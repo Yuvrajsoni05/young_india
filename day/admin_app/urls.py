@@ -1,7 +1,11 @@
+from tkinter.font import names
+
 from django.conf import settings
 from django.urls import path
 from .views import *
 from django.conf.urls.static import static
+
+from .views import EventDataAPI
 
 urlpatterns = [
     path('Admin-Login',Admin_Login,name='Admin_Login'),
@@ -16,6 +20,9 @@ urlpatterns = [
     path('download_excel',download_excel,name='download_excel'),
     path('Error',error_page,name='Error-Page'),
     path('delete-data',delete_multiple,name='delete_multiple'),
+    path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
+    path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
+    path('Handler-Delete/<int:handler_id>/',delete_handler,name='Handler-Delete')
 
 ]
 if settings.DEBUG:

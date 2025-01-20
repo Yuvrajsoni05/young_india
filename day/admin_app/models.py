@@ -9,3 +9,4 @@ class LoginSide(AbstractUser):
     photo = models.ImageField(upload_to='user_photo/', null=True)
     phone_number = models.CharField(max_length=90,null=True, blank=True)
 
+

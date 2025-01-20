@@ -2,7 +2,7 @@ from django.db import models
 from admin_app.models import LoginSide
 # Create your models here.
 class Event_Data(models.Model):
-    user = models.ForeignKey(LoginSide, on_delete=models.CASCADE)
+    user = models.ForeignKey(LoginSide, on_delete=models.SET_NULL, null=True, blank=True)
     your_name = models.CharField(max_length=200)
     date = models.DateField()
     role_yi = models.CharField(max_length=200,default='role_yi')

@@ -1,17 +1,17 @@
 
 from django.db.models import Avg, Sum
 from django.shortcuts import render,redirect,get_object_or_404
+from rest_framework.views import APIView
+from .serializer import *
+from rest_framework.response import Response
 from .models import *
 from django.contrib.auth import login, authenticate, update_session_auth_hash ,logout
 from django.contrib.auth.decorators import login_required
 import csv
 from django.http import HttpResponse
 import openpyxl
-
-# from ..manager_app.views import event_list
 from manager_app.models import Event_Data
 
-# from ..manager_app.views import event_data
 
 
 # Create your views here.
@@ -21,13 +21,12 @@ def Admin_Login(request):
         username = request.POST.get('admin_username')
         password = request.POST.get('admin_password')
         Admin_user = authenticate(request,username=username,password=password)
+        if Admin_user is not None:
+            login(request,Admin_user)
 
-        login(request,Admin_user)
-            # return HttpResponse("Yuvraj Soni")
-        return redirect('Admin_Dashboard')
-
-    # else:
-    #     return redirect('Error-Page')
+            return redirect('Admin_Dashboard')
+        else:
+            return redirect('Error-Page')
 
     return render(request,'Admin/AdminLogin.html')
 
@@ -44,13 +43,14 @@ def Admin_Signup(request):
             profile_img = request.FILES.get('profile_img')
             confirm_password = request.POST.get('password2')
             Admin_email = request.POST.get('add_email')
+            phone = request.POST.get('add_phone')
 
             if password != confirm_password:
                 return redirect('Admin-Signup')
-            Admin_User = LoginSide.objects.create_user(username=username,first_name=first_name,last_name=last_name,photo=profile_img,password=password,email=Admin_email,login_role="Admin")
+            Admin_User = LoginSide.objects.create_user(username=username,first_name=first_name,last_name=last_name,photo=profile_img,password=password,email=Admin_email,login_role="Admin",phone_number=phone)
             Admin_User.save()
             login(request,Admin_User)
-            return redirect('Admin_Dashboard')
+            return redirect('Admin_Login')
     return render(request,'Admin/AdminSignup.html')
 
 @login_required(login_url='Admin_Login')
@@ -131,7 +131,6 @@ def Admin_Dashboard(request):
 def Event_list(request):
     if request.user.login_role != 'Admin':
         return redirect('Error-Page')
-
     event_list = Event_Data.objects.all()
     context = {
         'events' : event_list
@@ -173,11 +172,41 @@ def delete_multiple(request,id=None):
     return redirect('Event_List')
 
 def manager_list(request):
+    if request.user.login_role != 'Admin':
+        return redirect('Error-Page')
     manager = LoginSide.objects.filter(login_role='Handler')
     contex = {
         'managers' :manager
     }
     return render(request,'Admin/view_manager.html',contex)
+
+
+def delete_handler(request,handler_id):
+    if request.user.login_role != 'Admin':
+        return redirect('Error-Page')
+    if request.method == 'POST':
+        delete_handlers = get_object_or_404(LoginSide,pk=handler_id)
+        delete_handlers.delete()
+    return redirect('View-manager')
+
+
+def delete_event(request,event_id):
+    if request.user.login_role != 'Admin':
+        return redirect('Error-Page')
+    if request.method == 'POST':
+        delete_events = Event_Data.objects.all().delete
+        delete_events.delete()
+    return redirect('Event_List')
+
+class EventDataAPI(APIView):
+    def get(self,request):
+        event = Event_Data.objects.all()
+        serializers = EventData(event,many=True)
+        return Response(serializers.data)
+
+
+
+
 
 
 

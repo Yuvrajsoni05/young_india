@@ -28,6 +28,7 @@ def manager_signup(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         password = request.POST.get('password1')
+        phone = request.POST.get('add_phone')
         profile_img = request.FILES.get('profile_img')
         confirm_password = request.POST.get('password2')
         manager_email = request.POST.get('manager_email')
@@ -40,6 +41,7 @@ def manager_signup(request):
                                                      photo=profile_img,
                                                      password=password,
                                                      email=manager_email,
+                                                     phone_number=phone,
                                                      login_role="Handler")
         manager_user.save()
         login(request,manager_user)
@@ -104,7 +106,6 @@ def event_list(request):
     # Ensure the user has the 'Handler' role
     if request.user.login_role != 'Handler':
         return redirect('manager-profile')
-
     user = request.user
     all_event = Event_Data.objects.filter(user=user)  # Filter the events for the logged-in user
 
@@ -123,14 +124,14 @@ def event_data(request):
             your_name = request.POST['your_name']
             event_date = request.POST['event_date']
             role_yi = request.POST['role_yi']
-            sig_option = request.POST['sig_select']
+            # sig_option = request.POST['sig_select']
             event_handle = request.POST['event_handle']
             project_verticals = request.POST['project_verticals']
             project_stakeholder = request.POST['project_stakeholder']
             yi_pillar = request.POST['yi_pillar']
             social_link = request.POST['social_link']
             total_impact = request.POST['total_impact']
-            Event_Data.objects.create(your_name=your_name,date=event_date,role_yi=role_yi,event_handle=event_handle,project_vertical=project_verticals, which_SIG=sig_option,
+            Event_Data.objects.create(your_name=your_name,date=event_date,role_yi=role_yi,event_handle=event_handle,project_vertical=project_verticals,
                                       project_stakeholder=project_stakeholder,yi_pillar=yi_pillar,social_link=social_link,total_impact=total_impact,user=request.user)
             return  redirect('event-list')
 

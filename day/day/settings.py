@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'admin_app','manager_app'
+    'admin_app','manager_app',
+    'rest_framework',
 
 ]
 AUTH_USER_MODEL = 'admin_app.LoginSide'

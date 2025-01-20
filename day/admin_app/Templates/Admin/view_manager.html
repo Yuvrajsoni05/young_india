@@ -73,8 +73,16 @@
         <td><img src="{{ manager.photo.url }}" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
 
 <td>
+    <form action="{% url 'Handler-Delete' handler_id=manager.id %}" method="post">
+        {% csrf_token %}
+         <button class="btn btn-danger"><i class="bi bi-trash"></i>&nbsp; Delete</button>
+    </form>
 <!--                    <button class="btn btn-primary">Edit</button>-->
-                    <button class="btn btn-danger">Delete</button>
+                               <a class="btn btn-light rounded-circle" href="tel:{{manager.phone_number }}">
+    <i class="bi bi-telephone-forward-fill"></i>
+</a>
+
+
 
                 </td>
             </tr>
