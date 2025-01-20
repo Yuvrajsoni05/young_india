@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+<link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+  <!-- Favicons -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  {% include 'Admin/components/header.html' %}
+  <!-- ======= Sidebar ======= -->
+  {% include 'Admin/components/side_navbar.html' %}
+  <!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Events <span></span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+ <i class="bi bi-list-ol"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ total }}</h6>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Sales Card -->
+
+
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12 col-sm-12 mb-4">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Impact</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ total_impact }}</h6>
+                      <span class="text-danger small pt-1 fw-bold">{{ impact_avg }}</span> <span class="text-muted small pt-2 ps-1">Average</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Customers Card -->
+
+            <!-- Blank Card with Form -->
+<!--            <div class="col-xxl-12 col-md-6 col-sm-12 mb-4">-->
+<!--              <div class="card">-->
+<!--                <div class="card-body">-->
+<!--                  <h5 class="card-title">Blank Form Card</h5>-->
+<!--                  &lt;!&ndash; Form inside the card &ndash;&gt;-->
+<!--                  <form action="#" method="post">-->
+<!--                    <div class="mb-3">-->
+<!--                      <label for="inputName" class="form-label">Name</label>-->
+<!--                      <input type="text" class="form-control" id="inputName" placeholder="Enter your name">-->
+<!--                    </div>-->
+<!--                    <div class="mb-3">-->
+<!--                      <label for="inputEmail" class="form-label">Email</label>-->
+<!--                      <input type="email" class="form-control" id="inputEmail" placeholder="Enter your email">-->
+<!--                    </div>-->
+<!--                    <div class="mb-3">-->
+<!--                      <label for="inputMessage" class="form-label">Message</label>-->
+<!--                      <textarea class="form-control" id="inputMessage" rows="3" placeholder="Enter your message"></textarea>-->
+<!--                    </div>-->
+<!--                    <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--                  </form>-->
+<!--                  &lt;!&ndash; End of Form &ndash;&gt;-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>&lt;!&ndash; End Blank Card &ndash;&gt;-->
+<iframe width="600" height="450" src="https://lookerstudio.google.com/embed/reporting/56ad84bc-6bf3-448f-900c-e7152ce74a03/page/HFnbE" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

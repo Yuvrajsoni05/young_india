@@ -1,0 +1,32 @@
+.form-control:focus {
+      border-color: #4e73df;
+      box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+.form-group label {
+      font-weight: 500;
+      color: #333;
+    }
+.card-header {
+      background-color: #1944c7;
+      color: #fff;
+    }
+
+.btn-primary {
+      background-color: #4e73df;
+      border-color: #4e73df;
+    }
+
+.btn-primary:hover {
+      background-color: #2e59d9;
+      border-color: #2e59d9;
+    }
+.form-group {
+      margin-bottom: 1rem;
+    }
+
+.form-control {
+      height: calc(1.5em + 0.75rem + 2px);
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      border-radius: 0.375rem;
+    }

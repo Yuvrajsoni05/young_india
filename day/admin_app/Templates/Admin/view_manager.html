@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
+    <title>Dashboard</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i|Calibri" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+  {% include 'Admin/components/header.html' %}
+  <!-- ======= Sidebar ======= -->
+  {% include 'Admin/components/side_navbar.html' %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Manager List</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item">Admin</li>
+          <li class="breadcrumb-item active">Manager List</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Table for Event Data -->
+  <div class="table-responsive">
+      <form action="{% url 'delete_multiple' %}" method="post">
+          {% csrf_token %}
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-nowrap" align="center">
+                <th>Sr.no</th>
+                <th>Name</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Profile Image</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+      {% for manager in managers %}
+    <tr class="text-nowrap" align="center">
+
+        <td>{{ forloop.counter }}</td>
+        <td>{{ manager.first_name }} {{ manager.last_name }}</td>
+        <td>{{ manager.first_name }}</td>
+        <td>{{ manager.last_name }}</td>
+        <td>{{ manager.email }}</td>
+        <td>{{ manager.phone_number }}</td>
+        <td><img src="{{ manager.photo.url }}" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
+
+<td>
+<!--                    <button class="btn btn-primary">Edit</button>-->
+                    <button class="btn btn-danger">Delete</button>
+
+                </td>
+            </tr>
+
+         {% endfor %}
+        </tbody>
+
+    </table>
+
+
+</form>
+
+
+</div>
+
+
+  </main><!-- End #main -->
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

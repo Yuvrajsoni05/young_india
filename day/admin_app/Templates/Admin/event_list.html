@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
+    <title>Dashboard</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i|Calibri" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+  {% include 'Admin/components/header.html' %}
+  <!-- ======= Sidebar ======= -->
+  {% include 'Admin/components/side_navbar.html' %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Add Event Data</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item">Admin</li>
+          <li class="breadcrumb-item active">Event List</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Table for Event Data -->
+  <div class="table-responsive">
+      <form action="{% url 'delete_multiple' %}" method="post">
+          {% csrf_token %}
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-nowrap" align="center">
+                <th></th>
+                <th>Event ID</th>
+                 <th>Date</th>
+                <th>Manager Name</th>
+
+                <th>Role YI</th>
+                <th>Handle By</th>
+                <th>Project Verticals</th>
+                <th>Project Stakeholder</th>
+                <th>SIG</th>
+                <th>YI Pillar</th>
+                <th>Social Link</th>
+                <th>Impact</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+      {% for event in events %}
+    <tr class="text-nowrap" align="center">
+        <td><input type="checkbox" id="delete_data" name="delete_data"></td>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ event.date }}</td>
+        <td>{{ event.your_name }}</td>
+        <td>{{ event.role_yi }}</td>
+        <td>{{ event.event_handle }}</td>
+        <td>{{ event.project_vertical }}</td>
+        <td>{{ event.project_stakeholder }}</td>
+        <td>{{ event.which_SIG }}</td>
+        <td>{{ event.yi_pillar }}</td>
+        <td>{{ event.social_link }}</td>
+        <td>{{ event.total_impact }}</td>
+<td>
+<!--                    <button class="btn btn-primary">Edit</button>-->
+                    <button class="btn btn-danger">Delete</button>
+
+                </td>
+            </tr>
+
+         {% endfor %}
+        </tbody>
+
+    </table>
+
+
+</form>
+<button class="btn btn-danger">Delete multiple</button>
+      <a href="{% url 'download_excel' %}">
+      <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
+          </a>
+</div>
+
+
+  </main><!-- End #main -->
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+
+
+from django.conf import settings
+from django.urls import path
+from .views import *
+from django.conf.urls.static import static
+
+urlpatterns = [
+        path('manager-login',manager_login,name='manager-login'),
+        path('manager-signup',manager_signup,name='manager-signup'),
+        path('manager-dashboard',manager_dashboard,name='manager-dashboard'),
+        path('manager-profile',manager_profile,name='manager-profile'),
+        path('manager-update/<int:manager_id>/',manager_update,name='manager-update'),
+        path('event-list',event_list,name='event-list'),
+        path('event_data',event_data,name='event_data'),
+        path('manager-logout',manager_logout,name='manager-logout'),
+        path('manager-password',manager_password,name='manager-password'),
+
+
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

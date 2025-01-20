@@ -1,0 +1,115 @@
+/* General styling */
+label, input, select, button {
+    font-family: 'cambria', sans-serif;
+}
+
+input.form-control, select.form-control {
+    height: 50px;
+    font-size: 18px;
+}
+
+.card-body {
+    padding: 40px;
+}
+
+.container {
+    height: 100%;
+}
+
+.form-group label {
+    font-size: 20px;
+}
+
+.card {
+    margin-top: 40px;
+}
+
+select option {
+    height: auto;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.btn-block {
+    padding: 14px;
+    font-size: 18px;
+}
+
+/* Media queries for responsiveness */
+
+/* Small screens (mobiles) */
+@media (max-width: 1200px) {
+    .form-group label {
+        font-size: 18px;
+    }
+
+    input.form-control, select.form-control {
+        font-size: 16px;
+        height: 40px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .btn-block {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 577px) and (max-width: 768px) {
+    .form-group label {
+        font-size: 18px;
+    }
+
+    input.form-control, select.form-control {
+        font-size: 17px;
+        height: 45px;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .btn-block {
+        font-size: 17px;
+        padding: 13px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 769px) {
+    .form-group label {
+        font-size: 20px;
+    }
+
+    input.form-control, select.form-control {
+        font-size: 18px;
+        height: 50px;
+    }
+
+    .card-body {
+        padding: 40px;
+    }
+
+    .btn-block {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    .container {
+        padding: 0 20px;
+    }
+}
