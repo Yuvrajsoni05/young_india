@@ -1,4 +1,4 @@
-import openpyxl
+
 from django.db.models import Avg, Sum
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate, update_session_auth_hash ,l
 from django.contrib.auth.decorators import login_required
 import csv
 from django.http import HttpResponse
+import openpyxl
 
 # from ..manager_app.views import event_list
 from manager_app.models import Event_Data
@@ -20,13 +21,13 @@ def Admin_Login(request):
         username = request.POST.get('admin_username')
         password = request.POST.get('admin_password')
         Admin_user = authenticate(request,username=username,password=password)
-        if Admin_user is not  None and Admin_user.login_role == 'Admin':
-            login(request,Admin_user)
-            # return HttpResponse("Yuvraj Soni")
-            return redirect('Admin_Dashboard')
 
-        else:
-            return redirect('Error-Page')
+        login(request,Admin_user)
+            # return HttpResponse("Yuvraj Soni")
+        return redirect('Admin_Dashboard')
+
+    # else:
+    #     return redirect('Error-Page')
 
     return render(request,'Admin/AdminLogin.html')
 
@@ -177,6 +178,7 @@ def manager_list(request):
         'managers' :manager
     }
     return render(request,'Admin/view_manager.html',contex)
+
 
 
 
