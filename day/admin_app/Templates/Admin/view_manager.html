@@ -82,22 +82,80 @@
 
     </form>
                 </td>
-        <td>
-    <form action="{% url 'Handler-Delete' handler_id=manager.id %}" method="post">
-        {% csrf_token %}
-         <button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
-    </form>
-                </td>
+       <td>
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">
+        <i class="bi bi-pencil-square"></i>
+    </button>
+</td>
+
         <td>
             <a class="btn btn-light rounded-circle" href="tel:{{manager.phone_number }}">
     <i class="bi bi-telephone-forward-fill"></i>
 </a> </td>
             </tr>
+      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Manager</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="manager_id" id="manager_id" value="">
+          <div class="mb-3">
+            <label for="manager_first_name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="manager_first_name" name="manager_first_name" value="{{manager.first_name}}" required>
+          </div>
+          <div class="mb-3">
+            <label for="manager_last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}" required>
+          </div>
+          <div class="mb-3">
+            <label for="manager_username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="manager_username" name="manager_username" value="{{manager.username}}" required>
+          </div>
+          <div class="mb-3">
+            <label for="manager_email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="manager_email" name="manager_email" value="{{manager.email }}" required>
+          </div>
+          <div class="mb-3">
+            <label for="manager_phone_number" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
+          </div>
+<!--               <div class="mb-3">-->
+<!--            <label for="manager_password" class="form-label">Password</label>-->
+<!--            <input type="password" class="form-control" id="manager_password" name="manager_password" value="{{manager.password }}"  required>-->
+<!--          </div>-->
+
+                 <div class="mb-3">
+            <label for="manager_profile_img" class="form-label">Profile Image</label>
+            <input type="file" class="form-control" id="manager_profile_img" name="manager_profile_img">
+          </div>
+          <!-- Closing the form here -->
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+
+
+
+          </form>
+
+
+
+
          {% endfor %}
         </tbody>
+
     </table>
 
 </div>
+<!-- Modal -->
+
 
 
   </main><!-- End #main -->

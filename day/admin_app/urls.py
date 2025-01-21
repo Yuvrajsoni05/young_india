@@ -21,6 +21,8 @@ urlpatterns = [
     path('download_excel',download_excel,name='download_excel'),
     path('Error',error_page,name='Error-Page'),
 
+
+    path('update-manager/<int:manager_id>/',update_manager,name='Update_Manager'),
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
     path('Handler-Delete/<int:handler_id>/',delete_handler,name='Handler-Delete')

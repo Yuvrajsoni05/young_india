@@ -6,12 +6,12 @@ class Event_Data(models.Model):
 
     your_name = models.CharField(max_length=200)
     date = models.DateField()
-    role_yi = models.CharField(max_length=200,default='role_yi')
+    role_yi = models.CharField(max_length=200)
     project_vertical = models.CharField(max_length=200)
     project_stakeholder = models.CharField(max_length=200)
     yi_pillar = models.CharField(max_length=200)
     social_link = models.URLField(max_length=300)
-    which_SIG = models.CharField(max_length=200,default='SIG')
+    which_SIG = models.CharField(max_length=200,null=True)
     event_handle = models.CharField(max_length=200,)
     total_impact = models.IntegerField(blank=False)
 

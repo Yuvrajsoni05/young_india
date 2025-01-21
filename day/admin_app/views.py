@@ -122,7 +122,7 @@ def Admin_Dashboard(request):
     if request.user.login_role != 'Admin':
         return redirect('Error-Page')
     total_event = Event_Data.objects.count()
-    total_user_data = LoginSide.objects.filter(login_role='Manager')
+    total_user_data = LoginSide.objects.filter(login_role='Handler')
     total_user = total_user_data.count()
 
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
@@ -216,6 +216,30 @@ def delete_event(request,event_id):
         delete_events.delete()
 
     return redirect('Event_List')
+
+
+def update_manager(request,manager_id):
+    if request.user.login_role != 'Admin':
+        return redirect('Error-Page')
+    update_manager_data = get_object_or_404(LoginSide,id=manager_id)
+    if request.method == 'POST':
+        update_manager_data.first_name = request.POST['manager_first_name']
+        update_manager_data.last_name = request.POST['manager_last_name']
+        update_manager_data.username = request.POST['manager_username']
+        update_manager_data.email = request.POST['manager_email']
+        # update_manager_data.password = request.POST['manager_password']
+        update_manager_data.phone_number = request.POST['manager_phone_number']
+        if 'manager_profile_img' in request.FILES:
+            update_manager_data.photo = request.FILES['manager_profile_img']
+        update_manager_data.save()
+    return redirect('View-manager')
+
+
+
+
+
+
+
 
 
 
