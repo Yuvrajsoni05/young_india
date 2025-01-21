@@ -19,8 +19,10 @@ def manager_login(request):
             login(request,manager_user)
             return redirect('manager-dashboard')
         else:
-            return redirect('manager-login')
-    return render(request,'manager/manager_login.html')
+            return redirect('Error-Page')
+    return render(request,'index.html')
+
+
 @login_required(login_url='Admin_Login')
 def manager_signup(request):
     if request.method == "POST":
@@ -32,6 +34,7 @@ def manager_signup(request):
         profile_img = request.FILES.get('profile_img')
         confirm_password = request.POST.get('password2')
         manager_email = request.POST.get('manager_email')
+
         if password != confirm_password:
             return render(request,'manager/manager_login.html')
 
@@ -44,7 +47,7 @@ def manager_signup(request):
                                                      phone_number=phone,
                                                      login_role="Handler")
         manager_user.save()
-        login(request,manager_user)
+
         return redirect('Admin_Dashboard')
     return render(request,'manager/manager_signup.html')
 
@@ -91,7 +94,6 @@ def manager_password(request):
 def manager_dashboard(request):
     if request.user.login_role != 'Handler':
         return redirect('Error-Page')
-
     return render(request,'manager/manager_dashboard.html')
 
 @login_required(login_url='manager-login')
@@ -107,14 +109,24 @@ def event_list(request):
     if request.user.login_role != 'Handler':
         return redirect('manager-profile')
     user = request.user
-    all_event = Event_Data.objects.filter(user=user)  # Filter the events for the logged-in user
-
+    all_event = Event_Data.objects.filter(user=user)
     context = {
         'user': user,
         'k1': all_event
     }
-
     return render(request, 'manager/event_list.html', context)
+
+
+
+def delete_event_handler(request,events_id):
+    if request.user.login_role != 'Handler':
+        return redirect('Error-Page')
+    if request.method == 'POST':
+        delete_events = get_object_or_404(Event_Data,id=events_id)
+        delete_events.delete()
+
+    return redirect('event-list')
+
 
 
 @login_required(login_url='manager-login')

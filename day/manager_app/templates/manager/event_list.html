@@ -46,11 +46,10 @@
   <div class="table-responsive">
     <table class="table table-bordered">
         <thead>
-            <tr class="text-nowrap">
+            <tr class="text-nowrap" align="center">
                 <th>Event ID</th>
                  <th>Date</th>
                 <th>Manager Name</th>
-
                 <th>Role YI</th>
                 <th>Handle By</th>
                 <th>Project Verticals</th>
@@ -63,9 +62,8 @@
             </tr>
         </thead>
         <tbody>
-
       {% for i in k1 %}
-    <tr class="text-nowrap">
+    <tr class="text-nowrap" align="center">
         <td>{{ forloop.counter }}</td>
         <td>{{ i.date }}</td>
         <td>{{ i.your_name }}</td>
@@ -78,8 +76,10 @@
         <td>{{ i.social_link }}</td>
         <td>{{ i.total_impact }}</td>
 <td>
-                    <button class="btn btn-primary">Edit</button>
-                    <button class="btn btn-danger">Delete</button>
+    <form method="post" action="{% url 'delete-event-manager' events_id=i.id %}">
+         {% csrf_token %}
+        <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+    </form>
                 </td>
             </tr>
          {% endfor %}

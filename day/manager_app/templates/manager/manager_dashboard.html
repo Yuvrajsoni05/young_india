@@ -21,18 +21,6 @@
     <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
 
     <!-- Custom Styles -->
-    <style>
-        /* Make inputs take full width on mobile */
-        @media (max-width: 768px) {
-            .form-group {
-                width: 100%;
-                margin-bottom: 15px;
-            }
-            .btn-block {
-                width: 100%;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -65,20 +53,20 @@
           <form method="POST" action="{% url 'event_data' %}">
             {% csrf_token %}
             <div class="row">
-              <div class="col-md-4 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="your_name">Your Name</label>
                   <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name">
                 </div>
               </div>
-              <div class="col-md-4 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_date">Event Date</label>
                   <input type="date" id="event_date" class="form-control" name="event_date" required>
                 </div>
               </div>
 
-              <div class="col-md-4 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="role_yi">YI Role</label>
                   <select class="form-control" id="role_yi" name="role_yi" required>
@@ -88,18 +76,16 @@
                     <option value="Team Member">Team Member</option>
                   </select>
                 </div>
-            </div>
+              </div>
 
-            <div class="row">
-            <div class="col-md-6 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="event_handle">Event handle</label>
+                  <label for="event_handle">Event Handle</label>
                   <input type="text" id="event_handle" class="form-control" name="event_handle" placeholder="Enter Event Handler Name">
                 </div>
               </div>
 
-
-              <div class="col-md-6 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="project_verticals">Project Verticals</label>
                   <select class="form-control" id="project_verticals" name="project_verticals" required>
@@ -123,24 +109,7 @@
                 </div>
               </div>
 
-<!--              <div class="col-md-6 col-12" id="sig_options" style="display: none;">-->
-<!--            <div class="form-group">-->
-<!--                <label for="">Special Interest Group Options</label>-->
-<!--                <select class="form-control" id="sig_select" name="sig_select">-->
-<!--                    <option value="" disabled selected>Select SIG Option</option>-->
-<!--                    <option value="Trekking">Trekking</option>-->
-<!--                    <option value="Photography">Photography</option>-->
-<!--                    <option value="Active Living">Active Living</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--        </div>-->
-
-            </div>
-            </div>
-
-
-            <div class="row">
-              <div class="col-md-6 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="project_stakeholder">Project Stakeholder</label>
                   <select class="form-control" id="project_stakeholder" name="project_stakeholder" required>
@@ -154,7 +123,7 @@
                 </div>
               </div>
 
-              <div class="col-md-6 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="yi_pillar">YI Pillar Impact</label>
                   <select class="form-control" id="yi_pillar" name="yi_pillar" required>
@@ -165,17 +134,15 @@
                   </select>
                 </div>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-md-6 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="social_link">Social Link</label>
                   <input type="url" id="social_link" class="form-control" name="social_link" required placeholder="Enter your social media link">
                 </div>
               </div>
 
-              <div class="col-md-6 col-12">
+              <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="total_impact">Total Impact</label>
                   <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact">
@@ -183,7 +150,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary ">Submit</button>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
           </form>
         </div>
       </div>

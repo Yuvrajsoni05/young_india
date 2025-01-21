@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 from .views import EventDataAPI
 
 urlpatterns = [
+    path('',index,name='index'),
     path('Admin-Login',Admin_Login,name='Admin_Login'),
     path('Admin-Signup',Admin_Signup,name='Admin_Signup'),
     path('Admin-Dashboard',Admin_Dashboard,name='Admin_Dashboard'),
@@ -19,7 +20,7 @@ urlpatterns = [
     path('View-manager',manager_list,name='View-manager'),
     path('download_excel',download_excel,name='download_excel'),
     path('Error',error_page,name='Error-Page'),
-    path('delete-data',delete_multiple,name='delete_multiple'),
+
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
     path('Handler-Delete/<int:handler_id>/',delete_handler,name='Handler-Delete')

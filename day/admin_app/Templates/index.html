@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+</head>
+<body>
+   <div id="container" class="container">
+		<!-- FORM SECTION -->
+		<div class="row">
+			<!-- SIGN UP -->
+			<div class="col align-items-center flex-col sign-up">
+				<div class="form-wrapper align-items-center" align="center">
+					<div class="form sign-up">
+                       <form action="{% url 'Admin_Login' %}" method="post">
+                            {% csrf_token %}
+						<div class="input-group">
+
+							<input type="text" class="form-control" id="admin_username" name="admin_username" placeholder="Username" required>
+						</div>
+						<div class="input-group">
+
+							<input type="password" class="form-control" id="admin_password" name="admin_password" placeholder="Password" required>
+						</div>
+
+						<button type="submit">Login Now</button>
+						<p>
+							<span>
+								Are You Manager ?
+							</span>
+							<b onclick="toggle()" class="pointer">
+								Manager Login
+							</b>
+						</p>
+                        </form>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col align-items-center flex-col sign-in">
+				<div class="form-wrapper align-items-center" align="center">
+					<div class="form sign-in">
+
+                            <form method="POST" action="{% url 'manager-login' %}">
+                            {% csrf_token %}
+						<div class="input-group">
+
+							<input type="text" class="form-control" id="manager_username" name="manager_username" placeholder="Username" required>
+						</div>
+						<div class="input-group">
+
+							<input type="password" class="form-control" id="manager_password" name="manager_password" placeholder="Password" required>
+						</div>
+						<button type="submit" >Login now</button>
+
+						<p>
+							<span>
+								Are You Admin?
+							</span>
+							<b onclick="toggle()" class="pointer">
+								Admin Login
+							</b>
+						</p>
+                        </form>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<!-- END FORM SECTION -->
+
+
+		<!-- CONTENT SECTION -->
+		<div class="row content-row">
+			<!-- SIGN IN CONTENT -->
+			<div class="col align-items-center flex-col">
+				<div class="text sign-in">
+					<h2>
+						Welcome
+					</h2>
+
+				</div>
+				<div class="img sign-in">
+
+				</div>
+			</div>
+			<!-- END SIGN IN CONTENT -->
+			<!-- SIGN UP CONTENT -->
+			<div class="col align-items-center flex-col">
+				<div class="img sign-up">
+
+				</div>
+				<div class="text sign-up">
+					<h2>
+						Admin Side
+					</h2>
+
+				</div>
+			</div>
+			<!-- END SIGN UP CONTENT -->
+		</div>
+		<!-- END CONTENT SECTION -->
+	</div>
+
+    <!-- Bootstrap JS -->
+  <script src="{% static 'js/index.js' %}"></script>
+
+</body>
+</html>

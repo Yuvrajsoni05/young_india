@@ -27,6 +27,7 @@
 <body>
 
   {% include 'Admin/components/header.html' %}
+
   {% include 'Admin/components/side_navbar.html' %}
 
   <main id="main" class="main">
@@ -44,13 +45,16 @@
 
     <!-- Table for Event Data -->
     <div class="table-responsive">
-        <form action="{% url 'delete_multiple' %}" method="post">
-            {% csrf_token %}
+
+
             <div style="margin-top:10px;">
+
+
+
                 <table id="eventTable" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                         <tr class="text-nowrap" align="center">
-                            <th></th>
+
                             <th>Event ID</th>
                             <th>Date</th>
                             <th>Manager Name</th>
@@ -68,7 +72,7 @@
                     <tbody>
                         {% for event in events %}
                         <tr class="text-nowrap" align="center">
-                            <td><input type="checkbox" id="delete_data" name="delete_data"></td>
+
                             <td>{{ forloop.counter }}</td>
                             <td>{{ event.date }}</td>
                             <td>{{ event.your_name }}</td>
@@ -80,6 +84,7 @@
                             <td>{{ event.yi_pillar }}</td>
                             <td>{{ event.social_link }}</td>
                             <td>{{ event.total_impact }}</td>
+
                             <td>
                                 <form method="post" action="{% url 'delete_event' event_id=event.id %}">
                                     {% csrf_token %}
@@ -92,9 +97,10 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
             </div>
-        </form>
-        <button class="btn btn-danger">Delete multiple</button>
+
+
         <a href="{% url 'download_excel' %}">
             <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
         </a>
