@@ -235,6 +235,9 @@ def update_manager(request,manager_id):
     return redirect('View-manager')
 
 
+def Email_side(request):
+    return render(request,'Admin/Mail/mail.html')
+
 
 
 
