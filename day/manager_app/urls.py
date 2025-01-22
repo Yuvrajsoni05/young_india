@@ -15,6 +15,7 @@ urlpatterns = [
         path('manager-logout',manager_logout,name='manager-logout'),
         path('manager-password',manager_password,name='manager-password'),
         path('about_yi',about_yi,name='about_yi'),
+        path('chart',chart_js,name='chart_js')
 
 ]
 if settings.DEBUG:
