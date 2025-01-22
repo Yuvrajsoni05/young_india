@@ -14,6 +14,7 @@ urlpatterns = [
         path('event_data',event_data,name='event_data'),
         path('manager-logout',manager_logout,name='manager-logout'),
         path('manager-password',manager_password,name='manager-password'),
+        path('about_yi',about_yi,name='about_yi'),
 
 ]
 if settings.DEBUG:

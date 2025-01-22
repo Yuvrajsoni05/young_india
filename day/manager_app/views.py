@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout,update_session_auth_hash
 from admin_app.models import LoginSide
@@ -17,8 +18,13 @@ def manager_login(request):
             login(request,manager_user)
             return redirect('manager-dashboard')
         else:
+            messages.error(request,"Incorrect Username Password")
             return redirect('Error-Page')
     return render(request,'index.html')
+
+
+
+
 
 
 @login_required(login_url='Admin_Login')
@@ -33,8 +39,19 @@ def manager_signup(request):
         confirm_password = request.POST.get('password2')
         manager_email = request.POST.get('manager_email')
 
+        if len(phone) != 10 or not phone.isdigit():
+            messages.error(request, "Phone number must be 10 digits.")
+            return render(request,'manager/manager_signup.html')
+
+        if len(password) < 6:
+            messages.error(request, "Password must be 6 digit")
+            return render(request,'manager/manager_signup.html')
+
+
+
         if password != confirm_password:
-            return render(request,'manager/manager_login.html')
+            messages.error(request, "Password and Confirm Password must be Same")
+            return render(request,'manager/manager_signup.html')
 
         manager_user = LoginSide.objects.create_user(username=manager_username,
                                                      first_name=first_name,
@@ -53,6 +70,12 @@ def manager_signup(request):
 def manager_logout(request):
     logout(request)
     return redirect('manager-login')
+
+
+
+
+def about_yi(request):
+    return render(request,'components/AboutYi.html')
 
 @login_required(login_url='manager-login')
 def manager_update(request,manager_id):
@@ -80,9 +103,16 @@ def manager_password(request):
             manager_user =request.user
 
             if not manager_user.check_password(old_password):
-                return redirect('manager_dashboard')
+                messages.error(request,"Old Password Incorrect")
+                return redirect('manager-profile')
+
+            if len(new_password)  < 6 :
+                messages.error(request, "Password must be 6 digit")
+                return redirect('manager-profile')
+
             if new_password != confirm_password:
-                return redirect('manager_dashboard')
+                messages.error(request,"New Password and Confirm Password must Be same" )
+                return redirect('manager-profile')
             manager_user.set_password(new_password)
             manager_user.save()
             update_session_auth_hash(request,manager_user)
@@ -134,14 +164,14 @@ def event_data(request):
             your_name = request.POST['your_name']
             event_date = request.POST['event_date']
             role_yi = request.POST['role_yi']
-            # sig_option = request.POST['sig_select']
+            sig_option = request.POST.get('sig_')
             event_handle = request.POST['event_handle']
             project_verticals = request.POST['project_verticals']
             project_stakeholder = request.POST['project_stakeholder']
             yi_pillar = request.POST['yi_pillar']
             social_link = request.POST['social_link']
             total_impact = request.POST['total_impact']
-            Event_Data.objects.create(your_name=your_name,date=event_date,role_yi=role_yi,event_handle=event_handle,project_vertical=project_verticals,
+            Event_Data.objects.create(your_name=your_name,date=event_date,role_yi=role_yi,event_handle=event_handle,project_vertical=project_verticals,which_SIG=sig_option,
                                       project_stakeholder=project_stakeholder,yi_pillar=yi_pillar,social_link=social_link,total_impact=total_impact,user=request.user)
             return  redirect('event-list')
 

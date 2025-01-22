@@ -227,8 +227,8 @@ h6 {
 .card-header,
 .card-footer {
   border-color: #ebeef4;
-  background-color: #fff;
-  color: #798eb3;
+  background-color: #0075ff;
+  color: #ffffff;
   padding: 15px;
 }
 
@@ -1214,24 +1214,4 @@ h6 {
   }
 }
 
-/*--------------------------------------------------------------
-# Footer
---------------------------------------------------------------*/
-.footer {
-  padding: 20px 0;
-  font-size: 14px;
-  transition: all 0.3s;
-  border-top: 1px solid #cddfff;
-}
 
-.footer .copyright {
-  text-align: center;
-  color: #012970;
-}
-
-.footer .credits {
-  padding-top: 5px;
-  text-align: center;
-  font-size: 13px;
-  color: #012970;
-}

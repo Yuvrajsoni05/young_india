@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - About Young India</title>
+    <meta content="Young India, Youth empowerment, India, Development" name="description">
+    <meta content="Young India, Youth, Innovation, Future" name="keywords">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i|Calibri" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/footer.css' %}" rel="stylesheet">
+
+    <script src="{% static 'assets/js/sig.js' %}"></script>
+
+    <!-- Custom Styles for Justify Content and Sticky Footer -->
+
+</head>
+
+<body>
+
+    {% include 'components/header.html' %}
+    <!-- ======= Sidebar ======= -->
+    {% include 'components/side_navbar.html' %}
+
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1>About Young India (YI)</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'manager-dashboard' %}">Home</a></li>
+                    <li class="breadcrumb-item">Manager</li>
+                    <li class="breadcrumb-item active">About YI</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <!-- Article Section -->
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-8" >
+                    <h2>The Power of Young India</h2>
+                    <p>
+                        Young India is not just a demographic term; it’s a reflection of the country’s transformative power. With over 600 million people under the age of 25, India boasts the world’s largest youth population. This dynamic and enthusiastic workforce holds the key to driving India's growth in the coming decades.
+                    </p>
+                    <p>
+                        The youth of India is increasingly empowered by access to education, technology, and entrepreneurial opportunities. From the tech hubs in Bangalore to grassroots social movements, the energy of Young India is transforming the nation across sectors, including politics, economics, science, and culture.
+                    </p>
+                    <p>
+                        A new generation of young leaders, thinkers, and doers is taking charge, pushing boundaries, and challenging societal norms. Their drive for innovation and their commitment to social change are shaping the future of the country. With the right support, mentorship, and resources, Young India has the potential to not only lead India to success but also to become a global leader in technology, sustainability, and culture.
+                    </p>
+                    <h3>Key Aspects of Young India</h3>
+                    <ul>
+                        <li><strong>Entrepreneurship:</strong> The youth of India is leading a start-up revolution, contributing to job creation and driving economic growth.</li>
+                        <li><strong>Technology & Innovation:</strong> Young Indians are at the forefront of technological advancements, from AI to blockchain, influencing global trends.</li>
+                        <li><strong>Social Impact:</strong> Youth-led social organizations are working to improve education, healthcare, and social justice across the country.</li>
+                        <li><strong>Education & Skill Development:</strong> Access to online learning and vocational training has empowered young individuals to excel in various fields.</li>
+                    </ul>
+                    <p>
+                        India’s youth is redefining the future with fresh ideas, a hunger for success, and an undying commitment to building a better tomorrow. As Young India takes its place in the global arena, it will undoubtedly play a crucial role in the development of not just the nation, but the world.
+                    </p>
+                    <h4>Learn More About Young India:</h4>
+                    <ul>
+                        <li><a href="https://www.niti.gov.in/young-india" target="_blank">NITI Aayog - Young India Initiatives</a></li>
+                        <li><a href="https://www.youthkiawaaz.com/" target="_blank">Youth Ki Awaaz - Platform for Young Voices</a></li>
+                        <li><a href="https://www.entrepreneur.com/topic/young-india" target="_blank">Entrepreneur - Young India Entrepreneurs</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <img src="{% static 'image/YIIMG.png' %}" alt="Young India" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <!-- Footer Section -->
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

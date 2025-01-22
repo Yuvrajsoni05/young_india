@@ -9,12 +9,63 @@
   <title>Dashboard</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-<link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
   <!-- Favicons -->
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <style>
+    /* In your admin_signup.css file or within <style> tags */
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main {
+      min-height: 100vh; /* Ensure the main content area takes at least the full viewport height */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      flex: 1;
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+
+    .card {
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    button[type="submit"] {
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    /* Ensure the card looks good on smaller screens */
+    @media (max-width: 768px) {
+      .card {
+        padding: 20px;
+      }
+      .row .col-md-6 {
+        margin-bottom: 10px;
+      }
+    }
+  </style>
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
@@ -22,8 +73,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-      <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
-
+  <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
 
 </head>
 
@@ -54,7 +104,7 @@
         </div>
         <br>
         <div class="card-body">
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm(event)">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-6">
@@ -80,7 +130,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="add_email">Email</label>
-                  <input type="email" class="form-control" name="add_email" placeholder="Add Email" required>
+                  <input type="email" class="form-control" id="add_email" name="add_email" placeholder="Add Email" required>
                 </div>
               </div>
             </div>
@@ -115,11 +165,22 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Add Admin</button>
+            <button type="submit"  class="btn btn-primary btn-block"  >Add Admin</button>
           </form>
         </div>
       </div>
     </div>
+      {% if messages %}
+  <div class="container">
+    {% for message in messages %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 
   </main><!-- End #main -->
 
@@ -129,7 +190,9 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
- <script src="{% static 'assets/js/regex.js' %}"></script>
+
+
+  <script src="{% static 'assets/js/validation.js' %}"></script> <!-- Link to validation.js -->
 
 </body>
 

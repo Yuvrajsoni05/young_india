@@ -11,32 +11,32 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-
-<link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+   <link href="{% static 'assets/css/footer.css' %}" rel="stylesheet">
+
+  <!-- Add custom style for fixed footer -->
 
 
 </head>
 
 <body>
 
-
-   {% include 'components/header.html' %}
+  {% include 'components/header.html' %}
   <!-- ======= Sidebar ======= -->
   {% include 'components/side_navbar.html' %}
-  <!-- End Sidebar-->
+  <!-- End Sidebar -->
 
-<main id="main" class="main">
+  <main id="main" class="main">
 
     <div class="pagetitle">
       <h1>Profile</h1>
@@ -52,60 +52,42 @@
     <section class="section profile">
       <div class="row">
         <div class="col-xl-4">
-
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-              <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="120px" width="120px"  alt="Profile" class="rounded-circle">
+              <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="120px" width="120px" alt="Profile" class="rounded-circle">
               <h2>{{ user.username }}</h2>
-
             </div>
           </div>
-
         </div>
 
         <div class="col-xl-8">
-
           <div class="card">
             <div class="card-body pt-3">
               <!-- Bordered Tabs -->
               <ul class="nav nav-tabs nav-tabs-bordered">
-
                 <li class="nav-item">
                   <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
                 </li>
-
                 <li class="nav-item">
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
                 </li>
-
-
                 <li class="nav-item">
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
                 </li>
-
               </ul>
               <div class="tab-content pt-2">
-
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
-
-
                   <h5 class="card-title">Profile Details</h5>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">First Name</div>
-                    <div class="col-lg-9 col-md-8">{{ user.first_name }} </div>
+                    <div class="col-lg-3 col-md-4 label">First Name</div>
+                    <div class="col-lg-9 col-md-8">{{ user.first_name }}</div>
                   </div>
-
-
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Username</div>
                     <div class="col-lg-9 col-md-8">{{ user.username }}</div>
                   </div>
-
-
-
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Phone</div>
@@ -120,25 +102,21 @@
                 </div>
 
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-
                   <!-- Profile Edit Form -->
                   <form method="POST" action="{% url 'manager-update' manager_id=user.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
-
                     <div class="row mb-3">
                       <label for="manager_profile_img" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="manager_profile_img" type="file" class="form-control" id="manager_profile_img"  >
+                        <input name="manager_profile_img" type="file" class="form-control" id="manager_profile_img" >
                       </div>
                     </div>
-
                     <div class="row mb-3">
                       <label for="manager_first_name" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="manager_first_name" type="text" class="form-control" id="manager_first_name" value="{{ user.first_name }}">
                       </div>
                     </div>
-
 
                     <div class="row mb-3">
                       <label for="manager_last_name" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
@@ -147,18 +125,12 @@
                       </div>
                     </div>
 
-
-
                     <div class="row mb-3">
                       <label for="username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="username" type="text" class="form-control" id="username" value="{{ user.username }}">
                       </div>
                     </div>
-
-
-
-
 
                     <div class="row mb-3">
                       <label for="phone_number" class="col-md-4 col-lg-3 col-form-label">Phone</label>
@@ -174,25 +146,16 @@
                       </div>
                     </div>
 
-
                     <div class="text-center">
                       <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
-
-                </div>
-
-                <div class="tab-pane fade pt-3" id="profile-settings">
-
-
-
                 </div>
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form method="post" action="">
+                  <form method="post" action="{% url 'manager-password' %}">
                     {% csrf_token %}
-
                     <div class="row mb-3">
                       <label for="old_password" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                       <div class="col-md-8 col-lg-9">
@@ -218,35 +181,28 @@
                       <button type="submit" class="btn btn-primary">Change Password</button>
                     </div>
                   </form><!-- End Change Password Form -->
-
                 </div>
-
               </div><!-- End Bordered Tabs -->
-
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
+    {% if messages %}
+      <div class="container">
+        {% for message in messages %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
   </main><!-- End #main -->
 
-  <!-- End #main -->
+  <!-- Footer -->
 
-  <!-- ======= Footer
-  <footer id="footer" class="footer">
-    <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-  </footer> End Footer -->
-
-
-  <!-- Vendor JS Files -->
 
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

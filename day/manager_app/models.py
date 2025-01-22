@@ -11,7 +11,7 @@ class Event_Data(models.Model):
     project_stakeholder = models.CharField(max_length=200)
     yi_pillar = models.CharField(max_length=200)
     social_link = models.URLField(max_length=300)
-    which_SIG = models.CharField(max_length=200,null=True)
+    which_SIG = models.CharField(max_length=200,null=True,blank=True)
     event_handle = models.CharField(max_length=200,)
     total_impact = models.IntegerField(blank=False)
 

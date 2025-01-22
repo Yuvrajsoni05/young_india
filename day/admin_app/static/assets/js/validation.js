@@ -1,4 +1,4 @@
-// Validate Phone Number (must be 10 digits)
+// Validate Phone Number (must be exactly 10 digits)
 function validatePhoneNumber(phone) {
     if (phone.length !== 10 || isNaN(phone)) {
         alert("Phone number must be exactly 10 digits.");
@@ -7,7 +7,7 @@ function validatePhoneNumber(phone) {
     return true;
 }
 
-// Validate Email (basic pattern)
+// Validate Email (basic pattern to check for "@" and ".")
 function validateEmail(email) {
     const atSymbol = email.indexOf("@");
     const dotSymbol = email.indexOf(".", atSymbol);
@@ -43,7 +43,7 @@ function validateForm(event) {
     // Check if both passwords match
     if (password1 !== password2) {
         alert("Passwords do not match.");
-        event.preventDefault();
+        event.preventDefault();  // Prevent form submission if passwords don't match
         return false;
     }
 

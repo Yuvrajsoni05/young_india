@@ -83,7 +83,7 @@
     </form>
                 </td>
        <td>
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
         <i class="bi bi-pencil-square"></i>
     </button>
 </td>
@@ -93,7 +93,7 @@
     <i class="bi bi-telephone-forward-fill"></i>
 </a> </td>
             </tr>
-      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -118,16 +118,13 @@
           </div>
           <div class="mb-3">
             <label for="manager_email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="manager_email" name="manager_email" value="{{manager.email }}" required>
+            <input type="email" class="form-control" id="manager_email" name="manager_email" value="{{ manager.email }}" required>
           </div>
           <div class="mb-3">
             <label for="manager_phone_number" class="form-label">Phone Number</label>
             <input type="text" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
           </div>
-<!--               <div class="mb-3">-->
-<!--            <label for="manager_password" class="form-label">Password</label>-->
-<!--            <input type="password" class="form-control" id="manager_password" name="manager_password" value="{{manager.password }}"  required>-->
-<!--          </div>-->
+
 
                  <div class="mb-3">
             <label for="manager_profile_img" class="form-label">Profile Image</label>
@@ -145,10 +142,14 @@
 
           </form>
 
-
+ </div>
+    </div>
+  </div>
 
 
          {% endfor %}
+
+
         </tbody>
 
     </table>

@@ -21,6 +21,7 @@
     <!-- Template Main CSS File -->
     <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/footer.css' %}" rel="stylesheet">
 
 </head>
 
@@ -33,7 +34,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Add Event Data</h1>
+      <h1>Event List</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'manager-dashboard' %}">Home</a></li>
@@ -73,7 +74,7 @@
         <td>{{ i.project_stakeholder }}</td>
         <td>{{ i.which_SIG }}</td>
         <td>{{ i.yi_pillar }}</td>
-        <td>{{ i.social_link }}</td>
+        <td><a href="{{ i.social_link }}">{{ i.social_link }}</a></td>
         <td>{{ i.total_impact }}</td>
 <td>
     <form method="post" action="{% url 'delete-event-manager' events_id=i.id %}">
@@ -85,10 +86,15 @@
          {% endfor %}
         </tbody>
     </table>
+
+
+
+
 </div>
 
 
   </main><!-- End #main -->
+
 
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>

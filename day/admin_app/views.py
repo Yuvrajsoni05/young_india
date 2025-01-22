@@ -12,6 +12,7 @@ import openpyxl
 from .serializer import EventDataSerializer
 from manager_app.models import Event_Data
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 
 
 
@@ -52,12 +53,23 @@ def Admin_Signup(request):
             Admin_email = request.POST.get('add_email')
             phone = request.POST.get('add_phone')
 
+            if len(phone) != 10 or not phone.isdigit():
+                messages.error(request, "Phone number must be 10 digits.")
+                return render(request, 'Admin/AdminSignup.html')
+
+            if len(password) < 6 :
+                messages.error(request,"Password Must Be 6 Digit")
+                return render(request, 'Admin/AdminSignup.html')
+
+
             if password != confirm_password:
+                messages.error(request,"Password and confirm Password must be same ")
                 return redirect('Admin-Signup')
+
             Admin_User = LoginSide.objects.create_user(username=username,first_name=first_name,last_name=last_name,photo=profile_img,password=password,email=Admin_email,login_role="Admin",phone_number=phone)
             Admin_User.save()
 
-            return redirect('Admin_Login')
+            return redirect('Admin_Dashboard')
     return render(request,'Admin/AdminSignup.html')
 
 @login_required(login_url='Admin_Login')
@@ -80,7 +92,7 @@ def Admin_update(request,admin_id):
                 admin_profile.first_name = request.POST['admin_firstname']
                 admin_profile.last_name = request.POST['admin_lastname']
                 admin_profile.email = request.POST['admin_email']
-                # admin_profile.photo = request.FILES['admin_profile_img']
+
                 admin_profile.username = request.POST['admin_username']
                 admin_profile.phone_number = request.POST['admin_phone']
                 if 'admin_profile_img' in request.FILES:
@@ -99,9 +111,16 @@ def admin_password(request):
             confirm_password = request.POST.get('confirm_password')
             admin_user =request.user
             if not admin_user.check_password(old_password):
-                return redirect('Admin_dashboard')
+                messages.error(request, "Old Password Incorrect")
+                return redirect('Admin_Profile')
+
+            if len(new_password) < 6:
+                messages.error(request, "Password must be 6 digit")
+                return redirect('Admin_Profile')
+
             if new_password != confirm_password:
-                return redirect('Admin_dashboard')
+                messages.error(request, "New Password and Confirm Password must Be same")
+                return redirect('Admin_Profile')
 
             admin_user.set_password(new_password)
             admin_user.save()
@@ -155,8 +174,6 @@ def error_page(request):
     return render(request,'Admin/components/Error_404.html')
 
 
-from django.http import HttpResponse
-import openpyxl
 
 def download_excel(request):
 
@@ -245,7 +262,7 @@ def Email_side(request):
 
 
 
-
+@method_decorator(login_required(login_url='Admin_Login'),name='get')
 class EventDataAPI(APIView):
     def get(self,request):
         event = Event_Data.objects.all()

@@ -1,26 +1,76 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i|Calibri" rel="stylesheet">
+  <title>Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-    <!-- Vendor CSS Files -->
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <style>
 
-    <!-- Template Main CSS File -->
-    <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
+.main {
+  min-height: 100vh; /* Ensure the main content area takes at least the full viewport height */
+  display: flex;
+  flex-direction: column;
+}
 
-    <!-- Custom Styles -->
+.container {
+  flex: 1;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.card {
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+button[type="submit"] {
+
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+  .row .col-md-6 {
+    margin-bottom: 10px;
+  }
+}
+
+
+  </style>
+
+  <!-- Favicons -->
+<link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+      <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -32,129 +82,156 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Add Event Data</h1>
+      <h1>Add Event Data </h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'manager-dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="">Home</a></li>
           <li class="breadcrumb-item">Manager</li>
-          <li class="breadcrumb-item active">Add Event</li>
+          <li class="breadcrumb-item active">Add Event Data </li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
 
     <div class="container">
-      <!-- Add Event Data Form -->
+      <!-- Signup Form -->
       <div class="card shadow-lg">
         <div class="card-header text-center">
-          <strong>Add Event</strong>
+          <strong>Add Event Data</strong>
         </div>
         <br>
         <div class="card-body">
           <form method="POST" action="{% url 'event_data' %}">
-            {% csrf_token %}
-            <div class="row">
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="your_name">Your Name</label>
-                  <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name">
-                </div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="event_date">Event Date</label>
-                  <input type="date" id="event_date" class="form-control" name="event_date" required>
-                </div>
-              </div>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="your_name">Your Name</label>
+                                    <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name">
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="event_date">Event Date</label>
+                                    <input type="date" id="event_date" class="form-control" name="event_date" required>
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="role_yi">YI Role</label>
-                  <select class="form-control" id="role_yi" name="role_yi" required>
-                    <option value="" disabled selected>Choose YI Role</option>
-                    <option value="Vertical Chair">Vertical Chair</option>
-                    <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                    <option value="Team Member">Team Member</option>
-                  </select>
-                </div>
-              </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="role_yi">YI Role</label>
+                                    <select class="form-control" id="role_yi" name="role_yi" required>
+                                        <option value="" disabled selected>Choose YI Role</option>
+                                        <option value="Vertical Chair">Vertical Chair</option>
+                                        <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                                        <option value="Team Member">Team Member</option>
+                                    </select>
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="event_handle">Event Handle</label>
-                  <input type="text" id="event_handle" class="form-control" name="event_handle" placeholder="Enter Event Handler Name">
-                </div>
-              </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="event_handle">Event Handle</label>
+                                    <input type="text" id="event_handle" class="form-control" name="event_handle" placeholder="Enter Event Handler Name">
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="project_verticals">Project Verticals</label>
-                  <select class="form-control" id="project_verticals" name="project_verticals" required>
-                    <option value="" disabled selected>Choose Project/Initiative</option>
-                    <option value="Masoom">Masoom</option>
-                    <option value="Road Safety">Road Safety</option>
-                    <option value="Health">Health</option>
-                    <option value="Sport">Sports</option>
-                    <option value="Accessibility">Accessibility</option>
-                    <option value="Learning(YI Talks)">Learning(YI Talks)</option>
-                    <option value="Climate action">Climate action</option>
-                    <option value="Innovation">Innovation</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Branding & PR">Branding & PR</option>
-                    <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
-                    <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
-                    <option value="Culture Connect">Culture Connect</option>
-                    <option value="Yi Angel">Yi Angel</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="project_verticals">Project Verticals</label>
+                                    <select class="form-control" id="project_verticals" name="project_verticals" required>
+                                        <option value="" disabled selected>Choose Project/Initiative</option>
+                                        <option value="Masoom">Masoom</option>
+                                        <option value="Road Safety">Road Safety</option>
+                                        <option value="Health">Health</option>
+                                        <option value="Sport">Sports</option>
+                                        <option value="Accessibility">Accessibility</option>
+                                        <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                                        <option value="Climate action">Climate action</option>
+                                        <option value="Innovation">Innovation</option>
+                                        <option value="Entrepreneurship">Entrepreneurship</option>
+                                        <option value="Branding & PR">Branding & PR</option>
+                                        <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                                        <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                                        <option value="Culture Connect">Culture Connect</option>
+                                        <option value="Yi Angel">Yi Angel</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="project_stakeholder">Project Stakeholder</label>
-                  <select class="form-control" id="project_stakeholder" name="project_stakeholder" required>
-                    <option value="" disabled selected>Choose Project Stakeholder</option>
-                    <option value="Membership Engagement">Membership Engagement</option>
-                    <option value="Yuva">Yuva</option>
-                    <option value="Thalir">Thalir</option>
-                    <option value="Rural Initiatives">Rural Initiatives</option>
-                    <option value="General Public">General Public</option>
-                  </select>
-                </div>
-              </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="project_stakeholder">Project Stakeholder</label>
+                                    <select class="form-control" id="project_stakeholder" name="project_stakeholder" required>
+                                        <option value="" disabled selected>Choose Project Stakeholder</option>
+                                        <option value="Membership Engagement">Membership Engagement</option>
+                                        <option value="Yuva">Yuva</option>
+                                        <option value="Thalir">Thalir</option>
+                                        <option value="Rural Initiatives">Rural Initiatives</option>
+                                        <option value="General Public">General Public</option>
+                                    </select>
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="yi_pillar">YI Pillar Impact</label>
-                  <select class="form-control" id="yi_pillar" name="yi_pillar" required>
-                    <option value="" disabled selected>Choose YI Pillar Impact</option>
-                    <option value="Youth Leader">Youth Leader</option>
-                    <option value="Thought Leader">Thought Leader</option>
-                    <option value="Nation Building">Nation Building</option>
-                  </select>
-                </div>
-              </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="yi_pillar">YI Pillar Impact</label>
+                                    <select class="form-control" id="yi_pillar" name="yi_pillar" required>
+                                        <option value="" disabled selected>Choose YI Pillar Impact</option>
+                                        <option value="Youth Leader">Youth Leader</option>
+                                        <option value="Thought Leader">Thought Leader</option>
+                                        <option value="Nation Building">Nation Building</option>
+                                    </select>
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="social_link">Social Link</label>
-                  <input type="url" id="social_link" class="form-control" name="social_link" required placeholder="Enter your social media link">
-                </div>
-              </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="social_link">Social Link</label>
+                                    <input type="url" id="social_link" class="form-control" name="social_link" required placeholder="Enter your social media link">
+                                </div>
+                            </div>
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="total_impact">Total Impact</label>
-                  <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact">
-                </div>
-              </div>
-            </div>
+                            <div class="col-12 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="total_impact">Total Impact</label>
+                                    <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact">
+                                </div>
+                            </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-          </form>
+                            <!-- Special Interest Group (SIG) dropdown, hidden by default -->
+                            <div class="col-12 col-sm-6 col-md-6" id="sig_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="sig_">Choose SIG</label>
+                                    <select class="form-control"  name="sig_">
+                                        <option value="" disabled selected>Choose Special Interest Group</option>
+                                        <option value="Active Living">Active Living</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Trekking">Trekking</option>
+                                        <option value="Entrepreneurship">Entrepreneurship</option>
+                                        <option value="Community">Community</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </form>
         </div>
       </div>
     </div>
+      {% if messages %}
+  <div class="container">
+    {% for message in messages %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 
   </main><!-- End #main -->
 
@@ -163,8 +240,20 @@
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Template Main JS File -->
-   <script src="{% static 'assets/js/sig.js' %}"></script>
   <script src="{% static 'assets/js/main.js' %}"></script>
+<script>
+  document.getElementById('project_verticals').addEventListener('change', function () {
+
+            var sigDiv = document.getElementById('sig_div');
+            if (this.value === "Special Interest Group (S.I.G)") {
+                sigDiv.style.display = "block";  // Show SIG dropdown
+            } else {
+                sigDiv.style.display = "none";   // Hide SIG dropdown
+            }
+        });
+</script>
+
 
 </body>
+
 </html>

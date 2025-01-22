@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="{% url 'manager-dashboard' %}" class="logo d-flex align-items-center">
   <img src="{% static 'Image/YIIMG.png' %}" alt="logo img" class="rounded-circle" >
-        <span class="d-none d-lg-block">Young India</span>
+        <span class="d-none d-lg-block">Yi Ahmedabad</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -47,9 +47,9 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'about_yi' %}">
                 <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
+                <span>About Yi</span>
               </a>
             </li>
             <li>
