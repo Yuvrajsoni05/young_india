@@ -132,16 +132,21 @@ button[type="submit"] {
             </div>
 
             <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="add_phone">Manager Phone</label>
-                  <input type="number" id="add_phone" class="form-control" name="add_phone" placeholder="Manager Phone" required>
-                </div>
-              </div>
+          <div class="col-md-6">
+           <label for="add_phone">Phone</label>
+          <div class="input-group mb-3">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">+91</span>
+            </div>
+            <input type="tel" class="form-control" id="add_phone" name="add_phone" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" placeholder="Enter your phone number" required>
+          </div>
+
+        </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="profile_img">Manager Profile Image</label>
-                  <input type="file" id="profile_img" class="form-control" name="profile_img">
+              <input type="file" id="profile_img" class="form-control" name="profile_img" accept=".jpg, .jpeg, .png">
                 </div>
               </div>
             </div>

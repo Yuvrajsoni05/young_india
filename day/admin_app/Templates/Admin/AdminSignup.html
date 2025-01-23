@@ -136,16 +136,23 @@
             </div>
 
             <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="add_phone">Phone</label>
-                  <input type="number" id="add_phone" class="form-control" name="add_phone" placeholder="Add Phone" required>
-                </div>
-              </div>
+        <div class="col-md-6">
+           <label for="add_phone">Phone</label>
+          <div class="input-group mb-3">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">+91</span>
+            </div>
+            <input type="tel" class="form-control" id="add_phone" name="add_phone" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" placeholder="Enter your phone number" required>
+          </div>
+
+        </div>
+
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="profile_img">Profile Image</label>
-                  <input type="file" id="profile_img" class="form-control" name="profile_img">
+                  <input type="file" id="profile_img" class="form-control" name="profile_img" accept=".jpg, .jpeg, .png">
+
                 </div>
               </div>
             </div>
@@ -190,6 +197,17 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+<script>
+  function validateForm(event) {
+    var phoneNumber = document.getElementById('add_phone').value;
+    var phonePattern = /^\+91[0-9]{10}$/;
+
+    if (!phonePattern.test(phoneNumber)) {
+      alert("Please enter a valid phone number starting with +91 followed by 10 digits.");
+      event.preventDefault(); // Prevent form submission
+    }
+  }
+</script>
 
 
   <script src="{% static 'assets/js/validation.js' %}"></script> <!-- Link to validation.js -->

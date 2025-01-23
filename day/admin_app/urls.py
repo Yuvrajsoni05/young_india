@@ -28,6 +28,10 @@ urlpatterns = [
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
     path('Handler-Delete/<int:handler_id>/',delete_handler,name='Handler-Delete'),
 
+    path('plot/',plot_chart, name='plot_view'),
+    path('pie',pie_chart,name='pie_chart'),
+    path('chart', chart_js, name='chart_js')
+
 
 
 ]

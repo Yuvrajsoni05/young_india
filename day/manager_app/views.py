@@ -1,7 +1,12 @@
+from io import BytesIO
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout,update_session_auth_hash
 from admin_app.models import LoginSide
+from matplotlib import pyplot as plt
+
 from .models import Event_Data
 from  django.contrib.auth.decorators import login_required
 
@@ -177,5 +182,3 @@ def event_data(request):
 
 
 
-def chart_js(request):
-    return render(request,'chart/bar.html')

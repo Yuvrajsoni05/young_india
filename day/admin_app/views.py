@@ -1,6 +1,12 @@
+from collections import Counter
+from io import BytesIO
 
+import matplotlib
+import numpy as np
+from asgiref.typing import HTTPResponseBodyEvent
 from django.db.models import Avg, Sum
 from django.shortcuts import render,redirect,get_object_or_404
+from matplotlib import pyplot as plt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
@@ -14,6 +20,7 @@ from manager_app.models import Event_Data
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 
+from django.shortcuts import render
 
 
 # Create your views here.
@@ -45,7 +52,7 @@ def Admin_Signup(request):
     else:
         if request.method == 'POST':
             username = request.POST.get('add_username')
-            first_name = request.POST.get('fist_name')
+            first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
             password = request.POST.get('password1')
             profile_img = request.FILES.get('profile_img')
@@ -271,6 +278,91 @@ class EventDataAPI(APIView):
 
 
 
+matplotlib.use('Agg')
+def plot_chart(request):
+    # Get all event data
+    event = Event_Data.objects.all()
+    total_event = Event_Data.objects.count()
+
+    # Collecting 'your_name' from Event_Data model
+    x = [i.your_name for i in event]
+
+    # Count how many events each person has done
+    event_counts = Counter(x)
+
+    # Create the plot
+    plt.figure(figsize=(8, 5))
+
+    # Get the unique names and their corresponding event counts
+    unique_names = list(event_counts.keys())
+    event_numbers = list(event_counts.values())
+
+    # Plot the bar chart
+    plt.bar(unique_names, event_numbers)
+
+    # Function to add labels on top of the bars showing the number of events
+    def addlabels(event_counts):
+        for i, count in enumerate(event_numbers):
+            plt.text(i, count + 0.1, str(count), ha='center', fontsize=10)
+
+    # Call the addlabels function
+    addlabels(event_counts)
+
+
+    plt.title(f" Total Events: {total_event}", fontsize=23, color='red', fontname='cambria')
+    plt.xlabel("Names")
+    plt.ylabel("Event Count")
+
+    # Rotate x-axis labels for better readability
+
+
+    # Add total event count in a text box on the plot
+    plt.text(0.5, max(event_numbers) * 1.05, f'Total Events: {total_event}', ha='center', fontsize=12, color='blue',
+             transform=plt.gca().transAxes)
+
+    plt.legend(["Total"])
+
+    # Save the plot to a BytesIO object
+    buffer = BytesIO()
+    plt.savefig(buffer, format='jpg')
+    buffer.seek(0)
+
+    # Close the plot to avoid memory issues when running multiple plots
+    plt.close()
+    # Return the image as an HttpResponse with the correct content type
+    return HttpResponse(buffer, content_type='image/jpg')
+
+
+
+def pie_chart(request):
+    event = Event_Data.objects.all()
+
+    # Collecting 'total_impact' and 'date' fields
+    impact = np.array([i.total_impact for i in event])
+    names = [i.date.strftime('%D') for i in event]  # Format dates to strings for better readability
+
+    # Create the pie chart
+    plt.figure(figsize=(8, 5))
+    plt.pie(impact, labels=names, autopct='%1.1f%%', )
+
+    # Set the title of the plot
+    plt.title('Impact Distribution by Event Date', fontsize=16, fontname='Cambria')
+
+    # Save the plot to a BytesIO object
+    buffer = BytesIO()
+    plt.savefig(buffer, format='jpg')
+    buffer.seek(0)
+
+    # Close the plot to avoid memory issues
+    plt.close()
+
+    # Return the image as an HTTP response
+    return HttpResponse(buffer, content_type='image/jpg')
+
+#
+# def line_chart(request):
+#     event = Event_Data.objects.all()
+#     event_date = np.array([i.date for i in event])
 
 
 
@@ -278,6 +370,13 @@ class EventDataAPI(APIView):
 
 
 
+
+
+
+
+
+def chart_js(request):
+    return render(request,'chart/bar.html')
 
 
     
