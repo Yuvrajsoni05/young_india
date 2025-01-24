@@ -110,7 +110,7 @@
               </div>
               <div class="mb-3">
                 <label for="role_yi" class="form-label">Role in Yi</label>
-                <select class="form-control" id="role_yis" name="role_yis" >
+                <select class="form-control" id="role_yi" name="role_yi" >
                   <option value="{{ i.role_yi }}">{{i.role_yi}}</option>
                   <option value="Vertical Chair">Vertical Chair</option>
                   <option value="Vertical Co-Chair">Vertical Co-Chair</option>
@@ -121,9 +121,9 @@
                 <input type="text" id="event_handle" class="form-control" value="{{ i.event_handle }}" name="event_handle" placeholder="Enter Event Handler Name">
             </div>
               <div class="mb-3">
-                <label for="project_vertical">Project Vertical</label>
+                <label for="project_vertical">Project Verticals</label>
                 <select class="form-control" id="project_verticals" name="project_verticals" >
-                    <option value="{{ i.project_vertical }}">{{i.project_vertical}}</option>
+                    <option value="{{ i.project_vertical }}" disabled selected>{{i.project_vertical}}</option>
                     <option value="Masoom">Masoom</option>
                     <option value="Road Safety">Road Safety</option>
                     <option value="Health">Health</option>
@@ -145,7 +145,7 @@
     
                      <div class="mb-3">
                       <label for="project_stakeholder">Project Stakeholder</label>
-                      <select class="form-control" id="project_stakeholders" name="project_stakeholders" required>
+                      <select class="form-control" id="project_stakeholder" name="project_stakeholder" required>
                           <option value="{{i.project_stakeholder}}" disabled selected>{{i.project_stakeholder}}</option>
                           <option value="Membership Engagement">Membership Engagement</option>
                           <option value="Yuva">Yuva</option>
@@ -160,7 +160,7 @@
 
               <div class="mb-3">
                 <label for="yi_pillar">YI Pillar Impact</label>
-                <select class="form-control" id="yi_pillars" name="yi_pillars" required>
+                <select class="form-control" id="yi_pillar" name="yi_pillar" required>
                     <option value="{{i.yi_pillar}}" disabled selected>{{i.yi_pillar}}</option>
                     <option value="Youth Leader">Youth Leader</option>
                     <option value="Thought Leader">Thought Leader</option>
@@ -172,14 +172,14 @@
 
               <div class="mb-3">
                 <label for="social_link">Social Link</label>
-                <input type="url" id="social_links" class="form-control" name="social_links" required value={{i.social_link}} placeholder="Enter your social media link">
+                <input type="url" id="social_link" class="form-control" name="social_link" required value={{i.social_link}} placeholder="Enter your social media link">
               </div>
 
 
 
               <div class="mb-3">
                 <label for="total_impact">Total Impact</label>
-                <input type="number" id="total_impacts" class="form-control" name="total_impacts" required placeholder="Enter total impact" value={{i.total_impact}}>
+                <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact" value={{i.total_impact}}>
               </div>
 
 

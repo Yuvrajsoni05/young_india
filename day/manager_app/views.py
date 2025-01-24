@@ -171,7 +171,7 @@ def update_event(request,event_id):
         update_event_data.your_name = request.POST['your_name']
         update_event_data.date = request.POST['date']
         update_event_data.role_yi = request.POST['role_yi']
-        update_event_data.project_vertical = request.POST['project_vertical']
+        update_event_data.project_vertical = request.POST['project_verticals']
         update_event_data.project_stakeholder = request.POST['project_stakeholder']
         update_event_data.yi_pillar = request.POST['yi_pillar']
         update_event_data.social_link = request.POST['social_link ']
