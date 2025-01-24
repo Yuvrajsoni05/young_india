@@ -8,12 +8,17 @@ urlpatterns = [
         path('manager-signup',manager_signup,name='manager-signup'),
         path('manager-dashboard',manager_dashboard,name='manager-dashboard'),
         path('manager-profile',manager_profile,name='manager-profile'),
-        path('manager-update/<int:manager_id>/',manager_update,name='manager-update'),
+        path('manager-update/<uuid:manager_id>/',manager_update,name='manager-update'),
         path('event-list',event_list,name='event-list'),
         path('event-delete/<int:events_id>/',delete_event_handler,name='delete-event-manager'),
+        path('event_update/<int:event_id>/',update_event,name='update-event-data'),
         path('event_data',event_data,name='event_data'),
         path('manager-logout',manager_logout,name='manager-logout'),
         path('manager-password',manager_password,name='manager-password'),
+        path('chart-dashboard',chart,name='chart-dashbaord'),
+        path('pie-chart',pie_chart,name='pie-chart-data'),
+        path('stackholder-chart',stackholder_chart,name='stackholder-chart'),
+        path('project-verticals-chart',project_chart,name='project-vertical-chart'),
         path('about_yi',about_yi,name='about_yi'),
 
 

@@ -367,18 +367,6 @@ def pie_chart(request):
 
 
 
-
-
-
-
-
-
-
-
-def chart_js(request):
-    return render(request,'chart/bar.html')
-
-
     
 
 

@@ -13,7 +13,7 @@ urlpatterns = [
     path('Admin-Signup',Admin_Signup,name='Admin_Signup'),
     path('Admin-Dashboard',Admin_Dashboard,name='Admin_Dashboard'),
     path('Admin-Profile',Admin_Profile,name='Admin_Profile'),
-    path('Admin-Update/<int:admin_id>/',Admin_update,name='Admin_Update'),
+    path('Admin-Update/<uuid:admin_id>/',Admin_update,name='Admin_Update'),
     path('Admin-Password',admin_password,name='Admin_Password'),
     path('Admin-Logout',admin_logout,name='Admin_Logout'),
     path('Event-List',Event_list,name='Event_List'),
@@ -23,14 +23,14 @@ urlpatterns = [
 
 
 
-    path('update-manager/<int:manager_id>/',update_manager,name='Update_Manager'),
+    path('update-manager/<uuid:manager_id>/',update_manager,name='Update_Manager'),
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
-    path('Handler-Delete/<int:handler_id>/',delete_handler,name='Handler-Delete'),
+    path('Handler-Delete/<uuid:handler_id>/',delete_handler,name='Handler-Delete'),
 
     path('plot/',plot_chart, name='plot_view'),
     path('pie',pie_chart,name='pie_chart'),
-    path('chart', chart_js, name='chart_js')
+    
 
 
 

@@ -59,7 +59,7 @@
                 <th>YI Pillar</th>
                 <th>Social Link</th>
                 <th>Impact</th>
-                <th>Action</th>
+                <th colspan="3" >Action</th>
             </tr>
         </thead>
         <tbody>
@@ -77,11 +77,143 @@
         <td><a href="{{ i.social_link }}">{{ i.social_link }}</a></td>
         <td>{{ i.total_impact }}</td>
 <td>
-    <form method="post" action="{% url 'delete-event-manager' events_id=i.id %}">
+    <form method="post" action="#">
          {% csrf_token %}
         <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
     </form>
-                </td>
+
+       </td>
+       <td>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ i.id }}">
+            <i class="bi bi-pencil-square"></i>
+        </button>
+    </td>
+                </tr>
+          <div class="modal fade" id="editModal{{ i.id }}" tabindex="-1" aria-labelledby="editModal{{ i.id }}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Event </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'update-event-data' event_id=i.id %}" >
+              {% csrf_token %}
+            
+              <div class="mb-3">
+                <label for="your_name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="your_name" name="your_name" value="{{ i.your_name}}" required>
+              </div>
+              <div class="mb-3">
+                <label for="date" class="form-label">Event Date</label>
+                <input type="Data" class="form-control" id="date" name="date" value="{{ i.date }}" >
+              </div>
+              <div class="mb-3">
+                <label for="role_yi" class="form-label">Role in Yi</label>
+                <select class="form-control" id="role_yis" name="role_yis" >
+                  <option value="{{ i.role_yi }}">{{i.role_yi}}</option>
+                  <option value="Vertical Chair">Vertical Chair</option>
+                  <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                  <option value="Team Member">Team Member</option>
+              </select>
+              <div class="form-group">
+                <label for="event_handle">Event Handle</label>
+                <input type="text" id="event_handle" class="form-control" value="{{ i.event_handle }}" name="event_handle" placeholder="Enter Event Handler Name">
+            </div>
+              <div class="mb-3">
+                <label for="project_vertical">Project Vertical</label>
+                <select class="form-control" id="project_verticals" name="project_verticals" >
+                    <option value="{{ i.project_vertical }}">{{i.project_vertical}}</option>
+                    <option value="Masoom">Masoom</option>
+                    <option value="Road Safety">Road Safety</option>
+                    <option value="Health">Health</option>
+                    <option value="Sport">Sports</option>
+                    <option value="Accessibility">Accessibility</option>
+                    <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                    <option value="Climate action">Climate action</option>
+                    <option value="Innovation">Innovation</option>
+                    <option value="Entrepreneurship">Entrepreneurship</option>
+                    <option value="Branding & PR">Branding & PR</option>
+                    <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                    <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                    <option value="Culture Connect">Culture Connect</option>
+                    <option value="Yi Angel">Yi Angel</option>
+                    <option value="Other">Other</option>
+                </select>
+              </div>
+    
+    
+                     <div class="mb-3">
+                      <label for="project_stakeholder">Project Stakeholder</label>
+                      <select class="form-control" id="project_stakeholders" name="project_stakeholders" required>
+                          <option value="{{i.project_stakeholder}}" disabled selected>{{i.project_stakeholder}}</option>
+                          <option value="Membership Engagement">Membership Engagement</option>
+                          <option value="Yuva">Yuva</option>
+                          <option value="Thalir">Thalir</option>
+                          <option value="Rural Initiatives">Rural Initiatives</option>
+                          <option value="General Public">General Public</option>
+                      </select>
+              </div>
+
+
+
+
+              <div class="mb-3">
+                <label for="yi_pillar">YI Pillar Impact</label>
+                <select class="form-control" id="yi_pillars" name="yi_pillars" required>
+                    <option value="{{i.yi_pillar}}" disabled selected>{{i.yi_pillar}}</option>
+                    <option value="Youth Leader">Youth Leader</option>
+                    <option value="Thought Leader">Thought Leader</option>
+                    <option value="Nation Building">Nation Building</option>
+                </select>
+              </div>
+
+              
+
+              <div class="mb-3">
+                <label for="social_link">Social Link</label>
+                <input type="url" id="social_links" class="form-control" name="social_links" required value={{i.social_link}} placeholder="Enter your social media link">
+              </div>
+
+
+
+              <div class="mb-3">
+                <label for="total_impact">Total Impact</label>
+                <input type="number" id="total_impacts" class="form-control" name="total_impacts" required placeholder="Enter total impact" value={{i.total_impact}}>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="sig_">Choose SIG</label>
+                <select class="form-control"  name="sig_">
+                    <option value="{{i.which_SIG}}" disabled selected>{{i.which_SIG}}</option>
+                    <option value="Active Living">Active Living</option>
+                    <option value="Photography">Photography</option>
+                    <option value="Trekking">Trekking</option>
+                    <option value="Entrepreneurship">Entrepreneurship</option>
+                    <option value="Community">Community</option>
+                </select>
+              </div>
+
+
+
+
+
+              <!-- Closing the form here -->
+    
+    
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+    
+    
+    
+              </form>
+    
+     </div>
+    </div>
+  </div>
             </tr>
          {% endfor %}
         </tbody>

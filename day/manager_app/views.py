@@ -6,7 +6,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout,update_session_auth_hash
 from admin_app.models import LoginSide
 from matplotlib import pyplot as plt
-
+import matplotlib
+import numpy as np
 from .models import Event_Data
 from  django.contrib.auth.decorators import login_required
 
@@ -162,6 +163,26 @@ def delete_event_handler(request,events_id):
 
 
 
+def update_event(request,event_id):
+    if request.user.login_role != 'Handler':
+        return redirect('Error-Page')
+    update_event_data = get_object_or_404(Event_Data,id=event_id)
+    if request.method == 'POST':
+        update_event_data.your_name = request.POST['your_name']
+        update_event_data.date = request.POST['date']
+        update_event_data.role_yi = request.POST['role_yi']
+        update_event_data.project_vertical = request.POST['project_vertical']
+        update_event_data.project_stakeholder = request.POST['project_stakeholder']
+        update_event_data.yi_pillar = request.POST['yi_pillar']
+        update_event_data.social_link = request.POST['social_link ']
+        update_event_data.which_SIG = request.POST['which_SIG']
+        update_event_data.event_handle = request.POST['event_handl']
+        update_event_data.total_impact= request.POST['total_impact']
+        update_event_data.save()
+    return redirect('event-list')
+
+
+
 @login_required(login_url='manager-login')
 def event_data(request):
     if request.user.login_role == 'Handler':
@@ -180,5 +201,102 @@ def event_data(request):
                                       project_stakeholder=project_stakeholder,yi_pillar=yi_pillar,social_link=social_link,total_impact=total_impact,user=request.user)
             return  redirect('event-list')
 
+from django.db.models import Avg, Sum
+
+def chart(request):
+    if request.user.login_role != 'Handler':
+        return redirect('Error-Page')
+    user = request.user
+    # user_data  = Event_Data.objects.filter(user=user)
+
+    total_event = Event_Data.objects.filter(user=user).count()
+
+
+    total_impact_data =  Event_Data.objects.filter(user=user).aggregate(Sum('total_impact'))
+    total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
+
+    context = {  'total_event':total_event,
+               'total_impact':total_impact   }
+
+    return render(request,'chart/chart.html',context)
+
+
+matplotlib.use('Agg')
+
+def pie_chart(request):
+
+
+    user = request.user
+    user_data = Event_Data.objects.filter(user=user)
+    
+
+
+    impact = np.array([i.total_impact for i in user_data])
+    date = [i.project_vertical for i in user_data]
+
+
+    plt.figure(figsize=(8,5))
+    plt.pie(impact,labels=date,autopct='%1.1f%%',)
+    plt.title("Project Verticals  ",fontsize=12,fontname='Cambria')
+
+
+    buffer =BytesIO()
+    plt.savefig(buffer,format='jpg')
+    buffer.seek(0)
+
+
+    plt.close()
+
+    return HttpResponse(buffer,content_type='image/jpg')
+
+
+
+def stackholder_chart(request):
+    user = request.user
+    user_data = Event_Data.objects.filter(user=user)
+
+    impact = np.array([i.total_impact for i in user_data])
+    stake_holder = [i.project_stakeholder for i in user_data]
+
+    plt.figure(figsize=(8,5))
+    plt.pie(impact,labels=stake_holder,autopct='%1.1f%%')
+    plt.title("Stackeholder wise Impact",fontsize=12,fontname='Cambria')
+
+
+    buffer = BytesIO()
+    plt.savefig(buffer,format='jpg')
+    buffer.seek(0)
+
+    plt.close()
+
+    return HttpResponse(buffer,content_type='image/jpg') 
+
+
+
+def project_chart(request):
+    user = request.user
+    user_data = Event_Data.objects.filter(user=user)
+    x = [i.project_vertical for i in user_data]
+    y = [i.total_impact for i in user_data]
+
+
+    total_impact = sum(y)
+    plt.figure(figsize=(20,5))
+
+
+    bar = plt.bar(x,y)
+    plt.bar_label(bar, labels=[f'{value}' for value in y])
+    plt.title("Project Wise Impact",fontname='Cambria',fontsize=20)
+    plt.xlabel("Project Verticals",fontname='Cambria',)
+    plt.ylabel("Impact",fontname='Cambria')
+
+    
+
+    buffer = BytesIO()
+    plt.savefig(buffer,format='jpg')
+    buffer.seek(0)
+
+    plt.close()
+    return HttpResponse(buffer,content_type='image/jpg')
 
 
