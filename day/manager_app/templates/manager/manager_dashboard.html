@@ -6,55 +6,10 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard</title>
+  <title>Add Event</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
-  <style>
-
-.main {
-  min-height: 100vh; /* Ensure the main content area takes at least the full viewport height */
-  display: flex;
-  flex-direction: column;
-}
-
-.container {
-  flex: 1;
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-
-.card {
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-form .form-group {
-  margin-bottom: 1.5rem;
-}
-
-button[type="submit"] {
-
-  font-size: 1.1rem;
-}
-
-@media (max-width: 768px) {
-  .card {
-    padding: 20px;
-  }
-  .row .col-md-6 {
-    margin-bottom: 10px;
-  }
-}
-
-
-  </style>
 
   <!-- Favicons -->
 <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
@@ -221,16 +176,7 @@ button[type="submit"] {
         </div>
       </div>
     </div>
-      {% if messages %}
-  <div class="container">
-    {% for message in messages %}
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
+
 
 
   </main><!-- End #main -->

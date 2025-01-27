@@ -6,7 +6,7 @@ from admin_app.models import LoginSide
 class Event_Data(models.Model):
     user = models.ForeignKey(LoginSide, on_delete=models.SET_NULL, null=True, default='1')
     your_name = models.CharField(max_length=50)
-    date = models.DateField()
+    date = models.CharField(max_length=200)
     role_yi = models.CharField(max_length=200)
     project_vertical = models.CharField(max_length=200)
     project_stakeholder = models.CharField(max_length=200)

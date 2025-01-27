@@ -25,7 +25,7 @@ def manager_login(request):
             return redirect('manager-dashboard')
         else:
             messages.error(request,"Incorrect Username Password")
-            return redirect('Error-Page')
+            return redirect('index')
     return render(request,'index.html')
 
 
@@ -67,7 +67,9 @@ def manager_signup(request):
                                                      email=manager_email,
                                                      phone_number=phone,
                                                      login_role="Handler")
+
         manager_user.save()
+        messages.success(request,'New Manager Created')
 
         return redirect('Admin_Dashboard')
     return render(request,'manager/manager_signup.html')
@@ -96,7 +98,10 @@ def manager_update(request,manager_id):
             if 'manager_profile_img' in request.FILES:
                 manager_profile.photo = request.FILES['manager_profile_img']
             manager_profile.save()
-        return redirect('manager-profile')
+            messages.success(request,'Profile Updated')
+        else:
+            messages.error(request,'Profile Not updated')
+            return redirect('manager-profile')
     return render(request,'manager/manager_profile.html')
 
 @login_required(login_url='manager-login')
@@ -121,6 +126,7 @@ def manager_password(request):
                 return redirect('manager-profile')
             manager_user.set_password(new_password)
             manager_user.save()
+            messages.success(request,'Password Updated')
             update_session_auth_hash(request,manager_user)
             return redirect('manager-profile')
 
@@ -152,7 +158,7 @@ def event_list(request):
 
 
 
-def delete_event_handler(request,events_id):
+def delete_event_user(request,events_id):
     if request.user.login_role != 'Handler':
         return redirect('Error-Page')
     if request.method == 'POST':
@@ -162,24 +168,55 @@ def delete_event_handler(request,events_id):
     return redirect('event-list')
 
 
-
-def update_event(request,event_id):
+def update_event_data(request,update_id):
     if request.user.login_role != 'Handler':
-        return redirect('Error-Page')
-    update_event_data = get_object_or_404(Event_Data,id=event_id)
-    if request.method == 'POST':
-        update_event_data.your_name = request.POST['your_name']
-        update_event_data.date = request.POST['date']
-        update_event_data.role_yi = request.POST['role_yi']
-        update_event_data.project_vertical = request.POST['project_verticals']
-        update_event_data.project_stakeholder = request.POST['project_stakeholder']
-        update_event_data.yi_pillar = request.POST['yi_pillar']
-        update_event_data.social_link = request.POST['social_link ']
-        update_event_data.which_SIG = request.POST['which_SIG']
-        update_event_data.event_handle = request.POST['event_handl']
-        update_event_data.total_impact= request.POST['total_impact']
-        update_event_data.save()
-    return redirect('event-list')
+        return redirect('Error-page')
+
+    else:
+        if request.user.login_role == "Handler":
+            update_event = get_object_or_404(Event_Data,id = update_id)
+
+            update_event.date = request.POST['event_date']
+            update_event.role_yi = request.POST['role_yi']
+            update_event.project_vertical = request.POST['project_verticals']
+            update_event.project_stakeholder = request.POST['project_stakeholder']
+            update_event.yi_pillar = request.POST['yi_pillar']
+            update_event.social_link = request.POST['social_link']
+            update_event.event_handle = request.POST['event_handle']
+            update_event.total_impact = request.POST['total_impact']
+            update_event.save()
+            messages.success(request,'Data update')
+            return redirect('event-list')
+        else:
+            messages.error(request,'Data not update')
+
+
+
+
+
+
+
+# def update_event(request,event_id):
+#     if request.user.login_role != 'Handler':
+#         return redirect('Error-Page')
+#     update_event_data = get_object_or_404(Event_Data,id=event_id)
+#     if request.method == 'POST':
+#         update_event_data.your_name = request.POST['your_name']
+#         update_event_data.date = request.POST['date']
+#         update_event_data.role_yi = request.POST['role_yi']
+#         update_event_data.project_vertical = request.POST['project_verticals']
+#         update_event_data.project_stakeholder = request.POST['project_stakeholder']
+#         update_event_data.yi_pillar = request.POST['yi_pillar']
+#         update_event_data.social_link = request.POST['social_link ']
+#         update_event_data.which_SIG = request.POST['which_SIG']
+#         update_event_data.event_handle = request.POST['event_handl']
+#         update_event_data.total_impact= request.POST['total_impact']
+#         update_event_data.save()
+#     return redirect('event-list')
+
+
+# def delete_event(request):
+
 
 
 

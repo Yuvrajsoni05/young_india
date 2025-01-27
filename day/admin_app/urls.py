@@ -22,15 +22,16 @@ urlpatterns = [
     path('Error',error_page,name='Error-Page'),
 
 
-
+    path('update-event-data/<int:event_id>/',update_event_data,name='Update_event_data'),
     path('update-manager/<uuid:manager_id>/',update_manager,name='Update_Manager'),
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
     path('Handler-Delete/<uuid:handler_id>/',delete_handler,name='Handler-Delete'),
 
+
     path('plot/',plot_chart, name='plot_view'),
-    path('pie',pie_chart,name='pie_chart'),
-    
+    # path('pie',pie_chart,name='pie_chart'),
+    path('chart',admin_chart,name='admin_chart'),
 
 
 

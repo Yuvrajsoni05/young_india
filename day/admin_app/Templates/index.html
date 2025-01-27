@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
   <link rel="stylesheet" href="{% static 'css/index.css' %}">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
    <div id="container" class="container">
@@ -107,6 +107,18 @@
 		</div>
 		<!-- END CONTENT SECTION -->
 	</div>
+{% if messages %}
+                  <script>
+    {% for message in messages %}
+        Swal.fire({
+            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+            text: "{{ message }}",
+            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+            confirmButtonText: 'OK'
+        });
+    {% endfor %}
+</script>
+{% endif %}
 
     <!-- Bootstrap JS -->
   <script src="{% static 'js/index.js' %}"></script>

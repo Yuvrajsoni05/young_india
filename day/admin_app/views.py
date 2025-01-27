@@ -32,6 +32,7 @@ def index(request):
 
 
 def Admin_Login(request):
+
     if request.method == 'POST':
         username = request.POST.get('admin_username')
         password = request.POST.get('admin_password')
@@ -41,7 +42,7 @@ def Admin_Login(request):
             return redirect('Admin_Dashboard')
         else:
             messages.error(request,"Invalid Username or Password")
-            return redirect('Error-Page')
+            return redirect('index')
 
     return render(request,'index.html')
 
@@ -75,6 +76,7 @@ def Admin_Signup(request):
 
             Admin_User = LoginSide.objects.create_user(username=username,first_name=first_name,last_name=last_name,photo=profile_img,password=password,email=Admin_email,login_role="Admin",phone_number=phone)
             Admin_User.save()
+            messages.success(request,"Admin Created")
 
             return redirect('Admin_Dashboard')
     return render(request,'Admin/AdminSignup.html')
@@ -105,7 +107,10 @@ def Admin_update(request,admin_id):
                 if 'admin_profile_img' in request.FILES:
                     admin_profile.photo = request.FILES['admin_profile_img']
                 admin_profile.save()
+                messages.success(request,'Profile Updated')
                 return redirect('Admin_Profile')
+            else:
+                messages.error(request,'Profile not Updated')
     # return render(request,'Admin/Admin_Profile.html')
 
 
@@ -131,6 +136,7 @@ def admin_password(request):
 
             admin_user.set_password(new_password)
             admin_user.save()
+            messages.success(request,'Password Updated ')
             update_session_auth_hash(request,admin_user)
             return redirect('Admin_Profile')
         else:
@@ -140,7 +146,7 @@ def admin_password(request):
 @login_required(login_url='Admin_Login')
 def admin_logout(request):
     logout(request)
-    return redirect('Admin_Login')
+    return redirect('index')
 
 
 @login_required(login_url='Admin_Login')
@@ -238,7 +244,6 @@ def delete_event(request,event_id):
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=event_id)
         delete_events.delete()
-
     return redirect('Event_List')
 
 
@@ -259,14 +264,24 @@ def update_manager(request,manager_id):
     return redirect('View-manager')
 
 
-def Email_side(request):
-    return render(request,'Admin/Mail/mail.html')
 
+def update_event_data(request,event_id):
+    if request.user.login_role != 'Admin':
+        return redirect('Error-Page')
+    else:
+        if request.user.login_role == "Admin":
+            update_event = get_object_or_404(Event_Data, id=event_id)
 
-
-
-
-
+            update_event.date = request.POST['event_date']
+            update_event.role_yi = request.POST['role_yi']
+            update_event.project_vertical = request.POST['project_verticals']
+            update_event.project_stakeholder = request.POST['project_stakeholder']
+            update_event.yi_pillar = request.POST['yi_pillar']
+            update_event.social_link = request.POST['social_link']
+            update_event.event_handle = request.POST['event_handle']
+            update_event.total_impact = request.POST['total_impact']
+            update_event.save()
+            return redirect('Event_List')
 
 
 @method_decorator(login_required(login_url='Admin_Login'),name='get')
@@ -334,37 +349,46 @@ def plot_chart(request):
 
 
 
-def pie_chart(request):
-    event = Event_Data.objects.all()
-
-    # Collecting 'total_impact' and 'date' fields
-    impact = np.array([i.total_impact for i in event])
-    names = [i.date.strftime('%D') for i in event]  # Format dates to strings for better readability
-
-    # Create the pie chart
-    plt.figure(figsize=(8, 5))
-    plt.pie(impact, labels=names, autopct='%1.1f%%', )
-
-    # Set the title of the plot
-    plt.title('Impact Distribution by Event Date', fontsize=16, fontname='Cambria')
-
-    # Save the plot to a BytesIO object
-    buffer = BytesIO()
-    plt.savefig(buffer, format='jpg')
-    buffer.seek(0)
-
-    # Close the plot to avoid memory issues
-    plt.close()
-
-    # Return the image as an HTTP response
-    return HttpResponse(buffer, content_type='image/jpg')
-
-#
-# def line_chart(request):
+# def pie_chart(request):
 #     event = Event_Data.objects.all()
-#     event_date = np.array([i.date for i in event])
+#
+#     # Collecting 'total_impact' and 'date' fields
+#     impact = np.array([i.total_impact for i in event])
+#     names = [i.date.strftime('%D') for i in event]  # Format dates to strings for better readability
+#
+#     # Create the pie chart
+#     plt.figure(figsize=(8, 5))
+#     plt.pie(impact, labels=names, autopct='%1.1f%%', )
+#
+#     # Set the title of the plot
+#     plt.title('Impact Distribution by Event Date', fontsize=16, fontname='Cambria')
+#
+#     # Save the plot to a BytesIO object
+#     buffer = BytesIO()
+#     plt.savefig(buffer, format='jpg')
+#     buffer.seek(0)
+#
+#     # Close the plot to avoid memory issues
+#     plt.close()
+#
+#     # Return the image as an HTTP response
+#     return HttpResponse(buffer, content_type='image/jpg')
+#
+# #
+# # def line_chart(request):
+# #     event = Event_Data.objects.all()
+# #     event_date = np.array([i.date for i in event])
 
+def admin_chart(request):
+    event_data = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+    # event_impact = Event_Data.objects.all().values_list('total_impact',flat=True).annotate(Sum('total_impact'))
+    event_impact_by_name = Event_Data.objects.values('your_name').annotate(total_impact=Sum('total_impact')).order_by('your_name')
+    context = {
+        'name': event_data,
+        'impact_data':event_impact_by_name
 
+    }
+    return render(request, 'Admin/chart/admin_chart.html', context)
 
 
     

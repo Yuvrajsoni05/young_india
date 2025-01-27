@@ -1,9 +1,20 @@
+{% load static %}
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'manager-dashboard' %}">
+
+
+          <h2>{{user.first_name}} {{user.last_name}}</h2>
+
+      </li>
+
+
+
+      <li class="nav-item">
+
+           <a class="nav-link " href="{% url 'chart-dashbaord' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -20,9 +31,9 @@
 
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'chart-dashbaord' %}">
+     <a class="nav-link " href="{% url 'manager-dashboard' %}">
           <i class="bi bi-clipboard-data-fill"></i>
-          <span>Chart</span>
+          <span>Add Event</span>
         </a>
       </li>
 

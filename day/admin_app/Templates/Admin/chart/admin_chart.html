@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
+    <title>Admin Chart</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i|Calibri" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+  {% include 'Admin/components/header.html' %}
+  <!-- ======= Sidebar ======= -->
+  {% include 'Admin/components/side_navbar.html' %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Admin Chart</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item">Admin</li>
+          <li class="breadcrumb-item active">Admin Chart</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+<div>
+  <canvas id="polarchart"></canvas>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  </main><!-- End #main -->
+
+  <!-- Vendor JS Files -->
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in name %}"{{ item }}",{% endfor %}],
+            datasets: [{
+                label: 'Name wise Impact',
+                data: [{% for item in impact_data %}{{ item.total_impact }},{% endfor %}],
+   backgroundColor: [
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(201, 203, 207, 0.2)'
+    ],
+                 borderColor: [
+      'rgb(54, 162, 235)',
+      'rgb(255, 159, 64)',
+      'rgb(255, 205, 86)',
+      'rgb(75, 192, 192)',
+      'rgb(54, 162, 235)',
+      'rgb(153, 102, 255)',
+      'rgb(201, 203, 207)'
+    ],
+                borderWidth: 1
+
+
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+  <script>
+  const ctxPolar = document.getElementById('polarchart');
+
+  new Chart(ctxPolar, {
+    type: 'polarArea',
+    data: {
+      labels: [
+        [{% for item in name %}"{{ item }}",{% endfor %}],
+      ],
+      datasets: [{
+        label: 'My First Dataset',
+        data: [{% for item in impact_data %}{{ item.total_impact }},{% endfor %}],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(75, 192, 192)',
+          'rgb(255, 205, 86)',
+          'rgb(201, 203, 207)',
+          'rgb(54, 162, 235)'
+        ]
+      }]
+    }
+  });
+</script>
+
+
+
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>
+
+
+
+

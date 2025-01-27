@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 
 import os
-
 from pathlib import Path
 
 from django.conf.global_settings import STATICFILES_DIRS, MEDIA_ROOT
@@ -42,8 +41,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-
-
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -142,10 +139,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Email backend
-EMAIL_HOST = 'smtp.gmail.com'  # Example SMTP server
-EMAIL_PORT = 587  # Port for Gmail SMTP
-EMAIL_USE_TLS = True  # Use TLS encryption
-EMAIL_HOST_USER = 'soniyuvraj9499@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'yuvi949978_'  # Your email password
-DEFAULT_FROM_EMAIL = 'soniyuvraj9499@gmail.com'  # Set this to the same as your email
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Email backend
+# EMAIL_HOST = 'smtp.gmail.com'  # Example SMTP server
+# EMAIL_PORT = 587  # Port for Gmail SMTP
+# EMAIL_USE_TLS = True  # Use TLS encryption
+# EMAIL_HOST_USER = 'soniyuvraj9499@gmail.com'  # Your email address
+# EMAIL_HOST_PASSWORD = 'yuvi949978_'  # Your email password
+# DEFAULT_FROM_EMAIL = 'soniyuvraj9499@gmail.com'  # Set this to the same as your email

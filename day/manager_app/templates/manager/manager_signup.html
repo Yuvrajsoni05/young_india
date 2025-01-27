@@ -9,7 +9,7 @@
   <title>Dashboard</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
 
 .main {
@@ -168,19 +168,29 @@ button[type="submit"] {
 
             <button type="submit" class="btn btn-primary btn-block">Add Manager</button>
           </form>
+
+
+
+
         </div>
       </div>
     </div>
-      {% if messages %}
-  <div class="container">
+
+
+
+    {% if messages %}
+                  <script>
     {% for message in messages %}
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+        Swal.fire({
+            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+            text: "{{ message }}",
+            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+            confirmButtonText: 'OK'
+        });
     {% endfor %}
-  </div>
+</script>
 {% endif %}
+
 
 
   </main><!-- End #main -->
