@@ -154,7 +154,7 @@ def Admin_Dashboard(request):
     if request.user.login_role != 'Admin':
         return redirect('Error-Page')
     total_event = Event_Data.objects.count()
-    total_user_data = LoginSide.objects.filter(login_role='Handler')
+    total_user_data = LoginSide.objects.filter(login_role='Manager')
     total_user = total_user_data.count()
 
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
@@ -174,11 +174,18 @@ def Admin_Dashboard(request):
 def Event_list(request):
     if request.user.login_role != 'Admin':
         return redirect('Error-Page')
-    event_list = Event_Data.objects.all()
+    manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+
+    search = request.GET.get('search')
+    if search and search != 'all':
+        event_list = Event_Data.objects.filter(your_name=search)
+    else:
+        event_list = Event_Data.objects.all()
     context = {
-        'events' : event_list
+        'events': event_list,
+        'm1': manager_name,
     }
-    return render(request,'Admin/event_list.html',context)
+    return render(request, 'Admin/event_list.html', context)
 
 
 
@@ -219,7 +226,7 @@ def download_excel(request):
 def manager_list(request):
     if request.user.login_role != 'Admin':
         return redirect('Error-Page')
-    manager = LoginSide.objects.filter(login_role='Handler')
+    manager = LoginSide.objects.filter(login_role='Manager')
     contex = {
         'managers' :manager
     }
@@ -261,6 +268,10 @@ def update_manager(request,manager_id):
         if 'manager_profile_img' in request.FILES:
             update_manager_data.photo = request.FILES['manager_profile_img']
         update_manager_data.save()
+        messages.success(request, 'Manager profile  Updated')
+
+    else:
+        messages.error(request,'Manager profile not Updated')
     return redirect('View-manager')
 
 
@@ -281,7 +292,12 @@ def update_event_data(request,event_id):
             update_event.event_handle = request.POST['event_handle']
             update_event.total_impact = request.POST['total_impact']
             update_event.save()
+            messages.success(request,'Event Updated')
             return redirect('Event_List')
+        else:
+            messages.error(request,'Event not updated')
+            return redirect('Event_List')
+
 
 
 @method_decorator(login_required(login_url='Admin_Login'),name='get')
@@ -293,59 +309,59 @@ class EventDataAPI(APIView):
 
 
 
-matplotlib.use('Agg')
-def plot_chart(request):
-    # Get all event data
-    event = Event_Data.objects.all()
-    total_event = Event_Data.objects.count()
-
-    # Collecting 'your_name' from Event_Data model
-    x = [i.your_name for i in event]
-
-    # Count how many events each person has done
-    event_counts = Counter(x)
-
-    # Create the plot
-    plt.figure(figsize=(8, 5))
-
-    # Get the unique names and their corresponding event counts
-    unique_names = list(event_counts.keys())
-    event_numbers = list(event_counts.values())
-
-    # Plot the bar chart
-    plt.bar(unique_names, event_numbers)
-
-    # Function to add labels on top of the bars showing the number of events
-    def addlabels(event_counts):
-        for i, count in enumerate(event_numbers):
-            plt.text(i, count + 0.1, str(count), ha='center', fontsize=10)
-
-    # Call the addlabels function
-    addlabels(event_counts)
-
-
-    plt.title(f" Total Events: {total_event}", fontsize=23, color='red', fontname='cambria')
-    plt.xlabel("Names")
-    plt.ylabel("Event Count")
-
-    # Rotate x-axis labels for better readability
-
-
-    # Add total event count in a text box on the plot
-    plt.text(0.5, max(event_numbers) * 1.05, f'Total Events: {total_event}', ha='center', fontsize=12, color='blue',
-             transform=plt.gca().transAxes)
-
-    plt.legend(["Total"])
-
-    # Save the plot to a BytesIO object
-    buffer = BytesIO()
-    plt.savefig(buffer, format='jpg')
-    buffer.seek(0)
-
-    # Close the plot to avoid memory issues when running multiple plots
-    plt.close()
-    # Return the image as an HttpResponse with the correct content type
-    return HttpResponse(buffer, content_type='image/jpg')
+# matplotlib.use('Agg')
+# def plot_chart(request):
+#     # Get all event data
+#     event = Event_Data.objects.all()
+#     total_event = Event_Data.objects.count()
+#
+#     # Collecting 'your_name' from Event_Data model
+#     x = [i.your_name for i in event]
+#
+#     # Count how many events each person has done
+#     event_counts = Counter(x)
+#
+#     # Create the plot
+#     plt.figure(figsize=(8, 5))
+#
+#     # Get the unique names and their corresponding event counts
+#     unique_names = list(event_counts.keys())
+#     event_numbers = list(event_counts.values())
+#
+#     # Plot the bar chart
+#     plt.bar(unique_names, event_numbers)
+#
+#     # Function to add labels on top of the bars showing the number of events
+#     def addlabels(event_counts):
+#         for i, count in enumerate(event_numbers):
+#             plt.text(i, count + 0.1, str(count), ha='center', fontsize=10)
+#
+#     # Call the addlabels function
+#     addlabels(event_counts)
+#
+#
+#     plt.title(f" Total Events: {total_event}", fontsize=23, color='red', fontname='cambria')
+#     plt.xlabel("Names")
+#     plt.ylabel("Event Count")
+#
+#     # Rotate x-axis labels for better readability
+#
+#
+#     # Add total event count in a text box on the plot
+#     plt.text(0.5, max(event_numbers) * 1.05, f'Total Events: {total_event}', ha='center', fontsize=12, color='blue',
+#              transform=plt.gca().transAxes)
+#
+#     plt.legend(["Total"])
+#
+#     # Save the plot to a BytesIO object
+#     buffer = BytesIO()
+#     plt.savefig(buffer, format='jpg')
+#     buffer.seek(0)
+#
+#     # Close the plot to avoid memory issues when running multiple plots
+#     plt.close()
+#     # Return the image as an HttpResponse with the correct content type
+#     return HttpResponse(buffer, content_type='image/jpg')
 
 
 

@@ -20,7 +20,7 @@ def manager_login(request):
         username = request.POST.get('manager_username')
         password = request.POST.get('manager_password')
         manager_user = authenticate(request,username=username,password=password)
-        if manager_user is not None and manager_user.login_role == 'Handler':
+        if manager_user is not None and manager_user.login_role == 'Manager':
             login(request,manager_user)
             return redirect('manager-dashboard')
         else:
@@ -49,8 +49,9 @@ def manager_signup(request):
             messages.error(request, "Phone number must be 10 digits.")
             return render(request,'manager/manager_signup.html')
 
-        if len(password) < 6:
-            messages.error(request, "Password must be 6 digit")
+        if len(password) < 6 :
+
+            messages.error(request, "Password must be 6 digit and one uppercase")
             return render(request,'manager/manager_signup.html')
 
 
@@ -66,12 +67,10 @@ def manager_signup(request):
                                                      password=password,
                                                      email=manager_email,
                                                      phone_number=phone,
-                                                     login_role="Handler")
-
+                                                     login_role="Manager")
         manager_user.save()
-        messages.success(request,'New Manager Created')
-
-        return redirect('Admin_Dashboard')
+        messages.success(request, 'New Manager Created')
+        return redirect('manager-signup')
     return render(request,'manager/manager_signup.html')
 
 @login_required(login_url='manager-login')
@@ -87,7 +86,7 @@ def about_yi(request):
 
 @login_required(login_url='manager-login')
 def manager_update(request,manager_id):
-    if request.user.login_role == "Handler":
+    if request.user.login_role == "Manager":
         if request.method == 'POST':
             manager_profile = get_object_or_404(LoginSide, id=manager_id)
             manager_profile.first_name = request.POST['manager_first_name']
@@ -99,6 +98,7 @@ def manager_update(request,manager_id):
                 manager_profile.photo = request.FILES['manager_profile_img']
             manager_profile.save()
             messages.success(request,'Profile Updated')
+            return redirect('manager-profile')
         else:
             messages.error(request,'Profile Not updated')
             return redirect('manager-profile')
@@ -106,7 +106,7 @@ def manager_update(request,manager_id):
 
 @login_required(login_url='manager-login')
 def manager_password(request):
-    if request.user.login_role == "Handler":
+    if request.user.login_role == "Manager":
         if request.method == 'POST':
             old_password = request.POST.get('old_password')
             new_password = request.POST.get('new_password')
@@ -129,24 +129,27 @@ def manager_password(request):
             messages.success(request,'Password Updated')
             update_session_auth_hash(request,manager_user)
             return redirect('manager-profile')
+        else:
+            messages.error(request,'Manager not Created')
+            return redirect('manager-profile')
 
 @login_required(login_url='manager-login')
 def manager_dashboard(request):
-    if request.user.login_role != 'Handler':
+    if request.user.login_role != 'Manager':
         return redirect('Error-Page')
     return render(request,'manager/manager_dashboard.html')
 
 @login_required(login_url='manager-login')
 def manager_profile(request):
-    if request.user.login_role != 'Handler':
+    if request.user.login_role != 'Manager':
         return redirect('Error-Page')
 
     return render(request,'manager/manager_profile.html')
 
 @login_required(login_url='manager-login')
 def event_list(request):
-    # Ensure the user has the 'Handler' role
-    if request.user.login_role != 'Handler':
+    # Ensure the user has the 'Manager' role
+    if request.user.login_role != 'Manager':
         return redirect('manager-profile')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
@@ -159,21 +162,19 @@ def event_list(request):
 
 
 def delete_event_user(request,events_id):
-    if request.user.login_role != 'Handler':
+    if request.user.login_role != 'Manager':
         return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=events_id)
         delete_events.delete()
-
     return redirect('event-list')
 
 
 def update_event_data(request,update_id):
-    if request.user.login_role != 'Handler':
+    if request.user.login_role != 'Manager':
         return redirect('Error-page')
-
     else:
-        if request.user.login_role == "Handler":
+        if request.user.login_role == "Manager":
             update_event = get_object_or_404(Event_Data,id = update_id)
 
             update_event.date = request.POST['event_date']
@@ -197,7 +198,7 @@ def update_event_data(request,update_id):
 
 
 # def update_event(request,event_id):
-#     if request.user.login_role != 'Handler':
+#     if request.user.login_role != 'Manager':
 #         return redirect('Error-Page')
 #     update_event_data = get_object_or_404(Event_Data,id=event_id)
 #     if request.method == 'POST':
@@ -222,7 +223,7 @@ def update_event_data(request,update_id):
 
 @login_required(login_url='manager-login')
 def event_data(request):
-    if request.user.login_role == 'Handler':
+    if request.user.login_role == 'Manager':
         if request.method == 'POST':
             your_name = request.POST['your_name']
             event_date = request.POST['event_date']
@@ -241,19 +242,33 @@ def event_data(request):
 from django.db.models import Avg, Sum
 
 def chart(request):
-    if request.user.login_role != 'Handler':
+    if request.user.login_role != 'Manager':
         return redirect('Error-Page')
+
     user = request.user
-    # user_data  = Event_Data.objects.filter(user=user)
-
+    all_event = Event_Data.objects.filter(user=user)
     total_event = Event_Data.objects.filter(user=user).count()
-
-
     total_impact_data =  Event_Data.objects.filter(user=user).aggregate(Sum('total_impact'))
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
+    event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
+    # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
+    event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
+    # Map event names to their corresponding total impact
+    event_impact_dict = {item['project_vertical']: item['total_impact'] for item in event_impact}
+
+    # Adjust event_impact to reflect the correct order of event_name
+    aligned_event_impact = [event_impact_dict.get(event, 0) for event in event_name]
+
+    # print(event_name)
+    # print(event_impact)
 
     context = {  'total_event':total_event,
-               'total_impact':total_impact   }
+               'total_impact':total_impact,
+                 'event_name': event_name,
+                 'impact':aligned_event_impact,
+
+
+                 }
 
     return render(request,'chart/chart.html',context)
 

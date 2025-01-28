@@ -65,7 +65,7 @@ button[type="submit"] {
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
       <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
@@ -168,16 +168,6 @@ button[type="submit"] {
 
             <button type="submit" class="btn btn-primary btn-block">Add Manager</button>
           </form>
-
-
-
-
-        </div>
-      </div>
-    </div>
-
-
-
     {% if messages %}
                   <script>
     {% for message in messages %}
@@ -190,6 +180,13 @@ button[type="submit"] {
     {% endfor %}
 </script>
 {% endif %}
+
+
+        </div>
+      </div>
+    </div>
+
+
 
 
 

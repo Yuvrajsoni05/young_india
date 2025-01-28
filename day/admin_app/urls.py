@@ -29,7 +29,7 @@ urlpatterns = [
     path('Handler-Delete/<uuid:handler_id>/',delete_handler,name='Handler-Delete'),
 
 
-    path('plot/',plot_chart, name='plot_view'),
+    # path('plot/',plot_chart, name='plot_view'),
     # path('pie',pie_chart,name='pie_chart'),
     path('chart',admin_chart,name='admin_chart'),
 

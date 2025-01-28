@@ -14,10 +14,7 @@
     <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
     <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
-
-    <!-- DataTables CSS (from CDN) -->
-    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Template Main CSS File -->
     <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -27,13 +24,12 @@
 <body>
 
   {% include 'Admin/components/header.html' %}
-
   {% include 'Admin/components/side_navbar.html' %}
 
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Add Event Data</h1>
+      <h1>Event List</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
@@ -45,160 +41,162 @@
 
     <!-- Table for Event Data -->
     <div class="table-responsive">
+   <form method="get" action="{% url 'Event_List' %}" id="managerFilterForm">
+   <div class="form-group" style="width:250px;">
+        <select class="form-control" id="search" name="search" required onchange="this.form.submit()">  <!-- Trigger form submit on change -->
+            <option value="" disabled selected>Choose by Manager</option>
+            <option value="all"> All </option>
+            {% for i in m1 %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
 
+        <table class="table table-striped" style="width:100%">
+            <thead>
+                <tr class="text-nowrap" align="center">
+                    <th>Sr.no</th>
+                    <th>Date</th>
+                    <th>Manager Name</th>
+                    <th>Role YI</th>
+                    <th>Handle By</th>
+                    <th>Project Verticals</th>
+                    <th>Project Stakeholder</th>
+                    <th>SIG</th>
+                    <th>YI Pillar</th>
+                    <th>Social Link</th>
+                    <th>Impact</th>
+                    <th colspan="2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr class="text-nowrap"  align="center">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ event.date }}</td>
+                    <td>{{ event.your_name }}</td>
+                    <td>{{ event.role_yi }}</td>
+                    <td>{{ event.event_handle }}</td>
+                    <td>{{ event.project_vertical }}</td>
+                    <td>{{ event.project_stakeholder }}</td>
+                    <td>{{ event.which_SIG }}</td>
+                    <td>{{ event.yi_pillar }}</td>
+                    <td><a href="{{ event.social_link }}" ><i class="bi bi-box-arrow-up-right"></i></a></td>
+                    <td>{{ event.total_impact }}</td>
 
-            <div style="margin-top:10px;">
+                    <td>
+                        <form method="post" action="{% url 'delete_event' event_id=event.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                    <td>
+                        <!-- Button to trigger modal -->
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                    </td>
+                </tr>
 
-
-
-                <table  class="table table-striped table-bordered" style="width:100%">
-                    <thead>
-                        <tr class="text-nowrap" align="center">
-
-                            <th>Sr.no</th>
-                            <th>Date</th>
-                            <th>Manager Name</th>
-                            <th>Role YI</th>
-                            <th>Handle By</th>
-                            <th>Project Verticals</th>
-                            <th>Project Stakeholder</th>
-                            <th>SIG</th>
-                            <th>YI Pillar</th>
-                            <th>Social Link</th>
-                            <th>Impact</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for event in events %}
-                        <tr class="text-nowrap" align="center">
-
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ event.date }}</td>
-                            <td>{{ event.your_name }}</td>
-                            <td>{{ event.role_yi }}</td>
-                            <td>{{ event.event_handle }}</td>
-                            <td>{{ event.project_vertical }}</td>
-                            <td>{{ event.project_stakeholder }}</td>
-                            <td>{{ event.which_SIG }}</td>x
-                            <td>{{ event.yi_pillar }}</td>
-                            <td><a href="{{ event.social_link }}" >{{ event.social_link }}</a></td>
-                            <td>{{ event.total_impact }}</td>
-
-                            <td>
-                                <form method="post" action="{% url 'delete_event' event_id=event.id %}">
+                <!-- Edit Event Modal -->
+                <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1" aria-labelledby="editEventModalLabel{{ event.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editEventModalLabel{{ event.id }}">Edit Event</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="{% url 'Update_event_data' event_id=event.id %}">
                                     {% csrf_token %}
-                                    <button class="btn btn-danger"><i class="bi bi-trash"></i>&nbsp;Delete</button>
+
+                                    <div class="mb-3">
+                                        <label for="event_date" class="form-label">Event Date</label>
+                                        <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="event_handle" class="form-label">Handle</label>
+                                        <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="role_yi">YI Role</label>
+                                        <select class="form-control" id="role_yi" name="role_yi">
+                                            <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
+                                            <option value="Vertical Chair">Vertical Chair</option>
+                                            <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                                            <option value="Team Member">Team Member</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="project_verticals" class="form-label">Project Verticals</label>
+                                        <select class="form-control" id="project_verticals" name="project_verticals">
+                                            <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
+                                            <option value="Masoom">Masoom</option>
+                                            <option value="Road Safety">Road Safety</option>
+                                            <option value="Health">Health</option>
+                                            <option value="Sport">Sports</option>
+                                            <option value="Accessibility">Accessibility</option>
+                                            <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                                            <option value="Climate action">Climate action</option>
+                                            <option value="Innovation">Innovation</option>
+                                            <option value="Entrepreneurship">Entrepreneurship</option>
+                                            <option value="Branding & PR">Branding & PR</option>
+                                            <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                                            <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                                            <option value="Culture Connect">Culture Connect</option>
+                                            <option value="Yi Angel">Yi Angel</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
+                                        <select class="form-control" id="project_stakeholder" name="project_stakeholder">
+                                            <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
+                                            <option value="Membership Engagement">Membership Engagement</option>
+                                            <option value="Yuva">Yuva</option>
+                                            <option value="Thalir">Thalir</option>
+                                            <option value="Rural Initiatives">Rural Initiatives</option>
+                                            <option value="General Public">General Public</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="yi_pillar" class="form-label">Yi Pillar</label>
+                                        <select class="form-control" id="yi_pillar" name="yi_pillar">
+                                            <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
+                                            <option value="Youth Leader">Youth Leader</option>
+                                            <option value="Thought Leader">Thought Leader</option>
+                                            <option value="Nation Building">Nation Building</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="social_link" class="form-label">Social Link</label>
+                                        <input type="url" class="form-control" id="social_link" name="social_link" value="{{ event.social_link }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="total_impact" class="form-label">Impact</label>
+                                        <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
                                 </form>
-
-
-                            </td>
-                            <td>
-                <!-- Button to trigger modal -->
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-              </td>
-            </tr>
-
-            <!-- Edit Event Modal -->
-            <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1" aria-labelledby="editEventModalLabel{{ event.id }}" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="editEventModalLabel{{ event.id }}">Edit Event</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form method="post" action="{% url 'Update_event_data' event_id=event.id %}">
-                      {% csrf_token %}
-
-                        <div class="mb-3">
-                        <label for="event_date" class="form-label">Event Date </label>
-                        <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
-                      </div>
-
-                        <div class="mb-3">
-                        <label for="event_handle" class="form-label">Handle </label>
-                        <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
-                      </div>
-                         <div class="mb-3">
-                    <label for="role_yi">YI Role</label>
-                                    <select class="form-control" id="role_yi" name="role_yi" >
-                                        <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
-                                        <option value="Vertical Chair">Vertical Chair</option>
-                                        <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                                        <option value="Team Member">Team Member</option>
-                                    </select>
-                         </div>
-
-                        <div class="mb-3">
-                        <label for="project_verticals" class="form-label">Project Verticals</label>
-                         <select class="form-control" id="project_verticals" name="project_verticals">
-                                        <option value="{{event.project_vertical }}" >{{event.project_vertical }}</option>
-                                        <option value="Masoom">Masoom</option>
-                                        <option value="Road Safety">Road Safety</option>
-                                        <option value="Health">Health</option>
-                                        <option value="Sport">Sports</option>
-                                        <option value="Accessibility">Accessibility</option>
-                                        <option value="Learning(YI Talks)">Learning(YI Talks)</option>
-                                        <option value="Climate action">Climate action</option>
-                                        <option value="Innovation">Innovation</option>
-                                        <option value="Entrepreneurship">Entrepreneurship</option>
-                                        <option value="Branding & PR">Branding & PR</option>
-                                        <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
-                                        <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
-                                        <option value="Culture Connect">Culture Connect</option>
-                                        <option value="Yi Angel">Yi Angel</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                      </div>
-
-                               <div class="mb-3">
-                        <label for="project_stakeholder" class="form-label">Project Stakeholder </label>
-                         <select class="form-control" id="project_stakeholder" name="project_stakeholder">
-                                        <option value="{{ event.project_stakeholder }}" >{{ event.project_stakeholder }}</option>
-                                        <option value="Membership Engagement">Membership Engagement</option>
-                                        <option value="Yuva">Yuva</option>
-                                        <option value="Thalir">Thalir</option>
-                                        <option value="Rural Initiatives">Rural Initiatives</option>
-                                        <option value="General Public">General Public</option>
-                                    </select>
-                      </div>
-
-                                     <div class="mb-3">
-                        <label for="yi_pillar" class="form-label">Yi Pillar </label>
-                        <select class="form-control" id="yi_pillar" name="yi_pillar">
-                                        <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
-                                        <option value="Youth Leader">Youth Leader</option>
-                                        <option value="Thought Leader">Thought Leader</option>
-                                        <option value="Nation Building">Nation Building</option>
-                                    </select>
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="social_link" class="form-label">Social Link</label>
-                        <input type="url" class="form-control" id="social_link" name="social_link" value="{{ event.social_link }}">
-                      </div>
-                      <div class="mb-3">
-                        <label for="total_impact" class="form-label">Impact</label>
-                        <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </form>
-                  </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-            </div>
-
+                {% endfor %}
+            </tbody>
+        </table>
 
         <a href="{% url 'download_excel' %}">
             <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
@@ -206,30 +204,21 @@
     </div>
 
   </main><!-- End #main -->
-
-  <!-- Vendor JS Files -->
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-  <!-- DataTables JS (from CDN) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-
-  <!-- Initialize DataTable -->
-  <script>
-    $(document).ready(function() {
-        // Initialize DataTables for pagination and sorting
-        $('#eventTable').DataTable({
-            "paging": true,   // Enable pagination
-            "pageLength": 5,  // Set default number of rows per page
-            "lengthMenu": [5, 10, 15, 20],  // Options to select number of rows per page
-            "searching": true  // Enable search functionality
+    {% if messages %}
+                  <script>
+    {% for message in messages %}
+        Swal.fire({
+            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+            text: "{{ message }}",
+            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+            confirmButtonText: 'OK'
         });
-    });
-  </script>
+    {% endfor %}
+</script>
+{% endif %}
+  <!-- Vendor JS Files -->
+    <script src="{% static 'assets/js/main.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
 </body>
 </html>
