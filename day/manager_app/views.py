@@ -65,7 +65,7 @@ def manager_signup(request):
                                                      password=password,
                                                      email=manager_email,
                                                      phone_number=phone,
-                                                     login_role="Manager")
+                                                     login_role="")
         manager_user.save()
         messages.success(request, 'New Manager Created')
         return redirect('manager-signup')
