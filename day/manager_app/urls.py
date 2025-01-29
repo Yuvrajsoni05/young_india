@@ -16,12 +16,13 @@ urlpatterns = [
         path('manager-logout',manager_logout,name='manager-logout'),
         path('manager-password',manager_password,name='manager-password'),
         path('chart-dashboard',chart,name='chart-dashbaord'),
-        path('pie-chart',pie_chart,name='pie-chart-data'),
-        path('stackholder-chart',stackholder_chart,name='stackholder-chart'),
-        path('project-verticals-chart',project_chart,name='project-vertical-chart'),
+        # path('pie-chart',pie_chart,name='pie-chart-data'),
+        # path('stackholder-chart',stackholder_chart,name='stackholder-chart'),
+        # path('project-verticals-chart',project_chart,name='project-vertical-chart'),
         path('about_yi',about_yi,name='about_yi'),
 
-
+        #Masoom Side
+        path('masoom-dashboard',masoom_dashboard,name='masoom-dashboard')
 
 
 ]

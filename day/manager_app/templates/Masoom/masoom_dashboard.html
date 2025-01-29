@@ -24,9 +24,7 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
   <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
-
 </head>
-
 <body>
 
   {% include 'components/header.html' %}
@@ -44,7 +42,7 @@
           <li class="breadcrumb-item active">Add Event Data</li>
         </ol>
       </nav>
-    </div><!-- End Page Title -->
+    </div>
 
     <div class="container">
       <!-- Signup Form -->
@@ -61,7 +59,7 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="your_name">Your Name</label>
-                  <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name">
+                  <input type="text" id="your_name" class="form-control" name="your_name" value="{{user.login_role}}" required placeholder="Enter your full name">
                 </div>
               </div>
 
@@ -101,7 +99,7 @@
                 </div>
               </div>
 
-
+              
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_handle">Event Handle</label>
@@ -110,29 +108,29 @@
               </div>
 
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="project_verticals">Project Verticals</label>
-                  <select class="form-control" id="project_verticals" name="project_verticals" required>
-                    <option value="" disabled selected>Choose Project/Initiative</option>
-                    <option value="Masoom">Masoom</option>
-                    <option value="Road Safety">Road Safety</option>
-                    <option value="Health">Health</option>
-                    <option value="Sport">Sports</option>
-                    <option value="Accessibility">Accessibility</option>
-                    <option value="Learning(YI Talks)">Learning(YI Talks)</option>
-                    <option value="Climate action">Climate action</option>
-                    <option value="Innovation">Innovation</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Branding & PR">Branding & PR</option>
-                    <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
-                    <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
-                    <option value="Culture Connect">Culture Connect</option>
-                    <option value="Yi Angel">Yi Angel</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
+<!--              <div class="col-12 col-sm-6 col-md-6">-->
+<!--                <div class="form-group">-->
+<!--                  <label for="project_verticals">Project Verticals</label>-->
+<!--                  <select class="form-control" id="project_verticals" name="project_verticals" required>-->
+<!--                    <option value="" disabled selected>Choose Project/Initiative</option>-->
+<!--                    <option value="Masoom">Masoom</option>-->
+<!--                    <option value="Road Safety">Road Safety</option>-->
+<!--                    <option value="Health">Health</option>-->
+<!--                    <option value="Sport">Sports</option>-->
+<!--                    <option value="Accessibility">Accessibility</option>-->
+<!--                    <option value="Learning(YI Talks)">Learning(YI Talks)</option>-->
+<!--                    <option value="Climate action">Climate action</option>-->
+<!--                    <option value="Innovation">Innovation</option>-->
+<!--                    <option value="Entrepreneurship">Entrepreneurship</option>-->
+<!--                    <option value="Branding & PR">Branding & PR</option>-->
+<!--                    <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>-->
+<!--                    <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>-->
+<!--                    <option value="Culture Connect">Culture Connect</option>-->
+<!--                    <option value="Yi Angel">Yi Angel</option>-->
+<!--                    <option value="Other">Other</option>-->
+<!--                  </select>-->
+<!--                </div>-->
+<!--              </div>-->
 
 
               <div class="col-12 col-sm-6 col-md-6">

@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_app', '0002_alter_loginside_id_alter_loginside_login_role_and_more'),
+        ('admin_app', '0003_alter_loginside_id'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='loginside',
             name='id',
-            field=models.UUIDField(default=uuid.UUID('654d654b-087d-462c-a6cc-ac5c467110e2'), editable=False, primary_key=True, serialize=False),
+            field=models.UUIDField(default=uuid.UUID('ca9f91fd-40bf-40b2-a178-3112739658e4'), editable=False, primary_key=True, serialize=False),
         ),
     ]

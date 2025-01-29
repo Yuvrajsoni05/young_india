@@ -226,7 +226,7 @@ def download_excel(request):
 def manager_list(request):
     if request.user.login_role != 'Admin':
         return redirect('Error-Page')
-    manager = LoginSide.objects.filter(login_role='Manager')
+    manager = LoginSide.objects.filter(login_role__in=[ 'Manager', 'Masoom'])
     contex = {
         'managers' :manager
     }

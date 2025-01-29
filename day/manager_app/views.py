@@ -1,5 +1,4 @@
 from io import BytesIO
-
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
@@ -10,7 +9,7 @@ import matplotlib
 import numpy as np
 from .models import Event_Data
 from  django.contrib.auth.decorators import login_required
-
+from django.db.models import Avg, Sum
 
 # Create your views here.
 
@@ -23,13 +22,13 @@ def manager_login(request):
         if manager_user is not None and manager_user.login_role == 'Manager':
             login(request,manager_user)
             return redirect('manager-dashboard')
+        if manager_user is not None and manager_user.login_role == 'Masoom':
+            login(request,manager_user)
+            return redirect('masoom-dashboard')
         else:
             messages.error(request,"Incorrect Username Password")
             return redirect('index')
     return render(request,'index.html')
-
-
-
 
 
 
@@ -50,15 +49,14 @@ def manager_signup(request):
             return render(request,'manager/manager_signup.html')
 
         if len(password) < 6 :
-
             messages.error(request, "Password must be 6 digit and one uppercase")
             return render(request,'manager/manager_signup.html')
-
 
 
         if password != confirm_password:
             messages.error(request, "Password and Confirm Password must be Same")
             return render(request,'manager/manager_signup.html')
+
 
         manager_user = LoginSide.objects.create_user(username=manager_username,
                                                      first_name=first_name,
@@ -176,7 +174,6 @@ def update_event_data(request,update_id):
     else:
         if request.user.login_role == "Manager":
             update_event = get_object_or_404(Event_Data,id = update_id)
-
             update_event.date = request.POST['event_date']
             update_event.role_yi = request.POST['role_yi']
             update_event.project_vertical = request.POST['project_verticals']
@@ -235,16 +232,43 @@ def event_data(request):
             yi_pillar = request.POST['yi_pillar']
             social_link = request.POST['social_link']
             total_impact = request.POST['total_impact']
-            Event_Data.objects.create(your_name=your_name,date=event_date,role_yi=role_yi,event_handle=event_handle,project_vertical=project_verticals,which_SIG=sig_option,
-                                      project_stakeholder=project_stakeholder,yi_pillar=yi_pillar,social_link=social_link,total_impact=total_impact,user=request.user)
+            event_expense = request.POST['event_expense']
+            event_venue = request.POST['event_venue']
+            event_name = request.POST['event_name']
+            event_images =  request.FILES.getlist('event_img')
+            school = request.POST['school']
+            collage = request.POST['collage']
+            associate_partner = request.POST['associate_partner']
+            place_name = school + collage
+
+            for img in event_images:
+                Event_Data.objects.create(
+                    your_name=your_name,
+                    date=event_date,
+                    role_yi=role_yi,
+                    event_handle=event_handle,
+                    project_vertical=project_verticals,
+                    which_SIG=sig_option,
+                    project_stakeholder=project_stakeholder,
+                    yi_pillar=yi_pillar,
+                    social_link=social_link,
+                    event_venue=event_venue,
+                    event_expense=event_expense,
+                    place_name=place_name,
+                    total_impact=total_impact,
+                    event_name=event_name,
+                    event_photo=img,
+                    associate_partner=associate_partner,
+                    user=request.user
+                )
             return  redirect('event-list')
 
-from django.db.models import Avg, Sum
+
+
 
 def chart(request):
     if request.user.login_role != 'Manager':
         return redirect('Error-Page')
-
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
     total_event = Event_Data.objects.filter(user=user).count()
@@ -267,88 +291,14 @@ def chart(request):
                  'event_name': event_name,
                  'impact':aligned_event_impact,
 
-
                  }
 
     return render(request,'chart/chart.html',context)
 
 
-matplotlib.use('Agg')
-
-def pie_chart(request):
 
 
-    user = request.user
-    user_data = Event_Data.objects.filter(user=user)
-    
+# Masoom Side
 
-
-    impact = np.array([i.total_impact for i in user_data])
-    date = [i.project_vertical for i in user_data]
-
-
-    plt.figure(figsize=(8,5))
-    plt.pie(impact,labels=date,autopct='%1.1f%%',)
-    plt.title("Project Verticals  ",fontsize=12,fontname='Cambria')
-
-
-    buffer =BytesIO()
-    plt.savefig(buffer,format='jpg')
-    buffer.seek(0)
-
-
-    plt.close()
-
-    return HttpResponse(buffer,content_type='image/jpg')
-
-
-
-def stackholder_chart(request):
-    user = request.user
-    user_data = Event_Data.objects.filter(user=user)
-
-    impact = np.array([i.total_impact for i in user_data])
-    stake_holder = [i.project_stakeholder for i in user_data]
-
-    plt.figure(figsize=(8,5))
-    plt.pie(impact,labels=stake_holder,autopct='%1.1f%%')
-    plt.title("Stackeholder wise Impact",fontsize=12,fontname='Cambria')
-
-
-    buffer = BytesIO()
-    plt.savefig(buffer,format='jpg')
-    buffer.seek(0)
-
-    plt.close()
-
-    return HttpResponse(buffer,content_type='image/jpg') 
-
-
-
-def project_chart(request):
-    user = request.user
-    user_data = Event_Data.objects.filter(user=user)
-    x = [i.project_vertical for i in user_data]
-    y = [i.total_impact for i in user_data]
-
-
-    total_impact = sum(y)
-    plt.figure(figsize=(20,5))
-
-
-    bar = plt.bar(x,y)
-    plt.bar_label(bar, labels=[f'{value}' for value in y])
-    plt.title("Project Wise Impact",fontname='Cambria',fontsize=20)
-    plt.xlabel("Project Verticals",fontname='Cambria',)
-    plt.ylabel("Impact",fontname='Cambria')
-
-    
-
-    buffer = BytesIO()
-    plt.savefig(buffer,format='jpg')
-    buffer.seek(0)
-
-    plt.close()
-    return HttpResponse(buffer,content_type='image/jpg')
-
-
+def masoom_dashboard(request):
+    return render(request,'Masoom/masoom_dashboard.html')
