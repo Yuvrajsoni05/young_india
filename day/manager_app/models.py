@@ -23,7 +23,7 @@ class Event_Data(models.Model):
     total_impact = models.IntegerField(blank=True,default=1)
     event_photo = models.ImageField(upload_to='event_photo/',null=True)
     place_name = models.CharField(max_length=200,blank=True)
-    associate_partner = models.CharField(max_length=200,blank=True,null=True)
+    associate_partner = models.CharField(max_length=200,null=True)
 
 
 

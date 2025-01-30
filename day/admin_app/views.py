@@ -157,15 +157,22 @@ def Admin_Dashboard(request):
     total_user_data = LoginSide.objects.filter(login_role='Manager')
     total_user = total_user_data.count()
 
+
+    total_expense_result = Event_Data.objects.aggregate(Sum('event_expense'))
+    total_expense =total_expense_result['event_expense__sum'] if total_expense_result['event_expense__sum'] is not None else 0
+
+
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
     total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum']is not None else 0
     impact_avg = Event_Data.objects.aggregate(Avg('total_impact'))
     avg_impact = impact_avg['total_impact__avg'] if impact_avg['total_impact__avg']is not None else 0
+
     contex = {
         'total_manager' :total_user,
         'total_event':total_event,
         'total_impact':total_impact,
         'impact_avg':avg_impact,
+        'total_expense':total_expense,
     }
     return render(request, 'Admin/AdminDashboard.html',contex)
 
@@ -407,7 +414,7 @@ def admin_chart(request):
     return render(request, 'Admin/chart/admin_chart.html', context)
 
 
-    
+
 
 
 

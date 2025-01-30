@@ -19,7 +19,7 @@ ROLE_CHOICES = [
 # Create your models here.
 class LoginSide(AbstractUser):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4(),editable=False)
-    login_role = models.CharField(max_length=25,choices=ROLE_CHOICES)
+    login_role = models.CharField(max_length=25,choices=[('Admin','Admin'),('Manager','Manager')])
     first_name = models.CharField(max_length=200,null=True)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)

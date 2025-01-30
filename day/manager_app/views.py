@@ -18,10 +18,12 @@ def manager_login(request):
     if request.method == 'POST':
         username = request.POST.get('manager_username')
         password = request.POST.get('manager_password')
-        manager_user = authenticate(request,username=username,password=password)
+        login_role = request.POST.get('login_role')
+        manager_user = authenticate(request,username=username,password=password,login_role=login_role)
         if manager_user is not None and manager_user.login_role == 'Manager':
             login(request,manager_user)
             return redirect('manager-dashboard')
+
         if manager_user is not None and manager_user.login_role == 'Masoom':
             login(request,manager_user)
             return redirect('masoom-dashboard')
@@ -43,6 +45,7 @@ def manager_signup(request):
         profile_img = request.FILES.get('profile_img')
         confirm_password = request.POST.get('password2')
         manager_email = request.POST.get('manager_email')
+        which_role = request.POST.getlist('which_role')
 
         if len(phone) != 10 or not phone.isdigit():
             messages.error(request, "Phone number must be 10 digits.")
@@ -58,6 +61,9 @@ def manager_signup(request):
             return render(request,'manager/manager_signup.html')
 
 
+
+
+
         manager_user = LoginSide.objects.create_user(username=manager_username,
                                                      first_name=first_name,
                                                      last_name=last_name,
@@ -65,11 +71,13 @@ def manager_signup(request):
                                                      password=password,
                                                      email=manager_email,
                                                      phone_number=phone,
-                                                     login_role="")
+                                                     login_role='Manager',)
         manager_user.save()
         messages.success(request, 'New Manager Created')
         return redirect('manager-signup')
     return render(request,'manager/manager_signup.html')
+
+
 
 @login_required(login_url='manager-login')
 def manager_logout(request):
@@ -226,7 +234,7 @@ def event_data(request):
             event_date = request.POST['event_date']
             role_yi = request.POST['role_yi']
             sig_option = request.POST.get('sig_')
-            event_handle = request.POST['event_handle']
+            event_handle = request.POST['handel_by']
             project_verticals = request.POST['project_verticals']
             project_stakeholder = request.POST['project_stakeholder']
             yi_pillar = request.POST['yi_pillar']
@@ -238,7 +246,7 @@ def event_data(request):
             event_images =  request.FILES.getlist('event_img')
             school = request.POST['school']
             collage = request.POST['collage']
-            associate_partner = request.POST['associate_partner']
+            associate_partner = request.POST.get('associate_partner',' ')
             place_name = school + collage
 
             for img in event_images:
