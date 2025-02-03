@@ -82,7 +82,7 @@ def manager_signup(request):
 @login_required(login_url='manager-login')
 def manager_logout(request):
     logout(request)
-    return redirect('manager-login')
+    return redirect('index')
 
 
 
@@ -249,27 +249,37 @@ def event_data(request):
             associate_partner = request.POST.get('associate_partner',' ')
             place_name = school + collage
 
-            for img in event_images:
-                Event_Data.objects.create(
-                    your_name=your_name,
-                    date=event_date,
-                    role_yi=role_yi,
-                    event_handle=event_handle,
-                    project_vertical=project_verticals,
-                    which_SIG=sig_option,
-                    project_stakeholder=project_stakeholder,
-                    yi_pillar=yi_pillar,
-                    social_link=social_link,
-                    event_venue=event_venue,
-                    event_expense=event_expense,
-                    place_name=place_name,
-                    total_impact=total_impact,
-                    event_name=event_name,
-                    event_photo=img,
-                    associate_partner=associate_partner,
-                    user=request.user
-                )
-            return  redirect('event-list')
+
+            if len(event_images) < 6:
+
+
+
+                for img in event_images:
+                    Event_Data.objects.create(
+                        your_name=your_name,
+                        date=event_date,
+                        role_yi=role_yi,
+                        event_handle=event_handle,
+                        project_vertical=project_verticals,
+                        which_SIG=sig_option,
+                        project_stakeholder=project_stakeholder,
+                        yi_pillar=yi_pillar,
+                        social_link=social_link,
+                        event_venue=event_venue,
+                        event_expense=event_expense,
+                        place_name=place_name,
+                        total_impact=total_impact,
+                        event_name=event_name,
+                        event_photo=img,
+                        associate_partner=associate_partner,
+                        user=request.user
+                    )
+                    messages.success(request,'thank you for insert data')
+                return  redirect('event-list')
+            else:
+
+                messages.error(request,"You cant upload more than 6 data")
+                return request('event_data')
 
 
 
@@ -298,7 +308,6 @@ def chart(request):
                'total_impact':total_impact,
                  'event_name': event_name,
                  'impact':aligned_event_impact,
-
                  }
 
     return render(request,'chart/chart.html',context)

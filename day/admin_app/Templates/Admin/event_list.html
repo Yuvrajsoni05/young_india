@@ -54,7 +54,7 @@
         </form>
     </div>
 
-
+  <div class="table-responsive">
         <table class="table table-striped" style="width:100%">
             <thead>
                 <tr class="text-nowrap" align="center">
@@ -216,6 +216,7 @@
         </a>
     </div>
 
+
   </main><!-- End #main -->
     {% if messages %}
                   <script>
@@ -231,37 +232,7 @@
 {% endif %}
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/js/main.js' %}"></script>
-<script>
-    const container = document.getElementById('tagContainer');
-    const input = document.getElementById('tagInput');
-    const hiddenInput = document.getElementById('hiddenInput');
-    container.addEventListener('click', () => input.focus());
-    input.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter' || event.key === ',') {
-            event.preventDefault();
-            let value = input.value.trim().replace(/,$/, "");
-            if (value !== '') {
-                addTag(value);
-                input.value = '';
-            }
-        }
-    });
-    function addTag(text) {
-        const tag = document.createElement('span');
-        tag.classList.add('tag');
-        tag.innerHTML = `${text} <span class="remove" onclick="removeTag(this)">×</span>`;
-        container.insertBefore(tag, input);
-        updateHiddenInput();
-    }
-    function removeTag(element) {
-        element.parentElement.remove();
-        updateHiddenInput();
-    }
-    function updateHiddenInput() {
-        const tags = document.querySelectorAll('.tag');
-        hiddenInput.value = Array.from(tags).map(tag => tag.textContent.replace(' ×', '')).join(',');
-    }
-</script>
+
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
 </body>
