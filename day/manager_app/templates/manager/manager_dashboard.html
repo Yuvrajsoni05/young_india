@@ -5,53 +5,13 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
   <title>Add Event</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
 
   <!-- Favicons -->
   <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
-  <style>
-    .tag-container {
-        border: 1px solid #ccc;
-
-
-        min-height: 40px;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        cursor: text;
-    }
-    .tag {
-        display: flex;
-        align-items: center;
-        background-color: #3498DB;
-        color: white;
-
-        padding: 5px 10px;
-        margin: 3px;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-    .tag .remove {
-        cursor: pointer;
-        margin-left: 8px;
-        font-weight: bold;
-    }
-    .tag-input {
-        border: none;
-        outline: none;
-        flex: 1;
-        padding: 5px;
-        font-size: 14px;
-    }
-  </style>
-
   <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -60,6 +20,39 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
   <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
+
+  <style>
+    .tag-container {
+      border: 1px solid #ccc;
+      min-height: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      cursor: text;
+    }
+    .tag {
+      display: flex;
+      align-items: center;
+      background-color: #3498DB;
+      color: white;
+      padding: 5px 10px;
+      margin: 3px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .tag .remove {
+      cursor: pointer;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+    .tag-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 5px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
@@ -132,13 +125,13 @@
                 </div>
               </div>
 
-           <div class="col-12 col-sm-6 col-md-6">
-    <label>Handler name(s)</label>
-    <div class="tag-container" id="tagContainer">
-        <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" aria-label="Tag Input">
-        <input type="hidden" id="hiddenInput" name="handel_by">
-    </div>
-</div>
+              <div class="col-12 col-sm-6 col-md-6">
+                <label for="tagInput">Handler name(s)</label>
+                <div class="tag-container" id="tagContainer">
+                  <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" aria-label="Tag Input">
+                  <input type="hidden" id="hiddenInput" name="handel_by">
+                </div>
+              </div>
 
 
               <div class="col-12 col-sm-6 col-md-6">
@@ -162,9 +155,11 @@
                     <option value="Yi Angel">Yi Angel</option>
                     <option value="Membership Engagement">Membership Engagement</option>
                     <option value="Other">Other</option>
+                     <option value="">None</option>
                   </select>
                 </div>
               </div>
+
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
@@ -176,6 +171,7 @@
                     <option value="Rural Initiatives">Rural Initiatives</option>
                     <option value="General Public">General Public</option>
                     <option value="Associate Partner">Associate Partner</option>
+                     <option value="">None</option>
                   </select>
                 </div>
               </div>
@@ -216,7 +212,7 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_img">Event Image</label>
-                  <input type="file" id="event_img" class="form-control" name="event_img" accept=".jpg, .jpeg, .png"  aria-label="Event Image" multiple>
+                  <input type="file" id="event_img" class="form-control" name="event_img" accept=".jpg, .jpeg, .png" aria-label="Event Image" multiple>
                 </div>
               </div>
 
@@ -230,6 +226,7 @@
                     <option value="Trekking">Trekking</option>
                     <option value="Entrepreneurship">Entrepreneurship</option>
                     <option value="Community">Community</option>
+                     <option value="">None</option>
                   </select>
                 </div>
               </div>
@@ -238,30 +235,32 @@
                 <div class="form-group">
                   <label for="associate_partners">Associate Partner</label>
                   <select class="form-control" id="associate_partners" name="associate_partner">
-                    <option value="" disabled selected>Choose Associate </option>
+                    <option value="" disabled selected>Choose Associate</option>
                     <option value="Big Bull">Big Bull</option>
                     <option value="EB">EB</option>
                     <option value="Yuvi">Yuvi</option>
+                     <option value="">None</option>
                   </select>
                 </div>
               </div>
 
-              <div class="col-12 col-sm-6 col-md-6" id="school_div" style="display:none;">
+              <div class="col-12 col-sm-6 col-md-6" id="school_div" style="display: none;">
                 <div class="form-group">
                   <label for="school">School</label>
                   <input type="text" id="school" class="form-control" name="school" placeholder="School" aria-label="School">
                 </div>
               </div>
 
-              <div class="col-12 col-sm-6 col-md-6" id="collage_div" style="display:none;">
+              <div class="col-12 col-sm-6 col-md-6" id="collage_div" style="display: none;">
                 <div class="form-group">
                   <label for="collage">Collage</label>
                   <input type="text" id="collage" class="form-control" name="collage" placeholder="Collage" aria-label="Collage">
                 </div>
               </div>
             </div>
+
             <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
-            <button type="reset" class="btn btn-primary btn-block mt-4">Reset</button>
+            <button type="reset" class="btn btn-secondary btn-block mt-4">Reset</button>
           </form>
         </div>
       </div>
@@ -275,48 +274,47 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
-
   <script src="{% static 'assets/js/event.js' %}"></script>
 
   <script>
     const container = document.getElementById('tagContainer');
-const input = document.getElementById('tagInput');
-const hiddenInput = document.getElementById('hiddenInput');
-container.addEventListener('click', () => input.focus());
+    const input = document.getElementById('tagInput');
+    const hiddenInput = document.getElementById('hiddenInput');
 
-input.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' || event.key === ',') {
+    container.addEventListener('click', () => input.focus());
+
+    input.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' || event.key === ',') {
         event.preventDefault();
         let value = input.value.trim().replace(/,$/, "");
         if (value !== '') {
-            if (document.querySelectorAll('.tag').length < 5) {  // Limit to 5 tags
-                addTag(value);
-                input.value = '';
-            } else {
-                alert('You can only add up to 5 handler names.');
-            }
+          if (document.querySelectorAll('.tag').length < 5) {  // Limit to 5 tags
+            addTag(value);
+            input.value = '';
+          } else {
+            alert('You can only add up to 5 handler names.');
+          }
         }
+      }
+    });
+
+    function addTag(text) {
+      const tag = document.createElement('span');
+      tag.classList.add('tag');
+      tag.innerHTML = `${text} <span class="remove" onclick="removeTag(this)">×</span>`;
+      container.insertBefore(tag, input);
+      updateHiddenInput();
     }
-});
 
-function addTag(text) {
-    const tag = document.createElement('span');
-    tag.classList.add('tag');
-    tag.innerHTML = `${text} <span class="remove" onclick="removeTag(this)">×</span>`;
-    container.insertBefore(tag, input);
-    updateHiddenInput();
-}
+    function removeTag(element) {
+      element.parentElement.remove();
+      updateHiddenInput();
+    }
 
-function removeTag(element) {
-    element.parentElement.remove();
-    updateHiddenInput();
-}
-
-function updateHiddenInput() {
-    const tags = document.querySelectorAll('.tag');
-    hiddenInput.value = Array.from(tags).map(tag => tag.textContent.replace(' ×', '')).join(',');
-}
-
+    function updateHiddenInput() {
+      const tags = document.querySelectorAll('.tag');
+      hiddenInput.value = Array.from(tags).map(tag => tag.textContent.replace(' ×', '')).join(',');
+    }
   </script>
 
 </body>

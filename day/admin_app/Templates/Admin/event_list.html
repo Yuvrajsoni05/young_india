@@ -71,7 +71,8 @@
             <th>SIG</th>
             <th>YI Pillar</th>
             <th>Social Link</th>
-             <th>Place Name</th>
+         <th>School</th>
+                    <th>Collage</th>
               <th>Associate Partner</th>
             <th>Impact</th>
               <th> Image  </th>
@@ -94,7 +95,8 @@
               <td>{{ event.which_SIG }}</td>
               <td>{{ event.yi_pillar }}</td>
               <td><a href="{{ event.social_link }}"><i class="bi bi-box-arrow-up-right"></i></a></td>
-               <td>{{event.place_name}}</td>
+              <td>{{ event.school }}</td>
+                    <td>{{ event.collage}}</td>
                 <td>{{event.associate_partner}}</td>
               <td>{{ event.total_impact }}</td>
                 <td><img src="{{ event.event_photo.url }}" height="45px" width="45px"  alt="Event Data" ></td>
@@ -128,6 +130,12 @@
                                         <label for="event_date" class="form-label">Event Date</label>
                                         <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
                                     </div>
+
+                                      <div class="mb-3">
+                                        <label for="event_date" class="form-label">Event Name</label>
+                                        <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
+                                    </div>
+
 
                                     <div class="mb-3">
                                         <label for="event_handle" class="form-label">Handle</label>
@@ -175,6 +183,7 @@
                                             <option value="Thalir">Thalir</option>
                                             <option value="Rural Initiatives">Rural Initiatives</option>
                                             <option value="General Public">General Public</option>
+                                            <option value="associate_partners">Associate Partner</option>
                                         </select>
                                     </div>
 
@@ -197,6 +206,53 @@
                                         <label for="total_impact" class="form-label">Impact</label>
                                         <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
                                     </div>
+
+                                     <div class="mb-3">
+                                        <label for="event_expense" class="form-label">Event Expense</label>
+                                        <input type="number" class="form-control" id="event_expense" name="event_expense" value="{{ event.event_expense }}">
+                                    </div>
+
+
+
+
+                                                         <!-- Special Interest Group (SIG) Dropdown -->
+                                                    <div class="mb-3" id="sig_div">
+                                                        <label for="sig_">Choose SIG</label>
+                                                        <select class="form-control" id="sig_" name="sig_">
+                                                            <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
+                                                            <option value="Active Living">Active Living</option>
+                                                            <option value="Photography">Photography</option>
+                                                            <option value="Trekking">Trekking</option>
+                                                            <option value="Entrepreneurship">Entrepreneurship</option>
+                                                            <option value="Community">Community</option>
+                                                            <option value="">None</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Associate Partner Dropdown -->
+                                                    <div class="mb-3" id="associate_div">
+                                                        <label for="associate_partners">Associate Partner</label>
+                                                        <select class="form-control" id="associate_partners" name="associate_partners">
+                                                            <option value="{{ i.associate_partner }}" >{{ event.associate_partner }}</option>
+                                                            <option value="Big Bull">Big Bull</option>
+                                                            <option value="EB">EB</option>
+                                                            <option value="Yuvi">Yuvi</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- School -->
+                                                    <div class="mb-3" id="school_div">
+                                                        <label for="school">School</label>
+                                                        <input type="text" id="school" class="form-control" name="school" placeholder="School" value="{{ event.place_name }}" aria-label="School">
+                                                    </div>
+
+                                                    <!-- College -->
+                                                    <div class="mb-3" id="collage_div">
+                                                        <label for="collage">College</label>
+                                                        <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.place_name }}" aria-label="College">
+                                                    </div>
+
+
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -232,6 +288,7 @@
 {% endif %}
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+
 
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 

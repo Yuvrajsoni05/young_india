@@ -63,6 +63,11 @@ def Admin_Signup(request):
             Admin_email = request.POST.get('add_email')
             phone = request.POST.get('add_phone')
 
+
+            if len(username) !=  6 :
+                messages.error(request,"Username only 6")
+                return redirect('Admin_Signup')
+
             if len(phone) != 10 or not phone.isdigit():
                 messages.error(request, "Phone number must be 10 digits.")
                 return render(request, 'Admin/AdminSignup.html')
@@ -213,7 +218,7 @@ def download_excel(request):
 
     headers = [
         'Event Date', 'Manager Name','Event Name' ,'Event Venue','Event Expense','Role YI', 'Project Verticals',
-        'Project StackHolder', 'YI Pillar', 'SIG', 'Place name', 'Associate Partner','Event Handle', 'Impact','Image'
+        'Project StackHolder', 'YI Pillar', 'SIG', 'School', 'Collage','Associate Partner','Event Handle', 'Impact','Image'
     ]
 
     # sheet[headers].font = Font(bold=True)
@@ -224,7 +229,7 @@ def download_excel(request):
     for i in event_data:
         row = [
             i.date, i.your_name, i.event_name,i.event_venue,i.event_expense,i.role_yi,i.project_vertical,
-            i.project_stakeholder, i.yi_pillar, i.which_SIG,i.place_name,i.associate_partner,
+            i.project_stakeholder, i.yi_pillar, i.which_SIG,i.school,i.collage,i.associate_partner,
             i.event_handle, i.total_impact]
         sheet.append(row)
         if i.event_photo:
@@ -303,8 +308,11 @@ def update_event_data(request,event_id):
     else:
         if request.user.login_role == "Admin":
             update_event = get_object_or_404(Event_Data, id=event_id)
-
+            update_event.school  = request.POST['school']
+            update_event.collage =  request.POST['collage']
             update_event.date = request.POST['event_date']
+            update_event.event_name = request.POST['event_name']
+            update_event.event_expense = request.POST['event_expense']
             update_event.role_yi = request.POST['role_yi']
             update_event.project_vertical = request.POST['project_verticals']
             update_event.project_stakeholder = request.POST['project_stakeholder']
@@ -312,6 +320,8 @@ def update_event_data(request,event_id):
             update_event.social_link = request.POST['social_link']
             update_event.event_handle = request.POST['event_handle']
             update_event.total_impact = request.POST['total_impact']
+            update_event.which_SIG = request.POST['sig_']
+            update_event.associate_partner = request.POST.get('associate_partners')
             update_event.save()
             messages.success(request,'Event Updated')
             return redirect('Event_List')

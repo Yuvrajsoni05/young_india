@@ -182,6 +182,8 @@ def update_event_data(request,update_id):
     else:
         if request.user.login_role == "Manager":
             update_event = get_object_or_404(Event_Data,id = update_id)
+            update_event.collage =  request.POST['collage']
+            update_event.school = request.POST['school']
             update_event.date = request.POST['event_date']
             update_event.role_yi = request.POST['role_yi']
             update_event.project_vertical = request.POST['project_verticals']
@@ -190,6 +192,9 @@ def update_event_data(request,update_id):
             update_event.social_link = request.POST['social_link']
             update_event.event_handle = request.POST['event_handle']
             update_event.total_impact = request.POST['total_impact']
+            update_event.which_SIG  = request.POST['sig_']
+
+            update_event.associate_partner = request.POST.get('associate_partners')
             update_event.save()
             messages.success(request,'Data update')
             return redirect('event-list')
@@ -247,7 +252,7 @@ def event_data(request):
             school = request.POST['school']
             collage = request.POST['collage']
             associate_partner = request.POST.get('associate_partner',' ')
-            place_name = school + collage
+
 
 
             if len(event_images) < 6:
@@ -267,7 +272,8 @@ def event_data(request):
                         social_link=social_link,
                         event_venue=event_venue,
                         event_expense=event_expense,
-                        place_name=place_name,
+                        school = school,
+                        collage= collage,
                         total_impact=total_impact,
                         event_name=event_name,
                         event_photo=img,

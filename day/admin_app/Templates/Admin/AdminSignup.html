@@ -153,20 +153,10 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
-<script>
-  function validateForm(event) {
-    var phoneNumber = document.getElementById('add_phone').value;
-    var phonePattern = /^\+91[0-9]{10}$/;
-
-    if (!phonePattern.test(phoneNumber)) {
-      alert("Please enter a valid phone number starting with +91 followed by 10 digits.");
-      event.preventDefault(); // Prevent form submission
-    }
-  }
-</script>
 
 
-  <script src="{% static 'assets/js/validation.js' %}"></script> <!-- Link to validation.js -->
+
+ <!-- Link to validation.js -->
 
 </body>
 
