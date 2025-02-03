@@ -139,10 +139,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Email backend
-# EMAIL_HOST = 'smtp.gmail.com'  # Example SMTP server
-# EMAIL_PORT = 587  # Port for Gmail SMTP
-# EMAIL_USE_TLS = True  # Use TLS encryption
-# EMAIL_HOST_USER = 'soniyuvraj9499@gmail.com'  # Your email address
-# EMAIL_HOST_PASSWORD = 'yuvi949978_'  # Your email password
-# DEFAULT_FROM_EMAIL = 'soniyuvraj9499@gmail.com'  # Set this to the same as your email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_USER')  # Your email
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')  # The 16-character app password you generated
+
