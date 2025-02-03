@@ -1,8 +1,10 @@
 from collections import Counter
 from io import BytesIO
+# from openpyxl.drawing.image import Image
 
 import matplotlib
 import numpy as np
+from PIL.Image import Image
 from asgiref.typing import HTTPResponseBodyEvent
 from django.db.models import Avg, Sum
 from django.shortcuts import render,redirect,get_object_or_404
@@ -197,11 +199,11 @@ def Event_list(request):
 
 
 
-def error_page(request):
-    return render(request,'Admin/components/Error_404.html')
+def error_page(request ,exception):
+    return render(request,'Admin/components/Error_404.html',{})
 
-
-
+from openpyxl.styles import Font
+from openpyxl.drawing.image import Image
 def download_excel(request):
 
     workbook = openpyxl.Workbook()
@@ -210,19 +212,31 @@ def download_excel(request):
 
 
     headers = [
-        'Event Date', 'Manager Name', 'Role YI', 'Project Verticals',
-        'Project StackHolder', 'YI Pillar', 'SIG', 'Event Handle', 'Impact'
+        'Event Date', 'Manager Name','Event Name' ,'Event Venue','Event Expense','Role YI', 'Project Verticals',
+        'Project StackHolder', 'YI Pillar', 'SIG', 'Place name', 'Associate Partner','Event Handle', 'Impact','Image'
     ]
+
+    # sheet[headers].font = Font(bold=True)
     sheet.append(headers)
 
 
     event_data = Event_Data.objects.all()
     for i in event_data:
         row = [
-            i.date, i.your_name, i.role_yi, i.project_vertical,
-            i.project_stakeholder, i.yi_pillar, i.which_SIG,
-            i.event_handle, i.total_impact ]
+            i.date, i.your_name, i.event_name,i.event_venue,i.event_expense,i.role_yi,i.project_vertical,
+            i.project_stakeholder, i.yi_pillar, i.which_SIG,i.place_name,i.associate_partner,
+            i.event_handle, i.total_impact]
         sheet.append(row)
+        if i.event_photo:
+            img_path = i.event_photo.path
+            img = Image(img_path)
+            img.width = 80
+            img.height =30
+
+            img.anchor = f'O{sheet.max_row}'
+            sheet.add_image(img)
+
+
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response['Content-Disposition'] = 'attachment; filename="Event_Data.xlsx"'
@@ -412,7 +426,6 @@ def admin_chart(request):
 
     }
     return render(request, 'Admin/chart/admin_chart.html', context)
-
 
 
 
