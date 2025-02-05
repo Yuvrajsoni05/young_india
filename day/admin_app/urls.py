@@ -33,10 +33,10 @@ urlpatterns = [
     # path('pie',pie_chart,name='pie_chart'),
     path('chart',admin_chart,name='admin_chart'),
 
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset_done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('password_reset/',CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset_done/',CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',CustomPasswordResetConfirm.as_view(), name='password_reset_confirm'),
+    # path('reset_done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
 
 

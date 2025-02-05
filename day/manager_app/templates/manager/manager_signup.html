@@ -106,13 +106,13 @@ button[type="submit"] {
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="manager_username">Username</label>
-                  <input type="text" id="manager_username" class="form-control" name="manager_username" placeholder="Username" required>
+                  <input type="text" id="manager_username" maxlength="15"   class="form-control" name="manager_username" placeholder="Username" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="first_name">First Name</label>
-                  <input type="text" id="first_name" class="form-control" name="first_name" placeholder="First Name" required>
+                  <input type="text" id="first_name" class="form-control" maxlength="20"  name="first_name" placeholder="First Name" required>
                 </div>
               </div>
             </div>
@@ -120,13 +120,13 @@ button[type="submit"] {
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="last_name">Last Name</label>
-                  <input type="text" id="last_name" class="form-control" name="last_name" placeholder="Last Name" required>
+                  <input type="text" id="last_name" class="form-control" maxlength="20" name="last_name" placeholder="Last Name" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="manager_email">Email</label>
-                  <input type="email" class="form-control" id="manager_email" name="manager_email" placeholder="Email" required>
+                  <input type="email" class="form-control"   maxlength="50" id="manager_email" name="manager_email" placeholder="Email" required>
                 </div>
               </div>
             </div>
@@ -158,13 +158,13 @@ button[type="submit"] {
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="password1">Password</label>
-                  <input type="password" id="password1" class="form-control" name="password1" placeholder="Password" required>
+                  <input type="password" id="password1" minlength="8" maxlength="12"  class="form-control" name="password1" placeholder="Password" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="password2">Confirm Password</label>
-                  <input type="password" id="password2" class="form-control" name="password2" placeholder="Confirm Password" required>
+                  <input type="password" id="password2" minlength="8" maxlength="12" class="form-control" name="password2" placeholder="Confirm Password" required>
                 </div>
               </div>
             </div>

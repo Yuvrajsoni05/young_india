@@ -202,21 +202,21 @@
                     <div class="row mb-3">
                       <label for="old_password" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="old_password" type="password" class="form-control" id="old_password">
+                        <input name="old_password" type="password" minlength="8" maxlength="20" class="form-control" id="old_password">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="new_password" class="col-md-4 col-lg-3 col-form-label">New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="new_password" type="password" class="form-control" id="new_password">
+                        <input name="new_password" type="password" minlength="8" maxlength="20" class="form-control" id="new_password">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="confirm_password" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="confirm_password" type="password" class="form-control" id="confirm_password">
+                        <input name="confirm_password" type="password" minlength="8" maxlength="20" class="form-control" id="confirm_password">
                       </div>
                     </div>
 
@@ -240,21 +240,22 @@
   </main><!-- End #main -->
 
   <!-- End #main -->
-
-  <!-- ======= Footer
-  <footer id="footer" class="footer">
-    <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-  </footer> End Footer -->
+    {% if messages %}
+                  <script>
+    {% for message in messages %}
+        Swal.fire({
+            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+            text: "{{ message }}",
+            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+            confirmButtonText: 'OK'
+        });
+    {% endfor %}
+</script>
+{% endif %}
 
 
   <!-- Vendor JS Files -->
-
+ <script src="{% static 'js/message.js' %}">  </script>
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 

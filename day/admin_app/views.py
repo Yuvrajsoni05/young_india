@@ -9,6 +9,7 @@ from asgiref.typing import HTTPResponseBodyEvent
 from django.db.models import Avg, Sum
 from django.shortcuts import render,redirect,get_object_or_404
 from matplotlib import pyplot as plt
+from rest_framework.reverse import reverse_lazy
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
@@ -64,17 +65,18 @@ def Admin_Signup(request):
             phone = request.POST.get('add_phone')
 
 
-            if len(username) !=  6 :
-                messages.error(request,"Username only 6")
-                return redirect('Admin_Signup')
+            # if len(username) !=  6 :
+            #     messages.error(request,"Username only 6")
+            #     return redirect('Admin_Signup')
 
             if len(phone) != 10 or not phone.isdigit():
                 messages.error(request, "Phone number must be 10 digits.")
                 return render(request, 'Admin/AdminSignup.html')
 
-            if len(password) < 6 :
-                messages.error(request,"Password Must Be 6 Digit")
-                return render(request, 'Admin/AdminSignup.html')
+            if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
+                messages.error(request,"Password must be at least 8 characters with one uppercase letter and one special character")
+                return redirect('Admin_Profile')
 
 
             if password != confirm_password:
@@ -133,8 +135,9 @@ def admin_password(request):
                 messages.error(request, "Old Password Incorrect")
                 return redirect('Admin_Profile')
 
-            if len(new_password) < 6:
-                messages.error(request, "Password must be 6 digit")
+            if len(new_password) < 8 or not any(c.isupper() for c in   new_password) or not any(
+                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in new_password):
+                messages.error(request,  "Password must be at least 8 characters with one uppercase letter and one special character")
                 return redirect('Admin_Profile')
 
             if new_password != confirm_password:
@@ -436,6 +439,54 @@ def admin_chart(request):
 
     }
     return render(request, 'Admin/chart/admin_chart.html', context)
+
+
+# Password Side
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
+from django.urls import reverse_lazy
+
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'password/password_reset_form.html'
+    email_template_name = 'password/password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password/password_reset_done.html'
+
+class CustomPasswordResetConfirm(PasswordResetConfirmView):
+    template_name = 'password/password_reset_confirm.html'
+    success_url = reverse_lazy('index')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -63,13 +63,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="add_username">Username</label>
-                  <input type="text" id="add_username" class="form-control" name="add_username" placeholder="Add Username" required>
+                  <input type="text" id="add_username" maxlength="15"  class="form-control" name="add_username" placeholder="Add Username" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="first_name">First Name</label>
-                  <input type="text" id="first_name" class="form-control" name="first_name" placeholder="First Name" required>
+                  <input type="text" id="first_name" maxlength="20"  class="form-control" name="first_name" placeholder="First Name" required>
                 </div>
               </div>
             </div>
@@ -77,13 +77,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="last_name">Last Name</label>
-                  <input type="text" id="last_name" class="form-control" name="last_name" placeholder="Last Name" required>
+                  <input type="text" id="last_name"  maxlength="20"  class="form-control" name="last_name" placeholder="Last Name" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="add_email">Email</label>
-                  <input type="email" class="form-control" id="add_email" name="add_email" placeholder="Add Email" required>
+                  <input type="email" class="form-control"  maxlength="50" id="add_email" name="add_email" placeholder="Add Email" required>
                 </div>
               </div>
             </div>
@@ -114,13 +114,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="password1">Password</label>
-                  <input type="password" id="password1" class="form-control" name="password1" placeholder="Password" required>
+                  <input type="password" id="password1" minlength="8" maxlength="20" class="form-control" name="password1" placeholder="Password" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="password2">Confirm Password</label>
-                  <input type="password" id="password2" class="form-control" name="password2" placeholder="Confirm Password" required>
+                  <input type="password" id="password2" minlength="8" maxlength="20" class="form-control" name="password2" placeholder="Confirm Password" required>
                 </div>
               </div>
             </div>
@@ -132,18 +132,7 @@
     </div>
 
 
-                     {% if messages %}
-<script>
-    {% for message in messages %}
-        Swal.fire({
-            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
-            text: "{{ message }}",
-            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-            confirmButtonText: 'OK'
-        });
-    {% endfor %}
-</script>
-{% endif %}
+  <script src="{% static 'js/message.js' %}" ></script>
 
   </main><!-- End #main -->
 

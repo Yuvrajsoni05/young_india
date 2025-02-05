@@ -47,14 +47,18 @@ def manager_signup(request):
         manager_email = request.POST.get('manager_email')
         which_role = request.POST.getlist('which_role')
 
+
+
+
+
         if len(phone) != 10 or not phone.isdigit():
             messages.error(request, "Phone number must be 10 digits.")
             return render(request,'manager/manager_signup.html')
 
-        if len(password) < 6 :
-            messages.error(request, "Password must be 6 digit and one uppercase")
-            return render(request,'manager/manager_signup.html')
-
+        if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+                c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
+            messages.error(request,"Password must be at least 8 characters with one uppercase letter and one special character")
+            return render(request, 'manager/manager_signup.html')
 
         if password != confirm_password:
             messages.error(request, "Password and Confirm Password must be Same")
@@ -123,8 +127,10 @@ def manager_password(request):
                 messages.error(request,"Old Password Incorrect")
                 return redirect('manager-profile')
 
-            if len(new_password)  < 6 :
-                messages.error(request, "Password must be 6 digit")
+            if len(new_password) < 8 or not any(c.isupper() for c in new_password) or not any(
+                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in new_password):
+                messages.error(request,
+                               "Password must be at least 8 characters with one uppercase letter and one special character")
                 return redirect('manager-profile')
 
             if new_password != confirm_password:
@@ -224,8 +230,6 @@ def update_event_data(request,update_id):
 #         update_event_data.total_impact= request.POST['total_impact']
 #         update_event_data.save()
 #     return redirect('event-list')
-
-
 # def delete_event(request):
 
 
@@ -256,9 +260,6 @@ def event_data(request):
 
 
             if len(event_images) < 6:
-
-
-
                 for img in event_images:
                     Event_Data.objects.create(
                         your_name=your_name,
@@ -280,10 +281,10 @@ def event_data(request):
                         associate_partner=associate_partner,
                         user=request.user
                     )
+
                     messages.success(request,'thank you for insert data')
                 return  redirect('event-list')
             else:
-
                 messages.error(request,"You cant upload more than 6 data")
                 return request('event_data')
 

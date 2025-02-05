@@ -16,6 +16,7 @@ ROLE_CHOICES = [
 
 ]
 
+
 # Create your models here.
 class LoginSide(AbstractUser):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4(),editable=False)

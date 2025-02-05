@@ -99,7 +99,9 @@
                     <td>{{ event.collage}}</td>
                 <td>{{event.associate_partner}}</td>
               <td>{{ event.total_impact }}</td>
+
                 <td><img src="{{ event.event_photo.url }}" height="45px" width="45px"  alt="Event Data" ></td>
+
               <td>
                         <form method="post" action="{% url 'delete_event' event_id=event.id %}">
                             {% csrf_token %}
