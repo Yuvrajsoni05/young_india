@@ -1235,3 +1235,6 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+footer {
+            margin-top: auto; /* Push footer to the bottom */
+        }

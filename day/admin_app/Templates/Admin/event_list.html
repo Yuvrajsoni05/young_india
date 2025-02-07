@@ -55,7 +55,7 @@
     </div>
 
   <div class="table-responsive">
-        <table class="table table-striped" style="width:100%">
+        <table class="table table-striped" style="width:100%" border="1px">
             <thead>
                 <tr class="text-nowrap" align="center">
                      <th>Sr.no</th>
@@ -71,6 +71,7 @@
             <th>SIG</th>
             <th>YI Pillar</th>
             <th>Social Link</th>
+
          <th>School</th>
                     <th>Collage</th>
               <th>Associate Partner</th>
@@ -234,7 +235,7 @@
                                                     <!-- Associate Partner Dropdown -->
                                                     <div class="mb-3" id="associate_div">
                                                         <label for="associate_partners">Associate Partner</label>
-                                                        <select class="form-control" id="associate_partners" name="associate_partners">
+                                                        <select class="form-control"  id="associate_partners" name="associate_partners" >
                                                             <option value="{{ i.associate_partner }}" >{{ event.associate_partner }}</option>
                                                             <option value="Big Bull">Big Bull</option>
                                                             <option value="EB">EB</option>
@@ -264,18 +265,21 @@
                             </div>
                         </div>
                     </div>
-                </div>
+
                 {% endfor %}
-            </tbody>
-        </table>
-
-        <a href="{% url 'download_excel' %}">
-            <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
-        </a>
-    </div>
+             </tbody>
+            </table>
 
 
-  </main><!-- End #main -->
+                <a href="{% url 'download_excel' %}">
+                    <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
+                </a>
+
+
+  </div>
+
+  {% include 'Admin/components/footer.html' %}
+    </main>
     {% if messages %}
                   <script>
     {% for message in messages %}

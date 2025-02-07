@@ -29,70 +29,106 @@ from django.shortcuts import render
 # Create your views here.
 
 
-
 def index(request):
     return render(request,'index.html ')
 
 
 def Admin_Login(request):
-
     if request.method == 'POST':
         username = request.POST.get('admin_username')
         password = request.POST.get('admin_password')
-        Admin_user = authenticate(request,username=username,password=password)
+
+        # Authenticate the user
+        Admin_user = authenticate(request, username=username, password=password)
+
         if Admin_user is not None:
-            login(request,Admin_user)
-            return redirect('Admin_Dashboard')
+            # Check if the authenticated user has the 'Admin' role
+            if Admin_user.login_role.filter(name='Admin').exists():  # Assuming 'Admin' is the role name
+                # Log the user in
+                login(request, Admin_user)
+                return redirect('Admin_Dashboard')
+            else:
+                messages.error(request, "You do not have permission to access the admin panel.")
+                return redirect('index')  # Redirect to the homepage or another page if not an Admin
         else:
-            messages.error(request,"Invalid Username or Password")
-            return redirect('index')
+            messages.error(request, "Invalid Username or Password")
+            return redirect('index')  # Redirect back to the login page if credentials are incorrect
 
-    return render(request,'index.html')
+    return render(request, 'index.html')
 
-@login_required(login_url='Admin_Login')
+# @login_required(login_url='Admin_Login')
 def Admin_Signup(request):
-    if request.user.login_role != 'Admin':
-        return redirect('Error-Page')
-    else:
-        if request.method == 'POST':
-            username = request.POST.get('add_username')
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            password = request.POST.get('password1')
-            profile_img = request.FILES.get('profile_img')
-            confirm_password = request.POST.get('password2')
-            Admin_email = request.POST.get('add_email')
-            phone = request.POST.get('add_phone')
+    if request.method == 'POST':
+        username = request.POST.get('add_username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        password = request.POST.get('password1')
+        profile_img = request.FILES.get('profile_img')
+        confirm_password = request.POST.get('password2')
+        Admin_email = request.POST.get('add_email')
+        phone = request.POST.get('add_phone')
+        login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
+
+        if LoginSide.objects.filter(email=Admin_email).exists():
+            messages.error(request, "This email is already taken.")
+            return redirect('Admin_Signup')
+
+        if LoginSide.objects.filter(username=username).exists():
+            messages.error(request, "This Username is already taken.")
+            return redirect('Admin_Signup')
+
+        # Validation checks
+        if len(phone) != 10 or not phone.isdigit():
+            messages.error(request, "Phone number must be 10 digits.")
+            return redirect('Admin_Signup')
+
+        if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+                c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
+            messages.error(request,
+                           "Password must be at least 8 characters with one uppercase letter and one special character")
+            return redirect('Admin_Signup')
+
+        if password != confirm_password:
+            messages.error(request, "Password and confirm Password must be same ")
+            return redirect('Admin_Signup')
+
+        # Create user
+        Admin_User = LoginSide.objects.create_user(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            photo=profile_img,
+            password=password,
+            email=Admin_email,
+            phone_number=phone
+        )
+
+        # Assign selected roles to the user
+        roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
+        Admin_User.login_role.set(roles)  # Assign multiple roles
+        Admin_User.save()
+
+        messages.success(request, "Admin Created")
+
+        return redirect('Admin_Dashboard')
+
+    # Fetch all roles for the dropdown
+    login_role = Login_Role.objects.all()
+    context = {
+        'role': login_role
+    }
+
+    return render(request, 'Admin/AdminSignup.html', context)
 
 
-            # if len(username) !=  6 :
-            #     messages.error(request,"Username only 6")
-            #     return redirect('Admin_Signup')
+# if request.user.login_role != 'Admin':
+    #     return redirect('Error-Page')
+    # else:
 
-            if len(phone) != 10 or not phone.isdigit():
-                messages.error(request, "Phone number must be 10 digits.")
-                return render(request, 'Admin/AdminSignup.html')
-
-            if len(password) < 8 or not any(c.isupper() for c in password) or not any(
-                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
-                messages.error(request,"Password must be at least 8 characters with one uppercase letter and one special character")
-                return redirect('Admin_Profile')
-
-
-            if password != confirm_password:
-                messages.error(request,"Password and confirm Password must be same ")
-                return redirect('Admin-Signup')
-
-            Admin_User = LoginSide.objects.create_user(username=username,first_name=first_name,last_name=last_name,photo=profile_img,password=password,email=Admin_email,login_role="Admin",phone_number=phone)
-            Admin_User.save()
-            messages.success(request,"Admin Created")
-
-            return redirect('Admin_Dashboard')
-    return render(request,'Admin/AdminSignup.html')
 
 @login_required(login_url='Admin_Login')
 def Admin_Profile(request):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     # else:
     #     return redirect('Admin_Profile')
@@ -101,10 +137,10 @@ def Admin_Profile(request):
 
 @login_required(login_url='Admin_Login')
 def Admin_update(request,admin_id):
-    if request.user.login_role != "Admin":
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     else:
-        if request.user.login_role == "Admin":
+        if request.user.login_role.filter(name='Admin').exists():
             if request.method == 'POST':
                 admin_profile = get_object_or_404(LoginSide,id=admin_id)
                 admin_profile.first_name = request.POST['admin_firstname']
@@ -125,7 +161,7 @@ def Admin_update(request,admin_id):
 
 @login_required(login_url='Admin_Login')
 def admin_password(request):
-    if request.user.login_role == "Admin":
+    if request.user.login_role.filter(name='Admin').exists():
         if request.method == 'POST':
             old_password = request.POST.get('old_password')
             new_password = request.POST.get('new_password')
@@ -156,12 +192,13 @@ def admin_password(request):
 @login_required(login_url='Admin_Login')
 def admin_logout(request):
     logout(request)
+
     return redirect('index')
 
 
 @login_required(login_url='Admin_Login')
 def Admin_Dashboard(request):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     total_event = Event_Data.objects.count()
     total_user_data = LoginSide.objects.filter(login_role='Manager')
@@ -177,7 +214,13 @@ def Admin_Dashboard(request):
     impact_avg = Event_Data.objects.aggregate(Avg('total_impact'))
     avg_impact = impact_avg['total_impact__avg'] if impact_avg['total_impact__avg']is not None else 0
 
+
+    all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
+    # login_role = Login_Role.objects.all()
+
     contex = {
+        'users_data':all_user,
+        # 'role':login_role,
         'total_manager' :total_user,
         'total_event':total_event,
         'total_impact':total_impact,
@@ -189,7 +232,7 @@ def Admin_Dashboard(request):
 
 @login_required(login_url='Admin_Login')
 def Event_list(request):
-    if request.user.login_role != 'Admin':
+    if not  request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
 
@@ -207,8 +250,8 @@ def Event_list(request):
 
 
 
-def error_page(request ,exception):
-    return render(request,'Admin/components/Error_404.html',{})
+def error_page(request ):
+    return render(request,'Admin/components/Error_404.html',)
 
 from openpyxl.styles import Font
 from openpyxl.drawing.image import Image
@@ -253,9 +296,9 @@ def download_excel(request):
     return response
 
 def manager_list(request):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
-    manager = LoginSide.objects.filter(login_role__in=[ 'Manager', 'Masoom'])
+    manager = LoginSide.objects.filter(login_role__in=['Manager'])
     contex = {
         'managers' :manager
     }
@@ -263,7 +306,7 @@ def manager_list(request):
 
 
 def delete_handler(request,handler_id):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     if request.method == 'POST':
         handler = get_object_or_404(LoginSide, id=handler_id)
@@ -275,7 +318,7 @@ def delete_handler(request,handler_id):
 
 
 def delete_event(request,event_id):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=event_id)
@@ -284,7 +327,7 @@ def delete_event(request,event_id):
 
 
 def update_manager(request,manager_id):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     update_manager_data = get_object_or_404(LoginSide,id=manager_id)
     if request.method == 'POST':
@@ -306,31 +349,34 @@ def update_manager(request,manager_id):
 
 
 def update_event_data(request,event_id):
-    if request.user.login_role != 'Admin':
+    if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     else:
-        if request.user.login_role == "Admin":
             update_event = get_object_or_404(Event_Data, id=event_id)
-            update_event.school  = request.POST['school']
-            update_event.collage =  request.POST['collage']
-            update_event.date = request.POST['event_date']
-            update_event.event_name = request.POST['event_name']
-            update_event.event_expense = request.POST['event_expense']
-            update_event.role_yi = request.POST['role_yi']
-            update_event.project_vertical = request.POST['project_verticals']
-            update_event.project_stakeholder = request.POST['project_stakeholder']
-            update_event.yi_pillar = request.POST['yi_pillar']
-            update_event.social_link = request.POST['social_link']
-            update_event.event_handle = request.POST['event_handle']
-            update_event.total_impact = request.POST['total_impact']
-            update_event.which_SIG = request.POST['sig_']
-            update_event.associate_partner = request.POST.get('associate_partners')
-            update_event.save()
-            messages.success(request,'Event Updated')
-            return redirect('Event_List')
-        else:
-            messages.error(request,'Event not updated')
-            return redirect('Event_List')
+
+            if request.method == 'POST':
+
+                update_event.school  = request.POST['school']
+                update_event.collage =  request.POST['collage']
+                update_event.date = request.POST['event_date']
+                update_event.event_name = request.POST['event_name']
+                update_event.event_expense = request.POST['event_expense']
+                update_event.role_yi = request.POST['role_yi']
+                update_event.project_vertical = request.POST['project_verticals']
+                update_event.project_stakeholder = request.POST['project_stakeholder']
+                update_event.yi_pillar = request.POST['yi_pillar']
+                update_event.social_link = request.POST['social_link']
+                update_event.event_handle = request.POST['event_handle']
+                update_event.total_impact = request.POST['total_impact']
+                update_event.which_SIG = request.POST['sig_']
+                update_event.associate_partner = request.POST.get('associate_partners')
+                update_event.save()
+                messages.success(request,'Event Updated')
+                return redirect('Event_List')
+
+            else:
+                messages.error(request,'Event not updated')
+                return redirect('Event_List')
 
 
 
@@ -456,7 +502,13 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 
 class CustomPasswordResetConfirm(PasswordResetConfirmView):
     template_name = 'password/password_reset_confirm.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('password_reset_complete')
+
+def password_update_done(request):
+    return render(request,'Admin/components/password_update_done.html')
+
+
+
 
 
 

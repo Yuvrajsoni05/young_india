@@ -26,6 +26,6 @@ urlpatterns = [
     path('manager',include('manager_app.urls')),
 
 ]
-handler404 = 'admin_app.views.error_page'
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

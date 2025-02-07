@@ -8,17 +8,16 @@
   <title>Dashboard</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-<link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
-  <!-- Favicons -->
- <script src="{% static 'js/dashboard.js' %}"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
+  <!-- JS and Google Fonts -->
+  <script src="{% static 'js/dashboard.js' %}"></script>
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
+
   <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
@@ -30,15 +29,14 @@
 
   <!-- ======= Header ======= -->
   {% include 'Admin/components/header.html' %}
+
   <!-- ======= Sidebar ======= -->
   {% include 'Admin/components/side_navbar.html' %}
-  <!-- End Sidebar-->
 
+  <!-- Main Content -->
   <main id="main" class="main">
-
-
     <div class="pagetitle">
-      <h1>{{ user.first_name }} {{user.last_name}} Dashboard</h1>
+      <h1>{{ user.first_name }} {{ user.last_name }} Dashboard</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="">Home</a></li>
@@ -47,6 +45,7 @@
       </nav>
     </div><!-- End Page Title -->
 
+    <!-- Dashboard Stats Section -->
     <section class="section dashboard">
       <div class="row">
 
@@ -54,14 +53,14 @@
         <div class="col-lg-12">
           <div class="row">
 
-            <!-- Sales Card -->
+            <!-- Stats Cards -->
             <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4">
               <div class="card info-card sales-card">
                 <div class="card-body">
-                  <h5 class="card-title">Total Events <span></span></h5>
+                  <h5 class="card-title">Total Events</h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-list-ol"></i>
+                      <i class="bi bi-list-ol"></i>
                     </div>
                     <div class="ps-3">
                       <h6 class="count">{{ total_event }}</h6>
@@ -69,12 +68,10 @@
                   </div>
                 </div>
               </div>
-            </div><!-- End Sales Card -->
+            </div>
 
-
-
-            <!-- Customers Card -->
-            <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4" >
+            <!-- Impact Card -->
+            <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4">
               <div class="card info-card customers-card">
                 <div class="card-body">
                   <h5 class="card-title">Total Impact</h5>
@@ -88,15 +85,16 @@
                   </div>
                 </div>
               </div>
-            </div><!-- End Customers Card -->
+            </div>
 
-               <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4" >
+            <!-- Expense Card -->
+            <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4">
               <div class="card info-card customers-card">
                 <div class="card-body">
                   <h5 class="card-title">Total Expense</h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                   <i class="bi bi-currency-rupee"></i>
+                      <i class="bi bi-currency-rupee"></i>
                     </div>
                     <div class="ps-3">
                       <h6 class="count">{{ total_expense }}</h6>
@@ -106,13 +104,14 @@
               </div>
             </div>
 
-              <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4">
+            <!-- Manager Card -->
+            <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4">
               <div class="card info-card sales-card">
                 <div class="card-body">
-                  <h5 class="card-title">Total Manager <span></span></h5>
+                  <h5 class="card-title">Total Managers</h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person"></i>
+                      <i class="bi bi-person"></i>
                     </div>
                     <div class="ps-3">
                       <h6 class="count">{{ total_manager }}</h6>
@@ -121,35 +120,127 @@
                 </div>
               </div>
             </div>
-              <div>
-            </div>
+
           </div>
         </div><!-- End Left side columns -->
+
       </div>
 
+      <!-- User Data Table -->
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-nowrap" align="center">
+              <th>Sr.no</th>
+              <th>Name</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Login Role</th>
+              <th>Phone Number</th>
+              <th>Profile Image</th>
+              <th colspan="3">Action</th>
+            </tr>
+          </thead>
+           {% for manager in users_data %}
+          <tbody>
 
-        <div class="row">
-<div class="col-12 col-sm-6 col-md-6 col-lg-6">
-  <div class="card">
-    <div class="card-body">
-      <img src="#" alt="Matplotlib plot" class="img-fluid">
-    </div>
-  </div>
-</div>
-<div class="col-12 col-sm-6 col-md-6 col-lg-6">
-  <div class="card">
-    <div class="card-body">
 
-      <img src="#" alt="Matplotlib plot" class="img-fluid">
-    </div>
-  </div>
-</div>
+              <tr class="text-nowrap" align="center">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ manager.first_name }} {{ manager.last_name }}</td>
+                <td>{{ manager.first_name }}</td>
+                <td>{{ manager.last_name }}</td>
+                <td>{{ manager.username }}</td>
+                <td>{{ manager.email }}</td>
+                <td>
+                  {% for i in manager.login_role.all %}
+                    {{ i.name }}
+                  {% endfor %}
+                </td>
+                <td>{{ manager.phone_number }}</td>
+                <td><img src="{{ manager.photo.url }}" height="45px" width="45px" alt="Profile" class="rounded-circle"></td>
+                <td>
+                  <form action="{% url 'Handler-Delete' handler_id=manager.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                </td>
+                <td>
+                  <a class="btn btn-light rounded-circle" href="tel:{{ manager.phone_number }}">
+                    <i class="bi bi-telephone-forward-fill"></i>
+                  </a>
+                </td>
+              </tr>
 
+              <!-- Edit Modal -->
+              <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Manager</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          <label for="manager_first_name" class="form-label">First Name</label>
+                          <input type="text" class="form-control" id="manager_first_name" maxlength="20" name="manager_first_name" value="{{ manager.first_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="manager_last_name" class="form-label">Last Name</label>
+                          <input type="text" class="form-control" name="manager_last_name" maxlength="20" value="{{ manager.last_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="manager_username" class="form-label">Username</label>
+                          <input type="text" class="form-control" name="manager_username" maxlength="15" value="{{ manager.username }}" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="manager_email" class="form-label">Email</label>
+                          <input type="email" class="form-control" name="manager_email" maxlength="15" value="{{ manager.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="manager_phone_number" class="form-label">Phone Number</label>
+                          <input type="number" class="form-control" name="manager_phone_number" maxlength="10" value="{{ manager.phone_number }}" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="manager_profile_img" class="form-label">Profile Image</label>
+                          <input type="file" class="form-control" name="manager_profile_img" accept=".jpeg , .jpg , png ">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div><!-- End Table -->
 
     </section>
+<br>
 
+
+  {% include 'Admin/components/footer.html' %}
 
   </main><!-- End #main -->
+
+
+
+
 
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
@@ -157,8 +248,6 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
-
-
 
 </body>
 

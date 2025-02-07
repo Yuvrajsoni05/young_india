@@ -18,18 +18,19 @@ def manager_login(request):
     if request.method == 'POST':
         username = request.POST.get('manager_username')
         password = request.POST.get('manager_password')
-        login_role = request.POST.get('login_role')
-        manager_user = authenticate(request,username=username,password=password,login_role=login_role)
-        if manager_user is not None and manager_user.login_role == 'Manager':
-            login(request,manager_user)
-            return redirect('manager-dashboard')
 
-        if manager_user is not None and manager_user.login_role == 'Masoom':
-            login(request,manager_user)
-            return redirect('masoom-dashboard')
+        manager_user = authenticate(request,username=username,password=password)
+        if manager_user is not None:
+            if manager_user.login_role.filter(name='Manager').exists():
+                login(request,manager_user)
+                return redirect('manager-dashboard')
+            else:
+                messages.error(request,"Incorrect Username Password")
         else:
-            messages.error(request,"Incorrect Username Password")
+            messages.error(request, "Invalid Username or Password")
             return redirect('index')
+
+
     return render(request,'index.html')
 
 
@@ -45,7 +46,7 @@ def manager_signup(request):
         profile_img = request.FILES.get('profile_img')
         confirm_password = request.POST.get('password2')
         manager_email = request.POST.get('manager_email')
-        which_role = request.POST.getlist('which_role')
+        # which_role = request.POST.getlist('which_role')
 
 
 
@@ -96,7 +97,7 @@ def about_yi(request):
 
 @login_required(login_url='manager-login')
 def manager_update(request,manager_id):
-    if request.user.login_role == "Manager":
+    if request.user.login_role.filter(name='Manager').exists():
         if request.method == 'POST':
             manager_profile = get_object_or_404(LoginSide, id=manager_id)
             manager_profile.first_name = request.POST['manager_first_name']
@@ -116,7 +117,7 @@ def manager_update(request,manager_id):
 
 @login_required(login_url='manager-login')
 def manager_password(request):
-    if request.user.login_role == "Manager":
+    if request.user.login_role.filter(name='Manager').exists():
         if request.method == 'POST':
             old_password = request.POST.get('old_password')
             new_password = request.POST.get('new_password')
@@ -147,13 +148,13 @@ def manager_password(request):
 
 @login_required(login_url='manager-login')
 def manager_dashboard(request):
-    if request.user.login_role != 'Manager':
+    if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-Page')
     return render(request,'manager/manager_dashboard.html')
 
 @login_required(login_url='manager-login')
 def manager_profile(request):
-    if request.user.login_role != 'Manager':
+    if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-Page')
 
     return render(request,'manager/manager_profile.html')
@@ -161,7 +162,7 @@ def manager_profile(request):
 @login_required(login_url='manager-login')
 def event_list(request):
     # Ensure the user has the 'Manager' role
-    if request.user.login_role != 'Manager':
+    if not request.user.login_role.filter(name='Manager').exists():
         return redirect('manager-profile')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
@@ -174,7 +175,7 @@ def event_list(request):
 
 
 def delete_event_user(request,events_id):
-    if request.user.login_role != 'Manager':
+    if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=events_id)
@@ -183,10 +184,10 @@ def delete_event_user(request,events_id):
 
 
 def update_event_data(request,update_id):
-    if request.user.login_role != 'Manager':
+    if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-page')
     else:
-        if request.user.login_role == "Manager":
+        if request.user.login_role.filter(name='Manager').exists():
             update_event = get_object_or_404(Event_Data,id = update_id)
             update_event.collage =  request.POST['collage']
             update_event.school = request.POST['school']
@@ -233,11 +234,20 @@ def update_event_data(request,update_id):
 # def delete_event(request):
 
 
+# def manager_list(request):
+#     if not request.user.login_role.filter(name='Admin').exists():
+#         return redirect('Error-Page')
+#     admin_role = Login_Role.objects.get(name='Admin')
+#     managers = LoginSide.objects.filter(login_role=admin_role)
+#     contex = {
+#         'managers' :managers
+#     }
+#     return render(request,'Admin/view_manager.html',contex)
 
 
 @login_required(login_url='manager-login')
 def event_data(request):
-    if request.user.login_role == 'Manager':
+    if request.user.login_role.filter(name='Manager').exists():
         if request.method == 'POST':
             your_name = request.POST['your_name']
             event_date = request.POST['event_date']
@@ -292,7 +302,7 @@ def event_data(request):
 
 
 def chart(request):
-    if request.user.login_role != 'Manager':
+    if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-Page')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
