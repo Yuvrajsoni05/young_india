@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 ]
 AUTH_USER_MODEL = 'admin_app.LoginSide'
 MIDDLEWARE = [
+    'admin_app.middleware.NoCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

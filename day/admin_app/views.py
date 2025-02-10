@@ -25,7 +25,7 @@ from django.utils.decorators import method_decorator
 
 from django.shortcuts import render
 
-
+from django.views.decorators.cache import never_cache
 # Create your views here.
 
 
@@ -56,7 +56,9 @@ def Admin_Login(request):
 
     return render(request, 'index.html')
 
-# @login_required(login_url='Admin_Login')
+
+
+@login_required(login_url='Admin_Login')
 def Admin_Signup(request):
     if request.method == 'POST':
         username = request.POST.get('add_username')
@@ -192,7 +194,9 @@ def admin_password(request):
 @login_required(login_url='Admin_Login')
 def admin_logout(request):
     logout(request)
+    request.session.flush()
 
+    request.session.modified = True
     return redirect('index')
 
 
@@ -506,6 +510,7 @@ class CustomPasswordResetConfirm(PasswordResetConfirmView):
 
 def password_update_done(request):
     return render(request,'Admin/components/password_update_done.html')
+
 
 
 
