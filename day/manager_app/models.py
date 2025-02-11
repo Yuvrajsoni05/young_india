@@ -25,7 +25,7 @@ class Event_Data(models.Model):
     # place_name = models.CharField(max_length=200,blank=True)
     school = models.CharField(max_length=200,blank=True,null=True)
     collage = models.CharField(max_length=200,blank=True,null=True)
-    associate_partner = models.CharField(max_length=200,blank=True,null=True)
+    associate_partner = models.CharField(max_length=200,null=True,blank=True)
 
 
 

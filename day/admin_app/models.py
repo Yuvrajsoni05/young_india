@@ -25,7 +25,7 @@ class LoginSide(AbstractUser):
     first_name = models.CharField(max_length=200,null=True)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200,unique=True,)
-    photo = models.ImageField(upload_to='user_photo/', null=True)
+    photo = models.ImageField(upload_to='user_photo/', null=True,)
     phone_number = models.CharField(max_length=15,default='Phone Number')
 
 

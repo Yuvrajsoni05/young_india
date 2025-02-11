@@ -58,6 +58,19 @@ def Admin_Login(request):
 
 
 
+
+from django.http import JsonResponse
+
+def get_username(request):
+    user  = request.user
+    data = {
+        "username": "Yuvraj Soni" # You can customize this with any name
+    }
+    return JsonResponse(data)
+
+
+
+
 @login_required(login_url='Admin_Login')
 def Admin_Signup(request):
     if request.method == 'POST':
@@ -70,6 +83,12 @@ def Admin_Signup(request):
         Admin_email = request.POST.get('add_email')
         phone = request.POST.get('add_phone')
         login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
+
+
+
+        if profile_img.size > 2*1024*1024:
+            messages.error(request,'Image Size must be 4mb')
+            return redirect('Admin_Signup')
 
         if LoginSide.objects.filter(email=Admin_email).exists():
             messages.error(request, "This email is already taken.")

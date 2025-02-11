@@ -1,44 +1,23 @@
-body, html {
-      height: 100%;
-      margin: 0;
-      padding: 0;
+.form-control {
+      border-radius: 0.5rem;
     }
-
-.main {
-      min-height: 100vh; /* Ensure the main content area takes at least the full viewport height */
-      display: flex;
-      flex-direction: column;
+.input-group-text {
+      border-radius: 0.5rem 0 0 0.5rem;
     }
-.container {
-      flex: 1;
-      padding-top: 30px;
-      padding-bottom: 30px;
-    }
-
-.card {
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.checkbox-container {
+      max-height: 150px;
+      overflow-y: auto;
     }
 .card-header {
-      font-size: 1.5rem;
-      font-weight: 600;
+      background-color: #f8f9fa;
     }
-form .form-group {
-      margin-bottom: 1.5rem;
+.form-check-label {
+      padding-left: 10px;
     }
-
-button[type="submit"] {
-      margin-top: 20px;
-      font-size: 1.1rem;
+.form-group {
+      margin-bottom: 20px;
     }
-
-    /* Ensure the card looks good on smaller screens */
-@media (max-width: 768px) {
-      .card {
-        padding: 20px;
-      }
-.row .col-md-6 {
-       margin-bottom: 10px;
-      }
+.btn-primary {
+      width: 100%;
+      padding: 10px;
     }

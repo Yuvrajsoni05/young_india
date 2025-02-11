@@ -22,6 +22,7 @@ urlpatterns = [
     path('Error',error_page,name='Error-Page'),
 
 
+
     path('update-event-data/<int:event_id>/',update_event_data,name='Update_event_data'),
     path('update-manager/<uuid:manager_id>/',update_manager,name='Update_Manager'),
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
@@ -37,10 +38,17 @@ urlpatterns = [
     path('password_reset_done/',CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/',CustomPasswordResetConfirm.as_view(), name='password_reset_confirm'),
     path('reset_done/',password_update_done, name='password_reset_complete'),
-
+    # path('api/get-user-details/', get_logged_in_user_details, name='get-user-details'),
+    path('get-username/',get_username, name='get_username'),
 
 
 
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+
+
+

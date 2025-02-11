@@ -252,7 +252,7 @@ def event_data(request):
             your_name = request.POST['your_name']
             event_date = request.POST['event_date']
             role_yi = request.POST['role_yi']
-            sig_option = request.POST.get('sig_')
+            sig_option = request.POST.get('sig_','')
             event_handle = request.POST['handel_by']
             project_verticals = request.POST['project_verticals']
             project_stakeholder = request.POST['project_stakeholder']
@@ -262,41 +262,39 @@ def event_data(request):
             event_expense = request.POST['event_expense']
             event_venue = request.POST['event_venue']
             event_name = request.POST['event_name']
-            event_images =  request.FILES.getlist('event_img')
+            event_images =  request.FILES.get('event_img')
             school = request.POST['school']
             collage = request.POST['collage']
-            associate_partner = request.POST.get('associate_partner',' ')
+            associate_partner = request.POST.get('associate_partner','')
 
+            if event_images.size > 1 * 1024 * 1024:
+                messages.error(request, 'Each image must be 4MB or less')
+                return redirect('event_data')
 
+            Event_Data.objects.create(
+                your_name=your_name,
+                date=event_date,
+                role_yi=role_yi,
+                event_handle=event_handle,
+                project_vertical=project_verticals,
+                which_SIG=sig_option,
+                project_stakeholder=project_stakeholder,
+                yi_pillar=yi_pillar,
+                social_link=social_link,
+                event_venue=event_venue,
+                event_expense=event_expense,
+                school=school,
+                collage=collage,
+                total_impact=total_impact,
+                event_name=event_name,
+                event_photo=event_images,
+                associate_partner=associate_partner,
+                user=request.user
+            )
 
-            if len(event_images) < 6:
-                for img in event_images:
-                    Event_Data.objects.create(
-                        your_name=your_name,
-                        date=event_date,
-                        role_yi=role_yi,
-                        event_handle=event_handle,
-                        project_vertical=project_verticals,
-                        which_SIG=sig_option,
-                        project_stakeholder=project_stakeholder,
-                        yi_pillar=yi_pillar,
-                        social_link=social_link,
-                        event_venue=event_venue,
-                        event_expense=event_expense,
-                        school = school,
-                        collage= collage,
-                        total_impact=total_impact,
-                        event_name=event_name,
-                        event_photo=img,
-                        associate_partner=associate_partner,
-                        user=request.user
-                    )
+            messages.success(request, 'thank you for insert data')
+        return redirect('event-list')
 
-                    messages.success(request,'thank you for insert data')
-                return  redirect('event-list')
-            else:
-                messages.error(request,"You cant upload more than 6 data")
-                return request('event_data')
 
 
 

@@ -22,7 +22,10 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-  <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
+    <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
+
+  <!-- Custom CSS to improve form styling -->
+
 </head>
 
 <body>
@@ -30,7 +33,6 @@
   {% include 'Admin/components/side_navbar.html' %}
 
   <main id="main" class="main">
-
     <div class="pagetitle">
       <h1>New Admin</h1>
       <nav>
@@ -54,7 +56,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="add_username">Username</label>
+                  <label for="add_username">Username <i class="bi bi-person-circle"></i></label>
                   <input type="text" id="add_username" maxlength="15" class="form-control" name="add_username" placeholder="Add Username" required>
                 </div>
               </div>
@@ -75,7 +77,7 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="add_email">Email</label>
+                  <label for="add_email">Email <i class="bi bi-envelope"></i></label>
                   <input type="email" class="form-control" maxlength="50" id="add_email" name="add_email" placeholder="Add Email" required>
                 </div>
               </div>
@@ -88,31 +90,19 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">+91</span>
                   </div>
-                  <input type="number" class="form-control" id="add_phone" name="add_phone" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" placeholder="Enter your phone number" required>
+                  <input type="tel" class="form-control" id="add_phone" name="add_phone" maxlength="10" minlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" placeholder="Enter your phone number" required>
                 </div>
               </div>
 
-
-
-                <div class="col-md-6">
-                  <label for="login_role">Login Role</label>
-                  <div class="checkbox-container text-right">
-                    {% for i in role %}
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="role_{{ forloop.counter }}">
-                        <label class="form-check-label">{{ i.name }}</label>
-                      </div>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-
-
-            <div class="row">
               <div class="col-md-6">
-                <div class="form-group">
-                  <label for="profile_img">Profile Image</label>
-                  <input type="file" id="profile_img" class="form-control" name="profile_img" accept=".jpg, .jpeg, .png">
+                <label for="login_role">Login Role</label>
+                <div class="checkbox-container text-left">
+                  {% for i in role %}
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="role_{{ forloop.counter }}">
+                      <label class="form-check-label">{{ i.name }}</label>
+                    </div>
+                  {% endfor %}
                 </div>
               </div>
             </div>
@@ -120,7 +110,17 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="password1">Password</label>
+                  <label for="profile_img">Profile Image</label>
+                  <input type="file" id="profile_img" class="form-control" name="profile_img" accept=".jpg, .jpeg, .png">
+                  <small class="form-text text-muted">Accepted file types: .jpg, .jpeg, .png</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="password1">Password <i class="bi bi-lock"></i></label>
                   <input type="password" id="password1" minlength="8" maxlength="20" class="form-control" name="password1" placeholder="Password" required>
                 </div>
               </div>
@@ -132,7 +132,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block mt-3">Add Admin</button>
+            <button type="submit" class="btn btn-primary mt-3">Add Admin</button>
           </form>
         </div>
       </div>
@@ -156,4 +156,12 @@
   {% endif %}
 
   <!-- Vendor JS Files -->
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></scri
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>
