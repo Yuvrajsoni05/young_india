@@ -96,7 +96,20 @@
                                 <td>{{ i.collage }}</td>
                                 <td>{{ i.associate_partner }}</td>
                                 <td>{{ i.total_impact }}</td>
-                                <td><img src="{{ i.event_photo.url }}" height="35px" width="45px" alt="Event Data" ></td>
+                                 <td>
+                    {% if i.event_photo.all %}
+                        {% for image in i.event_photo.all %}
+                            <div class="event-image">
+                                <img src="{{ image.event_photo.url }}" alt="Event Image" height="30" width="50" />
+                                {% if image.description %}
+                                    <p>{{ image.description }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No images available for this event.</p>
+                    {% endif %}
+                </td>
                                 <td>
                                     <form method="post" action="{% url 'delete-event-user' events_id=i.id %}">
                                         {% csrf_token %}

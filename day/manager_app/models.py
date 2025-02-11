@@ -21,11 +21,17 @@ class Event_Data(models.Model):
     which_SIG = models.CharField(max_length=200,blank=True,null=True)
     event_handle = models.CharField(max_length=200,)
     total_impact = models.IntegerField(blank=True,default=1)
-    event_photo = models.ImageField(upload_to='event_photo/',null=True)
+    # event_photo = models.ImageField(upload_to='event_photo/',null=True)
     # place_name = models.CharField(max_length=200,blank=True)
     school = models.CharField(max_length=200,blank=True,null=True)
     collage = models.CharField(max_length=200,blank=True,null=True)
     associate_partner = models.CharField(max_length=200,null=True,blank=True)
+
+
+class Event_Image(models.Model):
+    event = models.ForeignKey(Event_Data,related_name='event_photo',on_delete=models.CASCADE)
+    event_photo = models.ImageField(upload_to='event_photo/',null=True)
+
 
 
 

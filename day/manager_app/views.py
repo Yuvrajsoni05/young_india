@@ -7,7 +7,7 @@ from admin_app.models import LoginSide
 from matplotlib import pyplot as plt
 import matplotlib
 import numpy as np
-from .models import Event_Data
+from .models import Event_Data,Event_Image
 from  django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Sum
 
@@ -166,6 +166,7 @@ def event_list(request):
         return redirect('manager-profile')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
+
     context = {
         'user': user,
         'k1': all_event
@@ -262,16 +263,20 @@ def event_data(request):
             event_expense = request.POST['event_expense']
             event_venue = request.POST['event_venue']
             event_name = request.POST['event_name']
-            event_images =  request.FILES.get('event_img')
+            # event_images =  request.FILES.get('event_img')
             school = request.POST['school']
             collage = request.POST['collage']
             associate_partner = request.POST.get('associate_partner','')
 
-            if event_images.size > 1 * 1024 * 1024:
-                messages.error(request, 'Each image must be 4MB or less')
-                return redirect('event_data')
 
-            Event_Data.objects.create(
+
+
+
+            # if event_images.size > 1 * 1024 * 1024:
+            #     messages.error(request, 'Each image must be 4MB or less')
+            #     return redirect('event_data')
+
+            demo = Event_Data.objects.create(
                 your_name=your_name,
                 date=event_date,
                 role_yi=role_yi,
@@ -287,10 +292,13 @@ def event_data(request):
                 collage=collage,
                 total_impact=total_impact,
                 event_name=event_name,
-                event_photo=event_images,
+                # event_photo=event_images,
                 associate_partner=associate_partner,
                 user=request.user
             )
+            event_image = request.FILES.getlist('event_img')
+            for image in event_image:
+                Event_Image.objects.create(event_photo=image,event=demo)
 
             messages.success(request, 'thank you for insert data')
         return redirect('event-list')
