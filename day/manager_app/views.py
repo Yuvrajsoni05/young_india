@@ -275,6 +275,24 @@ def event_data(request):
             # if event_images.size > 1 * 1024 * 1024:
             #     messages.error(request, 'Each image must be 4MB or less')
             #     return redirect('event_data')
+            
+          
+            event_image = request.FILES.getlist('event_img')
+
+            if len(event_image) > 6:  # event_images is a list of image files
+                messages.error(request, "You can't upload more than 6 images")
+                return redirect('event_data')
+
+
+            # if event_image and event_image.size > 4 * 1024 * 1024:
+            #       # 4MB size limit
+            #     messages.error(request, 'Each image must be 4MB or less')
+            #     return redirect('event_data')
+
+    
+
+
+
 
             demo = Event_Data.objects.create(
                 your_name=your_name,
@@ -296,12 +314,12 @@ def event_data(request):
                 associate_partner=associate_partner,
                 user=request.user
             )
-            event_image = request.FILES.getlist('event_img')
+            
             for image in event_image:
                 Event_Image.objects.create(event_photo=image,event=demo)
 
             messages.success(request, 'thank you for insert data')
-        return redirect('event-list')
+            return redirect('event-list')
 
 
 
