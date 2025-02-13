@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout,update_session_auth_hash
-from admin_app.models import LoginSide
+from admin_app.models import LoginSide,Login_Role
 from matplotlib import pyplot as plt
 import matplotlib
 import numpy as np
@@ -14,28 +14,28 @@ from django.db.models import Avg, Sum
 # Create your views here.
 
 
-def manager_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('manager_username')
-        password = request.POST.get('manager_password')
+# def manager_login(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('manager_username')
+#         password = request.POST.get('manager_password')
 
-        manager_user = authenticate(request,username=username,password=password)
-        if manager_user is not None:
-            if manager_user.login_role.filter(name='Manager').exists():
-                login(request,manager_user)
-                return redirect('manager-dashboard')
-            else:
-                messages.error(request,"Incorrect Username Password")
-        else:
-            messages.error(request, "Invalid Username or Password")
-            return redirect('index')
-
-
-    return render(request,'index.html')
+#         manager_user = authenticate(request,username=username,password=password)
+#         if manager_user is not None:
+#             if manager_user.login_role.filter(name='Manager').exists():
+#                 login(request,manager_user)
+#                 return redirect('manager-dashboard')
+#             else:
+#                 messages.error(request,"Incorrect Username Password")
+#         else:
+#             messages.error(request, "Invalid Username or Password")
+#             return redirect('index')
 
 
+#     return render(request,'index.html')
 
-@login_required(login_url='Admin_Login')
+
+
+@login_required(login_url='index')
 def manager_signup(request):
     if request.method == "POST":
         manager_username = request.POST.get('manager_username')
@@ -84,9 +84,11 @@ def manager_signup(request):
 
 
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def manager_logout(request):
     logout(request)
+    request.session.clear()
+    
     return redirect('index')
 
 
@@ -95,7 +97,7 @@ def manager_logout(request):
 def about_yi(request):
     return render(request,'components/AboutYi.html')
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def manager_update(request,manager_id):
     if request.user.login_role.filter(name='Manager').exists():
         if request.method == 'POST':
@@ -115,7 +117,7 @@ def manager_update(request,manager_id):
             return redirect('manager-profile')
     return render(request,'manager/manager_profile.html')
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def manager_password(request):
     if request.user.login_role.filter(name='Manager').exists():
         if request.method == 'POST':
@@ -146,20 +148,28 @@ def manager_password(request):
             messages.error(request,'Manager not Created')
             return redirect('manager-profile')
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def manager_dashboard(request):
     if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-Page')
+    # all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
+
+    # user_vertical = LoginSide.objects.all()
+    role = request.user.login_role.name
+    context = {
+         "vertical": role
+    }
+    
     return render(request,'manager/manager_dashboard.html')
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def manager_profile(request):
     if not request.user.login_role.filter(name='Manager').exists():
         return redirect('Error-Page')
 
     return render(request,'manager/manager_profile.html')
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def event_list(request):
     # Ensure the user has the 'Manager' role
     if not request.user.login_role.filter(name='Manager').exists():
@@ -246,7 +256,7 @@ def update_event_data(request,update_id):
 #     return render(request,'Admin/view_manager.html',contex)
 
 
-@login_required(login_url='manager-login')
+@login_required(login_url='index')
 def event_data(request):
     if request.user.login_role.filter(name='Manager').exists():
         if request.method == 'POST':

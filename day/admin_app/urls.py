@@ -9,7 +9,7 @@ from .views import EventDataAPI
 
 urlpatterns = [
     path('',index,name='index'),
-    path('Admin-Login',Admin_Login,name='Admin_Login'),
+    # path('Admin-Login',Admin_Login,name='Admin_Login'),
     path('Admin-Signup',Admin_Signup,name='Admin_Signup'),
     path('Admin-Dashboard',Admin_Dashboard,name='Admin_Dashboard'),
     path('Admin-Profile',Admin_Profile,name='Admin_Profile'),

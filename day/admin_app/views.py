@@ -29,32 +29,78 @@ from django.views.decorators.cache import never_cache
 # Create your views here.
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from .models import Login_Role
+
+
+
 def index(request):
-    return render(request,'index.html ')
-
-
-def Admin_Login(request):
     if request.method == 'POST':
-        username = request.POST.get('admin_username')
-        password = request.POST.get('admin_password')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        login_roles = request.POST.get('login_roles')  # Changed to match the form input field
 
         # Authenticate the user
-        Admin_user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Ensure user is a LoginSide instance (if you're using a custom user model)
+            if isinstance(user ,LoginSide):
+                # Check if the user has the selected role
+                #object = MyModel.objects.filter(key=value).first()
+                selected_role = Login_Role.objects.filter(name=login_roles).first()  # Get the role from the database
 
-        if Admin_user is not None:
-            # Check if the authenticated user has the 'Admin' role
-            if Admin_user.login_role.filter(name='Admin').exists():  # Assuming 'Admin' is the role name
-                # Log the user in
-                login(request, Admin_user)
-                return redirect('Admin_Dashboard')
+                if selected_role and selected_role in user.login_role.all():  # Check if the user has this role
+                    login(request, user)
+                    
+                    # Redirect based on role
+                    if selected_role.name == 'Admin':  # Check if the role is 'Admin'
+                        return redirect('Admin_Dashboard')
+                    else:
+                        return redirect('manager-dashboard')
+                else:
+                    # Role does not match, redirect back to the login page
+                    return redirect('index')
             else:
-                messages.error(request, "You do not have permission to access the admin panel.")
-                return redirect('index')  # Redirect to the homepage or another page if not an Admin
+                # In case of an invalid user instance
+                return redirect('index')
         else:
-            messages.error(request, "Invalid Username or Password")
-            return redirect('index')  # Redirect back to the login page if credentials are incorrect
+            # If authentication fails, redirect to login page
+            return redirect('index')
 
-    return render(request, 'index.html')
+    # Get all roles to pass to the form
+    roles = Login_Role.objects.all()
+    context = {
+        'roles': roles
+    }
+    return render(request, 'index.html', context)
+
+
+
+
+# def Admin_Login(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('admin_username')
+#         password = request.POST.get('admin_password')
+
+#         # Authenticate the user
+#         Admin_user = authenticate(request, username=username, password=password)
+
+#         if Admin_user is not None:
+#             # Check if the authenticated user has the 'Admin' role
+#             if Admin_user.login_role.filter(name='Admin').exists():  # Assuming 'Admin' is the role name
+#                 # Log the user in
+#                 login(request, Admin_user)
+#                 return redirect('Admin_Dashboard')
+#             else:
+#                 messages.error(request, "You do not have permission to access the admin panel.")
+#                 return redirect('index')  # Redirect to the homepage or another page if not an Admin
+#         else:
+#             messages.error(request, "Invalid Username or Password")
+#             return redirect('index')  # Redirect back to the login page if credentials are incorrect
+
+#     return render(request, 'index.html')
 
 
 
@@ -71,7 +117,7 @@ def get_username(request):
 
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def Admin_Signup(request):
     if request.method == 'POST':
         username = request.POST.get('add_username')
@@ -86,7 +132,7 @@ def Admin_Signup(request):
 
 
 
-        if profile_img.size > 2*1024*1024:
+        if profile_img.size > 4*1024*1024:
             messages.error(request,'Image Size must be 4mb')
             return redirect('Admin_Signup')
 
@@ -147,7 +193,7 @@ def Admin_Signup(request):
     # else:
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def Admin_Profile(request):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
@@ -156,7 +202,7 @@ def Admin_Profile(request):
     return render(request, 'Admin/Admin_Profile.html')
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def Admin_update(request,admin_id):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
@@ -180,7 +226,7 @@ def Admin_update(request,admin_id):
     # return render(request,'Admin/Admin_Profile.html')
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def admin_password(request):
     if request.user.login_role.filter(name='Admin').exists():
         if request.method == 'POST':
@@ -210,16 +256,14 @@ def admin_password(request):
             return redirect('Error-Page')
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def admin_logout(request):
     logout(request)
-    request.session.flush()
-
-    request.session.modified = True
-    return redirect('index')
+    request.session.clear()
+    return redirect('/')
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def Admin_Dashboard(request):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
@@ -240,6 +284,7 @@ def Admin_Dashboard(request):
 
     all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
     # login_role = Login_Role.objects.all()
+    
 
     contex = {
         'users_data':all_user,
@@ -253,7 +298,7 @@ def Admin_Dashboard(request):
     return render(request, 'Admin/AdminDashboard.html',contex)
 
 
-@login_required(login_url='Admin_Login')
+@login_required(login_url='index')
 def Event_list(request):
     if not  request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
@@ -403,7 +448,7 @@ def update_event_data(request,event_id):
 
 
 
-@method_decorator(login_required(login_url='Admin_Login'),name='get')
+@method_decorator(login_required(login_url='index'),name='get')
 class EventDataAPI(APIView):
     def get(self,request):
         event = Event_Data.objects.all()

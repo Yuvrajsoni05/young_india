@@ -31,9 +31,15 @@
             border-radius: 5px;
             transition: transform 0.3s;
         }
-        
+
+
         .event-thumbnail:hover {
             transform: scale(1.1);
+        }
+
+
+        .yi-event-model{
+            max-width : 700px !important;CD
         }
         
     </style>
@@ -169,7 +175,7 @@
 
                            <!-- Edit Event Modal -->
             <div class="modal fade" id="editEventModal{{ i.id }}" tabindex="-1" aria-labelledby="editEventModalLabel{{ i.id }}" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog yi-event-model">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editEventModalLabel{{ i.id }}">Edit Event</h5>
