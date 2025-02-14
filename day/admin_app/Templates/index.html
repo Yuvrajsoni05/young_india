@@ -4,68 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <title>Login Form</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-   <div id="container" class="container">
-		<!-- FORM SECTION -->
-		<div class="row">
-			<!-- SIGN UP (Admin Login) -->
-			<div class="col align-items-center flex-col sign-up">
-				
-			</div>
+    <div class="l-form">
+        <div class="shape1"></div>
+        <div class="shape2"></div>
 
-			<!-- SIGN IN (Manager Login) -->
-			<div class="col align-items-center flex-col sign-in">
-				<div class="form-wrapper align-items-center" align="center">
-					<div class="form sign-in">
-                            <form method="POST" action="{% url 'index' %}">
-                            {% csrf_token %}
-						<div class="input-group">
-							<input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
-						</div>
-						<div class="input-group">
-							<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-						</div>
+        <div class="form">
+            <img src="{% static 'Image/YIIMG.png' %}" alt="image" class="form-img">
 
-						<div class="input-group">
-							<label for="login_role">Select Your Role</label>
-							<select class="form-control" id="login_roles" name="login_roles" required>
-								<option value="Select Your Role">Your Role</option>
-								{% for role in roles %}
-								<option value="{{ role.name }}">{{ role.name }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						
-						<button type="submit">Login Now</button>
+            <form method="POST" action="{% url 'index' %}" class="form-content">
+				{% csrf_token %}
+                <h1 class="form-title">Welcome</h1>
 
-                        </form>
-						  <a href="{% url 'password_reset' %}"><p>Forgot Password</p></a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- END FORM SECTION -->
+                <div class="form-div form-div-one ">
+                    <div class="form-icon">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M12 2C6.579 2 2 6.579 2 12s4.579 10 10 10 10-4.579 10-10S17.421 2 12 2zm0 5c1.727 0 3 1.272 3 3s-1.273 3-3 3c-1.726 0-3-1.272-3-3s1.274-3 3-3zm-5.106 9.772c.897-1.32 2.393-2.2 4.106-2.2h2c1.714 0 3.209.88 4.106 2.2C15.828 18.14 14.015 19 12 19s-3.828-.86-5.106-2.228z"></path></svg>
+                    </div>
+
+                    <div class="form-div-input">
+                        <label for="" class="form-label">Username</label>
+                        <input type="text" class="form-input" name="username">
+                    </div>
+                </div>
+
+                <div class="form-div">
+                    <div class="form-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M12 2C9.243 2 7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5zm6 10 .002 8H6v-8h12zm-9-2V7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9z"></path></svg>
+                    </div>
+
+                    <div class="form-div-input">
+                        <label for="" class="form-label">Password</label>
+                        <input type="password" class="form-input" name="password">
+                    </div>
+                </div>
+<br><br>
+
+				        <div class="form-div">
+                    <div class="form-icon">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 26 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M12 10c1.151 0 2-.848 2-2s-.849-2-2-2c-1.15 0-2 .848-2 2s.85 2 2 2zm0 1c-2.209 0-4 1.612-4 3.6v.386h8V14.6c0-1.988-1.791-3.6-4-3.6z"></path><path d="M19 2H5c-1.103 0-2 .897-2 2v13c0 1.103.897 2 2 2h4l3 3 3-3h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm-5 15-2 2-2-2H5V4h14l.002 13H14z"></path></svg>
+                    </div>
+
+                    <div class="form-div-input">
+<!--                        <label for="" class="form-label">Role</label>-->
+                        <select name="login_roles" style="width:100%;  border: none;" >
+                            <option value="" disabled selected>Your Role </option>
+
+                            {% for i in roles %}
+                                <option> {{ i.name }} </option>
+                            {% endfor %}
+
+                        </select>
+<!--                        <input type="text" class="form-input" name="login_roles">-->
+                    </div>
+                </div>
+
+                <a href="{% url 'password_reset' %}" class="form-forgot">Forgot Password?</a>
+
+                <input type="submit" value="Login" class="form-button">
 
 
-		<!-- CONTENT SECTION -->
-		<div class="row content-row">
-			<!-- SIGN IN CONTENT -->
-			<div class="col align-items-center flex-col">
-				<div class="text sign-in">
-					<h2>Welcome</h2>
-				</div>
-				<div class="img sign-in"></div>
-			</div>
-			<!-- END SIGN IN CONTENT -->
-		</div>
-		<!-- END CONTENT SECTION -->
-	</div>
+            </form>
+        </div>
+    </div>
 
-{% if messages %}
+	{% if messages %}
     <script>
         {% for message in messages %}
             Swal.fire({
@@ -78,8 +85,9 @@
     </script>
 {% endif %}
 
-    <!-- Bootstrap JS -->
-  <script src="{% static 'js/index.js' %}"></script>
 
+
+
+    <script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

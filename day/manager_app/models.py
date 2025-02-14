@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from admin_app.models import LoginSide
 # Create your models here.
@@ -7,6 +9,7 @@ from admin_app.models import LoginSide
 
 
 class Event_Data(models.Model):
+    # id  =  models.UUIDField(primary_key=True,default=uuid.UUID,editable=True)
     user = models.ForeignKey(LoginSide, on_delete=models.SET_NULL, null=True)
     your_name = models.CharField(max_length=50)
     event_name = models.CharField(max_length=200,blank=True)
@@ -31,6 +34,7 @@ class Event_Data(models.Model):
 class Event_Image(models.Model):
     event = models.ForeignKey(Event_Data,related_name='event_photo',on_delete=models.CASCADE)
     event_photo = models.ImageField(upload_to='event_photo/',null=True)
+
 
 
 

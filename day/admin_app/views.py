@@ -29,9 +29,8 @@ from django.views.decorators.cache import never_cache
 # Create your views here.
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from .models import Login_Role
+
+
 
 
 
@@ -39,28 +38,30 @@ def index(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        login_roles = request.POST.get('login_roles')  # Changed to match the form input field
+        login_roles = request.POST.get('login_roles')  # Selected role from form input
 
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            # Ensure user is a LoginSide instance (if you're using a custom user model)
-            if isinstance(user ,LoginSide):
-                # Check if the user has the selected role
-                #object = MyModel.objects.filter(key=value).first()
-                selected_role = Login_Role.objects.filter(name=login_roles).first()  # Get the role from the database
 
-                if selected_role and selected_role in user.login_role.all():  # Check if the user has this role
+        if user is not None:
+            # Ensure user is a LoginSide instance (if using a custom user model)
+            if isinstance(user, LoginSide):
+                # Get the selected role from the database
+                selected_role = Login_Role.objects.filter(name=login_roles).first()
+
+                if selected_role and selected_role in user.login_role.all():  # Check if user has the selected role
                     login(request, user)
-                    
+
+                    # Store the role in the session so that it can be accessed across requests
+                    request.session['user_roles'] = selected_role.name
+
                     # Redirect based on role
-                    if selected_role.name == 'Admin':  # Check if the role is 'Admin'
+                    if selected_role.name == 'Admin':  # If user has Admin role
                         return redirect('Admin_Dashboard')
                     else:
                         return redirect('manager-dashboard')
                 else:
-                    # Role does not match, redirect back to the login page
+                    # Role doesn't match, redirect back to the login page
                     return redirect('index')
             else:
                 # In case of an invalid user instance
@@ -75,6 +76,9 @@ def index(request):
         'roles': roles
     }
     return render(request, 'index.html', context)
+
+
+
 
 
 

@@ -1,13 +1,18 @@
-let container = document.getElementById('container')
+const inputs = document.querySelectorAll(".form-input");
 
-toggle = () => {
-	container.classList.toggle('sign-in')
-	container.classList.toggle('sign-up')
+function addfocus() {
+    let parent = this.parentNode.parentNode;
+    parent.classList.add("focus");
 }
 
-setTimeout(() => {
-	container.classList.add('sign-in')
-}, 20)
+function remfocus() {
+    let parent = this.parentNode.parentNode;
+    if(this.value == ""){
+        parent.classList.remove("focus");
+    }
+}
 
-
-
+inputs.forEach(input => {
+    input.addEventListener("focus", addfocus);
+    input.addEventListener("blur", remfocus)
+});

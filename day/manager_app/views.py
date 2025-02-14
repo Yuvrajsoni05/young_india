@@ -155,12 +155,20 @@ def manager_dashboard(request):
     # all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
 
     # user_vertical = LoginSide.objects.all()
-    role = request.user.login_role.name
-    context = {
-         "vertical": role
-    }
+    # Get the role from the session
+    user_role = request.session.get('user_roles', None)
+
+    if user_role:
+        context = {
+            'role': user_role  # Pass the role to the template
+        }
+    else:
+        # Handle the case where no role is found in the session (maybe unauthorized access)
+        context = {
+            'role': 'Unknown'
+        }
     
-    return render(request,'manager/manager_dashboard.html')
+    return render(request,'manager/manager_dashboard.html',context)
 
 @login_required(login_url='index')
 def manager_profile(request):
