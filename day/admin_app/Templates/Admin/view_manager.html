@@ -75,12 +75,12 @@
         <td>{{ manager.username }}</td>
         <td>{{ manager.email }}</td>
        <td> {% for role in manager.login_role.all %}
-                        {% if role.name == "Manager" %}
-                            {{ role.name }}
-                        {% endif %}
+           {% if role.name != "superuser" %}
+                        {{ role.name }}
+                        {% endif %},
                     {% endfor %}</td>
         <td>{{ manager.phone_number }}</td>
-        <td><img src="{{ manager.photo.url }}" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
+        <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
 
 <td>
     <form action="{% url 'Handler-Delete' handler_id=manager.id %}" method="post">
@@ -100,6 +100,7 @@
     <i class="bi bi-telephone-forward-fill"></i>
 </a> </td>
             </tr>
+
       <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -113,7 +114,7 @@
           <input type="hidden" name="manager_id" id="manager_id" value="">
           <div class="mb-3">
             <label for="manager_first_name" class="form-label">First Name</label>
-            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{manager.first_name}}" required>
+            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}" required>
           </div>
           <div class="mb-3">
             <label for="manager_last_name" class="form-label">Last Name</label>
@@ -148,6 +149,7 @@
 
 
           </form>
+
 {% if messages %}
                   <script>
     {% for message in messages %}

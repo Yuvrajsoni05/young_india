@@ -39,9 +39,9 @@
 
 
         .yi-event-model{
-            max-width : 700px !important;CD
+            max-width : 700px !important;
         }
-        
+
     </style>
 
 </head>
@@ -120,7 +120,7 @@
                                     {% if i.event_photo.all %}
                                         {% with first_image=i.event_photo.first %}
                                             <!-- Show the first image as the thumbnail -->
-                                            <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="30" width="50" class="event-thumbnail" 
+                                            <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="30" width="50" class="event-thumbnail"
                                                 data-bs-toggle="modal" data-bs-target="#imageModal{{ i.id }}" 
                                                 data-image-url="{{ first_image.event_photo.url }}" />
                                         {% endwith %}
@@ -159,6 +159,7 @@
                                             </div>
                                         </div>
                                     </div>
+
 
                                 <td>
                                     <form method="post" action="{% url 'delete-event-user' events_id=i.id %}">
@@ -368,7 +369,7 @@
     </script>
     {% endif %}
 
-    <script>   </script>
+
 
     <!-- Vendor JS Files -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

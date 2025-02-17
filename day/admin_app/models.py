@@ -16,7 +16,7 @@ ROLE_CHOICES = [
 
 ]
 class Login_Role(models.Model):
-    name = models.CharField(max_length=200,primary_key=True)
+    name = models.CharField(max_length=200,primary_key=True,choices=ROLE_CHOICES)
 
 # Create your models here.
 class LoginSide(AbstractUser):

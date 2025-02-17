@@ -22,10 +22,9 @@ urlpatterns = [
         path('about_yi',about_yi,name='about_yi'),
 
         #Masoom Side
-        path('masoom-dashboard',masoom_dashboard,name='masoom-dashboard')
+        # path('masoom-dashboard',masoom_dashboard,name='masoom-dashboard')
 
 
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 

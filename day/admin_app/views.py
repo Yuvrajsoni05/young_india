@@ -123,6 +123,9 @@ def get_username(request):
 
 @login_required(login_url='index')
 def Admin_Signup(request):
+    if not request.user.login_role.filter(name='Admin').exists():
+        return redirect('Error-Page')
+
     if request.method == 'POST':
         username = request.POST.get('add_username')
         first_name = request.POST.get('first_name')
@@ -264,7 +267,7 @@ def admin_password(request):
 def admin_logout(request):
     logout(request)
     request.session.clear()
-    return redirect('/')
+    return redirect('index')
 
 
 @login_required(login_url='index')
@@ -286,13 +289,13 @@ def Admin_Dashboard(request):
     avg_impact = impact_avg['total_impact__avg'] if impact_avg['total_impact__avg']is not None else 0
 
 
-    all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
-    # login_role = Login_Role.objects.all()
+    all_user = LoginSide.objects.all().distinct()
+    login_role = Login_Role.objects.all()
     
 
     contex = {
         'users_data':all_user,
-        # 'role':login_role,
+        'role':login_role,
         'total_manager' :total_user,
         'total_event':total_event,
         'total_impact':total_impact,
@@ -307,6 +310,12 @@ def Event_list(request):
     if not  request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+  #  project_verticals = Event_Data.objects.all().values_list('project_vertical',flat=True).distinct()
+
+
+
+
+
 
     search = request.GET.get('search')
     if search and search != 'all':
@@ -316,11 +325,23 @@ def Event_list(request):
     context = {
         'events': event_list,
         'm1': manager_name,
+
     }
     return render(request, 'Admin/event_list.html', context)
 
-
-
+# def vertical_base(request):
+#     project_verticals = Event_Data.objects.all().values_list('project_vertical', flat=True).distinct()
+#     verticals =  request.GET.get('search_role')
+#
+#     if verticals and verticals != 'all':
+#         project_vertical = Event_Data.objects.filter(project_vertical=verticals)
+#     else:
+#         project_vertical = Event_Data.objects.all()
+#     context = {
+#         'vertical_data': project_vertical,
+#         'e1': project_verticals
+#     }
+#     return render(request, 'Admin/event_list.html', context)
 
 def error_page(request ):
     return render(request,'Admin/components/Error_404.html',)
@@ -370,8 +391,13 @@ def download_excel(request):
 def manager_list(request):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
-    manager = LoginSide.objects.filter(login_role__in=['Manager'])
+    manager = LoginSide.objects.all().distinct()
+    # login_role = Login_Role.objects.exclude(is_superuser=False)
+    login_role = Login_Role.objects.exclude(name = 'superuser')
+    # login_role = Login_Role.objects.exclude(name='superuser')  # Example if you have a role field
+
     contex = {
+        'role' :login_role,
         'managers' :manager
     }
     return render(request,'Admin/view_manager.html',contex)
