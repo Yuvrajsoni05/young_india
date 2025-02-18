@@ -11,6 +11,16 @@
 
   <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
+
+<style>
+
+  
+.yi-dropdown {
+  display: flex;
+  gap: 10px;
+}
+</style>
+
   <!-- JS and Google Fonts -->
   <script src="{% static 'js/dashboard.js' %}"></script>
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -19,7 +29,7 @@
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
@@ -83,7 +93,7 @@
                       <h6 class="count">{{ total_impact }}</h6>
                     </div>
                   </div>
-                </div>
+                </div> 
               </div>
             </div>
 
@@ -126,137 +136,287 @@
 
       </div>
 
+
+      <div class="yi-dropdown">
+        <div class="table-responsive">
+          <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+              <div class="form-group" style="width:250px;">
+                  <select class="form-control" id="search" name="search" required onchange="this.form.submit()">
+                      <option value="" disabled selected>Choose by Name</option>
+                      <option value="all">All</option>
+                      {% for i in m1 %}
+                          <option value="{{ i }}">{{ i }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          </form>
+      </div>
+  
+  
+  
+      <div class="table-responsive">
+        <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+            <div class="form-group" style="width:250px;">
+                <select class="form-control" id="search" name="search" required onchange="this.form.submit()">
+                    <option value="" disabled selected>Choose by Name</option>
+                    <option value="all">All</option>
+                    {% for i in m1 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+      </div>
+
+  <br>
+    
+
+
+
       <!-- User Data Table -->
-<!--      <div class="table-responsive mt-4">-->
-<!--        <table class="table table-bordered">-->
-<!--          <thead>-->
-<!--            <tr class="text-nowrap" align="center">-->
-<!--              <th>Sr.no</th>-->
-<!--              <th>Name</th>-->
-<!--              <th>First Name</th>-->
-<!--              <th>Last Name</th>-->
-<!--              <th>Username</th>-->
-<!--              <th>Email</th>-->
-<!--              <th>Login Role</th>-->
-<!--              <th>Phone Number</th>-->
-<!--              <th>Profile Image</th>-->
-<!--              <th colspan="3">Action</th>-->
-<!--            </tr>-->
-<!--          </thead>-->
-<!--           {% for manager in users_data %}-->
-<!--          <tbody>-->
+      <div class="table-responsive">
+        <table class="table table-striped" style="width:100%" border="1px">
+            <thead>
+                <tr class="text-nowrap" align="center">
+                    <th>Sr.no</th>
+                    <th>Event Date</th>
+                    <th>Manager Name</th>
+                    <th>Event Name</th>
+                    <th>Event Venue</th>
+                    <th>Event Expense</th>
+                    <th>Role YI</th>
+                    <th>Handle By</th>
+                    <th>Project Verticals</th>
+                    <th>Project Stakeholder</th>
+                    <th>SIG</th>
+                    <th>YI Pillar</th>
+                    <th>Social Link</th>
+                    <th>School</th>
+                    <th>College</th>
+                    <th>Associate Partner</th>
+                    <th>Impact</th>
+                    <th>Image</th>
+                    <th colspan="3">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr class="text-nowrap" align="center">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ event.date }}</td>
+                        <td>{{ event.your_name }}</td>
+                        <td>{{ event.event_name }}</td>
+                        <td>{{ event.event_venue }}</td>
+                        <td>{{ event.event_expense }}</td>
+                        <td>{{ event.role_yi }}</td>
+                        <td>{{ event.event_handle }}</td>
+                        <td>{{ event.project_vertical }}</td>
+                        <td>{{ event.project_stakeholder }}</td>
+                        <td>{{ event.which_SIG }}</td>
+                        <td>{{ event.yi_pillar }}</td>
+                        <td><a href="{{ event.social_link }}"><i class="bi bi-box-arrow-up-right"></i></a></td>
+                        <td>{{ event.school }}</td>
+                        <td>{{ event.collage }}</td>
+                        <td>{{ event.associate_partner }}</td>
+                        <td>{{ event.total_impact }}</td>
+                        <td>{% if event.event_photo.all %}
+                            {% with first_image=event.event_photo.first %}
+
+                        <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="39" width="50" class="event-thumbnail"
+                               data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
+                                            data-image-url="{{ first_image.event_photo.url }}" >
+
+                                {% endwith %}
+                                {% else %}
+                                <p>No images available for this event.</p>
+                                {% endif %}
+                        </td>
+                        <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ event.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModalLabel{{ event.id }}">Event Images</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        {% for image in event.event_photo.all %}
+                                                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                                <img src="{{ image.event_photo.url }}" class="d-block w-100" width="500px" height="400px" alt="Event Image">
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        <td>
+                            <form method="post" action="{% url 'delete_event' event_id=event.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                        <td>
+                            <!-- Button to trigger modal -->
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Event Modal -->
+                    <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1" aria-labelledby="editEventModalLabel{{ event.id }}" aria-hidden="true">
+                        <div class="modal-dialog yi-event-model">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editEventModalLabel{{ event.id }}">Edit Event</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="{% url 'Update_event_data' event_id=event.id %}">
+                                        {% csrf_token %}
+
+                                        <div class="mb-3">
+                                            <label for="event_date" class="form-label">Event Date</label>
+                                            <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="event_name" class="form-label">Event Name</label>
+                                            <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="event_handle" class="form-label">Handle</label>
+                                            <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="role_yi" class="form-label">YI Role</label>
+                                            <select class="form-control" id="role_yi" name="role_yi">
+                                                <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
+                                                <option value="Vertical Chair">Vertical Chair</option>
+                                                <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                                                <option value="Team Member">Team Member</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="project_verticals" class="form-label">Project Verticals</label>
+                                            <select class="form-control" id="project_verticals" name="project_verticals">
+                                                <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
+                                                <!-- Add all vertical options -->
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
+                                            <select class="form-control" id="project_stakeholder" name="project_stakeholder">
+                                                <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
+                                                <!-- Add all stakeholder options -->
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="yi_pillar" class="form-label">Yi Pillar</label>
+                                            <select class="form-control" id="yi_pillar" name="yi_pillar">
+                                                <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
+                                                <!-- Add all pillar options -->
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="social_link" class="form-label">Social Link</label>
+                                            <input type="url" class="form-control" id="social_link" name="social_link" value="{{ event.social_link }}">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="total_impact" class="form-label">Impact</label>
+                                            <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="event_expense" class="form-label">Event Expense</label>
+                                            <input type="number" class="form-control" id="event_expense" name="event_expense" value="{{ event.event_expense }}">
+                                        </div>
+
+                                        <div class="mb-3" id="sig_div">
+                                            <label for="sig_">Choose SIG</label>
+                                            <select class="form-control" id="sig_" name="sig_">
+                                                <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
+                                                <!-- Add SIG options -->
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3" id="associate_div">
+                                            <label for="associate_partners">Associate Partner</label>
+                                            <select class="form-control" id="associate_partners" name="associate_partners">
+                                                <option value="{{ event.associate_partner }}">{{ event.associate_partner }}</option>
+                                                <!-- Add associate partners -->
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3" id="school_div">
+                                            <label for="school">School</label>
+                                            <input type="text" id="school" class="form-control" name="school" placeholder="School" value="{{ event.school }}">
+                                        </div>
+
+                                        <div class="mb-3" id="collage_div">
+                                            <label for="collage">College</label>
+                                            <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Download Excel Button -->
+        <a href="{% url 'download_excel' %}">
+            <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
+        </a>
+    </div>
 
 
-<!--              <tr class="text-nowrap" align="center">-->
-<!--                <td>{{ forloop.counter }}</td>-->
-<!--                <td>{{ manager.first_name }} {{ manager.last_name }}</td>-->
-<!--                <td>{{ manager.first_name }}</td>-->
-<!--                <td>{{ manager.last_name }}</td>-->
-<!--                <td>{{ manager.username }}</td>-->
-<!--                <td>{{ manager.email }}</td>-->
-<!--                <td>-->
-<!--                  {% for i in manager.login_role.all %}-->
-<!--                    {{ i.name }}-->
-<!--                  {% endfor %}-->
-<!--                </td>-->
-<!--                <td>{{ manager.phone_number }}</td>-->
-<!--                <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="45px" width="45px" alt="Profile" class="rounded-circle"></td>-->
-<!--                <td>-->
-<!--                  <form action="{% url 'Handler-Delete' handler_id=manager.id %}" method="post">-->
-<!--                    {% csrf_token %}-->
-<!--                    <button class="btn btn-danger"><i class="bi bi-trash"></i></button>-->
-<!--                  </form>-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">-->
-<!--                    <i class="bi bi-pencil-square"></i>-->
-<!--                  </button>-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                  <a class="btn btn-light rounded-circle" href="tel:{{ manager.phone_number }}">-->
-<!--                    <i class="bi bi-telephone-forward-fill"></i>-->
-<!--                  </a>-->
-<!--                </td>-->
-<!--              </tr>-->
-
-<!--              &lt;!&ndash; Edit Modal &ndash;&gt;-->
-<!--              <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">-->
-<!--                <div class="modal-dialog">-->
-<!--                  <div class="modal-content">-->
-<!--                    <div class="modal-header">-->
-<!--                      <h5 class="modal-title">Edit Manager</h5>-->
-<!--                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                    </div>-->
-<!--                    <div class="modal-body">-->
-<!--                      <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">-->
-<!--                        {% csrf_token %}-->
-<!--                        <div class="mb-3">-->
-<!--                          <label for="" class="form-label">First Name</label>-->
-<!--                          <input type="text" class="form-control"  maxlength="20" name="manager_first_name" value="{{ manager.first_name }}" required>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                          <label for="" class="form-label">Last Name</label>-->
-<!--                          <input type="text" class="form-control" name="manager_last_name" maxlength="20" value="{{ manager.last_name }}" required>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                          <label for="" class="form-label">Username</label>-->
-<!--                          <input type="text" class="form-control" name="manager_username" maxlength="15" value="{{ manager.username }}" required>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                          <label for="" class="form-label">Email</label>-->
-<!--                          <input type="email" class="form-control" name="manager_email" maxlength="15" value="{{ manager.email }}" required>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                          <label for="" class="form-label">Phone Number</label>-->
-<!--                          <input type="number" class="form-control" name="manager_phone_number" maxlength="10" value="{{ manager.phone_number }}" required>-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                          <label for="" class="form-label">Profile Image</label>-->
-<!--                          <input type="file" class="form-control" name="manager_profile_img" accept=".jpeg , .jpg , png ">-->
-<!--                        </div>-->
-
-
-<!--                        <div class="mb-3">-->
-<!--                          <label for="login_role" class="form-label">Login Role :</label>{% for i in role %}-->
-<!--                          <input type="checkbox" name="login_role" id="login_role" value=" {{ i.name }}" {% for s in manager.login_role.all %}-->
-<!--                                 checked-->
-<!--                                 {% endfor %} > <label class="form-check-label" >{{ i.name }}</label>-->
-<!--&lt;!&ndash;                          <select class="form-control" id="login_role" name="login_role">&ndash;&gt;-->
-<!--{% endfor %}-->
-<!--&lt;!&ndash;                                 <option value="">{% for i in manager.login_role.all %}&ndash;&gt;-->
-<!--&lt;!&ndash;                                            {{ i.name }}&ndash;&gt;-->
-<!--&lt;!&ndash;                                   {% endfor %}&ndash;&gt;-->
-<!--&lt;!&ndash;                                 </option>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                          </select>&ndash;&gt;-->
-<!--                        </div>-->
-<!--                        <div class="modal-footer">-->
-<!--                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-<!--                          <button type="submit" class="btn btn-primary">Save changes</button>-->
-<!--                        </div>-->
-<!--                      </form>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-
-<!--            {% endfor %}-->
-
-<!--          </tbody>-->
-<!--        </table>-->
-<!--      </div>&lt;!&ndash; End Table &ndash;&gt;-->
+    
 
     </section>
-<br>
 
-
-  {% include 'Admin/components/footer.html' %}
 
   </main><!-- End #main -->
 
 
-
-
+  {% if messages %}
+  <script>
+      {% for message in messages %}
+          Swal.fire({
+              title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
+              text: "{{ message }}",
+              icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+              confirmButtonText: 'OK'
+          });
+      {% endfor %}
+  </script>
+{% endif %}
 
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>

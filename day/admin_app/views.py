@@ -1,7 +1,7 @@
 from collections import Counter
 from io import BytesIO
 # from openpyxl.drawing.image import Image
-
+from django.core.paginator import Paginator
 import matplotlib
 import numpy as np
 from PIL.Image import Image
@@ -19,7 +19,7 @@ import csv
 from django.http import HttpResponse
 import openpyxl
 from .serializer import EventDataSerializer
-from manager_app.models import Event_Data
+from manager_app.models import Event_Data,Event_Image
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 
@@ -291,8 +291,32 @@ def Admin_Dashboard(request):
 
     all_user = LoginSide.objects.all().distinct()
     login_role = Login_Role.objects.all()
-    
 
+
+
+    manager_role = Event_Data.objects.all().values_list('project_verticals',flat=True).distinct()
+    manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+
+    login_role = request.GET.get('login_role')
+
+    if login_role and login_role != 'login_role':
+        event_role = Event_Data.objects.filter(login_role=login_role)
+    else:
+        event_role= Event_Data.objects.filter(login_role=login_role)
+        
+
+
+    search = request.GET.get('search')
+    if search and search != 'all':
+        event_list = Event_Data.objects.filter(your_name=search)
+    
+    else:
+        event_list = Event_Data.objects.all()
+
+    events_list = Event_Data.objects.all()
+    paginator = Paginator(events_list, 10)  # Show 10 events per page
+    page_number = request.GET.get('page')
+    events = paginator.get_page(page_number)
     contex = {
         'users_data':all_user,
         'role':login_role,
@@ -301,6 +325,8 @@ def Admin_Dashboard(request):
         'total_impact':total_impact,
         'impact_avg':avg_impact,
         'total_expense':total_expense,
+        'events':event_list,
+         'm1': manager_name,
     }
     return render(request, 'Admin/AdminDashboard.html',contex)
 
@@ -348,45 +374,79 @@ def error_page(request ):
 
 from openpyxl.styles import Font
 from openpyxl.drawing.image import Image
-def download_excel(request):
+import openpyxl
+from openpyxl.drawing.image import Image
+from django.http import HttpResponse
 
+from io import BytesIO
+from PIL import Image as PILImage
+from openpyxl.drawing.image import Image
+import os
+from django.conf import settings
+
+def download_excel(request):
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     sheet.title = 'Event Data'
 
-
     headers = [
-        'Event Date', 'Manager Name','Event Name' ,'Event Venue','Event Expense','Role YI', 'Project Verticals',
-        'Project StackHolder', 'YI Pillar', 'SIG', 'School', 'Collage','Associate Partner','Event Handle', 'Impact','Image'
+        'Event Date', 'Manager Name', 'Event Name', 'Event Venue', 'Event Expense', 'Role YI', 'Project Verticals',
+        'Project Stakeholder', 'YI Pillar', 'SIG', 'School', 'Collage', 'Associate Partner', 'Event Handle', 'Impact', 'Image'
     ]
 
-    # sheet[headers].font = Font(bold=True)
+    # Set the headers in the first row
     sheet.append(headers)
 
-
+    # Get all event data
     event_data = Event_Data.objects.all()
+
+    # Write event data rows
     for i in event_data:
         row = [
-            i.date, i.your_name, i.event_name,i.event_venue,i.event_expense,i.role_yi,i.project_vertical,
-            i.project_stakeholder, i.yi_pillar, i.which_SIG,i.school,i.collage,i.associate_partner,
-            i.event_handle, i.total_impact]
+            i.date, i.your_name, i.event_name, i.event_venue, i.event_expense, i.role_yi, i.project_vertical,
+            i.project_stakeholder, i.yi_pillar, i.which_SIG, i.school, i.collage, i.associate_partner,
+            i.event_handle, i.total_impact
+        ]
         sheet.append(row)
-        if i.event_photo:
-            img_path = i.event_photo.path
-            img = Image(img_path)
-            img.width = 80
-            img.height =30
 
-            img.anchor = f'O{sheet.max_row}'
-            sheet.add_image(img)
+        # Now, for each event, if there are related images, we add them.
+        event_images = i.event_photo.all()  # Access related Event_Image for each Event_Data
 
+        # Check if there are images for this event
+        for img in event_images:
+            if img.event_photo:
+                img_path = os.path.join(settings.MEDIA_ROOT, img.event_photo.name)
 
+                # Open the image with Pillow
+                try:
+                    pil_img = PILImage.open(img_path)
+
+                    # Save the image to a BytesIO stream
+                    img_stream = BytesIO()
+                    pil_img.save(img_stream, format='PNG')
+                    img_stream.seek(0)
+
+                    # Create an Image object for openpyxl from the BytesIO stream
+                    openpyxl_img = Image(img_stream)
+                    openpyxl_img.width = 80
+                    openpyxl_img.height = 30
+
+                    # Insert the image in the corresponding row
+                    img.anchor = f'O{sheet.max_row}'  # The 'O' column is the 15th column (Image column)
+                    sheet.add_image(openpyxl_img)
+                except Exception as e:
+                    print(f"Error inserting image: {e}")
+                    continue
+
+    # Generate the response to download the file
     response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
     response['Content-Disposition'] = 'attachment; filename="Event_Data.xlsx"'
 
     workbook.save(response)
     return response
+
 
 def manager_list(request):
     if not request.user.login_role.filter(name='Admin').exists():
@@ -437,6 +497,10 @@ def update_manager(request,manager_id):
         update_manager_data.phone_number = request.POST['manager_phone_number']
         if 'manager_profile_img' in request.FILES:
             update_manager_data.photo = request.FILES['manager_profile_img']
+
+        if update_manager_data.photo.size > 4*1024*1024:
+            messages.error(request,'Image Size must be 4mb ')
+            return redirect('View-manager')
         update_manager_data.save()
         messages.success(request, 'Manager profile  Updated')
 
@@ -470,11 +534,11 @@ def update_event_data(request,event_id):
                 update_event.associate_partner = request.POST.get('associate_partners')
                 update_event.save()
                 messages.success(request,'Event Updated')
-                return redirect('Event_List')
+                return redirect('Admin_Dashboard')
 
             else:
                 messages.error(request,'Event not updated')
-                return redirect('Event_List')
+                return redirect('Admin_Dashboard')
 
 
 

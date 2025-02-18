@@ -12,7 +12,7 @@ ROLE_CHOICES = [
     ('Accessibility','Accessibility'),('Learning(YI Talks)','Learning(YI Talks)'),
     ('Climate action','Climate action'),('Climate action','Climate action'),
     ('Innovation','Innovation'),('Entrepreneurship','Entrepreneurship'),('Branding & PR','Branding & PR'),('Women Engagement (YIWE)','Women Engagement (YIWE)'),
-    ('Culture Connect','Culture Connect'),('Yi Angel','Yi Angel')
+    ('Culture Connect','Culture Connect'),('Yi Angel','Yi Angel'),('Special Interest Group (S.I.G)','Special Interest Group (S.I.G)')
 
 ]
 class Login_Role(models.Model):

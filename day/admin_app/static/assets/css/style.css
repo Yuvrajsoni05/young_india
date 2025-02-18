@@ -166,6 +166,11 @@ h6 {
   }
 }
 
+.yi-dropdown {
+  display: flex;
+  gap: 10px;
+}
+
 @keyframes dropdown-animate {
   0% {
     opacity: 0;
@@ -1238,3 +1243,5 @@ h6 {
 footer {
             margin-top: auto; /* Push footer to the bottom */
         }
+
+
