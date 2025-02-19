@@ -155,12 +155,12 @@
   
   
       <div class="table-responsive">
-        <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+        <form method="get" action="{% url 'Role_List' %}" id="managerFilterForm">
             <div class="form-group" style="width:250px;">
                 <select class="form-control" id="search" name="search" required onchange="this.form.submit()">
-                    <option value="" disabled selected>Choose by Name</option>
-                    <option value="all">All</option>
-                    {% for i in m1 %}
+                    <option value="" disabled selected>Choose by Role</option>
+                    <option value="alls">All</option>
+                    {% for i in d1 %}
                         <option value="{{ i }}">{{ i }}</option>
                     {% endfor %}
                 </select>
@@ -376,6 +376,11 @@
                                             <label for="collage">College</label>
                                             <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
                                         </div>
+
+                                        <div class="mb-3" id="image_file">
+                                          <label for="event_image">Event Image </label>
+                                          <input type="file" id="event_image" class="form-control" name="event_image" accept='.jpeg,.png,.jpg' multiple>
+                                      </div>
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

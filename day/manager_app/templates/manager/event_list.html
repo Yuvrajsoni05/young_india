@@ -23,6 +23,7 @@
     <link href="{% static 'css/manager_dashboard.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/footer.css' %}" rel="stylesheet">
+    <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
     <style>
 
 
@@ -120,7 +121,7 @@
                                     {% if i.event_photo.all %}
                                         {% with first_image=i.event_photo.first %}
                                             <!-- Show the first image as the thumbnail -->
-                                            <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="30" width="50" class="event-thumbnail"
+                                            <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="40" width="50" class="event-thumbnail"
                                                 data-bs-toggle="modal" data-bs-target="#imageModal{{ i.id }}" 
                                                 data-image-url="{{ first_image.event_photo.url }}" />
                                         {% endwith %}
@@ -199,7 +200,10 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="event_handle" class="form-label">Handle</label>
-                                            <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ i.event_handle }}" placeholder="Enter handler's name">
+                                            <div class="tag-container" id="tagContainer">
+                                                <input type="text" id="tagInput" class="form-control" value="{{i.event_handle}}" >
+                                                <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by" value="{{i.event_handle}}">
+                                              </div>
                                         </div>
                                     </div>
 
@@ -378,6 +382,8 @@
 
     <!-- Template Main JS File -->
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'js/inputfiled.js' %}" ></script>
+
 
 
 </body>

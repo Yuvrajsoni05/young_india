@@ -208,7 +208,9 @@ def update_event_data(request,update_id):
     # if not request.user.login_role.filter(name='Manager').exists():
     #     return redirect('Error-page')
     # else:
-    if request.user.login_role.filter(name='Manager').exists():
+    if request.method == 'POST':
+
+
         update_event = get_object_or_404(Event_Data,id = update_id)
         update_event.collage =  request.POST['collage']
         update_event.school = request.POST['school']
@@ -218,7 +220,7 @@ def update_event_data(request,update_id):
         update_event.project_stakeholder = request.POST['project_stakeholder']
         update_event.yi_pillar = request.POST['yi_pillar']
         update_event.social_link = request.POST['social_link']
-        update_event.event_handle = request.POST['event_handle']
+        update_event.event_handle = request.POST.getlist('handel_by')
         update_event.total_impact = request.POST['total_impact']
         update_event.which_SIG  = request.POST['sig_']
 

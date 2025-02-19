@@ -290,22 +290,8 @@ def Admin_Dashboard(request):
 
 
     all_user = LoginSide.objects.all().distinct()
-    login_role = Login_Role.objects.all()
-
-
-
-    manager_role = Event_Data.objects.all().values_list('project_verticals',flat=True).distinct()
+    login_role = Login_Role.objects.all().distinct()
     manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
-
-    login_role = request.GET.get('login_role')
-
-    if login_role and login_role != 'login_role':
-        event_role = Event_Data.objects.filter(login_role=login_role)
-    else:
-        event_role= Event_Data.objects.filter(login_role=login_role)
-        
-
-
     search = request.GET.get('search')
     if search and search != 'all':
         event_list = Event_Data.objects.filter(your_name=search)
@@ -313,10 +299,13 @@ def Admin_Dashboard(request):
     else:
         event_list = Event_Data.objects.all()
 
-    events_list = Event_Data.objects.all()
-    paginator = Paginator(events_list, 10)  # Show 10 events per page
-    page_number = request.GET.get('page')
-    events = paginator.get_page(page_number)
+
+ 
+  #  project_verticals = Event_Data.objects.all().values_list('project_vertical',flat=True).distinct()
+
+
+
+
     contex = {
         'users_data':all_user,
         'role':login_role,
@@ -327,33 +316,49 @@ def Admin_Dashboard(request):
         'total_expense':total_expense,
         'events':event_list,
          'm1': manager_name,
+    
     }
     return render(request, 'Admin/AdminDashboard.html',contex)
+
+
+def Login_data(request):
+    role = request.GET.get('search')
+    login_data = Login_Role.objects.all().values_list('name', flat=True).distinct()
+
+    # Handle the case when 'role' is 'alls' or not provided
+    if role == 'alls' or role is None:
+        role_list = Login_Role.objects.all()  # Fetch all roles
+    else:
+        role_list = Event_Data.objects.all()  # Or modify this logic if you need a different filter
+
+    context = {
+        'd1': login_data,  # Renamed 'd1' to a more descriptive name
+        'role_list': role_list,
+    }
+
+    return render(request, 'Admin/AdminDashboard.html', context)
+
 
 
 @login_required(login_url='index')
 def Event_list(request):
     if not  request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
-    manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+    manager_name = Login_Role.objects.all().values_list('login_role', flat=True).distinct()
   #  project_verticals = Event_Data.objects.all().values_list('project_vertical',flat=True).distinct()
-
-
-
-
 
 
     search = request.GET.get('search')
     if search and search != 'all':
-        event_list = Event_Data.objects.filter(your_name=search)
+        event_list = Login_Role.objects.filter(login_role=search)
     else:
         event_list = Event_Data.objects.all()
     context = {
         'events': event_list,
-        'm1': manager_name,
+        'd1': manager_name,
 
     }
-    return render(request, 'Admin/event_list.html', context)
+    return render(request, 'Admin/AdminDashboard.html', context)
 
 # def vertical_base(request):
 #     project_verticals = Event_Data.objects.all().values_list('project_vertical', flat=True).distinct()
@@ -372,11 +377,7 @@ def Event_list(request):
 def error_page(request ):
     return render(request,'Admin/components/Error_404.html',)
 
-from openpyxl.styles import Font
-from openpyxl.drawing.image import Image
-import openpyxl
-from openpyxl.drawing.image import Image
-from django.http import HttpResponse
+
 
 from io import BytesIO
 from PIL import Image as PILImage
@@ -481,7 +482,7 @@ def delete_event(request,event_id):
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=event_id)
         delete_events.delete()
-    return redirect('Event_List')
+    return redirect('Admin_Dashboard')
 
 
 def update_manager(request,manager_id):
@@ -493,8 +494,15 @@ def update_manager(request,manager_id):
         update_manager_data.last_name = request.POST['manager_last_name']
         update_manager_data.username = request.POST['manager_username']
         update_manager_data.email = request.POST['manager_email']
+        login_roles = request.POST.getlist('login_role')
+        update_manager_data.login_role.set(Login_Role.objects.filter(name__in=login_roles))# many to many filed change with set() in django
+
+        
         # update_manager_data.password = request.POST['manager_password']
         update_manager_data.phone_number = request.POST['manager_phone_number']
+
+        print(update_manager_data.login_role)
+
         if 'manager_profile_img' in request.FILES:
             update_manager_data.photo = request.FILES['manager_profile_img']
 
@@ -503,7 +511,6 @@ def update_manager(request,manager_id):
             return redirect('View-manager')
         update_manager_data.save()
         messages.success(request, 'Manager profile  Updated')
-
     else:
         messages.error(request,'Manager profile not Updated')
     return redirect('View-manager')
@@ -515,6 +522,7 @@ def update_event_data(request,event_id):
         return redirect('Error-Page')
     else:
             update_event = get_object_or_404(Event_Data, id=event_id)
+            update_image,created = Event_Image.objects.get_or_create(event=update_event)
 
             if request.method == 'POST':
 
@@ -532,6 +540,18 @@ def update_event_data(request,event_id):
                 update_event.total_impact = request.POST['total_impact']
                 update_event.which_SIG = request.POST['sig_']
                 update_event.associate_partner = request.POST.get('associate_partners')
+                if 'event_image' in request.FILES:
+                    update_image.event_photo = request.FILES.getlist('event_image')
+                    update_image.save()
+                    return redirect('Admin_Dashboard',event_id=update_event.id)
+                # event_image = request.FILES.getlist('event_image')
+
+                # for image in event_image:
+                #     Event_Image.objects.save(event_image=image,event=update_event)
+                
+
+
+
                 update_event.save()
                 messages.success(request,'Event Updated')
                 return redirect('Admin_Dashboard')
@@ -548,6 +568,11 @@ class EventDataAPI(APIView):
         event = Event_Data.objects.all()
         serializers = EventDataSerializer(event,many=True)
         return Response(serializers.data)
+    def post(self,request):
+        event = Event_Data.objects.all()
+        serializers = EventDataSerializer(event,many=True)
+        return Response(serializers.data)
+    
 
 
 
@@ -641,10 +666,18 @@ def admin_chart(request):
     event_data = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
     # event_impact = Event_Data.objects.all().values_list('total_impact',flat=True).annotate(Sum('total_impact'))
     event_impact_by_name = Event_Data.objects.values('your_name').annotate(total_impact=Sum('total_impact')).order_by('your_name')
+
+
+    project_verticals = Event_Data.objects.all().values_list('project_vertical', flat=True).distinct()
+    # event_impact = Event_Data.objects.all().values_list('total_impact',flat=True).annotate(Sum('total_impact'))
+    project_verticals_by_name = Event_Data.objects.values('your_name').annotate(total_impact=Sum('project_vertical')).order_by('project_vertical')
+
+
     context = {
         'name': event_data,
-        'impact_data':event_impact_by_name
-
+        'impact_data':event_impact_by_name,
+        'verticals':project_verticals,
+       
     }
     return render(request, 'Admin/chart/admin_chart.html', context)
 
@@ -670,14 +703,40 @@ def password_update_done(request):
     return render(request,'Admin/components/password_update_done.html')
 
 
+# def update_manager(request, manager_id):
+#     if not request.user.login_role.filter(name='Admin').exists():
+#         return redirect('Error-Page')
+    
+#     update_manager_data = get_object_or_404(LoginSide, id=manager_id)
+    
+#     if request.method == 'POST':
+#         update_manager_data.first_name = request.POST['manager_first_name']
+#         update_manager_data.last_name = request.POST['manager_last_name']
+#         update_manager_data.username = request.POST['manager_username']
+#         update_manager_data.email = request.POST['manager_email']
+        
+#         # Assuming you want to update the login roles
+#         login_roles = request.POST.getlist('login_role')  # This is a list of role IDs
+#         update_manager_data.login_role.set(Login_Role.objects.filter(name__in=login_roles))  # Set roles by filtering by IDs
+        
+#         update_manager_data.phone_number = request.POST['manager_phone_number']
 
+#         # Optional: Updating the profile image
+#         if 'manager_profile_img' in request.FILES:
+#             update_manager_data.photo = request.FILES['manager_profile_img']
 
+#         # Check if the image is too large
+#         if update_manager_data.photo.size > 4 * 1024 * 1024:
+#             messages.error(request, 'Image Size must be 4mb ')
+#             return redirect('View-manager')
 
+#         update_manager_data.save()
+#         messages.success(request, 'Manager profile updated')
 
-
-
-
-
+#     else:
+#         messages.error(request, 'Manager profile not updated')
+    
+#     return redirect('View-manager')
 
 
 

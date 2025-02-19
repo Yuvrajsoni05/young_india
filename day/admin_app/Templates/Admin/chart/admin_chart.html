@@ -59,7 +59,7 @@
       <div class="card-body">
         <h5 class="card-title">Circle Chart</h5>
 <div>
-  <canvas id="polarchart"></canvas>
+  <canvas  id="polarchart"></canvas>
 </div>
 
       </div>
@@ -119,16 +119,16 @@
   const ctxPolar = document.getElementById('polarchart');
 
   new Chart(ctxPolar, {
-    type: 'polarArea',
+    type: 'bar',
     data: {
       labels: [
-        [{% for item in name %}"{{ item }}",{% endfor %}],
+        [{% for item in verticals %}"{{ item }}",{% endfor %}],
       ],
       datasets: [{
         label: 'My First Dataset',
         data: [{% for item in impact_data %}{{ item.total_impact }},{% endfor %}],
         backgroundColor: [
-          'rgb(255, 99, 132)',
+          'rgb(99, 255, 221)',
           'rgb(75, 192, 192)',
           'rgb(255, 205, 86)',
           'rgb(201, 203, 207)',

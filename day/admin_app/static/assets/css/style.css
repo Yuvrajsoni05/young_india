@@ -166,10 +166,6 @@ h6 {
   }
 }
 
-.yi-dropdown {
-  display: flex;
-  gap: 10px;
-}
 
 @keyframes dropdown-animate {
   0% {

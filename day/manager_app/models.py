@@ -22,7 +22,7 @@ class Event_Data(models.Model):
     yi_pillar = models.CharField(max_length=200)
     social_link = models.URLField(max_length=300)
     which_SIG = models.CharField(max_length=200,blank=True,null=True)
-    event_handle = models.CharField(max_length=200,)
+    event_handle = models.CharField(max_length=200,blank=True,null=True)
     total_impact = models.IntegerField(blank=True,default=1)
     # event_photo = models.ImageField(upload_to='event_photo/',null=True)
     # place_name = models.CharField(max_length=200,blank=True)
