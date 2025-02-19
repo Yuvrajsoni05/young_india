@@ -31,4 +31,12 @@ class LoginSide(AbstractUser):
 
 
 
+# user = User.objects.get(username="your_username")
+# print(user)
+#  print(user.username, user.email, user.id)
+# users = LoginSide.objects.filter(username='meet')
 
+# # This will iterate over all users (in case there are multiple 'meet' users)
+# for user in users:
+#     print(user.username, user.email, user.id)  # Print any other fields you need
+# login_data = LoginSide.objects.get(username="meet").login_role.all().values_list("name",flat=True)
