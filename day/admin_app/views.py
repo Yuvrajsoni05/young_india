@@ -784,6 +784,7 @@ def password_update_done(request):
 
 
 
+#warning: in the working copy of 'day/admin_app/views.py', LF will be replaced by CRLF the next time Git touches it
 
 
 
