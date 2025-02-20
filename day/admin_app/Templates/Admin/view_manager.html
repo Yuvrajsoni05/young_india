@@ -25,6 +25,7 @@
 
 <body>
 
+
   {% include 'Admin/components/header.html' %}
   <!-- ======= Sidebar ======= -->
   {% include 'Admin/components/side_navbar.html' %}
@@ -132,12 +133,11 @@
             <label for="manager_phone_number" class="form-label">Phone Number</label>
             <input type="number" maxlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
           </div>
-
-          <div class="mb-3">
+            <div class="mb-3">
             <label for="manager_role" class="form-label">Manager Role :</label>
             {% for i in role %}
-              
-            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role">{{i.name}}
+
+            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role{{ manager.id }}" {% if i in user_role %} checked {% endif %}>{{i.name}}
             {% endfor %}
           </div>
 

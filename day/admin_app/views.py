@@ -456,10 +456,11 @@ def manager_list(request):
     # login_role = Login_Role.objects.exclude(is_superuser=False)
     login_role = Login_Role.objects.exclude(name = 'superuser')
     # login_role = Login_Role.objects.exclude(name='superuser')  # Example if you have a role field
-
+    user_roles = request.user.login_role.all()
     contex = {
         'role' :login_role,
-        'managers' :manager
+        'managers' :manager,
+        'user_role': user_roles
     }
     return render(request,'Admin/view_manager.html',contex)
 
@@ -562,18 +563,49 @@ def update_event_data(request,event_id):
 
 
 
-@method_decorator(login_required(login_url='index'),name='get')
-class EventDataAPI(APIView):
-    def get(self,request):
-        event = Event_Data.objects.all()
-        serializers = EventDataSerializer(event,many=True)
-        return Response(serializers.data)
-    def post(self,request):
-        event = Event_Data.objects.all()
-        serializers = EventDataSerializer(event,many=True)
-        return Response(serializers.data)
-    
+#@method_decorator(login_required(login_url='index'),name='get')
 
+
+from rest_framework import status
+
+
+class EventDataAPI(APIView):
+    def get(self, request):
+        event = Event_Data.objects.all()
+        serializers = EventDataSerializer(event, many=True)
+        return Response(serializers.data)
+
+    def post(self, request):
+        # Create a new Event_Data object
+        serializers = EventDataSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()  # Save the new object
+            return Response(serializers.data)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        # Ensure the 'id' is passed and object exists
+        try:
+            event = Event_Data.objects.get(pk=request.data.get('id'))
+            event.delete()  # Delete the object
+            return Response({'message': 'Event deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Event_Data.DoesNotExist:
+            return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request):
+
+        # Get the event instance based on the provided ID
+        event = Event_Data.objects.get(pk=request.data.get('id'))
+
+        # Pass the event instance and updated data to the serializer
+        serializer = EventDataSerializer(event, data=request.data, partial=False)
+
+        # Validate and save the data
+        if serializer.is_valid():
+            serializer.save()  # Save the updated event
+            return Response(serializer.data)  # Return the updated data
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # matplotlib.use('Agg')
