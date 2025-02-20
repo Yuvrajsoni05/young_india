@@ -586,8 +586,11 @@ class EventDataAPI(APIView):
     def delete(self, request):
         # Ensure the 'id' is passed and object exists
         try:
-            event = Event_Data.objects.get(pk=request.data.get('id'))
+           # event_id = request.query_params.get('id')
+            # event = Event_Data.objects.get(pk=request.data.get('id'))
+            event= Event_Data.request.query_params.get('id')
             event.delete()  # Delete the object
+
             return Response({'message': 'Event deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Event_Data.DoesNotExist:
             return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
