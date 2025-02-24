@@ -47,8 +47,9 @@
     }
 
     .form-group label {
-      font-weight: 600;
+      font-weight:52px;
       color: #2c3e50;
+
     }
 
     .form-control {
@@ -102,7 +103,7 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
           <li class="breadcrumb-item">Admin</li>
-          <li class="breadcrumb-item active">Add New Admin</li>
+          <li class="breadcrumb-item active">Register In Yi</li>
         </ol>
       </nav>
     </div>
@@ -110,15 +111,16 @@
     <div class="container mt-4">
       <div class="card">
         <div class="card-header">
-          <strong>Register New Admin</strong>
+          <strong style="font-family: Cambria, serif;" >Register New User in YI</strong>
         </div>
         <div class="card-body custom-form">
+          <br>
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label>Username <i class="bi bi-person-circle"></i></label>
+                  <i class="bi bi-person-circle"></i> <label>Username </label>
                   <input type="text" class="form-control" name="add_username" placeholder="Enter Username" required>
                 </div>
               </div>
@@ -150,7 +152,7 @@
                 <label>Phone</label>
                 <div class="input-group">
                   <span class="input-group-text">+91</span>
-                  <input type="tel" class="form-control" name="add_phone" placeholder="Enter phone number" required>
+                  <input type="tel" class="form-control" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
                 </div>
               </div>
 
@@ -181,13 +183,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Password <i class="bi bi-lock"></i></label>
-                  <input type="password" class="form-control" name="password1" placeholder="Password" required>
+                  <input type="password" minlength="8" maxlength="12" class="form-control" name="password1" placeholder="Password" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Confirm Password</label>
-                  <input type="password" class="form-control" name="password2" placeholder="Confirm Password" required>
+                  <input type="password" class="form-control" name="password2" minlength="8" maxlength="12"  placeholder="Confirm Password" required>
                 </div>
               </div>
             </div>
