@@ -11,8 +11,7 @@
   <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
   <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -22,10 +21,74 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
 
-  <!-- Custom CSS to improve form styling -->
+  <!-- Custom Styling -->
+  <style>
+    /* Apply Cambria only to form elements */
+    .custom-form {
+      font-family: Cambria, serif;
+    }
 
+    .card {
+      border-radius: 12px;
+      border: none;
+      background: #fff;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      border-radius: 12px 12px 0 0;
+      text-align: center;
+      font-size: 20px;
+      padding: 15px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      transition: 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background-color: #007bff;
+      border: none;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .form-check-inline {
+      display: inline-block;
+      margin-right: 15px;
+    }
+
+    .input-group-text {
+      background: #007bff;
+      color: white;
+      border-radius: 8px 0 0 8px;
+    }
+  </style>
 </head>
 
 <body>
@@ -34,7 +97,7 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>New Admin</h1>
+      <h1>Add New Admin</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
@@ -44,62 +107,59 @@
       </nav>
     </div>
 
-    <div class="container mt-5">
-      <!-- Signup Form -->
-      <div class="card shadow-lg">
-        <div class="card-header text-center">
-          <strong>Add User</strong>
+    <div class="container mt-4">
+      <div class="card">
+        <div class="card-header">
+          <strong>Register New Admin</strong>
         </div>
-        <div class="card-body">
-          <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm(event)">
+        <div class="card-body custom-form">
+          <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="add_username">Username <i class="bi bi-person-circle"></i></label>
-                  <input type="text" id="add_username" maxlength="15" class="form-control" name="add_username" placeholder="Add Username" required>
+                  <label>Username <i class="bi bi-person-circle"></i></label>
+                  <input type="text" class="form-control" name="add_username" placeholder="Enter Username" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="first_name">First Name</label>
-                  <input type="text" id="first_name" maxlength="20" class="form-control" name="first_name" placeholder="First Name" required>
+                  <label>First Name</label>
+                  <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
                 </div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="last_name">Last Name</label>
-                  <input type="text" id="last_name" maxlength="20" class="form-control" name="last_name" placeholder="Last Name" required>
+                  <label>Last Name</label>
+                  <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="add_email">Email <i class="bi bi-envelope"></i></label>
-                  <input type="email" class="form-control" maxlength="50" id="add_email" name="add_email" placeholder="Add Email" required>
+                  <label>Email <i class="bi bi-envelope"></i></label>
+                  <input type="email" class="form-control" name="add_email" placeholder="Email Address" required>
                 </div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-6">
-                <label for="add_phone">Phone</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">+91</span>
-                  </div>
-                  <input type="tel" class="form-control" id="add_phone" name="add_phone" maxlength="10" minlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" placeholder="Enter your phone number" required>
+                <label>Phone</label>
+                <div class="input-group">
+                  <span class="input-group-text">+91</span>
+                  <input type="tel" class="form-control" name="add_phone" placeholder="Enter phone number" required>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <label for="login_role">Login Role</label>
-                <div class="checkbox-container text-left">
+                <label>Login Role</label>
+                <div class="checkbox-container">
                   {% for i in role %}
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="">
+                    <div class="form-check form-check-inline">
+                      <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}">
                       <label class="form-check-label">{{ i.name }}</label>
                     </div>
                   {% endfor %}
@@ -107,44 +167,41 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="profile_img">Profile Image</label>
-                  <input type="file" id="profile_img" class="form-control" name="profile_img" accept=".jpg, .jpeg, .png">
-                  <small class="form-text text-muted">Accepted file types: .jpg, .jpeg, .png</small>
+                  <label>Profile Image</label>
+                  <input type="file" class="form-control" name="profile_img">
+                  <small class="form-text">Accepted formats: .jpg, .jpeg, .png</small>
                 </div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="password1">Password <i class="bi bi-lock"></i></label>
-                  <input type="password" id="password1" minlength="8" maxlength="20" class="form-control" name="password1" placeholder="Password" required>
+                  <label>Password <i class="bi bi-lock"></i></label>
+                  <input type="password" class="form-control" name="password1" placeholder="Password" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="password2">Confirm Password</label>
-                  <input type="password" id="password2" minlength="8" maxlength="20" class="form-control" name="password2" placeholder="Confirm Password" required>
+                  <label>Confirm Password</label>
+                  <input type="password" class="form-control" name="password2" placeholder="Confirm Password" required>
                 </div>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Add Admin</button>
+            <button type="submit" class="btn btn-primary mt-4">Create Admin</button>
           </form>
         </div>
       </div>
     </div>
-
-    <script src="{% static 'js/message.js' %}"></script>
-
   </main>
 
-    {% if messages %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
+
+  {% if messages %}
+        <script>
             {% for message in messages %}
                 Swal.fire({
                     title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
@@ -153,17 +210,11 @@
                     confirmButtonText: 'OK'
                 });
             {% endfor %}
-        });
-    </script>
-    {% endif %}
+        </script>
+  {% endif %}
 
-  <!-- Vendor JS Files -->
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-
+ <script src="{% static 'assets/js/main.js' %}"></script>
 </body>
 
 </html>
