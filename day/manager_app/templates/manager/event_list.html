@@ -363,8 +363,10 @@
         document.addEventListener("DOMContentLoaded", function() {
             {% for message in messages %}
                 Swal.fire({
+                    position: "top-end",
                     title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
                     text: "{{ message }}",
+                    showConfirmButton: false,
                     icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
                     confirmButtonText: 'OK'
                 });

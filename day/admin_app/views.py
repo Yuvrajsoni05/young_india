@@ -62,12 +62,15 @@ def index(request):
                         return redirect('manager-dashboard')
                 else:
                     # Role doesn't match, redirect back to the login page
+                    messages.error(request, "Role not match")
                     return redirect('index')
             else:
                 # In case of an invalid user instance
+                messages.error(request, "username is Invalid")
                 return redirect('index')
         else:
             # If authentication fails, redirect to login page
+            messages.error(request, "Login Again PlZ")
             return redirect('index')
 
     # Get all roles to pass to the form
