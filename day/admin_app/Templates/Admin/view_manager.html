@@ -75,11 +75,11 @@
         <td>{{ manager.last_name }}</td>
         <td>{{ manager.username }}</td>
         <td>{{ manager.email }}</td>
-       <td> {% for role in manager.login_role.all %}
-           {% if role.name != "superuser" %}
-                        {{ role.name }}
-                        {% endif %},
-                    {% endfor %}</td>
+       <td><select>
+        {% for role in manager.login_role.all %}
+            <option   value="{{ role.name }}">{{ role.name }}</option>
+        {% endfor %}
+    </select></td>
         <td>{{ manager.phone_number }}</td>
         <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
 

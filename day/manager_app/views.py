@@ -268,7 +268,7 @@ def update_event_data(request,update_id):
 #     }
 #     return render(request,'Admin/view_manager.html',contex)
 
-
+from django.http import JsonResponse
 @login_required(login_url='index')
 def event_data(request):
     # if request.user.login_role.filter(name='Manager').exists():
@@ -305,7 +305,7 @@ def event_data(request):
         if len(event_image) > 6:  # event_images is a list of image files
             messages.error(request, "You can Upload only 6 Images")
             return redirect('event_data')
-
+    
 
             # if event_image and event_image.size > 4 * 1024 * 1024:
             #       # 4MB size limit
@@ -341,8 +341,11 @@ def event_data(request):
         for image in event_image:
             Event_Image.objects.create(event_photo=image,event=demo)
 
-        messages.success(request, 'thank you for insert data')
+        
+            # return JsonResponse({'status':'Data inserted'})
+        messages.success(request, 'Thank you for insert data')
         return redirect('event-list')
+        
     return render(request, 'manager/event_list.html')
 
 
