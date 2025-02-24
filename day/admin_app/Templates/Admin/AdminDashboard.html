@@ -154,19 +154,21 @@
   
   
   
-      <div class="table-responsive">
+     {% comment %} <div class="table-responsive">
         <form method="get" action="{% url 'Role_List' %}" id="managerFilterForm">
             <div class="form-group" style="width:250px;">
-                <select class="form-control" id="search" name="search" required onchange="this.form.submit()">
+                <select class="form-control" id="role_search" name="role_search" required onchange="this.form.submit()">
                     <option value="" disabled selected>Choose by Role</option>
                     <option value="alls">All</option>
-                    {% for i in d1 %}
-                        <option value="{{ i }}">{{ i }}</option>
+                    {% for role in role_datas %}
+                      <option value="{{ role }}">{{role}}</option>
                     {% endfor %}
+                   
+                 
                 </select>
             </div>
         </form>
-    </div>
+    </div> {% endcomment %}
       </div>
 
   <br>

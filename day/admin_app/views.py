@@ -321,23 +321,37 @@ def Admin_Dashboard(request):
     return render(request, 'Admin/AdminDashboard.html',contex)
 
 
-def Login_data(request):
-    role = request.GET.get('search')
-    login_data = Login_Role.objects.all().values_list('name', flat=True).distinct()
+# def Login_data(request):
+#     role = request.GET.get('search')
+#     login_data = Login_Role.objects.all().values_list('name', flat=True).distinct()
 
-    # Handle the case when 'role' is 'alls' or not provided
-    if role == 'alls' or role is None:
-        role_list = Login_Role.objects.all()  # Fetch all roles
-    else:
-        role_list = Event_Data.objects.all()  # Or modify this logic if you need a different filter
+#     # Handle the case when 'role' is 'alls' or not provided
+#     if role == 'alls' or role is None:
+#         role_list = Login_Role.objects.all()  # Fetch all roles
+#     else:
+#         role_list = Event_Data.objects.all()  # Or modify this logic if you need a different filter
 
-    context = {
-        'd1': login_data,  # Renamed 'd1' to a more descriptive name
-        'role_list': role_list,
-    }
+#     context = {
+#         'd1': login_data,  # Renamed 'd1' to a more descriptive name
+#         'role_list': role_list,
+#     }
 
-    return render(request, 'Admin/AdminDashboard.html', context)
+#     return render(request, 'Admin/AdminDashboard.html', context)
+# def Role_List(request):
+    
+#     role_data = Login_Role.objects.all().values_list('name',flat=True).distinct()
+#     role = request.GET.get('role_serach')
 
+#     if role and role != 'all':
+#         role_list = Event_Data.objects.filter(login_role = role)
+#     else:
+#         role_list = Event_Data.objects.all()
+
+#     context = {
+
+#         'role_datas' : role_list,
+#     }
+#     return render(request,'Admin/AdminDashboard.html',context)
 
 
 @login_required(login_url='index')
@@ -379,9 +393,14 @@ def error_page(request ):
 
 
 
+
+
+import openpyxl
+from openpyxl.drawing.image import Image
 from io import BytesIO
 from PIL import Image as PILImage
-from openpyxl.drawing.image import Image
+from django.http import HttpResponse
+# from .models import Event_Data, Event_Image  # Assuming you have these models
 import os
 from django.conf import settings
 
@@ -411,9 +430,12 @@ def download_excel(request):
         sheet.append(row)
 
         # Now, for each event, if there are related images, we add them.
-        event_images = i.event_photo.all()  # Access related Event_Image for each Event_Data
+        event_images = Event_Image.objects.filter(event=i)  # Access related Event_Image for each Event_Data
 
-        # Check if there are images for this event
+        # Initialize a list to store image references
+        img_references = []
+
+        # Loop through all images for this event and add them to the last column
         for img in event_images:
             if img.event_photo:
                 img_path = os.path.join(settings.MEDIA_ROOT, img.event_photo.name)
@@ -433,11 +455,18 @@ def download_excel(request):
                     openpyxl_img.height = 30
 
                     # Insert the image in the corresponding row
-                    img.anchor = f'O{sheet.max_row}'  # The 'O' column is the 15th column (Image column)
-                    sheet.add_image(openpyxl_img)
+                    img_references.append(openpyxl_img)  # Collect image references
+
                 except Exception as e:
                     print(f"Error inserting image: {e}")
                     continue
+
+        # Insert the images into the last column after all rows are written
+        if img_references:
+            image_cell = f'P{sheet.max_row}'  # Image column is 'P', which is 15th column
+            for img_ref in img_references:
+                img_ref.anchor = image_cell
+                sheet.add_image(img_ref)
 
     # Generate the response to download the file
     response = HttpResponse(
@@ -447,6 +476,7 @@ def download_excel(request):
 
     workbook.save(response)
     return response
+
 
 
 def manager_list(request):

@@ -370,10 +370,10 @@ def chart(request):
     # print(event_impact)
 
     context = {  'total_event':total_event,
-               'total_impact':total_impact,
+                 'total_impact':total_impact,
                  'event_name': event_name,
                  'impact':aligned_event_impact,
-                 }
+                }
 
     return render(request,'chart/chart.html',context)
 
@@ -384,3 +384,56 @@ def chart(request):
 
 # def masoom_dashboard(request):
 #     return render(request,'Masoom/masoom_dashboard.html')
+
+
+
+# def update_event_data(request, event_id):
+#     if not request.user.login_role.filter(name='Admin').exists():
+#         return redirect('Error-Page')
+#     else:
+#         # Fetch the event object that you want to update
+#         update_event = get_object_or_404(Event_Data, id=event_id)
+
+#         # Fetch the Event_Image instances related to this event
+#         event_images = Event_Image.objects.filter(event=update_event)
+
+#         if request.method == 'POST':
+#             # Update Event_Data fields
+#             update_event.school = request.POST['school']
+#             update_event.collage = request.POST['collage']
+#             update_event.date = request.POST['event_date']
+#             update_event.event_name = request.POST['event_name']
+#             update_event.event_expense = request.POST['event_expense']
+#             update_event.role_yi = request.POST['role_yi']
+#             update_event.project_vertical = request.POST['project_verticals']
+#             update_event.project_stakeholder = request.POST['project_stakeholder']
+#             update_event.yi_pillar = request.POST['yi_pillar']
+#             update_event.social_link = request.POST['social_link']
+#             update_event.event_handle = request.POST['event_handle']
+#             update_event.total_impact = request.POST['total_impact']
+#             update_event.which_SIG = request.POST['sig_']
+#             update_event.associate_partner = request.POST.get('associate_partners')
+
+#             # Handle image uploads: if new images are uploaded, create or update Event_Image instances
+#             if 'event_image' in request.FILES:
+#                 # For each uploaded file, create a new Event_Image entry
+#                 uploaded_images = request.FILES.getlist('event_image')
+
+#                 for uploaded_image in uploaded_images:
+#                     Event_Image.objects.create(event=update_event, event_photo=uploaded_image)
+#                 # Alternatively, you could update existing images if necessary
+#                 # for image in event_images:
+#                 #     image.event_photo = updated_image_file
+#                 #     image.save()
+
+#             # Save the Event_Data object
+#             update_event.save()
+
+#             # Show a success message
+#             messages.success(request, 'Event Updated Successfully')
+#             return redirect('Admin_Dashboard', event_id=update_event.id)
+
+#         else:
+#             # If the method is not POST, show an error message
+#             messages.error(request, 'Event not updated')
+#             return redirect('Admin_Dashboard')

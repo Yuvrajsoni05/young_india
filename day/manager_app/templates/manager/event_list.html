@@ -123,7 +123,7 @@
                                             <!-- Show the first image as the thumbnail -->
                                             <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="40" width="50" class="event-thumbnail"
                                                 data-bs-toggle="modal" data-bs-target="#imageModal{{ i.id }}" 
-                                                data-image-url="{{ first_image.event_photo.url }}" />
+                                                data-image-url="{{ first_image.event_photo.url }}">
                                         {% endwith %}
                                     {% else %}
                                         <p>No images available for this event.</p>

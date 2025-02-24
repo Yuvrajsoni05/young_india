@@ -20,7 +20,7 @@ urlpatterns = [
     path('View-manager',manager_list,name='View-manager'),
     path('download_excel',download_excel,name='download_excel'),
     path('Error',error_page,name='Error-Page'),
-    path('role_list',Login_data, name="Role_List"),
+    # path('role_list',Role_List, name="Role_List"),
 
 
 

@@ -33,7 +33,7 @@ class Event_Data(models.Model):
 
 class Event_Image(models.Model):
     event = models.ForeignKey(Event_Data,related_name='event_photo',on_delete=models.CASCADE)
-    event_photo = models.ImageField(upload_to='event_photo/',null=True)
+    event_photo = models.ImageField(upload_to='event_photo/',null=True,blank=True)
 
 
 
