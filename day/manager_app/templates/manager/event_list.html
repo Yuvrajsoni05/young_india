@@ -143,7 +143,7 @@
                                                         <div class="carousel-inner">
                                                             {% for image in i.event_photo.all %}
                                                                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                                    <img src="{{ image.event_photo.url }}" class="d-block w-100" alt="Event Image">
+                                                                    <img src="{{ image.event_photo.url }}" class="d-block w-100" alt="Event Image" width="700px" height=500px>
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
@@ -201,8 +201,8 @@
                                         <div class="mb-3">
                                             <label for="event_handle" class="form-label">Handle</label>
                                             <div class="tag-container" id="tagContainer">
-                                                <input type="text" id="tagInput" class="form-control" value="{{i.event_handle}}" >
-                                                <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by" value="{{i.event_handle}}">
+                                               
+                                                <input type="text" id="hiddenInput" class="form-control"  name="handel_by" value="{{i.event_handle}}">
                                               </div>
                                         </div>
                                     </div>
@@ -364,11 +364,14 @@
             {% for message in messages %}
                 Swal.fire({
                     position: "top-end",
+                    width: 400,
                     title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
                     text: "{{ message }}",
                     showConfirmButton: false,
                     icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-                    confirmButtonText: 'OK'
+                    timer:1000
+                  
+                    
                 });
             {% endfor %}
         });
@@ -378,13 +381,13 @@
 
 
     <!-- Vendor JS Files -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
     <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Template Main JS File -->
     <script src="{% static 'assets/js/main.js' %}"></script>
-    <script src="{% static 'js/inputfiled.js' %}" ></script>
+
 
 
 

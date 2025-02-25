@@ -205,6 +205,7 @@
             <tbody>
                 {% for event in events %}
                     <tr class="text-nowrap" align="center">
+
                         <td>{{ forloop.counter }}</td>
                         <td>{{ event.date }}</td>
                         <td>{{ event.your_name }}</td>
@@ -399,7 +400,7 @@
 
         <!-- Download Excel Button -->
         <a href="{% url 'download_excel' %}">
-            <button class="btn btn-success"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
+            <button class="btn btn-success" name="export"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
         </a>
     </div>
 

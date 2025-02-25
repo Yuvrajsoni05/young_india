@@ -274,54 +274,59 @@ def admin_logout(request):
 
 
 @login_required(login_url='index')
+
+
 def Admin_Dashboard(request):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
+    
+    # You don't need to reassign user_id since it's already passed in the URL
+    
     total_event = Event_Data.objects.count()
+    
+    # Assuming 'Manager' is a role or attribute in the LoginSide model
     total_user_data = LoginSide.objects.filter(login_role='Manager')
     total_user = total_user_data.count()
-
-
+    
+    # Calculate total expenses
     total_expense_result = Event_Data.objects.aggregate(Sum('event_expense'))
-    total_expense =total_expense_result['event_expense__sum'] if total_expense_result['event_expense__sum'] is not None else 0
+    total_expense = total_expense_result['event_expense__sum'] if total_expense_result['event_expense__sum'] is not None else 0
 
-
+    # Calculate total impact
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
-    total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum']is not None else 0
+    total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum'] is not None else 0
+
+    # Calculate average impact
     impact_avg = Event_Data.objects.aggregate(Avg('total_impact'))
-    avg_impact = impact_avg['total_impact__avg'] if impact_avg['total_impact__avg']is not None else 0
+    avg_impact = impact_avg['total_impact__avg'] if impact_avg['total_impact__avg'] is not None else 0
 
-
+    # Retrieve all distinct users and roles
     all_user = LoginSide.objects.all().distinct()
     login_role = Login_Role.objects.all().distinct()
+
+    # Manager names from Event_Data
     manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+
+    # Handle search filtering
     search = request.GET.get('search')
     if search and search != 'all':
-        event_list = Event_Data.objects.filter(your_name=search)
-    
+        event_list = Event_Data.objects.filter(your_name__icontains=search)  # Using icontains for partial match
     else:
         event_list = Event_Data.objects.all()
 
-
- 
-  #  project_verticals = Event_Data.objects.all().values_list('project_vertical',flat=True).distinct()
-
-
-
-
-    contex = {
-        'users_data':all_user,
-        'role':login_role,
-        'total_manager' :total_user,
-        'total_event':total_event,
-        'total_impact':total_impact,
-        'impact_avg':avg_impact,
-        'total_expense':total_expense,
-        'events':event_list,
-         'm1': manager_name,
-    
+    context = {
+        'users_data': all_user,
+        'role': login_role,
+        'total_manager': total_user,
+        'total_event': total_event,
+        'total_impact': total_impact,
+        'impact_avg': avg_impact,
+        'total_expense': total_expense,
+        'events': event_list,
+        'm1': manager_name,
     }
-    return render(request, 'Admin/AdminDashboard.html',contex)
+
+    return render(request, 'Admin/AdminDashboard.html', context)
 
 
 # def Login_data(request):
@@ -805,6 +810,27 @@ def password_update_done(request):
 #         messages.error(request, 'Manager profile not updated')
     
 #     return redirect('View-manager')
+
+
+# def delete_multiple_events(request):
+#     # Fetch all events from the database
+#     events = Event_Data.objects.all()
+
+#     # Handle the form submission
+#     if request.method == 'POST':
+#         # Check if the delete button was clicked
+#         if 'delete_events' in request.POST:
+#             selected_event_ids = request.POST.getlist('selected_events')
+
+#             if selected_event_ids:
+#                 # Delete selected events
+#                 demo =Event_Data.objects.filter(id__in=selected_event_ids)
+
+
+#             # After deletion, redirect to the same page (or elsewhere)
+#             return redirect('Admin_Dashboard')  # Replace with your actual view name
+
+#     return render(request, 'Admin/AdminDashboard.html', {'events': events})
 
 
 

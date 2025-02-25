@@ -12,6 +12,7 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -23,7 +24,9 @@
     <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
 
   <style>
-
+    .form-data{
+      font-family:'cambria';
+    }
   </style>
 </head>
 
@@ -46,13 +49,13 @@
     </div>
 
     <div class="container">
-      <!-- Signup Form -->
+      <!-- Event Add  Form -->
       <div class="card shadow-lg">
         <div class="card-header text-center">
           <strong>Add Event Data</strong>
         </div>
         <br>
-        <div class="card-body">
+        <div class="card-body ">
           <form method="POST" action="{% url 'event_data' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
@@ -121,7 +124,7 @@
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
-                <label for="tagInput">Handler name(s)</label>
+                <label for="tagInput">Members name(s)</label>
                 <div class="tag-container" id="tagContainer">
                   <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" >
                   <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by">
@@ -133,7 +136,7 @@
                 <div class="form-group">
                   <label for="project_verticals">Project Verticals</label>
                
-                   <input class="form-control" id="project_verticals" name="project_verticals" value="{{ role }}" >
+                   <input class="form-control" id="project_verticals" name="project_verticals" value="{{ role }}" readonly >
             
                   <!--- <option value="" disabled selected>Choose Project/Initiative</option>
                     <option value="Masoom">Masoom</option>
@@ -257,12 +260,23 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
-            <button type="reset" class="btn btn-secondary btn-block mt-4">Reset</button>
+            <button type="reset" class="btn btn-primary btn-block mt-4">Reset</button>
           </form>
         </div>
       </div>
     </div>
-
+    {% if messages %}
+    <script>
+          {% for message in messages %}
+          Swal.fire({
+          title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+          text: "{{ message }}",
+          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+          confirmButtonText: 'OK'
+          });
+          {% endfor %}
+</script>
+{% endif %}
   </main>
 
   <!-- Vendor JS Files -->

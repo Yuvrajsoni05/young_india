@@ -10,7 +10,7 @@ import numpy as np
 from .models import Event_Data,Event_Image
 from  django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Sum
-
+import os
 # Create your views here.
 
 
@@ -220,7 +220,7 @@ def update_event_data(request,update_id):
         update_event.project_stakeholder = request.POST['project_stakeholder']
         update_event.yi_pillar = request.POST['yi_pillar']
         update_event.social_link = request.POST['social_link']
-        update_event.event_handle = request.POST.getlist('handel_by')
+        update_event.event_handle = request.POST['handel_by']
         update_event.total_impact = request.POST['total_impact']
         update_event.which_SIG  = request.POST['sig_']
 
@@ -302,19 +302,23 @@ def event_data(request):
           
         event_image = request.FILES.getlist('event_img')
 
-        if len(event_image) > 6:  # event_images is a list of image files
+        if len(event_image) > 6 and event_image:  # event_images is a list of image files
             messages.error(request, "You can Upload only 6 Images")
-            return redirect('event_data')
+            return redirect('manager-dashboard')
     
+        valid_extensions = ['.jpeg', '.jpg', '.png']
 
+        for img in event_image:
+            ext = os.path.splitext(img.name)[1]  # Get the file extension
+            if ext.lower() not in valid_extensions:
+                messages.error(request, f"Invalid file type: {img.name}. Only .jpg, .jpeg, and .png are allowed.")
+                return redirect('manager-dashboard') 
             # if event_image and event_image.size > 4 * 1024 * 1024:
             #       # 4MB size limit
             #     messages.error(request, 'Each image must be 4MB or less')
-            #     return redirect('event_data')
+            #     return redirect('')
 
     
-
-
 
 
         demo = Event_Data.objects.create(
