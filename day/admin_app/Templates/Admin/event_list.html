@@ -108,7 +108,7 @@
                             <td>{{ event.event_venue }}</td>
                             <td>{{ event.event_expense }}</td>
                             <td>{{ event.role_yi }}</td>
-                            <td>{{ event.event_handle }}</td>
+                            <td></td>
                             <td>{{ event.project_vertical }}</td>
                             <td>{{ event.project_stakeholder }}</td>
                             <td>{{ event.which_SIG }}</td>
@@ -120,7 +120,7 @@
                             <td>{{ event.total_impact }}</td>
                             <td>{% if event.event_photo.all %}
                                 {% with first_image=event.event_photo.first %}
-<!--                                       -->
+
                             <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="39" width="50" class="event-thumbnail"
                                    data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
                                                 data-image-url="{{ first_image.event_photo.url }}" >
@@ -159,10 +159,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
                             <td>
                                 <form method="post" action="{% url 'delete_event' event_id=event.id %}">
                                     {% csrf_token %}

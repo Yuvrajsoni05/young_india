@@ -277,13 +277,14 @@ def admin_logout(request):
 
 
 def Admin_Dashboard(request):
+    
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     
     # You don't need to reassign user_id since it's already passed in the URL
     
     total_event = Event_Data.objects.count()
-    
+    user_id = request.user.id
     # Assuming 'Manager' is a role or attribute in the LoginSide model
     total_user_data = LoginSide.objects.filter(login_role='Manager')
     total_user = total_user_data.count()
@@ -306,7 +307,7 @@ def Admin_Dashboard(request):
 
     # Manager names from Event_Data
     manager_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
-
+    
     # Handle search filtering
     search = request.GET.get('search')
     if search and search != 'all':
@@ -315,6 +316,7 @@ def Admin_Dashboard(request):
         event_list = Event_Data.objects.all()
 
     context = {
+        'user_id':user_id,
         'users_data': all_user,
         'role': login_role,
         'total_manager': total_user,

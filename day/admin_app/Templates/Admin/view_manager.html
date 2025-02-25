@@ -112,7 +112,7 @@
         <h5 class="modal-title" id="editModalLabel">Edit Manager</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body form-data">
+      <div class="modal-body ">
         <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">
           {% csrf_token %}
           <input type="hidden" name="manager_id" id="manager_id" value="">
