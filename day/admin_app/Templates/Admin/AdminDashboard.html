@@ -13,12 +13,21 @@
 
 
 <style>
-
-  
-.yi-dropdown {
-  display: flex;
-  gap: 10px;
-}
+  .yi-event-model{
+    max-width:700px;
+  }
+  .yi-dropdown {
+    display: flex;
+    gap: 10px;
+  }
+  .yi-btn{
+    z-index:999;
+    position: relative;
+  }
+  .yi-navigation{
+    height: fit-content;
+    margin: auto;
+  }
 </style>
 
   <!-- JS and Google Fonts -->
@@ -46,15 +55,23 @@
   <!-- Main Content -->
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>{{ user.first_name }} {{ user.last_name }} Dashboard {{ user.id }}</h1>
+      <h1>{{ user.first_name }} {{ user.last_name }} Dashboard </h1>
+        <div align="right">
+           <a href="{% url 'Admin_Signup' %}"><button type="button" class="btn btn-primary">
+            <i class="bi bi-pencil-square"> </i>Add New Member
+        </button></a>
+      </div>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="">Home</a></li>
           <li class="breadcrumb-item active">Dashboard</li>
+       
         </ol>
+        
       </nav>
     </div><!-- End Page Title -->
 
+   
     <!-- Dashboard Stats Section -->
     <section class="section dashboard">
       <div class="row">
@@ -178,9 +195,9 @@
 
       <!-- User Data Table -->
       <div class="table-responsive">
-        <table class="table " style="width:100%" border="1px">
+        <table class="table " style="width:100%;font-family:cambria" border="1px">
             <thead>
-                <tr class="text-nowrap" align="center">
+                <tr class="text-nowrap" align="center" >
                     <th>Sr.no</th>
                     <th>Event Date</th>
                     <th>Manager Name</th>
@@ -188,7 +205,7 @@
                     <th>Event Venue</th>
                     <th>Event Expense</th>
                     <th>Role YI</th>
-                    <th>Handle By</th>
+                    <th> EC Members  Name</th>
                     <th>Project Verticals</th>
                     <th>Project Stakeholder</th>
                     <th>SIG</th>
@@ -223,47 +240,57 @@
                         <td>{{ event.collage }}</td>
                         <td>{{ event.associate_partner }}</td>
                         <td>{{ event.total_impact }}</td>
-                        <td>{% if event.event_photo.all %}
-                            {% with first_image=event.event_photo.first %}
+                        <td>
+    {% if event.event_photo.all %}
+        {% with first_image=event.event_photo.first %}
+            <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="39" width="50" class="event-thumbnail"
+                 data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
+                 data-image-url="{{ first_image.event_photo.url }}" >
+        {% endwith %}
+    {% else %}
+        <p>No images available for this event.</p>
+    {% endif %}
+</td>
 
-                        <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="39" width="50" class="event-thumbnail"
-                               data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
-                                            data-image-url="{{ first_image.event_photo.url }}" >
+<!-- Modal to display and delete images -->
+<div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ event.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel{{ event.id }}">Event Images</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in event.event_photo.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image.event_photo.url }}" class="d-block w-100" width="500px" height="500px" alt="Event Image"><br>
 
-                                {% endwith %}
-                                {% else %}
-                                <p>No images available for this event.</p>
-                                {% endif %}
-                        </td>
-                        <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ event.id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="imageModalLabel{{ event.id }}">Event Images</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
-                                                    <div class="carousel-inner">
-                                                        {% for image in event.event_photo.all %}
-                                                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                                <img src="{{ image.event_photo.url }}" class="d-block w-100" width="500px" height="400px" alt="Event Image">
-                                                            </div>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">Previous</span>
-                                                    </button>
-                                                    <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">Next</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- Form for deleting the image -->
+                              
+                                <form method="POST" action="{% url 'event_image_id' image_id=image.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger yi-btn">Delete Image</button>
+                                </form>
+                           
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                         <td>
                             <form method="post" action="{% url 'delete_event' event_id=event.id %}">
                                 {% csrf_token %}
@@ -280,14 +307,14 @@
 
                     <!-- Edit Event Modal -->
                     <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1" aria-labelledby="editEventModalLabel{{ event.id }}" aria-hidden="true">
-                        <div class="modal-dialog yi-event-model">
+                        <div class="modal-dialog ">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editEventModalLabel{{ event.id }}">Edit Event</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="post" action="{% url 'Update_event_data' event_id=event.id %}">
+                                    <form method="post" action="{% url 'Update_event_data' event_id=event.id %}"  enctype="multipart/form-data">
                                         {% csrf_token %}
 
                                         <div class="mb-3">
@@ -301,7 +328,7 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="event_handle" class="form-label">Handle</label>
+                                            <label for="event_handle" class="form-label">Members Name</label>
                                             <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
                                         </div>
 
@@ -379,12 +406,13 @@
                                             <label for="collage">College</label>
                                             <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
                                         </div>
+                                        
 
-                                        <div class="mb-3" id="image_file">
-                                          <label for="event_image">Event Image </label>
-                                          <input type="file" id="event_image" class="form-control" name="event_image" accept='.jpeg,.png,.jpg' multiple>
+                                        <div class="mb-3" id="collage_div">
+                                          <label for="event_image">Event Image</label>
+                                          <input type="file" id="event_image" class="form-control" name="event_image" multiple>
                                       </div>
-
+                                        
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Save changes</button>
@@ -396,7 +424,7 @@
                     </div>
                 {% endfor %}
             </tbody>
-        </table>
+        </table>[]
 
         <!-- Download Excel Button -->
         <a href="{% url 'download_excel' %}">

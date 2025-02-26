@@ -109,6 +109,9 @@ def manager_update(request,manager_id):
         manager_profile.phone_number = request.POST['phone_number']
         if 'manager_profile_img' in request.FILES:
             manager_profile.photo = request.FILES['manager_profile_img']
+            if manager_profile.photo.size > 4*1024*1024:
+                messages.error(request,'Image Size must be 4mb')
+                return redirect('manager-profile')
         manager_profile.save()
         messages.success(request,'Profile Updated')
         return redirect('manager-profile')
@@ -117,6 +120,11 @@ def manager_update(request,manager_id):
         return redirect('manager-profile')
 
     # return render(request,'manager/manager_profile.html')
+
+
+    # if update_manager_data.photo.size > 4*1024*1024:
+    #         messages.error(request,'Image Size must be 4mb ')
+    #         return redirect('View-manager')
 
 @login_required(login_url='index')
 def manager_password(request):

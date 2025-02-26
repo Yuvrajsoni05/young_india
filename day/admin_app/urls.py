@@ -23,6 +23,7 @@ urlpatterns = [
     # path('role_list',Role_List, name="Role_List"),
 
 
+    path('update-event-image/<int:image_id>/',event_image_delete,name='event_image_id'),
 
     path('update-event-data/<int:event_id>/',update_event_data,name='Update_event_data'),
     path('update-manager/<uuid:manager_id>/',update_manager,name='Update_Manager'),

@@ -154,7 +154,6 @@ def Admin_Signup(request):
             messages.error(request, "This Username is already taken.")
             return redirect('Admin_Signup')
 
-        # Validation checks
         if len(phone) != 10 or not phone.isdigit():
             messages.error(request, "Phone number must be 10 digits.")
             return redirect('Admin_Signup')
@@ -406,6 +405,8 @@ def error_page(request ):
 
 
 import openpyxl
+from openpyxl import Workbook
+from openpyxl.styles import Alignment
 from openpyxl.drawing.image import Image
 from io import BytesIO
 from PIL import Image as PILImage
@@ -415,7 +416,7 @@ import os
 from django.conf import settings
 
 def download_excel(request):
-    workbook = openpyxl.Workbook()
+    workbook = Workbook()
     sheet = workbook.active
     sheet.title = 'Event Data'
 
@@ -439,44 +440,32 @@ def download_excel(request):
         ]
         sheet.append(row)
 
-        # Now, for each event, if there are related images, we add them.
+        # Now, for each event, if there are related images, we add them as hyperlinks.
         event_images = Event_Image.objects.filter(event=i)  # Access related Event_Image for each Event_Data
 
-        # Initialize a list to store image references
-        img_references = []
+        # Initialize a list to store image URLs
+        img_urls = []
 
-        # Loop through all images for this event and add them to the last column
+        # Loop through all images for this event and generate URLs for the images
         for img in event_images:
             if img.event_photo:
-                img_path = os.path.join(settings.MEDIA_ROOT, img.event_photo.name)
+                # Construct the URL for the image
+                img_url = os.path.join(settings.MEDIA_URL, img.event_photo.name)
 
-                # Open the image with Pillow
-                try:
-                    pil_img = PILImage.open(img_path)
+                # Add the URL as a hyperlink to the last column
+                img_urls.append(img_url)
 
-                    # Save the image to a BytesIO stream
-                    img_stream = BytesIO()
-                    pil_img.save(img_stream, format='PNG')
-                    img_stream.seek(0)
+        # Insert the URLs into the last column (Column P)
+        if img_urls:
+            # Concatenate all image URLs into one string, separated by commas (optional)
+            image_link = ', '.join(img_urls)
 
-                    # Create an Image object for openpyxl from the BytesIO stream
-                    openpyxl_img = Image(img_stream)
-                    openpyxl_img.width = 80
-                    openpyxl_img.height = 30
-
-                    # Insert the image in the corresponding row
-                    img_references.append(openpyxl_img)  # Collect image references
-
-                except Exception as e:
-                    print(f"Error inserting image: {e}")
-                    continue
-
-        # Insert the images into the last column after all rows are written
-        if img_references:
-            image_cell = f'P{sheet.max_row}'  # Image column is 'P', which is 15th column
-            for img_ref in img_references:
-                img_ref.anchor = image_cell
-                sheet.add_image(img_ref)
+            # Write the image links into the last column
+            cell = f'P{sheet.max_row}'
+            sheet[cell] = image_link
+            # Make the cell contents a clickable link by adding the hyperlink to each image URL.
+            sheet[cell].hyperlink = image_link
+            sheet[cell].style = 'Hyperlink'
 
     # Generate the response to download the file
     response = HttpResponse(
@@ -563,10 +552,8 @@ def update_event_data(request,event_id):
         return redirect('Error-Page')
     else:
             update_event = get_object_or_404(Event_Data, id=event_id)
-            update_image,created = Event_Image.objects.get_or_create(event=update_event)
-
+            
             if request.method == 'POST':
-
                 update_event.school  = request.POST['school']
                 update_event.collage =  request.POST['collage']
                 update_event.date = request.POST['event_date']
@@ -581,10 +568,19 @@ def update_event_data(request,event_id):
                 update_event.total_impact = request.POST['total_impact']
                 update_event.which_SIG = request.POST['sig_']
                 update_event.associate_partner = request.POST.get('associate_partners')
-                if 'event_image' in request.FILES:
-                    update_image.event_photo = request.FILES.getlist('event_image')
-                    update_image.save()
-                    return redirect('Admin_Dashboard',event_id=update_event.id)
+
+
+                event_image = request.FILES.getlist('event_image')
+
+                for image in event_image:
+                    Event_Image.objects.create(event=update_event,event_photo = image)
+                update_event.save()
+
+
+
+                
+                
+              
                 # event_image = request.FILES.getlist('event_image')
 
                 # for image in event_image:
@@ -593,13 +589,20 @@ def update_event_data(request,event_id):
 
 
 
-                update_event.save()
                 messages.success(request,'Event Updated')
                 return redirect('Admin_Dashboard')
 
             else:
                 messages.error(request,'Event not updated')
                 return redirect('Admin_Dashboard')
+
+
+def event_image_delete(request, image_id):
+    if request.method == 'POST':
+        image_to_delete = get_object_or_404(Event_Image, id=image_id)
+        image_to_delete.delete()  # Delete the image record
+    return redirect('Admin_Dashboard')
+
 
 
 
@@ -626,7 +629,7 @@ class EventDataAPI(APIView):
     def delete(self, request):
         # Ensure the 'id' is passed and object exists
         try:
-           # event_id = request.query_params.get('id')
+            # event_id = request.query_params.get('id')
             # event = Event_Data.objects.get(pk=request.data.get('id'))
             event= Event_Data.request.query_params.get('id')
             event.delete()  # Delete the object

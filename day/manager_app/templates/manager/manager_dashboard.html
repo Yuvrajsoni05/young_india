@@ -24,7 +24,7 @@
     <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
 
   <style>
-    .form-data{
+    .form-datas{
       font-family:'cambria';
     }
   </style>
@@ -50,13 +50,13 @@
 
     <div class="container">
       <!-- Event Add  Form -->
-      <div class="card shadow-lg">
+      <div class="card shadow-lg form-datas ">
         <div class="card-header text-center">
           <strong>Add Event Data</strong>
         </div>
         <br>
         <div class="card-body ">
-          <form method="POST" action="{% url 'event_data' %}" enctype="multipart/form-data">
+          <form method="POST" action="{% url 'event_data' %}"  enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
 
