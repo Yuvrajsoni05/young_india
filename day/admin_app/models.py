@@ -50,3 +50,5 @@ class LoginSide(AbstractUser):
 
 # # Access the related `login_role` field (ManyToMany relationship) and print the list of roles
 # print(user.login_role.all())
+# SessionInterrupted at /EC-Member-List
+# The request's session was deleted before the request completed. The user may have logged out in a concurrent request, for example.

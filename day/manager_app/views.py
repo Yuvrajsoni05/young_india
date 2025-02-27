@@ -220,6 +220,7 @@ def update_event_data(request,update_id):
 
 
         update_event = get_object_or_404(Event_Data,id = update_id)
+        
         update_event.collage =  request.POST['collage']
         update_event.school = request.POST['school']
         update_event.date = request.POST['event_date']
