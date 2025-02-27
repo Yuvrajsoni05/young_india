@@ -56,20 +56,19 @@
   <main id="main" class="main">
     <div class="pagetitle">
       <h1>{{ user.first_name }} {{ user.last_name }} Dashboard </h1>
-        <div align="right">
-           <a href="{% url 'Admin_Signup' %}"><button type="button" class="btn btn-primary">
-            <i class="bi bi-pencil-square"> </i>Add New Member
-        </button></a>
-      </div>
+      <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add Ec Member</button></a>
+    </div>
+
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="">Home</a></li>
           <li class="breadcrumb-item active">Dashboard</li>
+          
        
         </ol>
         
       </nav>
-    </div><!-- End Page Title -->
+  <!-- End Page Title -->
 
    
     <!-- Dashboard Stats Section -->
@@ -107,7 +106,7 @@
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 class="count">{{ total_impact }}</h6>
+                      <h6 class="count">{{ total_impact|floatformat:"g" }}</h6>
                     </div>
                   </div>
                 </div> 
@@ -124,7 +123,7 @@
                       <i class="bi bi-currency-rupee"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 class="count">{{ total_expense }}</h6>
+                      <h6 class="count">{{ total_expense|floatformat:"g"  }}</h6>
                     </div>
                   </div>
                 </div>
@@ -135,7 +134,7 @@
             <div class="col-xxl-3 col-xl-12 col-sm-12 mb-4">
               <div class="card info-card sales-card">
                 <div class="card-body">
-                  <h5 class="card-title">Total Managers</h5>
+                  <h5 class="card-title">Total EC Members </h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-person"></i>
@@ -253,44 +252,43 @@
 </td>
 
 <!-- Modal to display and delete images -->
-<div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ event.id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel{{ event.id }}">Event Images</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for image in event.event_photo.all %}
-                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                <img src="{{ image.event_photo.url }}" class="d-block w-100" width="500px" height="500px" alt="Event Image"><br>
+                            <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ event.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel{{ event.id }}">Event Images</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    {% for image in event.event_photo.all %}
+                                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                            <img src="{{ image.event_photo.url }}" class="d-block w-100" width="500px" height="500px" alt="Event Image"><br>
 
-                                <!-- Form for deleting the image -->
-                              
-                                <form method="POST" action="{% url 'event_image_id' image_id=image.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger yi-btn">Delete Image</button>
-                                </form>
-                           
+                                                            <!-- Form for deleting the image -->
+                                                          
+                                                            <form method="POST" action="{% url 'event_image_id' image_id=image.id %}">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="btn btn-danger yi-btn">Delete Image</button>
+                                                            </form>
+                                                      
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <button class="carousel-control-prev yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                    <button class="carousel-control-prev yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
                         <td>
                             <form method="post" action="{% url 'delete_event' event_id=event.id %}">
                                 {% csrf_token %}
@@ -424,7 +422,7 @@
                     </div>
                 {% endfor %}
             </tbody>
-        </table>[]
+        </table>
 
         <!-- Download Excel Button -->
         <a href="{% url 'download_excel' %}">

@@ -5,23 +5,25 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Add Event</title>
+  <title>Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-  <!-- Favicons -->
   <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
-  <!-- Google Fonts -->
+
+   
+
+  <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
-  <scrip src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-  <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
-    <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
+
 
   <style>
     .form-datas{
@@ -32,8 +34,9 @@
 
 <body>
 
-  {% include 'components/header.html' %}
-  {% include 'components/side_navbar.html' %}
+    {% include 'Admin/components/header.html' %}
+    {% include 'Admin/components/side_navbar.html' %}
+
 
   <main id="main" class="main">
 
@@ -126,12 +129,12 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <label for="tagInput">Members name(s)</label>
-                <div class="tag-container form-group" id="tagContainer">
+                <div class="tag-container" id="tagContainer">
                   <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" >
                   <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by">
                 </div>
               </div>
-              
+
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
@@ -140,12 +143,11 @@
                     <!--- <input class="form-control" id="project_verticals" name="project_verticals" value="{{ role }}" readonly > -->
 
                   <select class="form-control"id="project_verticals" name="project_verticals">
-                    {% for i in role  %}
+                    {% comment %} {% for i in role  %}
                     <option value={{i}}> {{i}} </option>
-                    {% endfor %}
-                  </select> 
-
-                  <!--- <option value="" disabled selected>Choose Project/Initiative</option>
+                    {% endfor %} {% endcomment %}
+              
+                <option value="" disabled selected>Choose Project/Initiative</option>
                     <option value="Masoom">Masoom</option>
                     <option value="Road Safety">Road Safety</option>
                     <option value="Health">Health</option>
@@ -163,7 +165,8 @@
                     <option value="Membership Engagement">Membership Engagement</option>
                     <option value="Other">Other</option>
                      <option value="">None</option>
-                  </input> --> 
+                  </input>      </select> 
+
                 </div>
               </div>
 
@@ -287,14 +290,12 @@
   </main>
 
   <!-- Vendor JS Files -->
+  <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
-  <script src="{% static 'assets/js/event.js' %}"></script>
-
-  <script src="{% static 'js/inputfiled.js' %}" ></script>
 
 </body>
 

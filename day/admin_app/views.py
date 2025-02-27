@@ -35,50 +35,98 @@ from django.views.decorators.cache import never_cache
 
 
 def index(request):
-    if request.method == 'POST':
+     
+     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        login_roles = request.POST.get('login_roles')  # Selected role from form input
 
-        # Authenticate the user
+        # Authenticate the user using only username and password
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # Ensure user is a LoginSide instance (if using a custom user model)
-            if isinstance(user, LoginSide):
-                # Get the selected role from the database
-                selected_role = Login_Role.objects.filter(name=login_roles).first()
+            login(request, user)  # Log the user in
 
-                if selected_role and selected_role in user.login_role.all():  # Check if user has the selected role
-                    login(request, user)
-
-                    # Store the role in the session so that it can be accessed across requests
-                    request.session['user_roles'] = selected_role.name
-
-                    # Redirect based on role
-                    if selected_role.name == 'Admin':  # If user has Admin role
-                        return redirect('Admin_Dashboard')
-                    else:
-                        return redirect('manager-dashboard')
-                else:
-                    # Role doesn't match, redirect back to the login page
-                    messages.error(request, "Role not match")
-                    return redirect('index')
+            # Check if the user has the 'Admin' role
+            if user.login_role.filter(name='Admin').exists():
+                # If the user is Admin, redirect to the Admin Dashboard
+                return redirect('Admin_Dashboard')
             else:
-                # In case of an invalid user instance
-                messages.error(request, "username is Invalid")
-                return redirect('index')
+                user = request.user
+                # Otherwise, pass all associated roles to the context and go to manager dashboard
+                roles = user.login_role.all() 
+                request.session['userrole'] = [role.name for role in roles] # Get all roles associated with the user
+                return redirect('manager-dashboard')
         else:
-            # If authentication fails, redirect to login page
-            messages.error(request, "Login Again PlZ")
+            # If authentication fails, show an error message
+            messages.error(request, "Invalid credentials, please try again.")
             return redirect('index')
+        
+     return render(request, 'index.html')
+    # If it's a GET request, render the login page
+    
 
-    # Get all roles to pass to the form
-    roles = Login_Role.objects.all()
-    context = {
-        'roles': roles
-    }
-    return render(request, 'index.html', context)
+
+  
+   
+    # if request.method == 'POST':
+    #     username = request.POST.get('username')
+    #     password = request.POST.get('password')
+    #     #login_roles = request.POST.get('login_roles')  # Selected role from form input
+
+    #     # Authenticate the user
+    #     user = authenticate(request, username=username, password=password)
+
+    #     if user is not None:
+    #         if user.login_role.filter(name='Admin').exists():
+    #             login(request,user)
+    #             return redirect('Admin_Dashboard')
+            
+    #         else:
+    #             return redirect('manager-dashboard')
+
+
+        # if user is not None:
+            
+        #     # Ensure user is a LoginSide instance (if using a custom user model)
+        #     if isinstance(user, LoginSide):
+        #         if user.login_role.name == 'Admin':
+        #             return redirect('Admin_Dashbaord')
+                
+        #         # Get the selected role from the database
+
+               
+        #         selected_role = Login_Role.objects.filter(name=login_roles).first()
+
+        #         if selected_role and selected_role in user.login_role.all():  # Check if user has the selected role
+        #             login(request, user)
+
+        #             # Store the role in the session so that it can be accessed across requests
+        #             request.session['user_roles'] = selected_role.name
+
+        #             # Redirect based on role
+        #             if selected_role.name == 'Admin':  # If user has Admin role
+        #                 return redirect('Admin_Dashboard')
+        #             else:
+        #                 return redirect('manager-dashboard')
+        #         else:
+        #             # Role doesn't match, redirect back to the login page
+        #             messages.error(request, "Role not match")
+        #             return redirect('index')
+        #     else:
+        #         # In case of an invalid user instance
+        #         messages.error(request, "username is Invalid")
+        #         return redirect('index')
+        # else:
+        #     # If authentication fails, redirect to login page
+        #     messages.error(request, "Login Again PlZ")
+        #     return redirect('index')
+
+    # # Get all roles to pass to the form
+    # roles = Login_Role.objects.all()
+    # context = {
+    #     'roles': roles
+    # }
+    # return render(request, 'index.html', context)
 
 
 
@@ -273,8 +321,6 @@ def admin_logout(request):
 
 
 @login_required(login_url='index')
-
-
 def Admin_Dashboard(request):
     
     if not request.user.login_role.filter(name='Admin').exists():
@@ -285,7 +331,8 @@ def Admin_Dashboard(request):
     total_event = Event_Data.objects.count()
     user_id = request.user.id
     # Assuming 'Manager' is a role or attribute in the LoginSide model
-    total_user_data = LoginSide.objects.filter(login_role='Manager')
+    total_user_data = LoginSide.objects.exclude(login_role='Admin')
+
     total_user = total_user_data.count()
     
     # Calculate total expenses
@@ -361,7 +408,8 @@ def Admin_Dashboard(request):
 #         'role_datas' : role_list,
 #     }
 #     return render(request,'Admin/AdminDashboard.html',context)
-
+def admin_event_data(request):
+    return render(request,'Admin/Admin_Event_data.html')
 
 @login_required(login_url='index')
 def Event_list(request):
@@ -854,7 +902,7 @@ def password_update_done(request):
 
 
 
-
+# person = Person.objects.get(email="example@example.com")L
 
 
 

@@ -165,11 +165,11 @@ def manager_dashboard(request):
 
     # user_vertical = LoginSide.objects.all()
     # Get the role from the session
-    user_role = request.session.get('user_roles', None)
+    user_roles = request.session.get('userrole', [])
 
-    if user_role:
+    if user_roles:
         context = {
-            'role': user_role  # Pass the role to the template
+            'role': user_roles  # Pass the role to the template
         }
     else:
         # Handle the case where no role is found in the session (maybe unauthorized access)

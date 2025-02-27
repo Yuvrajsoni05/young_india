@@ -57,6 +57,8 @@ h6 {
 # Page Title
 --------------------------------------------------------------*/
 .pagetitle {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 

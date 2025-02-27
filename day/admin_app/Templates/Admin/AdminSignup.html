@@ -24,9 +24,7 @@
   <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
 
   <!-- Custom Styling -->
-  <style>
- 
-  </style>
+  
 </head>
 
 <body>
@@ -35,7 +33,8 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>Register New User in YI</h1>
+      <h1>Register New Executive Council Member</h1>
+    </div>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
@@ -43,21 +42,23 @@
           <li class="breadcrumb-item active">Register In Yi</li>
         </ol>
       </nav>
-    </div>
+    
 
     <div class="container mt-4">
-      <div class="card">
+      <div class="card custom-form">
         <div class="card-header">
-          <strong style="font-family: Cambria, serif;" >Register New User in YI</strong>
+          Register New Executive Council Member
         </div>
-        <div class="card-body custom-form">
-          <br>
+    
+        <div class="card-body "> <br>
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
+              
               <div class="col-md-6">
+               
                 <div class="form-group">
-                  <i class="bi bi-person-circle"></i> <label>Username </label>
+                  <i class="bi bi-person-circle"></i> <label>Username</label>
                   <input type="text" class="form-control" name="add_username" placeholder="Enter Username" required>
                 </div>
               </div>
@@ -86,15 +87,31 @@
 
             <div class="row mt-3">
               <div class="col-md-6">
+                <div class="form-group">
                 <label>Phone</label>
                 <div class="input-group">
                   <span class="input-group-text">+91</span>
                   <input type="tel" class="form-control" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
                 </div>
               </div>
-
+            </div>
               <div class="col-md-6">
-                <label>Login Role</label>
+                <div class="form-group">
+                  <label>YI Role</label>
+                  <select class="form-control" id="role_yi" name="role_yi" required aria-label="YI Role">
+                    <option value="" disabled selected>Choose YI Role</option>
+                    <option value="Vertical Chair">Vertical Chair</option>
+                    <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                    <option value="Team Member">Team Member</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+            <div class="form-group">
+              <div class="col-md-12">
+                <label>Executive Council Role</label>
                 <div class="checkbox-container">
                   {% for i in role %}
                     <div class="form-check form-check-inline">
@@ -105,9 +122,10 @@
                 </div>
               </div>
             </div>
+          </div>
 
             <div class="row mt-3">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="form-group">
                   <label>Profile Image</label>
                   <input type="file" class="form-control" name="profile_img">
@@ -115,7 +133,6 @@
                 </div>
               </div>
             </div>
-            
 
             <div class="row mt-3">
               <div class="col-md-6">
@@ -132,30 +149,29 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Create Yi </button>
-            <button type="reset" class="btn btn-primary mt-4">Reset </button>
+            <button type="submit" class="btn btn-primary mt-4">Create Yi</button>
+            <button type="reset" class="btn btn-secondary mt-4">Reset</button>
           </form>
         </div>
       </div>
     </div>
   </main>
 
-
   {% if messages %}
-        <script>
-            {% for message in messages %}
-                Swal.fire({
-                    title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
-                    text: "{{ message }}",
-                    icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-                    confirmButtonText: 'OK'
-                });
-            {% endfor %}
-        </script>
+    <script>
+      {% for message in messages %}
+        Swal.fire({
+          title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
+          text: "{{ message }}",
+          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+          confirmButtonText: 'OK'
+        });
+      {% endfor %}
+    </script>
   {% endif %}
 
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
- <script src="{% static 'assets/js/main.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
 </body>
 
 </html>

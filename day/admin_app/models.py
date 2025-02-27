@@ -40,3 +40,13 @@ class LoginSide(AbstractUser):
 # for user in users:
 #     print(user.username, user.email, user.id)  # Print any other fields you need
 # login_data = LoginSide.objects.get(username="meet").login_role.all().values_list("name",flat=True)
+
+
+
+# from yourapp.models import LoginSide
+
+# # Fetch a particular user, e.g., by their email (you can adjust the condition to suit your needs)
+# user = LoginSide.objects.get(email='user_email@example.com')
+
+# # Access the related `login_role` field (ManyToMany relationship) and print the list of roles
+# print(user.login_role.all())
