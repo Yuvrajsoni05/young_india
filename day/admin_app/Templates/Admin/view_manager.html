@@ -142,7 +142,7 @@
             <div class="d-flex flex-wrap gap-3">
                 {% for i in role %}
                     <div class="form-check form-check-inline">
-                        <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role{{ manager.id }}" {% if i in user_role %} checked {% endif %}>
+                        <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role{{ manager.id }}" {% if i in manager.login_role.all  %} checked {% endif %}>
                         <label class="form-check-label" for="login_role{{ manager.id }}">{{ i.name }}</label>
                     </div>
                 {% endfor %}
@@ -162,10 +162,7 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Save changes</button>
       </div>
-
-
-
-          </form>
+      </form>
 
 {% if messages %}
                   <script>

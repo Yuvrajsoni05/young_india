@@ -35,52 +35,52 @@ import os
 
 
 
-@login_required(login_url='index')
-def manager_signup(request):
-    if request.method == "POST":
-        manager_username = request.POST.get('manager_username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        password = request.POST.get('password1')
-        phone = request.POST.get('add_phone')
-        profile_img = request.FILES.get('profile_img')
-        confirm_password = request.POST.get('password2')
-        manager_email = request.POST.get('manager_email')
-        # which_role = request.POST.getlist('which_role')
+# @login_required(login_url='index')
+# def manager_signup(request):
+#     if request.method == "POST":
+#         manager_username = request.POST.get('manager_username')
+#         first_name = request.POST.get('first_name')
+#         last_name = request.POST.get('last_name')
+#         password = request.POST.get('password1')
+#         phone = request.POST.get('add_phone')
+#         profile_img = request.FILES.get('profile_img')
+#         confirm_password = request.POST.get('password2')
+#         manager_email = request.POST.get('manager_email')
+#         # which_role = request.POST.getlist('which_role')
 
 
 
 
 
-        if len(phone) != 10 or not phone.isdigit():
-            messages.error(request, "Phone number must be 10 digits.")
-            return render(request,'manager/manager_signup.html')
+#         if len(phone) != 10 or not phone.isdigit():
+#             messages.error(request, "Phone number must be 10 digits.")
+#             return render(request,'manager/manager_signup.html')
 
-        if len(password) < 8 or not any(c.isupper() for c in password) or not any(
-                c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
-            messages.error(request,"Password must be at least 8 characters with one uppercase letter and one special character")
-            return render(request, 'manager/manager_signup.html')
+#         if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+#                 c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
+#             messages.error(request,"Password must be at least 8 characters with one uppercase letter and one special character")
+#             return render(request, 'manager/manager_signup.html')
 
-        if password != confirm_password:
-            messages.error(request, "Password and Confirm Password must be Same")
-            return render(request,'manager/manager_signup.html')
-
-
+#         if password != confirm_password:
+#             messages.error(request, "Password and Confirm Password must be Same")
+#             return render(request,'manager/manager_signup.html')
 
 
 
-        manager_user = LoginSide.objects.create_user(username=manager_username,
-                                                     first_name=first_name,
-                                                     last_name=last_name,
-                                                     photo=profile_img,
-                                                     password=password,
-                                                     email=manager_email,
-                                                     phone_number=phone,
-                                                     login_role='Manager',)
-        manager_user.save()
-        messages.success(request, 'New Manager Created')
-        return redirect('manager-signup')
-    return render(request,'manager/manager_signup.html')
+
+
+#         manager_user = LoginSide.objects.create_user(username=manager_username,
+#                                                      first_name=first_name,
+#                                                      last_name=last_name,
+#                                                      photo=profile_img,
+#                                                      password=password,
+#                                                      email=manager_email,
+#                                                      phone_number=phone,
+#                                                      login_role='Manager',)
+#         manager_user.save()
+#         messages.success(request, 'New Manager Created')
+#         return redirect('manager-signup')
+#     return render(request,'manager/manager_signup.html')
 
 
 
@@ -99,7 +99,8 @@ def about_yi(request):
 
 @login_required(login_url='index')
 def manager_update(request,manager_id):
-    # if request.user.login_role.filter(name='Manager').exists():
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     if request.method == 'POST':
         manager_profile = get_object_or_404(LoginSide, id=manager_id)
         manager_profile.first_name = request.POST['manager_first_name']
@@ -128,7 +129,8 @@ def manager_update(request,manager_id):
 
 @login_required(login_url='index')
 def manager_password(request):
-    # if request.user.login_role.filter(name='Manager').exists():
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
@@ -159,8 +161,8 @@ def manager_password(request):
 
 @login_required(login_url='index')
 def manager_dashboard(request):
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('Error-Page')
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     # all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
 
     # user_vertical = LoginSide.objects.all()
@@ -181,16 +183,16 @@ def manager_dashboard(request):
 
 @login_required(login_url='index')
 def manager_profile(request):
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('Error-Page')
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
 
     return render(request,'manager/manager_profile.html')
 
 @login_required(login_url='index')
 def event_list(request):
     # Ensure the user has the 'Manager' role
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('manager-profile')
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
 
@@ -203,8 +205,8 @@ def event_list(request):
 
 
 def delete_event_user(request,events_id):
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('Error-Page')
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=events_id)
         delete_events.delete()
@@ -213,8 +215,8 @@ def delete_event_user(request,events_id):
 
 def update_event_data(request,update_id):
 
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('Error-page')
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     # else:
     if request.method == 'POST':
 
@@ -280,7 +282,8 @@ def update_event_data(request,update_id):
 from django.http import JsonResponse
 @login_required(login_url='index')
 def event_data(request):
-    # if request.user.login_role.filter(name='Manager').exists():
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     if request.method == 'POST':
         your_name = request.POST['your_name']
         event_date = request.POST['event_date']
@@ -366,8 +369,8 @@ def event_data(request):
 
 
 def chart(request):
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('Error-Page')
+    if  request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
     total_event = Event_Data.objects.filter(user=user).count()

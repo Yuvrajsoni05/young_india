@@ -155,7 +155,7 @@
                     <div class="row mb-3">
                       <label for="admin_username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="admin_username" type="text" class="form-control" id="admin_username" value="{{ user.username }}">
+                        <input name="admin_username" type="text" minlength="15" maxlength="15" class="form-control" id="admin_username" value="{{ user.username }}">
                       </div>
                     </div>
 
@@ -166,14 +166,14 @@
                     <div class="row mb-3">
                       <label for="admin_phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="admin_phone" type="text" class="form-control" id="admin_phone" value="{{ user.phone_number }}">
+                        <input name="admin_phone" type="text" minlength="10" maxlength="10" class="form-control" id="admin_phone" value="{{ user.phone_number }}">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="admin_email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="admin_email" type="email" class="form-control" id="admin_email" value="{{ user.email }}">
+                        <input name="admin_email" type="email" maxlength="40" , class="form-control" id="admin_email" value="{{ user.email }}">
                       </div>
                     </div>
 

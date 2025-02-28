@@ -174,8 +174,8 @@ def get_username(request):
 
 # @login_required(login_url='index')
 def Admin_Signup(request):
-    # if not request.user.login_role.filter(name='Admin').exists():
-    #     return redirect('Error-Page')
+    if not request.user.login_role.filter(name='Admin').exists():
+        return redirect('Error-Page')
 
     if request.method == 'POST':
         username = request.POST.get('add_username')
@@ -531,7 +531,7 @@ def manager_list(request):
         return redirect('Error-Page')
     manager = LoginSide.objects.all().distinct()
     # login_role = Login_Role.objects.exclude(is_superuser=False)
-    login_role = Login_Role.objects.exclude(name = 'superuser')
+    login_role = Login_Role.objects.all()
     # login_role = Login_Role.objects.exclude(name='superuser')  # Example if you have a role field
     user_roles = request.user.login_role.all()
     contex = {

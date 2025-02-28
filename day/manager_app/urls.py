@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
         # path('manager-login',manager_login,name='manager-login'),
-        path('signup',manager_signup,name='manager-signup'),
+        # path('signup',manager_signup,name='manager-signup'),
         path('add-event',manager_dashboard,name='manager-dashboard'),
         path('profile',manager_profile,name='manager-profile'),
         path('update/<uuid:manager_id>/',manager_update,name='manager-update'),

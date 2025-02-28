@@ -18,6 +18,10 @@ ROLE_CHOICES = [
 class Login_Role(models.Model):
     name = models.CharField(max_length=200,primary_key=True,choices=ROLE_CHOICES)
 
+
+    def __str__(self):
+        return f"{self.name}"
+
 # Create your models here.
 class LoginSide(AbstractUser):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
@@ -27,6 +31,12 @@ class LoginSide(AbstractUser):
     email = models.EmailField(max_length=200,unique=True,)
     photo = models.ImageField(upload_to='user_photo/', null=True,)
     phone_number = models.CharField(max_length=15,default='Phone Number')
+
+    def __str__(self):
+        return f"{self.first_name} | {self.last_name}  {self.login_role}"
+    
+
+  
 
 
 
@@ -52,3 +62,12 @@ class LoginSide(AbstractUser):
 # print(user.login_role.all())
 # SessionInterrupted at /EC-Member-List
 # The request's session was deleted before the request completed. The user may have logged out in a concurrent request, for example.
+
+
+# Show Login Role 
+
+#user = LoginSide.objects.get(id='some-uuid')  # Replace 'some-uuid' with the actual UUID
+# print(user.login_role.all())
+# for role in user.login_role.all():
+#     print(role.name)
+# print(str(user.login_role.all()))
