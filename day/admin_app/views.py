@@ -174,76 +174,87 @@ def get_username(request):
 
 # @login_required(login_url='index')
 def Admin_Signup(request):
-    if not request.user.login_role.filter(name='Admin').exists():
-        return redirect('Error-Page')
+    try:
 
-    if request.method == 'POST':
-        username = request.POST.get('add_username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        password = request.POST.get('password1')
-        profile_img = request.FILES.get('profile_img')
-        confirm_password = request.POST.get('password2')
-        Admin_email = request.POST.get('add_email')
-        phone = request.POST.get('add_phone')
-        login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
+        if not request.user.login_role.filter(name='Admin').exists():
+            return redirect('Error-Page')
+
+        if request.method == 'POST':
+            username = request.POST.get('add_username')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            password = request.POST.get('password1')
+            profile_img = request.FILES.get('profile_img')
+            confirm_password = request.POST.get('password2')
+            Admin_email = request.POST.get('add_email')
+            phone = request.POST.get('add_phone')
+            login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
 
 
 
-        if profile_img.size > 4*1024*1024:
-            messages.error(request,'Image Size must be 4mb')
-            return redirect('Admin_Signup')
+            if profile_img.size > 4*1024*1024:
+                messages.error(request,'Image Size must be 4mb')
+                return redirect('Admin_Signup')
+            
+            # valid_extensions = ['.jpeg','.jpg','.png']
 
-        if LoginSide.objects.filter(email=Admin_email).exists():
-            messages.error(request, "This email is already taken.")
-            return redirect('Admin_Signup')
+            # for img in profile_img:
+            #     ext = os.path.splitext(img.name)[1]
+            #     if ext.lower() not in valid_extensions:
+            #         messages.error(request,f"Invalid File . only .jpeg .png .jpeg")
+            #         return redirect('Admin_Signup')
 
-        if LoginSide.objects.filter(username=username).exists():
-            messages.error(request, "This Username is already taken.")
-            return redirect('Admin_Signup')
+            if LoginSide.objects.filter(email=Admin_email).exists():
+                messages.error(request, "This email is already taken.")
+                return redirect('Admin_Signup')
 
-        if len(phone) != 10 or not phone.isdigit():
-            messages.error(request, "Phone number must be 10 digits.")
-            return redirect('Admin_Signup')
+            if LoginSide.objects.filter(username=username).exists():
+                messages.error(request, "This Username is already taken.")
+                return redirect('Admin_Signup')
 
-        if len(password) < 8 or not any(c.isupper() for c in password) or not any(
-                c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
-            messages.error(request,
-                           "Password must be at least 8 characters with one uppercase letter and one special character")
-            return redirect('Admin_Signup')
+            if len(phone) != 10 or not phone.isdigit():
+                messages.error(request, "Phone number must be 10 digits.")
+                return redirect('Admin_Signup')
 
-        if password != confirm_password:
-            messages.error(request, "Password and confirm Password must be same ")
-            return redirect('Admin_Signup')
+            if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
+                messages.error(request,
+                            "Password must be at least 8 characters with one uppercase letter and one special character")
+                return redirect('Admin_Signup')
 
-        # Create user
-        Admin_User = LoginSide.objects.create_user(
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            photo=profile_img,
-            password=password,
-            email=Admin_email,
-            phone_number=phone
-        )
+            if password != confirm_password:
+                messages.error(request, "Password and confirm Password must be same ")
+                return redirect('Admin_Signup')
 
-        # Assign selected roles to the user
-        roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
-        Admin_User.login_role.set(roles)  # Assign multiple roles
-        Admin_User.save()
+            # Create user
+            Admin_User = LoginSide.objects.create_user(
+                username=username,
+                first_name=first_name,
+                last_name=last_name,
+                photo=profile_img,
+                password=password,
+                email=Admin_email,
+                phone_number=phone
+            )
 
-        messages.success(request, "Admin Created")
+            # Assign selected roles to the user
+            roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
+            Admin_User.login_role.set(roles)  # Assign multiple roles
+            Admin_User.save()
 
-        return redirect('Admin_Dashboard')
+            messages.success(request, "Admin Created")
 
-    # Fetch all roles for the dropdown
-    login_role = Login_Role.objects.all()
-    context = {
-        'role': login_role
-    }
+            return redirect('Admin_Dashboard')
 
-    return render(request, 'Admin/AdminSignup.html', context)
+        # Fetch all roles for the dropdown
+        login_role = Login_Role.objects.all()
+        context = {
+            'role': login_role
+        }
 
+        return render(request, 'Admin/AdminSignup.html', context)
+    except :
+        return render(request, 'Admin/AdminSignup.html', context)
 
 # if request.user.login_role != 'Admin':
     #     return redirect('Error-Page')

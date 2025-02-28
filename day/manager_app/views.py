@@ -191,8 +191,8 @@ def manager_profile(request):
 @login_required(login_url='index')
 def event_list(request):
     # Ensure the user has the 'Manager' role
-    if  request.user.login_role.filter(name='Admin').exclude():
-        return redirect('Error-Page')
+    # if not request.user.login_role.filter(name='Manager').exists():
+    #     return redirect('manager-profile')
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
 
@@ -205,8 +205,8 @@ def event_list(request):
 
 
 def delete_event_user(request,events_id):
-    if  request.user.login_role.filter(name='Admin').exclude():
-        return redirect('Error-Page')
+    # if not request.user.login_role.filter(name='Manager').exists():
+    #     return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=events_id)
         delete_events.delete()
@@ -376,14 +376,17 @@ def chart(request):
     total_event = Event_Data.objects.filter(user=user).count()
     total_impact_data =  Event_Data.objects.filter(user=user).aggregate(Sum('total_impact'))
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
+
     event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
+    
     event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     # Map event names to their corresponding total impact
-    event_impact_dict = {item['project_vertical']: item['total_impact'] for item in event_impact}
+    event_total_dict = {item['project_vertical']: item['total_impact'] for item in total_event}
 
     # Adjust event_impact to reflect the correct order of event_name
-    aligned_event_impact = [event_impact_dict.get(event, 0) for event in event_name]
+    aligned_event_impact = [event_total_dict.get(event, 0) for event in event_name]
+    
 
     # print(event_name)
     # print(event_impact)

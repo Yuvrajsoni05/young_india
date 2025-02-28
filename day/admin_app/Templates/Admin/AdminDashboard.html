@@ -194,7 +194,7 @@
 
       <!-- User Data Table -->
       <div class="table-responsive">
-        <table class="table " style="width:100%;font-family:cambria" border="1px">
+        <table class="table table-bordered " style="width:100%;font-family:cambria" border="1px">
             <thead>
                 <tr class="text-nowrap" align="center" >
                     <th>Sr.no</th>
@@ -219,6 +219,7 @@
                 </tr>
             </thead>
             <tbody>
+              {% if events %}
                 {% for event in events %}
                     <tr class="text-nowrap" align="center">
 
@@ -421,6 +422,11 @@
                         </div>
                     </div>
                 {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="17" class="text-center"> No Event available </td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
 
@@ -431,7 +437,6 @@
     </div>
 
 
-    
 
     </section>
 

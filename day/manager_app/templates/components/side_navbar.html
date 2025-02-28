@@ -1,54 +1,61 @@
 {% load static %}
 <aside id="sidebar" class="sidebar">
+    <!-- User Profile Section -->
+    <div class="sidebar-header">
+        <div class="user-profile">
+            <!-- Round User Image -->
+            <img src="{% static 'Image/YIIMG.png' %}" alt="User Image" class="rounded-circle" width="40" height="40">
+            <span class="user-name">John Doe</span>
+        </div>
+    </div>
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-
-
-          <h2>{{user.first_name}} {{user.last_name}}</h2>
-
-      </li>
-
-
-
-      <li class="nav-item">
-
-           <a class="nav-link " href="{% url 'chart-dashbaord' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-
+        <li class="nav-item">
+        </li>
 
         <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'event-list' %}">
-          <i class="bi bi-list-columns-reverse"></i>
-          <span>View Events</span>
-        </a>
-      </li>
+            <a class="nav-link " href="{% url 'chart-dashbaord' %}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
 
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{% url 'event-list' %}">
+                <i class="bi bi-list-columns-reverse"></i>
+                <span>View Events</span>
+            </a>
+        </li>
 
-      <li class="nav-item">
-     <a class="nav-link " href="{% url 'manager-dashboard' %}">
-          <i class="bi bi-clipboard-data-fill"></i>
-          <span>Add Event</span>
-        </a>
-      </li>
+        <li class="nav-item">
+            <a class="nav-link " href="{% url 'manager-dashboard' %}">
+                <i class="bi bi-clipboard-data-fill"></i>
+                <span>Add Event</span>
+            </a>
+        </li>
 
-
-     
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'manager-logout' %}">
-          <i class="bi bi-box-arrow-left"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Login Page Nav -->
-
-
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{% url 'manager-logout' %}">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </li><!-- End Login Page Nav -->
     </ul>
+</aside>
 
-  </aside>
+<!-- Add CSS styles to make the image round -->
+<style>
+    .user-profile {
+        display: flex;
+        align-items: center;
+        margin: 15px;
+    }
+    .user-profile img {
+        border-radius: 50%; /* Make the image round */
+    }
+    .user-name {
+        margin-left: 10px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+</style>

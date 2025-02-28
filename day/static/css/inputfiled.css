@@ -10,7 +10,7 @@
 .tag {
       display: flex;
       align-items: center;
-      background-color: #3498DB;
+      background-color: #2993da;
       color: white;
       padding: 5px 10px;
       margin: 3px;
@@ -22,7 +22,8 @@
       margin-left: 8px;
       font-weight: bold;
     }
-.tag-input {
+.tag-input 
+    {
       border: none;
       outline: none;
       flex: 1;
