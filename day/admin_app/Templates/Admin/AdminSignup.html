@@ -1,30 +1,11 @@
+{% extends "base/base.html" %}
+
+{% block title %} Admin Signup {% endblock title %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Dashboard</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+{% block link %}   <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet"> {% endblock link %}
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-  <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
-
-  <!-- Custom Styling -->
-  
+{% block bodyblock %}
 </head>
 
 <body>
@@ -32,14 +13,15 @@
   {% include 'Admin/components/side_navbar.html' %}
 
   <main id="main" class="main">
+
     <div class="pagetitle">
-      <h1>Register New EC Member</h1>
+      <h1>Add EC Member </h1>
     </div>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
-          <li class="breadcrumb-item">Admin</li>
-          <li class="breadcrumb-item active">Register In Yi</li>
+          <li class="breadcrumb-item"><a href="">Home</a></li>
+          <li class="breadcrumb-item">Manager</li>
+          <li class="breadcrumb-item active">Add EC Member</li>
         </ol>
       </nav>
     
@@ -97,9 +79,9 @@
             </div>
               <div class="col-md-6"style="margin-top: 15px;">
                 <div class="form-group" >
-                  <label>YI Role</label>
-                  <select class="form-control" id="role_yi" name="role_yi" required aria-label="YI Role">
-                    <option value="" disabled selected>Choose YI Role</option>
+                  <label>Yi Role</label>
+                  <select class="form-control" id="yi_role" name="yi_role" required aria-label="YI Role">
+                    <option value="" disabled selected>Choose Yi Role</option>
                     <option value="Vertical Chair">Vertical Chair</option>
                     <option value="Vertical Co-Chair">Vertical Co-Chair</option>
                     <option value="Team Member">Team Member</option>
@@ -156,7 +138,8 @@
       </div>
     </div>
   </main>
-
+  {% endblock %} 
+  {% block alert %}
   {% if messages %}
     <script>
       {% for message in messages %}
@@ -169,9 +152,7 @@
       {% endfor %}
     </script>
   {% endif %}
+  {% endblock alert %}
 
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'assets/js/main.js' %}"></script>
-</body>
 
-</html>
+

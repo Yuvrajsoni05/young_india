@@ -188,6 +188,7 @@ def Admin_Signup(request):
             confirm_password = request.POST.get('password2')
             Admin_email = request.POST.get('add_email')
             phone = request.POST.get('add_phone')
+            yi_role = request.POST.get('yi_role')
             login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
 
 
@@ -234,6 +235,7 @@ def Admin_Signup(request):
                 photo=profile_img,
                 password=password,
                 email=Admin_email,
+                yi_role=yi_role,
                 phone_number=phone
             )
 
@@ -242,7 +244,7 @@ def Admin_Signup(request):
             Admin_User.login_role.set(roles)  # Assign multiple roles
             Admin_User.save()
 
-            messages.success(request, "Admin Created")
+            messages.success(request, "New Executive Council Member Add")
 
             return redirect('Admin_Dashboard')
 
@@ -420,6 +422,71 @@ def Admin_Dashboard(request):
 #     }
 #     return render(request,'Admin/AdminDashboard.html',context)
 def admin_event_data(request):
+    if not request.user.login_role.filter(name='Admin').exclude():
+        return redirect('Error-Page')
+    
+    if request.method  == 'POST':
+        your_name = request.POST['your_name']
+        event_date = request.POST['event_date']
+        role_yi = request.POST['role_yi']
+        sig_option = request.POST.get('sig_','')
+        event_handle = request.POST['handel_by']
+        project_verticals = request.POST['project_verticals']
+        project_stakeholder = request.POST['project_stakeholder']
+        yi_pillar = request.POST['yi_pillar']
+        social_link = request.POST['social_link']
+        total_impact = request.POST['total_impact']
+        event_expense = request.POST['event_expense']
+        event_venue = request.POST['event_venue']
+        event_name = request.POST['event_name']
+      
+        school = request.POST['school']
+        collage = request.POST['collage']
+        associate_partner = request.POST.get('associate_partner','')
+
+
+        event_image = request.FILES.getlist('event_img')
+
+        if len(event_image)>6 and event_image:
+            messages.error(request,"You can Upload only 6 Image")
+            return redirect('admin_event_data')
+        
+        valid_extension = ['.jpeg','.jpg','.png']
+
+
+        for img in event_image:
+            ext =  os.path.splitext(img.name)[1]
+            if ext.lower() not in valid_extension:
+                messages.error(request,f"Invalid file type: {img.name} . Only .jpg, .jpeg, and .png are allowed.")
+                return redirect('admin_event_data')
+
+        event_data = Event_Data.objects.create(
+                    your_name=your_name,
+            date=event_date,
+            role_yi=role_yi,
+            event_handle=event_handle,
+            project_vertical=project_verticals,
+            which_SIG=sig_option,
+            project_stakeholder=project_stakeholder,
+            yi_pillar=yi_pillar,
+            social_link=social_link,
+            event_venue=event_venue,
+            event_expense=event_expense,
+            school=school,
+            collage=collage,
+            total_impact=total_impact,
+            event_name=event_name,
+         
+            associate_partner=associate_partner,
+            user=request.user
+        )
+        for image in event_image:
+            Event_Image.objects.create(event_photo=image,event=event_data)
+
+        messages.success(request,'Thank you Insert Data  ')
+        return redirect('Admin_Dashboard')
+    
+
     return render(request,'Admin/Admin_Event_data.html')
 
 @login_required(login_url='index')
@@ -474,18 +541,29 @@ from django.http import HttpResponse
 import os
 from django.conf import settings
 
+
+from openpyxl.styles import Alignment, Font
+
+  # Replace with the actual imports
+
 def download_excel(request):
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = 'Event Data'
 
+    # Set the headers in the first row
     headers = [
         'Event Date', 'Manager Name', 'Event Name', 'Event Venue', 'Event Expense', 'Role YI', 'Project Verticals',
         'Project Stakeholder', 'YI Pillar', 'SIG', 'School', 'Collage', 'Associate Partner', 'Event Handle', 'Impact', 'Image'
     ]
 
-    # Set the headers in the first row
+    # Set the headers row
     sheet.append(headers)
+
+    # Styling for headers (Bold and Centered)
+    for cell in sheet[1]:
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(horizontal='center', vertical='center')
 
     # Get all event data
     event_data = Event_Data.objects.all()
@@ -510,8 +588,6 @@ def download_excel(request):
             if img.event_photo:
                 # Construct the URL for the image
                 img_url = os.path.join(settings.MEDIA_URL, img.event_photo.name)
-
-                # Add the URL as a hyperlink to the last column
                 img_urls.append(img_url)
 
         # Insert the URLs into the last column (Column P)
@@ -522,9 +598,24 @@ def download_excel(request):
             # Write the image links into the last column
             cell = f'P{sheet.max_row}'
             sheet[cell] = image_link
+
             # Make the cell contents a clickable link by adding the hyperlink to each image URL.
             sheet[cell].hyperlink = image_link
             sheet[cell].style = 'Hyperlink'
+            sheet[cell].alignment = Alignment(wrap_text=True)
+
+    # Adjust column widths based on content size
+    for col in sheet.columns:
+        max_length = 0
+        column = col[0].column_letter  # Get the column name
+        for cell in col:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        sheet.column_dimensions[column].width = adjusted_width
 
     # Generate the response to download the file
     response = HttpResponse(
@@ -582,6 +673,7 @@ def update_manager(request,manager_id):
         update_manager_data.first_name = request.POST['manager_first_name']
         update_manager_data.last_name = request.POST['manager_last_name']
         update_manager_data.username = request.POST['manager_username']
+        update_manager_data.yi_role = request.POST['yi_role']
         update_manager_data.email = request.POST['manager_email']
         login_roles = request.POST.getlist('login_role')
         update_manager_data.login_role.set(Login_Role.objects.filter(name__in=login_roles))# many to many filed change with set() in django
@@ -599,9 +691,9 @@ def update_manager(request,manager_id):
             messages.error(request,'Image Size must be 4mb ')
             return redirect('View-manager')
         update_manager_data.save()
-        messages.success(request, 'Manager profile  Updated')
+        messages.success(request, 'EC Member  Profile  Updated')
     else:
-        messages.error(request,'Manager profile not Updated')
+        messages.error(request,'EC Member  profile not Updated')
     return redirect('View-manager')
 
 

@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-SESSION_COOKIE_AGE = 1000 # set just 10 seconds to test
+SESSION_COOKIE_AGE = 6000 # set just 10 seconds to test
 SESSION_SAVE_EVERY_REQUEST = False
 
 

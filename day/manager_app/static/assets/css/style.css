@@ -45,6 +45,7 @@ h6 {
   margin-top: 60px;
   padding: 20px 30px;
   transition: all 0.3s;
+  background: #0b49c4;
 }
 
 @media (max-width: 1199px) {

@@ -1,31 +1,10 @@
+{% extends "base/base.html" %}
+
+{% block title %}<title> Profile </title> {% endblock title %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Dashboard</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'  %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
- 
-
-  <!-- Custom Styling -->
-  
-</head>
+{% block bodyblock %}
 
 <body>
 
@@ -233,6 +212,7 @@
       </div>
 
     </section>
+    {% block alert %}
     {% if messages %}
                   <script>
     {% for message in messages %}
@@ -245,20 +225,7 @@
     {% endfor %}
 </script>
 {% endif %}
+{% endblock alert %}
   </main><!-- End #main -->
 
-  <!-- End #main -->
-
-
-
-  <!-- Vendor JS Files -->
- <script src="{% static 'js/message.js' %}">  </script>
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-
-</body>
-
-</html>
+  {% endblock %} 

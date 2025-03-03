@@ -38,7 +38,7 @@
 
 
         <div class="pagetitle">
-          <h1>Main Dashboard</h1>
+         <h1> Welcome, {{user.first_name}} {{user.last_name}} </h1>
         </div>
         
           <nav>
@@ -64,7 +64,7 @@
                     <i class="bi bi-list-ol"></i>
                   </div>
                   <div class="ps-3">
-                    <h6>{{ total_event }}</h6>
+                    <h6>{{ total_event|floatformat:"0" }}</h6>
                   </div>
                 </div>
               </div>
@@ -82,7 +82,7 @@
                     <i class="bi bi-people-fill"></i>
                   </div>
                   <div class="ps-3">
-                    <h6>{{ total_impact }}</h6>
+                    <h6>{{ total_impact|floatformat:"g" }}</h6>
                   </div>
                 </div>
               </div>
@@ -99,7 +99,7 @@
       <div class="card-body">
         <h5 class="card-title">Event wise Impact</h5>
           <div >
-            <canvas id="myChart" role="img" ></canvas>
+            {% comment %} <canvas id="myChart" role="img" ></canvas> {% endcomment %}
           </div>
       </div>
     </div>

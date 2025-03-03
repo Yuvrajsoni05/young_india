@@ -24,16 +24,17 @@ class Login_Role(models.Model):
 
 # Create your models here.
 class LoginSide(AbstractUser):
-    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False,db_index=True)
     login_role = models.ManyToManyField(Login_Role,)
     first_name = models.CharField(max_length=200,null=True)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200,unique=True,)
     photo = models.ImageField(upload_to='user_photo/', null=True,)
+    yi_role = models.CharField(max_length=200,null=True)
     phone_number = models.CharField(max_length=15,default='Phone Number')
 
     def __str__(self):
-        return f"{self.first_name} | {self.last_name}  {self.login_role}"
+        return f"{self.first_name} | {self.last_name} | {self.login_role}"
     
 
   

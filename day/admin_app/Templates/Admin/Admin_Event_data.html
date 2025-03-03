@@ -1,40 +1,21 @@
+
+{% extends "base/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% block title %} Admin Signup {% endblock title %}
+{% load static %}
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Dashboard</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+{% block link %}   <link href="{% static 'css/Admin_Event_data.css' %}" rel="stylesheet">
+<link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
+ {% endblock link %}
 
-  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
-
-
-   
-
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Template Main CSS File -->
-  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-
-
-  <style>
-    .form-datas{
-      font-family:'cambria';
-    }
-  </style>
+{% block bodyblock %}
+</head>
 </head>
 
 <body>
 
     {% include 'Admin/components/header.html' %}
+
     {% include 'Admin/components/side_navbar.html' %}
 
 
@@ -60,7 +41,7 @@
         </div>
         <br>
         <div class="card-body ">
-          <form method="POST" action="{% url 'event_data' %}"  enctype="multipart/form-data">
+          <form method="POST" action="{% url 'admin_event_data' %}"  enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
 
@@ -118,12 +99,8 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="role_yi">YI Role</label>
-                  <select class="form-control" id="role_yi" name="role_yi" required aria-label="YI Role">
-                    <option value="" disabled selected>Choose YI Role</option>
-                    <option value="Vertical Chair">Vertical Chair</option>
-                    <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                    <option value="Team Member">Team Member</option>
-                  </select>
+                  <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}">
+                
                 </div>
               </div>
 
@@ -275,28 +252,26 @@
         </div>
       </div>
     </div>
+    {% block alert %}
     {% if messages %}
-    <script>
-          {% for message in messages %}
+      <script>
+        {% for message in messages %}
           Swal.fire({
-          title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
-          text: "{{ message }}",
-          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-          confirmButtonText: 'OK'
+            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
+            text: "{{ message }}",
+            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+            confirmButtonText: 'OK'
           });
-          {% endfor %}
-</script>
-{% endif %}
+        {% endfor %}
+      </script>
+    {% endif %}
+    {% endblock alert %}
   </main>
 
-  <!-- Vendor JS Files -->
-  <!-- Vendor JS Files -->
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  {% endblock %} 
 
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-
-</body>
-
-</html>
+  {% block script %}
+  <script src="{% static 'assets/js/event.js' %}"></script>
+  <script src="{% static 'js/input.js' %}" ></script>
+{% endblock script %}
+ 

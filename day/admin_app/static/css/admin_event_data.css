@@ -1,16 +1,19 @@
  /* Focus state for inputs */
-.form-control:focus {
+ .form-control:focus {
     border-color: #4e73df;
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
     transition: all 0.3s ease;
+    
   }
 
   /* Form Group Label Styling */
 .form-group label {
     font-weight: bold; /* Light bold */
     color: #333;
+    font-family: 'cambria';
     transition: all 0.3s ease;
     font-size: large;
+    
   }
 
 .form-group label:hover {

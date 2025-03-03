@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+ <title>{% block title %} Base Html {% endblock%} </title> 
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+
+  <!-- JS and Google Fonts -->
+ 
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    {% block link %}   default Link {% endblock link %}
+</head>
+{% block bodyblock %}
+
+This is Default
+{% endblock %} 
+
+
+{% block alert %}
+<h1>alert</h1>
+{% endblock alert %}
+
+<!-- Vendor JS Files -->
+<script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Template Main JS File -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+{% block script %}
+
+{% endblock script %}
+
+</body>
+
+</html>

@@ -377,15 +377,15 @@ def chart(request):
     total_impact_data =  Event_Data.objects.filter(user=user).aggregate(Sum('total_impact'))
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
 
-    event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
+    # event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     
-    event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
+    # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     # Map event names to their corresponding total impact
-    event_total_dict = {item['project_vertical']: item['total_impact'] for item in total_event}
+    # event_total_dict = {item['project_vertical']: item['total_impact'] for item in total_event}
 
     # Adjust event_impact to reflect the correct order of event_name
-    aligned_event_impact = [event_total_dict.get(event, 0) for event in event_name]
+    # aligned_event_impact = [event_total_dict.get(event, 0) for event in event_name]
     
 
     # print(event_name)
@@ -393,8 +393,8 @@ def chart(request):
 
     context = {  'total_event':total_event,
                  'total_impact':total_impact,
-                 'event_name': event_name,
-                 'impact':aligned_event_impact,
+                #  'event_name': event_name,
+                #  'impact':aligned_event_impact,
                 }
 
     return render(request,'chart/chart.html',context)
