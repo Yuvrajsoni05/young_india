@@ -15,7 +15,7 @@ class Event_Data(models.Model):
     event_name = models.CharField(max_length=200,blank=True)
     event_venue = models.CharField(max_length=200,blank=True)
     event_expense = models.BigIntegerField(blank=True,default=0)
-    date = models.DateField()
+    date = models.CharField(max_length=200)
     role_yi = models.CharField(max_length=200)
     project_vertical = models.CharField(max_length=200)
     project_stakeholder = models.CharField(max_length=200)

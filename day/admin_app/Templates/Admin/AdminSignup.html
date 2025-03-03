@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 
-{% block title %} Admin Signup {% endblock title %}
+{% block title %} New EC Member {% endblock title %}
 {% load static %}
 
 {% block link %}   <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet"> {% endblock link %}
@@ -40,13 +40,13 @@
               <div class="col-md-6" style="margin-top: 15px;">
                 <div class="form-group">
                   <i class="bi bi-person-circle"></i> <label>Username</label>
-                  <input type="text" class="form-control" name="add_username" placeholder="Enter Username" required>
+                  <input type="text" class="form-control" name="add_username" maxlength="15" placeholder="Enter Username" required>
                 </div>
               </div>
               <div class="col-md-6"style="margin-top: 15px;" >
                 <div class="form-group">
                   <label>First Name</label>
-                  <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                  <input type="text" class="form-control" name="first_name" maxlength="15" placeholder="First Name" required>
                 </div>
               </div>
             </div>
@@ -56,13 +56,13 @@
               <div class="col-md-6"style="margin-top: 15px;" >
                 <div class="form-group">
                   <label>Last Name</label>
-                  <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                  <input type="text" class="form-control"   maxlength="15"  name="last_name" placeholder="Last Name" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group" style="margin-top: 15px;">
                   <i class="bi bi-envelope"></i> <label>Email</label>
-                  <input type="email" class="form-control" name="add_email" placeholder="Email Address" required>
+                  <input type="email" class="form-control" maxlength="50"  name="add_email" placeholder="Email Address" required>
                 </div>
               </div>
             </div>
