@@ -1,19 +1,14 @@
 {% extends "base/base.html" %}
 
-{% block title %}<title> Profile </title> {% endblock title %}
+<title> {% block title %} Profile {% endblock title %} </title> 
 {% load static %}
 
 
-{% block bodyblock %}
 
-<body>
 
-   <!-- ======= Header ======= -->
-        {% include 'Admin/components/header.html' %}
-  <!-- ======= Sidebar ======= -->
-  {% include 'Admin/components/side_navbar.html' %}
-  <!-- End Sidebar-->
 
+
+  {% block bodyblock %}
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -215,20 +210,9 @@
       </div>
 
     </section>
-    {% block alert %}
-    {% if messages %}
-                  <script>
-    {% for message in messages %}
-        Swal.fire({
-            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
-            text: "{{ message }}",
-            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-            confirmButtonText: 'OK'
-        });
-    {% endfor %}
-</script>
-{% endif %}
-{% endblock alert %}
+ 
+
+
   </main><!-- End #main -->
 
   {% endblock %} 

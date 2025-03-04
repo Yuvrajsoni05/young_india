@@ -8,17 +8,13 @@
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
  {% endblock link %}
 
+
+</head>
+
+
+
+
 {% block bodyblock %}
-</head>
-</head>
-
-<body>
-
-    {% include 'Admin/components/header.html' %}
-
-    {% include 'Admin/components/side_navbar.html' %}
-
-
   <main id="main" class="main">
 
     <div class="pagetitle">
@@ -252,20 +248,7 @@
         </div>
       </div>
     </div>
-    {% block alert %}
-    {% if messages %}
-      <script>
-        {% for message in messages %}
-          Swal.fire({
-            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
-            text: "{{ message }}",
-            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-            confirmButtonText: 'OK'
-          });
-        {% endfor %}
-      </script>
-    {% endif %}
-    {% endblock alert %}
+   
   </main>
 
   {% endblock %} 
@@ -273,5 +256,5 @@
   {% block script %}
   <script src="{% static 'assets/js/event.js' %}"></script>
   <script src="{% static 'js/input.js' %}" ></script>
-{% endblock script %}
+  {% endblock script %}
  

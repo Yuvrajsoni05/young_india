@@ -1,8 +1,9 @@
 from collections import Counter
 from io import BytesIO
+import re
 # from openpyxl.drawing.image import Image
 from django.core.paginator import Paginator
-import matplotlib
+# import matplotlib
 import numpy as np
 from PIL.Image import Image
 from asgiref.typing import HTTPResponseBodyEvent
@@ -15,18 +16,30 @@ from rest_framework.response import Response
 from .models import *
 from django.contrib.auth import login, authenticate, update_session_auth_hash ,logout
 from django.contrib.auth.decorators import login_required
-import csv
+# import csv
 from django.http import HttpResponse
-import openpyxl
+# import openpyxl
 from .serializer import EventDataSerializer
 from manager_app.models import Event_Data,Event_Image
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-
 from django.shortcuts import render
-
 from django.views.decorators.cache import never_cache
+import openpyxl
+from openpyxl import Workbook
+from openpyxl.styles import Alignment
+from openpyxl.drawing.image import Image
+from io import BytesIO
+from PIL import Image as PILImage
+from django.http import HttpResponse
+import os
+from django.conf import settings
+from openpyxl.styles import Alignment, Font
 # Create your views here.
+import logging
+
+regex= r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$'
+
 
 
 
@@ -35,34 +48,44 @@ from django.views.decorators.cache import never_cache
 
 
 def index(request):
-     
-     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    try:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        # Authenticate the user using only username and password
-        user = authenticate(request, username=username, password=password)
+           
+            user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user)  # Log the user in
+            if user is not None:
+                login(request, user)  # Log the user in
 
-            # Check if the user has the 'Admin' role
-            if user.login_role.filter(name='Admin').exists():
-                # If the user is Admin, redirect to the Admin Dashboard
-                return redirect('Admin_Dashboard')
+         
+                if user.login_role.filter(name='Admin').exists():
+                    # print(f"{username} , {password}")
+                   # logger.info(f"Someone is trying to login Name : {username} {password}")
+                    return redirect('Admin_Dashboard')
+                else:
+                    
+                    roles = user.login_role.all() 
+                    request.session['userrole'] = [role.name for role in roles]  # Get all roles associated with the user
+                    return redirect('manager-dashboard')
             else:
-                user = request.user
-                # Otherwise, pass all associated roles to the context and go to manager dashboard
-                roles = user.login_role.all() 
-                request.session['userrole'] = [role.name for role in roles] # Get all roles associated with the user
-                return redirect('manager-dashboard')
-        else:
-            # If authentication fails, show an error message
-            messages.error(request, "Invalid credentials, please try again.")
-            return redirect('index')
-        
-     return render(request, 'index.html')
+              
+                messages.error(request, "Invalid credentials, please try again.")
+                logger.info(f"Error during authentication: {str(e)}")
+                return redirect('index')
+    except Exception as e:
+
+        messages.error(request, f"Error")
+        # Optionally, log the exception for debugging purposes (e.g., using Python's logging module)
+        # 
+        logger = logging.getLogger(__name__)
+        logger.error(f"Someone is trying to login Name : {username} {password}")
+        return render(request, 'index.html')
+
     # If it's a GET request, render the login page
+    return render(request, 'index.html')
+
     
 
 
@@ -172,10 +195,8 @@ def get_username(request):
 
 
 
-# @login_required(login_url='index')
+@login_required(login_url='index')
 def Admin_Signup(request):
-    try:
-
         if not request.user.login_role.filter(name='Admin').exists():
             return redirect('Error-Page')
 
@@ -213,9 +234,11 @@ def Admin_Signup(request):
                 messages.error(request, "This Username is already taken.")
                 return redirect('Admin_Signup')
 
-            if len(phone) != 10 or not phone.isdigit():
-                messages.error(request, "Phone number must be 10 digits.")
+            if len(phone) != 10 or not phone.isdigit() or regex :
+                messages.error(request, "Phone number must be 10 digits. and valid phone number")
                 return redirect('Admin_Signup')
+     
+                
 
             if len(password) < 8 or not any(c.isupper() for c in password) or not any(
                     c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
@@ -242,21 +265,32 @@ def Admin_Signup(request):
             # Assign selected roles to the user
             roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
             Admin_User.login_role.set(roles)  # Assign multiple roles
-            Admin_User.save()
 
-            messages.success(request, "New Executive Council Member Add")
+            try:
+                    
+                Admin_User.full_clean()
+                Admin_User.save()
+                messages.success(request, "New Executive Council Member Add")
+                return redirect('Admin_Dashboard')
 
-            return redirect('Admin_Dashboard')
+            except Exception as e:
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request,f"{error}")
+                    return redirect('Admin_Signup')
 
         # Fetch all roles for the dropdown
         login_role = Login_Role.objects.all()
         context = {
             'role': login_role
         }
-
         return render(request, 'Admin/AdminSignup.html', context)
-    except :
-        return render(request, 'Admin/AdminSignup.html', context)
+    
+    # except Exception as e :
+    #     messages.error(request,f'New User not Add Something went Worng Plz Try again ')
+    #      return render(request, 'Admin/AdminSignup.html')
+    
+        
 
 # if request.user.login_role != 'Admin':
     #     return redirect('Error-Page')
@@ -273,57 +307,84 @@ def Admin_Profile(request):
 
 
 @login_required(login_url='index')
-def Admin_update(request,admin_id):
+def Admin_update(request, admin_id):
+    # Check if the user has 'Admin' role
     if not request.user.login_role.filter(name='Admin').exists():
+        messages.error(request, 'You do not have permission to access this page.')
         return redirect('Error-Page')
-    else:
-        if request.user.login_role.filter(name='Admin').exists():
-            if request.method == 'POST':
-                admin_profile = get_object_or_404(LoginSide,id=admin_id)
-                admin_profile.first_name = request.POST['admin_firstname']
-                admin_profile.last_name = request.POST['admin_lastname']
-                admin_profile.email = request.POST['admin_email']
+    
+    try:
+        # Ensure method is POST to update profile
+        if request.method == 'POST':
+            admin_profile = get_object_or_404(LoginSide, id=admin_id)
 
-                admin_profile.username = request.POST['admin_username']
-                admin_profile.phone_number = request.POST['admin_phone']
-                if 'admin_profile_img' in request.FILES:
-                    admin_profile.photo = request.FILES['admin_profile_img']
+            # Update fields from POST data
+            admin_profile.first_name = request.POST.get('admin_firstname', admin_profile.first_name)
+            admin_profile.last_name = request.POST.get('admin_lastname', admin_profile.last_name)
+            admin_profile.email = request.POST.get('admin_email', admin_profile.email)
+            admin_profile.username = request.POST.get('admin_username', admin_profile.username)
+            admin_profile.phone_number = request.POST.get('admin_phone', admin_profile.phone_number)
+
+          
+            if 'admin_profile_img' in request.FILES:
+                admin_profile.photo = request.FILES['admin_profile_img']
+                if admin_profile.photo.size > 4*1024*1024:
+                    messages.error(request,'Image Size must be 4mb')
+                    return redirect('Admin_Profile')
+            try:
+                admin_profile.full_clean()
                 admin_profile.save()
-                messages.success(request,'Profile Updated')
+                messages.success(request,'Profile successfully updated.')
                 return redirect('Admin_Profile')
-            else:
-                messages.error(request,'Profile not Updated')
-    # return render(request,'Admin/Admin_Profile.html')
+            except Exception as e:
+                for field,errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request,f"{error} ")
+                    return redirect('Admin_Profile')
+        # If the method is not POST, show an error
+        else:
+            messages.error(request, 'Invalid request method. Profile not updated.')
+            return redirect('Admin_Profile')
+
+    except Exception as e:
+        # Handle any other errors during the process
+        messages.error(request, f'Error updating profile: {str(e)}')
+        return redirect('Admin_Profile')
 
 
 @login_required(login_url='index')
 def admin_password(request):
     if request.user.login_role.filter(name='Admin').exists():
-        if request.method == 'POST':
-            old_password = request.POST.get('old_password')
-            new_password = request.POST.get('new_password')
-            confirm_password = request.POST.get('confirm_password')
-            admin_user =request.user
-            if not admin_user.check_password(old_password):
-                messages.error(request, "Old Password Incorrect")
-                return redirect('Admin_Profile')
+        try:
 
-            if len(new_password) < 8 or not any(c.isupper() for c in   new_password) or not any(
-                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in new_password):
-                messages.error(request,  "Password must be at least 8 characters with one uppercase letter and one special character")
-                return redirect('Admin_Profile')
 
-            if new_password != confirm_password:
-                messages.error(request, "New Password and Confirm Password must Be same")
-                return redirect('Admin_Profile')
+            if request.method == 'POST':
+                old_password = request.POST.get('old_password')
+                new_password = request.POST.get('new_password')
+                confirm_password = request.POST.get('confirm_password')
+                admin_user =request.user
+                if not admin_user.check_password(old_password):
+                    messages.error(request, "Old Password Incorrect")
+                    return redirect('Admin_Profile')
 
-            admin_user.set_password(new_password)
-            admin_user.save()
-            messages.success(request,'Password Updated ')
-            update_session_auth_hash(request,admin_user)
-            return redirect('Admin_Profile')
-        else:
-            return redirect('Error-Page')
+                if len(new_password) < 8 or not any(c.isupper() for c in   new_password) or not any(
+                        c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in new_password):
+                    messages.error(request,  "Password must be at least 8 characters with one uppercase letter and one special character")
+                    return redirect('Admin_Profile')
+
+                if new_password != confirm_password:
+                    messages.error(request, "New Password and Confirm Password must Be same")
+                    return redirect('Admin_Profile')
+
+                admin_user.set_password(new_password)
+                admin_user.save()
+                messages.success(request,'Password Updated ')
+                update_session_auth_hash(request,admin_user)
+                return redirect('Admin_Profile')
+            else:
+                return redirect('Error-Page')
+        except Exception as e:
+            messages.error(request,'Somthing Wrong ',str(e))
 
 
 @login_required(login_url='index')
@@ -355,6 +416,26 @@ def Admin_Dashboard(request):
     # Calculate total impact
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
     total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum'] is not None else 0
+    def format_total_impact(total_impact):
+        try:
+            # Convert total_impact to a float
+            value = float(total_impact)
+            
+            # Format as K if the value is 1000 or greater
+            if value >= 100000 :
+                return f"{value / 1000:.0f}L"
+         
+            
+            # Return the value as string if it's less than 1000
+            return str(value)
+        
+        except Exception as e:
+            # Log the error for debugging (can replace with proper logging in production)
+            print(f"Error formatting total impact: {e}")
+            return str(total_impact)  # Return the raw value if there's an error
+
+# Apply the function to your total_impact
+    formatted_total_impact = format_total_impact(total_impact)
 
     # Calculate average impact
     impact_avg = Event_Data.objects.aggregate(Avg('total_impact'))
@@ -380,7 +461,7 @@ def Admin_Dashboard(request):
         'role': login_role,
         'total_manager': total_user,
         'total_event': total_event,
-        'total_impact': total_impact,
+        'total_impact': formatted_total_impact ,
         'impact_avg': avg_impact,
         'total_expense': total_expense,
         'events': event_list,
@@ -530,19 +611,6 @@ def error_page(request ):
 
 
 
-import openpyxl
-from openpyxl import Workbook
-from openpyxl.styles import Alignment
-from openpyxl.drawing.image import Image
-from io import BytesIO
-from PIL import Image as PILImage
-from django.http import HttpResponse
-# from .models import Event_Data, Event_Image  # Assuming you have these models
-import os
-from django.conf import settings
-
-
-from openpyxl.styles import Alignment, Font
 
   # Replace with the actual imports
 
@@ -627,21 +695,30 @@ def download_excel(request):
     return response
 
 
-
 def manager_list(request):
+    # Check if the user has the 'Admin' role
     if not request.user.login_role.filter(name='Admin').exists():
-        return redirect('Error-Page')
+        return redirect('Error-Page')  # Redirect if the user doesn't have the Admin role
+
+    # Make sure you're filtering by the 'user' field, not 'username'
     manager = LoginSide.objects.all().distinct()
-    # login_role = Login_Role.objects.exclude(is_superuser=False)
+
+    # Fetch all login roles (you can filter this as needed)
     login_role = Login_Role.objects.all()
-    # login_role = Login_Role.objects.exclude(name='superuser')  # Example if you have a role field
+    
+    # Get the user's roles
     user_roles = request.user.login_role.all()
-    contex = {
-        'role' :login_role,
-        'managers' :manager,
+
+    # Prepare context to pass to the template
+    context = {
+        'role': login_role,
+        'managers': manager,
         'user_role': user_roles
     }
-    return render(request,'Admin/view_manager.html',contex)
+
+    # Render the template with the context
+    return render(request, 'Admin/view_manager.html', context)
+
 
 
 def delete_handler(request,handler_id):
@@ -687,11 +764,25 @@ def update_manager(request,manager_id):
         if 'manager_profile_img' in request.FILES:
             update_manager_data.photo = request.FILES['manager_profile_img']
 
-        if update_manager_data.photo.size > 4*1024*1024:
-            messages.error(request,'Image Size must be 4mb ')
+            if update_manager_data.photo.size > 4*1024*1024:
+                messages.error(request,'Image Size must be 4mb ')
+                return redirect('View-manager')
+        try:
+
+            update_manager_data.full_clean() 
+            update_manager_data.save()
+            messages.success(request, 'EC Member  Profile  Updated')
+           
             return redirect('View-manager')
-        update_manager_data.save()
-        messages.success(request, 'EC Member  Profile  Updated')
+        except Exception as e:
+            # print(e.message_dict.items())
+            for field, errors in e.message_dict.items():
+                # print(field)
+                # print(errors)
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+                return redirect('View-manager')
+        
     else:
         messages.error(request,'EC Member  profile not Updated')
     return redirect('View-manager')
@@ -701,6 +792,7 @@ def update_manager(request,manager_id):
 def update_event_data(request,event_id):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
+    
     else:
             update_event = get_object_or_404(Event_Data, id=event_id)
             
@@ -1009,8 +1101,49 @@ def password_update_done(request):
 
 
 
+# from django.db import models
+# from django.contrib.auth.models import AbstractUser
+# import uuid
+# from django.core.exceptions import ValidationError
+# import re
 
+# # Custom validator for email domain
+# def validate_email_domain(value):
+#     if '@example.com' not in value:
+#         raise ValidationError('Email must be from the domain @example.com')
 
+# # Custom validator for phone number
+# def validate_phone_number(value):
+#     # Ensure phone number contains only digits
+#     if not value.isdigit():
+#         raise ValidationError('Phone number must contain only digits')
+#     # Optionally, you can add checks for length or specific formats
+#     if len(value) < 10 or len(value) > 15:
+#         raise ValidationError('Phone number must be between 10 and 15 digits')
+
+# # Assuming Login_Role is already defined somewhere
+# class Login_Role(models.Model):
+#     role_name = models.CharField(max_length=200)
+
+# class LoginSide(AbstractUser):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
+#     login_role = models.ManyToManyField(Login_Role)
+#     first_name = models.CharField(max_length=200, null=True)
+#     last_name = models.CharField(max_length=200)
+#     email = models.EmailField(max_length=200, unique=True, validators=[validate_email_domain])  # Added email validator
+#     photo = models.ImageField(upload_to='user_photo/', null=True)
+#     yi_role = models.CharField(max_length=200, null=True)
+    
+#     # Updated phone number to CharField with validator
+#     phone_number = models.CharField(max_length=15, default='0', null=True, blank=True, validators=[validate_phone_number])  # Added phone number validator
+
+#     def __str__(self):
+#         return self.username
+
+# value = float(value)
+#         if value >= 1000:
+#             return f"{value / 1000:.0f}K"
+#         return str(value)
 
 
 

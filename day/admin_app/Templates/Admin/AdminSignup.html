@@ -73,7 +73,7 @@
                 <label>Phone</label>
                 <div class="input-group">
                   <span class="input-group-text">+91</span>
-                  <input type="tel" class="form-control" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
+                  <input type="number" class="form-control" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
                 </div>
               </div>
             </div>
@@ -120,13 +120,13 @@
               <div class="col-md-6"style="margin-top: 15px;">
                 <div class="form-group">
                   <label>Password <i class="bi bi-lock"></i></label>
-                  <input type="password" minlength="8" maxlength="12" class="form-control" name="password1" placeholder="Password" required>
+                  <input type="password" minlength="8" maxlength="20" class="form-control" name="password1" placeholder="Password" required>
                 </div>
               </div>
               <div class="col-md-6"style="margin-top: 15px;">
                 <div class="form-group">
                   <label>Confirm Password</label>
-                  <input type="password" class="form-control" name="password2" minlength="8" maxlength="12"  placeholder="Confirm Password" required>
+                  <input type="password" class="form-control" name="password2" minlength="8" maxlength="20"  placeholder="Confirm Password" required>
                 </div>
               </div>
             </div>
@@ -139,20 +139,7 @@
     </div>
   </main>
   {% endblock %} 
-  {% block alert %}
-  {% if messages %}
-    <script>
-      {% for message in messages %}
-        Swal.fire({
-          title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}',
-          text: "{{ message }}",
-          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-          confirmButtonText: 'OK'
-        });
-      {% endfor %}
-    </script>
-  {% endif %}
-  {% endblock alert %}
+ 
 
 
 
