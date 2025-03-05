@@ -19,6 +19,11 @@
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+ 
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -39,11 +44,6 @@
 
    
 
-
-
-
-
-
 {% if messages %}
 <script>
 {% for message in messages %}
@@ -52,24 +52,27 @@ title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %}
 text: "{{ message }}",
 icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
 showConfirmButton: false,
-timer:4400,
+timer:1500,
 
 });
 {% endfor %}
 </script>
 {% endif %}
-</body>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 <!-- Vendor JS Files -->
 <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
 <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
 
 <!-- Template Main JS File -->
-<script src="{% static 'assets/js/main.js' %}"></script>
 
 {% block script %}
 
 {% endblock script %}
 
+
 </body>
 
 </html>
+
+

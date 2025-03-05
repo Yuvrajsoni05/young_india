@@ -7,9 +7,10 @@
 
   /* Form Group Label Styling */
 .form-group label {
-    font-weight: 500; /* Light bold */
+    font-weight: bold; /* Light bold */
     color: #333;
     transition: all 0.3s ease;
+    font-size: large;
   }
 
 .form-group label:hover {

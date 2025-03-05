@@ -1,0 +1,303 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Dashboard {% endblock title %}
+
+
+
+
+  {% block bodyblock %}
+  <!-- Main Content -->
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Main Dashboard </h1>
+
+      <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add Ec Member</button></a>
+    </div>
+      
+    </div>
+
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+          
+        </ol>
+      </nav>
+  <!-- End Page Title -->
+
+   
+    <!-- Dashboard Stats Section -->
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+
+            <!-- Stats Cards -->
+            <div class="col-xxl-4 col-xl-12 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Events</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-list-ol"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="count">{{ total_event }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Impact Card -->
+            <div class="col-xxl-4 col-xl-12 col-sm-12 mb-4">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Impact</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="count">{{ total_impact }}</h6>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+
+            <!-- Expense Card -->
+            <div class="col-xxl-4 col-xl-12 col-sm-12 mb-4">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Expense</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="count">{{ total_expense|floatformat:"g"  }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% comment %} <div class="col-xxl-4 col-xl-12 col-sm-12 mb-4">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Impact</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="count">{{ total_impact|floatformat:"g" }}</h6>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div> {% endcomment %}
+
+            <!-- Manager Card -->
+            {% comment %} <div class="col-xxl-4 col-xl-12 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total EC Members </h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="count">{{ total_manager }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> {% endcomment %}
+
+          </div>
+          
+        </div><!-- End Left side columns -->
+        
+
+      </div>
+
+
+      <div class="yi-dropdown">
+        <div class="table-responsive">
+          <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+              <div class="form-group" style="width:250px;">
+                  <select class="form-control" id="search" name="search" required onchange="this.form.submit()">
+                      <option value="" disabled selected>Choose by Name</option>
+                      <option value="all">All</option>
+                      {% for i in m1 %}
+                          <option value="{{ i }}">{{ i }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          </form>
+          <div>
+          <h4>{{ forloop.counter  }}</h4>
+          </div>
+      </div>
+  
+  
+  
+     {% comment %} <div class="table-responsive">
+        <form method="get" action="{% url 'Role_List' %}" id="managerFilterForm">
+            <div class="form-group" style="width:250px;">
+                <select class="form-control" id="role_search" name="role_search" required onchange="this.form.submit()">
+                    <option value="" disabled selected>Choose by Role</option>
+                    <option value="alls">All</option>
+                    {% for role in role_datas %}
+                      <option value="{{ role }}">{{role}}</option>
+                    {% endfor %}
+                   
+                 
+                </select>
+            </div>
+        </form>
+    </div> {% endcomment %}
+      </div>
+
+  <br>
+    
+
+
+
+      <!-- User Data Table -->
+      <div class="table-responsive">
+        <table class="table table-bordered "  border="1px">
+            <thead>
+                <tr class="text-nowrap" align="center" >
+                    <th>Sr.no</th>
+                    <th>Event Date</th>
+                    <th>Manager Name</th>
+                    <th>Event Name</th>
+                    <th>Event Venue</th>
+                    <th>Event Expense</th>
+                    <th>Role YI</th>
+                    <th> EC Members  Name</th>
+                    <th>Project Verticals</th>
+                    <th>Project Stakeholder</th>
+                    <th>SIG</th>
+                    <th>YI Pillar</th>
+                    <th>Social Link</th>
+                    <th>School</th>
+                    <th>College</th>
+                    <th>Associate Partner</th>
+                    <th>Impact</th>
+                    <th>Image</th>
+                    <th colspan="3">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% if events %}
+                {% for event in events %}
+                    <tr class="text-nowrap" align="center">
+
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ event.date }}</td>
+                        <td>{{ event.your_name }}</td>
+                        <td>{{ event.event_name }}</td>
+                        <td>{{ event.event_venue }}</td>
+                        <td>{{ event.event_expense }}</td>
+                        <td>{{ event.role_yi }}</td>
+                        <td>{{ event.event_handle }}</td>
+                        <td>{{ event.project_vertical }}</td>
+                        <td>{{ event.project_stakeholder }}</td>
+                        <td>{{ event.which_SIG }}</td>
+                        <td>{{ event.yi_pillar }}</td>
+                        <td><a href="{{ event.social_link }}"><i class="bi bi-box-arrow-up-right"></i></a></td>
+                        <td>{{ event.school }}</td>
+                        <td>{{ event.collage }}</td>
+                        <td>{{ event.associate_partner }}</td>
+                        <td>{{ event.total_impact }}</td>
+                        <td>
+    {% if event.event_photo.all %}
+        {% with first_image=event.event_photo.first %}
+            <img src="{{ first_image.event_photo.url }}" alt="Event Image" height="39" width="50" class="event-thumbnail"
+                 data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
+                 data-image-url="{{ first_image.event_photo.url }}" >
+        {% endwith %}
+    {% else %}
+        <p>No images available for this event.</p>
+    {% endif %}
+</td>
+
+<!-- Modal to display and delete images -->
+                            <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ event.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel{{ event.id }}">Event Images</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    {% for image in event.event_photo.all %}
+                                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                            <img src="{{ image.event_photo.url }}" class="d-block w-100" width="500px" height="500px" alt="Event Image"><br>
+
+                                                            <!-- Form for deleting the image -->
+                                                          
+                                                            <form method="POST" action="{% url 'event_image_id' image_id=image.id %}">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="btn btn-danger yi-btn">Delete Image</button>
+                                                            </form>
+                                                      
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <button class="carousel-control-prev yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next yi-navigation" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <td>
+                            <form method="post" action="{% url 'delete_event' event_id=event.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                        <td>
+                            <!-- Button to trigger modal -->
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                   
+
+        <!-- Download Excel Button -->
+        <a href="{% url 'download_excel' %}">
+            <button class="btn btn-success" name="export"><i class="bi bi-file-earmark-excel-fill"></i>&nbsp;Download Excel</button>
+        </a>
+    </div>
+
+
+
+    </section>
+
+
+  </main><!-- End #main -->
+  {% endblock bodyblock %} 
+  
+  {% block script %}
+  <script src="{% static 'js/dashboard.js' %}"></script>
+  {% endblock script %}
+  
+

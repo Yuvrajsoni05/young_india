@@ -18,7 +18,7 @@ from django.contrib.auth import login, authenticate, update_session_auth_hash ,l
 from django.contrib.auth.decorators import login_required
 # import csv
 from django.http import HttpResponse
-# import openpyxl
+import openpyxl
 from .serializer import EventDataSerializer
 from manager_app.models import Event_Data,Event_Image
 from django.contrib import messages
@@ -35,6 +35,9 @@ from django.http import HttpResponse
 import os
 from django.conf import settings
 from openpyxl.styles import Alignment, Font
+from django.contrib.sessions.models import Session
+from django.utils.timezone import now
+from django.contrib.auth.models import User
 # Create your views here.
 import logging
 
@@ -401,14 +404,28 @@ def Admin_Dashboard(request):
         return redirect('Error-Page')
     
     # You don't need to reassign user_id since it's already passed in the URL
-    
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
     total_event = Event_Data.objects.count()
     user_id = request.user.id
-    # Assuming 'Manager' is a role or attribute in the LoginSide model
+   
     total_user_data = LoginSide.objects.exclude(login_role='Admin')
 
     total_user = total_user_data.count()
     
+
+    sessions = Session.objects.filter(expire_date__gte=now())
+
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+
+    # Get the names of active users
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
+
+    # To count active users:
+    active_users_count = active_users.count()
     # Calculate total expenses
     total_expense_result = Event_Data.objects.aggregate(Sum('event_expense'))
     total_expense = total_expense_result['event_expense__sum'] if total_expense_result['event_expense__sum'] is not None else 0
@@ -416,26 +433,26 @@ def Admin_Dashboard(request):
     # Calculate total impact
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
     total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum'] is not None else 0
-    def format_total_impact(total_impact):
-        try:
-            # Convert total_impact to a float
-            value = float(total_impact)
+    # def format_total_impact(total_impact):
+    #     try:
+    #         # Convert total_impact to a float
+    #         value = float(total_impact)
             
-            # Format as K if the value is 1000 or greater
-            if value >= 100000 :
-                return f"{value / 1000:.0f}L"
+    #         # Format as K if the value is 1000 or greater
+    #         if value >= 100000 :
+    #             return f"{value / 1000:.0f}L"
          
             
-            # Return the value as string if it's less than 1000
-            return str(value)
+    #         # Return the value as string if it's less than 1000
+    #         return str(value)
         
-        except Exception as e:
-            # Log the error for debugging (can replace with proper logging in production)
-            print(f"Error formatting total impact: {e}")
-            return str(total_impact)  # Return the raw value if there's an error
+    #     except Exception as e:
+    #         # Log the error for debugging (can replace with proper logging in production)
+    #         print(f"Error formatting total impact: {e}")
+    #         return str(total_impact)  # Return the raw value if there's an error
 
 # Apply the function to your total_impact
-    formatted_total_impact = format_total_impact(total_impact)
+    # formatted_total_impact = format_total_impact(total_impact)
 
     # Calculate average impact
     impact_avg = Event_Data.objects.aggregate(Avg('total_impact'))
@@ -461,14 +478,24 @@ def Admin_Dashboard(request):
         'role': login_role,
         'total_manager': total_user,
         'total_event': total_event,
-        'total_impact': formatted_total_impact ,
+        'total_impact': total_impact ,
         'impact_avg': avg_impact,
         'total_expense': total_expense,
         'events': event_list,
         'm1': manager_name,
+        'count':active_users_count,
+        'name':active_user_names
     }
 
     return render(request, 'Admin/AdminDashboard.html', context)
+
+
+
+
+
+# def active_users_count(request):
+   
+#     return render(request, 'dashboard.html', {'active_users_count': active_users.count()})
 
 
 # def Login_data(request):

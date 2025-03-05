@@ -63,10 +63,16 @@ h6 {
 }
 
 .pagetitle h1 {
-  font-size: 24px;
-  margin-bottom: 0;
-  font-weight: 600;
-  color: #012970;
+    font-size: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #012970;
+}
+@media screen and (max-width: 480px) {
+  .pagetitle {
+    display: grid;
+    gap: 10px;
+  } 
 }
 
 /*--------------------------------------------------------------
@@ -1160,6 +1166,20 @@ footer {
         }
 
 
-
+.yi-event-model{
+  max-width:700px;
+}
+.yi-dropdown {
+  display: flex;
+  gap: 10px;
+}
+.yi-btn{
+  z-index:999;
+  position: relative;
+}
+.yi-navigation{
+  height: fit-content;
+  margin: auto;
+}
 
 

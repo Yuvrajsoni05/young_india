@@ -91,3 +91,8 @@ class LoginSide(AbstractUser):
 # for role in user.login_role.all():
 #     print(role.name)
 # print(str(user.login_role.all()))
+
+
+# python3.13.exe -m venv venv
+# $ source venv/Scripts/activate
+# $ pip install -r requirement.txt 
