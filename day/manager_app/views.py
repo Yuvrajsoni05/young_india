@@ -209,6 +209,7 @@ def delete_event_user(request,events_id):
     #     return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=events_id)
+        
         delete_events.delete()
     return redirect('event-list')
 
@@ -304,7 +305,11 @@ def event_data(request):
         associate_partner = request.POST.get('associate_partner','')
 
 
-
+        event_data = [your_name,event_date,role_yi,project_verticals,project_stakeholder,yi_pillar,total_impact]
+        
+        if any(i is None for i in event_date):
+            messages.error(request,"Must Filed Requird Filed")
+            return redirect('event_data')
 
 
             # if event_images.size > 1 * 1024 * 1024:
@@ -360,9 +365,9 @@ def event_data(request):
         
             # return JsonResponse({'status':'Data inserted'})
         messages.success(request, 'Thank you for insert data')
-        return redirect('event-list')
-        
-    return render(request, 'manager/event_list.html')
+        return redirect('manager-dashboard')
+            
+    return render(request, 'manager/manager_dashboard.html')
 
 
 

@@ -154,7 +154,7 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped table-hover" id="eventTable">
+                <table class="table  table-hover" id="eventTable">
                     <thead class="table-light">
                         <tr class="text-nowrap text-center">
                             <th>Sr.no</th>
@@ -164,8 +164,8 @@
                             <th>Event Venue</th>
                             <th>Event Expense</th>
                             <th>Role In YI</th>
-                            <th>EC Members name's</th>
-                            <th>Project Verticals</th>
+                            <th>EC Members name</th>
+                            <th>Project Vertical</th>
                             <th>Event Impact</th>
                             <th>Event Image</th>
                             
@@ -181,11 +181,11 @@
                                     <td>{{ event.your_name }}</td>
                                     <td>{{ event.event_name }}</td>
                                     <td>{{ event.event_venue }}</td>
-                                    <td>₹{{ event.event_expense|floatformat:"2" }}</td>
+                                    <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
                                     <td>{{ event.role_yi }}</td>
                                     <td>{{ event.event_handle }}</td>
                                     <td>{{ event.project_vertical }}</td>
-                                    <td>{{ event.total_impact }}</td>
+                                    <td>{{ event.total_impact|floatformat:"g" }}</td>
                                     <td>
                                       {% if event.event_photo.all %}
                                           {% with first_image=event.event_photo.first %}
@@ -194,7 +194,7 @@
                                                    data-image-url="{{ first_image.event_photo.url }}" >
                                           {% endwith %}
                                       {% else %}
-                                          <p>No images available for this event.</p>
+                                          <p>No image uploaded for this event. </p>
                                       {% endif %}
                                   </td>
                                   
@@ -207,7 +207,7 @@
                                                                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                           </div>
                                                                           <div class="modal-body">
-                                                                              <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                                                                              <div id="imageGallery{{ event.id }}" class="carousel slide carousel-fade" data-bs-ride="carousel">
                                                                                   <div class="carousel-inner">
                                                                                       {% for image in event.event_photo.all %}
                                                                                           <div class="carousel-item {% if forloop.first %}active{% endif %}">
@@ -245,7 +245,7 @@
                                             
                                             <!-- Edit Button -->
                                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
-                                                <i class="bi bi-pencil"></i>
+                                              <i class="bi bi-pencil-square"></i>
                                             </button>
                                             &nbsp;
                                             <!-- Delete Button -->
@@ -391,10 +391,10 @@
                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                         </li>
                         <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        {% comment %} <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li> {% endcomment %}
                         <li class="page-item">
                             <a class="page-link" href="#">Next</a>
                         </li>

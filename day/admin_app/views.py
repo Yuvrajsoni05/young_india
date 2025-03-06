@@ -41,7 +41,7 @@ from django.contrib.auth.models import User
 # Create your views here.
 import logging
 
-regex= r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$'
+regex= r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{10}$'
 
 
 
@@ -202,96 +202,130 @@ def get_username(request):
 def Admin_Signup(request):
         if not request.user.login_role.filter(name='Admin').exists():
             return redirect('Error-Page')
+        
+        sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+        user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+        # Query LoginSide objects for users
+        active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+        
+        active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
+        active_users_count = LoginSide.objects.filter(is_active=True).count()
+    
+        active_users_count = active_users.count()
 
-        if request.method == 'POST':
-            username = request.POST.get('add_username')
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            password = request.POST.get('password1')
-            profile_img = request.FILES.get('profile_img')
-            confirm_password = request.POST.get('password2')
-            Admin_email = request.POST.get('add_email')
-            phone = request.POST.get('add_phone')
-            yi_role = request.POST.get('yi_role')
-            login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
-
-
-
-            if profile_img.size > 4*1024*1024:
-                messages.error(request,'Image Size must be 4mb')
-                return redirect('Admin_Signup')
+        try:
             
-            # valid_extensions = ['.jpeg','.jpg','.png']
+    
+            if request.method == 'POST':
+                            
+                username = request.POST.get('add_username')
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                password = request.POST.get('password1')
+                profile_img = request.FILES.get('profile_img')
+                confirm_password = request.POST.get('password2')
+                Admin_email = request.POST.get('add_email')
+                phone = request.POST.get('add_phone')
+                yi_role = request.POST.get('yi_role')
+                login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
 
-            # for img in profile_img:
-            #     ext = os.path.splitext(img.name)[1]
-            #     if ext.lower() not in valid_extensions:
-            #         messages.error(request,f"Invalid File . only .jpeg .png .jpeg")
-            #         return redirect('Admin_Signup')
+                
+                fields = [username, first_name, last_name, password, confirm_password, Admin_email, phone, yi_role, login_role]
+                if any(field is  None  for field in fields ):
+                    messages.error(request,"All Filed Are Required")
+                    return redirect('Admin_Signup') 
 
-            if LoginSide.objects.filter(email=Admin_email).exists():
-                messages.error(request, "This email is already taken.")
-                return redirect('Admin_Signup')
+            
+                if profile_img is not  None:
+                    
+                    if profile_img.size > 4*1024*1024  :
+                        
+                        messages.error(request,'Image Size must be 4mb')
+                        return redirect('Admin_Signup')
+                
+                    
+    
+                # valid_extensions = ['.jpeg','.jpg','.png']
 
-            if LoginSide.objects.filter(username=username).exists():
-                messages.error(request, "This Username is already taken.")
-                return redirect('Admin_Signup')
+                # for img in profile_img:
+                #     ext = os.path.splitext(img.name)[1]
+                #     if ext.lower() not in valid_extensions:
+                #         messages.error(request,f"Invalid File . only .jpeg .png .jpeg")
+                #         return redirect('Admin_Signup')
 
-            if len(phone) != 10 or not phone.isdigit() or regex :
-                messages.error(request, "Phone number must be 10 digits. and valid phone number")
-                return redirect('Admin_Signup')
-     
+                if LoginSide.objects.filter(email=Admin_email).exists():
+                    messages.error(request, "This email is already taken.")
+                    return redirect('Admin_Signup')
+
+                if LoginSide.objects.filter(username=username).exists():
+                    messages.error(request, "This Username is already taken.")
+                    return redirect('Admin_Signup')
+                
+                
+                regex = r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$'
+                
+                if not re.match(regex,phone):
+                    messages.error(request, "Phone number must be 10 digits. and valid phone number")
+                    return redirect('Admin_Signup')
+                    
+
+                # if len(phone) != 10 or not phone.isdigit() or regex:
+                #     messages.error(request, "Phone number must be 10 digits. and valid phone number")
+                #     return redirect('Admin_Signup')
+        
+                    
+
+                if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+                        c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
+                    messages.error(request,
+                                "Password must be at least 8 characters with one uppercase letter and one special character")
+                    return redirect('Admin_Signup')
+
+                if password != confirm_password:
+                    messages.error(request, "Password and confirm Password must be same ")
+                    return redirect('Admin_Signup')
+
+                # Create user
+                Admin_User = LoginSide.objects.create_user(
+                        username=username,
+                        first_name=first_name,
+                        last_name=last_name,
+                        photo=profile_img,
+                        password=password,
+                        email=Admin_email,
+                        yi_role=yi_role,
+                        phone_number=phone
+                    )
+
+                    # Assign selected roles to the user
+                roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
+                Admin_User.login_role.set(roles)  # Assign multiple roles
+                    
                 
 
-            if len(password) < 8 or not any(c.isupper() for c in password) or not any(
-                    c in "!@#$%^&*()_+-={}[]|\\:;\"'<>,.?/~`" for c in password):
-                messages.error(request,
-                            "Password must be at least 8 characters with one uppercase letter and one special character")
-                return redirect('Admin_Signup')
-
-            if password != confirm_password:
-                messages.error(request, "Password and confirm Password must be same ")
-                return redirect('Admin_Signup')
-
-            # Create user
-            Admin_User = LoginSide.objects.create_user(
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                photo=profile_img,
-                password=password,
-                email=Admin_email,
-                yi_role=yi_role,
-                phone_number=phone
-            )
-
-            # Assign selected roles to the user
-            roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
-            Admin_User.login_role.set(roles)  # Assign multiple roles
-
-            try:
-                    
+            
+                        
                 Admin_User.full_clean()
                 Admin_User.save()
                 messages.success(request, "New Executive Council Member Add")
                 return redirect('Admin_Dashboard')
 
-            except Exception as e:
-                for field, errors in e.message_dict.items():
-                    for error in errors:
-                        messages.error(request,f"{error}")
-                    return redirect('Admin_Signup')
+                
 
-        # Fetch all roles for the dropdown
-        login_role = Login_Role.objects.all()
-        context = {
-            'role': login_role
-        }
-        return render(request, 'Admin/AdminSignup.html', context)
+            # Fetch all roles for the dropdown
+            login_role = Login_Role.objects.all()
+            context = {
+                'role': login_role,
+                'name':active_user_names,
+                'count':active_users_count
+            }
+            
+            return render(request, 'Admin/AdminSignup.html', context)
     
-    # except Exception as e :
-    #     messages.error(request,f'New User not Add Something went Worng Plz Try again ')
-    #      return render(request, 'Admin/AdminSignup.html')
+        except Exception as e :
+            messages.error(request,f'New User not Add Something went Worng Plz Try again ' )
+            return render(request, 'Admin/AdminSignup.html')
     
         
 
@@ -304,9 +338,25 @@ def Admin_Signup(request):
 def Admin_Profile(request):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
+    
+    
+    sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+    
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
+  
+    active_users_count = active_users.count()
+    context = {
+            'name':active_user_names,
+            'count':active_users_count,
+    }
     # else:
-    #     return redirect('Admin_Profile')
-    return render(request, 'Admin/Admin_Profile.html')
+    #     return redirect('Admin_Profile',)
+    return render(request, 'Admin/Admin_Profile.html',context)
 
 
 @login_required(login_url='index')
@@ -404,7 +454,7 @@ def Admin_Dashboard(request):
         return redirect('Error-Page')
     
     # You don't need to reassign user_id since it's already passed in the URL
-    active_users_count = LoginSide.objects.filter(is_active=True).count()
+   
     total_event = Event_Data.objects.count()
     user_id = request.user.id
    
@@ -414,23 +464,18 @@ def Admin_Dashboard(request):
     
 
     sessions = Session.objects.filter(expire_date__gte=now())
-
     # Get user ids from the session data
     user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
-
     # Query LoginSide objects for users
     active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
-
-    # Get the names of active users
+    
     active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
-
-    # To count active users:
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
+  
     active_users_count = active_users.count()
-    # Calculate total expenses
+    
     total_expense_result = Event_Data.objects.aggregate(Sum('event_expense'))
     total_expense = total_expense_result['event_expense__sum'] if total_expense_result['event_expense__sum'] is not None else 0
-
-    # Calculate total impact
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
     total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum'] is not None else 0
     # def format_total_impact(total_impact):
@@ -490,7 +535,24 @@ def Admin_Dashboard(request):
     return render(request, 'Admin/AdminDashboard.html', context)
 
 
-
+def base(request):
+    sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+    
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
+  
+    active_users_count = active_users.count()
+    
+    context = {
+        'count':active_users_count,
+        'name':active_user_names
+    }
+    
+    return render(request,'base/base.html',context)
 
 
 # def active_users_count(request):
@@ -532,6 +594,20 @@ def Admin_Dashboard(request):
 def admin_event_data(request):
     if not request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
+    
+    
+    sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+    
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
+  
+    active_users_count = active_users.count()
+    
+    
     
     if request.method  == 'POST':
         your_name = request.POST['your_name']
@@ -593,9 +669,12 @@ def admin_event_data(request):
 
         messages.success(request,'Thank you Insert Data  ')
         return redirect('Admin_Dashboard')
-    
+    context = {
+    'count':active_users_count,
+    'name':active_user_names
+}
 
-    return render(request,'Admin/Admin_Event_data.html')
+    return render(request,'Admin/Admin_Event_data.html',context)
 
 @login_required(login_url='index')
 def Event_list(request):
@@ -726,6 +805,8 @@ def manager_list(request):
     # Check if the user has the 'Admin' role
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')  # Redirect if the user doesn't have the Admin role
+    
+  
 
     # Make sure you're filtering by the 'user' field, not 'username'
     manager = LoginSide.objects.all().distinct()
@@ -736,13 +817,26 @@ def manager_list(request):
     # Get the user's roles
     user_roles = request.user.login_role.all()
 
+    sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+    
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
+  
+    active_users_count = active_users.count()
+    
     # Prepare context to pass to the template
     context = {
         'role': login_role,
         'managers': manager,
-        'user_role': user_roles
+        'user_role': user_roles,
+        'count':active_users_count,
+        'name':active_user_names
     }
-
+    
     # Render the template with the context
     return render(request, 'Admin/view_manager.html', context)
 
@@ -753,6 +847,8 @@ def delete_handler(request,handler_id):
         return redirect('Error-Page')
     if request.method == 'POST':
         handler = get_object_or_404(LoginSide, id=handler_id)
+        if handler.photo:
+            handler.photo.delete()
         handler.delete()
     return redirect('View-manager')
 
@@ -765,6 +861,8 @@ def delete_event(request,event_id):
         return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=event_id)
+        if delete_events.event:
+            delete_event.event.delete()
         delete_events.delete()
     return redirect('Admin_Dashboard')
 
@@ -870,10 +968,15 @@ def update_event_data(request,event_id):
 def event_image_delete(request, image_id):
     if request.method == 'POST':
         image_to_delete = get_object_or_404(Event_Image, id=image_id)
+        if image_to_delete.event_photo:
+            image_to_delete.event_photo.delete()
         image_to_delete.delete()  # Delete the image record
     return redirect('Admin_Dashboard')
 
-
+#  if delete_event.event_photo():
+#             delete_event.event_photo.delete()
+            
+#         delete_events.delete()
 
 
 #@method_decorator(login_required(login_url='index'),name='get')

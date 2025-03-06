@@ -5,13 +5,10 @@
 
 {% block link %}   <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet"> {% endblock link %}
 
-{% block bodyblock %}
-</head>
 
-<body>
-  {% include 'Admin/components/header.html' %}
-  {% include 'Admin/components/side_navbar.html' %}
 
+
+  {% block bodyblock %}
   <main id="main" class="main">
 
     <div class="pagetitle">
@@ -110,7 +107,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label>Profile Image</label>
-                  <input type="file" class="form-control" name="profile_img" accept=".jpeg,.png,jpg">
+                  <input type="file" class="form-control" name="profile_img" accept=".jpeg,.png,jpg" >
                   <small class="form-text">Accepted formats: .jpg, .jpeg, .png</small>
                 </div>
               </div>
@@ -139,6 +136,9 @@
     </div>
   </main>
   {% endblock %} 
+
+
+
  
 
 

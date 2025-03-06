@@ -21,6 +21,7 @@ urlpatterns = [
     path('download_excel',download_excel,name='download_excel'),
     path('Error',error_page,name='Error-Page'),
     path('admin-event-data',admin_event_data,name="admin_event_data" ),
+    # path('header',header,name='header')
     # path('role_list',Role_List, name="Role_List"),
 
 

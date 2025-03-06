@@ -1,14 +1,14 @@
 {% load static %}
+
 <header id="header" class="header fixed-top d-flex align-items-center">
 
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="{% url 'Admin_Dashboard' %}" class="logo d-flex align-items-center">
-  <img src="{% static 'Image/YIIMG.png' %}" alt="logo img" class="rounded-circle" >
-        <span class="d-none d-lg-block">Yi Ahmedabad</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="{% url 'Admin_Dashboard' %}" class="logo d-flex align-items-center">
+<img src="{% static 'Image/YIIMG.png' %}" alt="logo img" class="rounded-circle" >
+      <span class="d-none d-lg-block">Yi Ahmedabad</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
 
 
     <nav class="header-nav ms-auto">
@@ -20,7 +20,7 @@
 
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-app-indicator"></i>
-            <span class="badge bg-primary badge-number">{{count}}</span>
+            <span class="badge bg-primary badge-number"> {{ count }} </span>
           </a><!-- End Notification Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
@@ -29,7 +29,7 @@
               <li class="notification-item">
                 <i class="bi bi-activity"></i>
                 <div>
-                  <h4>{{ i }}</h4>
+                  <h4>{{ i }} </h4>
             
                 </div>
               </li>
