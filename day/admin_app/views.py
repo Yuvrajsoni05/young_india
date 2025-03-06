@@ -861,8 +861,12 @@ def delete_event(request,event_id):
         return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=event_id)
-        if delete_events.event:
-            delete_event.event.delete()
+        event_images = delete_events.event_photo.all()
+        for event_image in event_images:
+            if event_image.event_photo():
+                event_images.event_photo.delete()
+            event_image.delete()
+            
         delete_events.delete()
     return redirect('Admin_Dashboard')
 

@@ -164,3 +164,28 @@
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
+from django.shortcuts import get_object_or_404, redirect
+  from .models import Event_Data, Event_Image
+  
+  def delete_event(request, event_id):
+      # Check if the user has Admin role
+      if not request.user.login_role.filter(name='Admin').exists():
+          return redirect('Error-Page')
+      
+      if request.method == 'POST':
+          # Get the Event_Data instance
+          delete_event = get_object_or_404(Event_Data, id=event_id)
+          
+          # Delete related event images if they exist
+          # Get related Event_Image objects
+          event_images = delete_event.event_photo.all()
+          for event_image in event_images:
+              if event_image.event_photo:
+                  event_image.event_photo.delete()  # This deletes the file from the media directory
+              event_image.delete()  # Delete the Event_Image instance from the database
+          
+          # Delete the Event_Data instance
+          delete_event.delete()
+      
+      return redirect('Admin_Dashboard') {% endcomment %}
+  
