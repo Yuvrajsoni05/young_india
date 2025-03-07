@@ -555,6 +555,9 @@ def base(request):
     return render(request,'base/base.html',context)
 
 
+# def getuser(request):
+#     query = LoginSide.objects.all()
+#     return JsonResponse({"user":list(query.values)})
 # def active_users_count(request):
    
 #     return render(request, 'dashboard.html', {'active_users_count': active_users.count()})
@@ -861,11 +864,11 @@ def delete_event(request,event_id):
         return redirect('Error-Page')
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=event_id)
-        event_images = delete_events.event_photo.all()
-        for event_image in event_images:
-            if event_image.event_photo():
-                event_images.event_photo.delete()
-            event_image.delete()
+        # event_images = delete_events.event_photo.all()
+        # for event_image in event_images:
+        #     if event_image.event_photo():
+        #         event_images.event_photo.delete()
+        #     event_image.delete()
             
         delete_events.delete()
     return redirect('Admin_Dashboard')

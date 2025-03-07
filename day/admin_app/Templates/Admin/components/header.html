@@ -164,7 +164,7 @@
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
-from django.shortcuts import get_object_or_404, redirect
+{% comment %} from django.shortcuts import get_object_or_404, redirect
   from .models import Event_Data, Event_Image
   
   def delete_event(request, event_id):
@@ -187,5 +187,5 @@ from django.shortcuts import get_object_or_404, redirect
           # Delete the Event_Data instance
           delete_event.delete()
       
-      return redirect('Admin_Dashboard') {% endcomment %}
+      return redirect('Admin_Dashboard') {% endcomment %} 
   

@@ -12,7 +12,9 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Executive Council Members List</h1>
+      <h1>EC Members List</h1>
+      <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add Ec Member</button></a></div>
+
     </div>
       <nav>
         <ol class="breadcrumb">
@@ -48,7 +50,7 @@
         <tbody>
 
       {% for manager in managers %}
-    <tr class="text-nowrap" align="center">
+    <tr class="text-nowrap" align="center" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
 
         <td>{{ forloop.counter }}</td>
         <td>{{ manager.first_name }} {{ manager.last_name }}</td>

@@ -13,7 +13,7 @@
 
     <div class="pagetitle">
       <h1>Profile</h1>
-    </div>
+          </div>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
@@ -28,12 +28,18 @@
         <div class="col-xl-4">
 
           <div class="card">
+            
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="120px" width="120px"  alt="Profile" class="rounded-circle">
+              <div class="position-relative mb-4">
+                <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
+                     height="130px" width="130px" alt="Profile" 
+                     class="rounded-circle   border-light ">
+               
+              </div>
+
               <h2>{{ user.username }}</h2>
-
-
+              <p class="text-muted mb-3">Admin</p>
 
             </div>
 
@@ -44,6 +50,7 @@
         <div class="col-xl-8">
 
           <div class="card">
+            
             <div class="card-body pt-3">
               <!-- Bordered Tabs -->
               <ul class="nav nav-tabs nav-tabs-bordered">
@@ -105,7 +112,15 @@
                     <div class="row mb-3">
                       <label for="admin_profile_img" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="admin_profile_img" type="file" class="form-control" id="admin_profile_img" accept=".jpg, .jpeg, .png"  >
+                        <div class="d-flex align-items-center">
+                          <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
+                              alt="Profile" class="rounded-circle me-3" style="width: 70px; height: 70px;">
+                          <div class="flex-grow-1">
+                            <input name="admin_profile_img" type="file" class="form-control" id="admin_profile_img" 
+                                  accept=".jpg, .jpeg, .png">
+                            <small class="text-muted">Upload a new image (JPG, JPEG, PNG)</small>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -129,7 +144,7 @@
                     <div class="row mb-3">
                       <label for="admin_username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="admin_username" type="text" minlength="15" maxlength="15" class="form-control" id="admin_username" value="{{ user.username }}">
+                        <input name="admin_username" type="text"  maxlength="15" class="form-control" id="admin_username" value="{{ user.username }}">
                       </div>
                     </div>
 
@@ -183,14 +198,15 @@
                       <label for="new_password" class="col-md-4 col-lg-3 col-form-label">New Password</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="new_password" type="password" minlength="8" maxlength="20" class="form-control" id="new_password">
+                        
                       </div>
+                      
                     </div>
 
                     <div class="row mb-3">
                       <label for="confirm_password" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="confirm_password" type="password" minlength="8" maxlength="20" class="form-control" id="confirm_password">
-                      </div>
+                        <input name="confirm_password" type="password" minlength="8" maxlength="20" class="form-control" id="confirm_password">         </div>
                     </div>
 
                     <div class="text-center">
@@ -218,4 +234,39 @@
   {% endblock %} 
   {% block script %}
   <script src="{% static 'js/dashboard.js' %}"></script>
+  <script>
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const icon = this.querySelector('i');
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      });
+    });
+    
+    // Add event listener for the quick upload button
+    document.getElementById('admin_profile_img_quick').addEventListener('change', function() {
+      // Clone the file to the main form input
+      const mainInput = document.getElementById('admin_profile_img');
+      const dataTransfer = new DataTransfer();
+      
+      // Add each file to the DataTransfer object
+      for (let i = 0; i < this.files.length; i++) {
+        dataTransfer.items.add(this.files[i]);
+      }
+      
+      // Set the main file input's files to our DataTransfer files
+      mainInput.files = dataTransfer.files;
+    });
+  </script>
   {% endblock script %}

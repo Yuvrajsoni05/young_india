@@ -6,6 +6,8 @@
 
 {% block link %}   <link href="{% static 'css/Admin_Event_data.css' %}" rel="stylesheet">
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
+<link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
+
  {% endblock link %}
 
 
@@ -16,28 +18,28 @@
 
 {% block bodyblock %}
   <main id="main" class="main">
-
+<br>
     <div class="pagetitle">
-      <h1>Add Event Data</h1>
+      <h1> Add Yong India Event</h1>
     </div>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="">Home</a></li>
-          <li class="breadcrumb-item">Admin </li>
-          <li class="breadcrumb-item active">Add Event Data</li>
+          <li class="breadcrumb-item"><a href="{% url 'View-manager' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
+          <li class="breadcrumb-item active"><a href="{% url 'admin_event_data' %}">Add Yi Event</a></li>
         </ol>
       </nav>
  
 
-    <div class="container">
+    <div class="container-fluid">
       <!-- Event Add  Form -->
-      <div class="card shadow-lg form-datas ">
-        <div class="card-header text-center">
-          <strong>Add Event Data</strong>
+      <div class="card custom-form form-datas  w-100 ">
+        <div class="card-header">
+          Add Yong India Events
         </div>
         <br>
         <div class="card-body ">
-          <form method="POST" action="{% url 'admin_event_data' %}"  enctype="multipart/form-data">
+          <form method="POST" action="{% url 'admin_event_data' %}"  enctype="multipart/form-data" class="w-100">
             {% csrf_token %}
             <div class="row">
 
@@ -101,7 +103,7 @@
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
-                <label for="tagInput">Members name(s)</label>
+                <label >Members name(s)</label>
                 <div class="tag-container" id="tagContainer">
                   <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" >
                   <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by">
@@ -136,7 +138,7 @@
                     <option value="Culture Connect">Culture Connect</option>
                     <option value="Yi Angel">Yi Angel</option>
                     <option value="Membership Engagement">Membership Engagement</option>
-                    <option value="Other">Other</option>
+         
                      <option value="">None</option>
                     </select> 
 

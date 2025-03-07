@@ -33,8 +33,8 @@ class Login_Role(models.Model):
 class LoginSide(AbstractUser):
    
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False,db_index=True)
-    login_role = models.ManyToManyField(Login_Role)
-    first_name = models.CharField(max_length=200,null=True,)
+    login_role = models.ManyToManyField(Login_Role,verbose_name = "LoginRole")
+    first_name = models.CharField(max_length=200,null=True,verbose_name = "FirstName")
     last_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200,unique=True,validators=[validate_email])
     photo = models.ImageField(upload_to='user_photo/', null=True, blank=True)

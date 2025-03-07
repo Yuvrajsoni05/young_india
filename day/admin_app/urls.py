@@ -35,7 +35,7 @@ urlpatterns = [
 
 
     # path('plot/',plot_chart, name='plot_view'),
-    # path('pie',pie_chart,name='pie_chart'),
+    # path('getuser',getuser,name='getuser'),
     path('chart',admin_chart,name='admin_chart'),
 
     path('password_reset/',CustomPasswordResetView.as_view(), name='password_reset'),
@@ -44,6 +44,7 @@ urlpatterns = [
     path('reset_done/',password_update_done, name='password_reset_complete'),
     # path('api/get-user-details/', get_logged_in_user_details, name='get-user-details'),
     path('get-username/',get_username, name='get_username'),
+    
 
     # path('delete_events/',delete_multiple_events, name='delete_multiple_events'),
 

@@ -43,7 +43,7 @@
                       <i class="bi bi-list-ol"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 class="count">{{ total_event }}</h6>
+                      <h6 class="counts">{{ total_event }}</h6>
                     </div>
                   </div>
                 </div>
@@ -120,8 +120,7 @@
           </div>
           
         </div><!-- End Left side columns -->
-        
-
+      
       </div>
    
       <div>
@@ -131,11 +130,14 @@
 
       <div class="card" id="table">
         <div class="card-header d-flex justify-content-between align-items-center">
+          <div class="event-title-icon rounded-circle bg-primary ">
+            <i class="bi bi-calendar-check text-primary fs-4"></i>
+          </div>
           {% comment %} <img src="{% static 'Image/YIIMG.png' %}" alt="logo img" width="90px" height="90px;" class="rounded-circle" > {% endcomment %}
           <h1 style="color: #012970;">Yi Ahmedabad Event's</h1>
             {% comment %} <h5 class="card-title mb-0">Yi Events </h5> {% endcomment %}
             <div class="d-flex align-items-center">
-                <!-- Dropdown for filtering -->
+           
                 <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="me-2">
                     <select class="form-select form-select-sm" id="search" name="search" onchange="this.form.submit()">
                         <option value="" disabled selected>Choose by Name</option>
@@ -166,16 +168,20 @@
                             <th>Role In YI</th>
                             <th>EC Members name</th>
                             <th>Project Vertical</th>
+                            <th>School</th>
+                            <th>Collage</th>
+                            <th>Associate Partner</th>
+                            <th>S.I.G</th>
                             <th>Event Impact</th>
                             <th>Event Image</th>
                             
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="display">
                         {% if events %}
                             {% for event in events %}
-                                <tr class="text-nowrap text-center">
+                                <tr  class="text-nowrap text-center" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ event.date }}</td>
                                     <td>{{ event.your_name }}</td>
@@ -185,6 +191,10 @@
                                     <td>{{ event.role_yi }}</td>
                                     <td>{{ event.event_handle }}</td>
                                     <td>{{ event.project_vertical }}</td>
+                                    <td>{{ event.school }}</td>
+                                    <td>{{ event.collage }}</td>
+                                    <td>{{ event.associate_partner }}</td>
+                                    <td>{{ event.which_SIG }}</td>
                                     <td>{{ event.total_impact|floatformat:"g" }}</td>
                                     <td>
                                       {% if event.event_photo.all %}
@@ -420,6 +430,36 @@
   
   {% block script %}
   <script src="{% static 'js/dashboard.js' %}"></script>
+  {% comment %} <script>
+    $(document).ready(function() {
+      setInterval(function() {
+        $.ajax({
+          type: 'GET',
+          url: "{% url 'getuser' %}",  
+          success: function(response) {
+            console.log("Data Added");
+          },
+          error: function(response) {
+            alert("No Data Found");
+          }
+        });
+      }, 1000); 
+    });
+  </script> {% endcomment %}
+  
+
+
+  <script>$('.counts').each(function () {
+    $(this).prop('Counter',0).animate({
+        Counter: $(this).text()
+    }, {
+        duration: 3000,
+        easing: 'swing',
+        step: function (now) {
+            $(this).text(Math.ceil(now));
+        }
+    });
+});</script>
   {% endblock script %}
 
 

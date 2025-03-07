@@ -57,6 +57,7 @@ h6 {
 # Page Title
 --------------------------------------------------------------*/
 .pagetitle {
+  margin-top: -23px;
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
@@ -90,7 +91,7 @@ h6 {
   position: fixed;
   visibility: hidden;
   opacity: 0;
-  right: 15px;
+  right: 22px;
   bottom: 15px;
   z-index: 99999;
   background: #4154f1;
@@ -323,6 +324,7 @@ h6 {
 
 /* Breadcrumbs */
 .breadcrumb {
+  margin-top: -7px;
   font-size: 14px;
   font-family: "Nunito", sans-serif;
   color: #899bbd;
