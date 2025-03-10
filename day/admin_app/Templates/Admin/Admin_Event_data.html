@@ -6,7 +6,7 @@
 
 {% block link %}   <link href="{% static 'css/Admin_Event_data.css' %}" rel="stylesheet">
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
-<link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">
+
 
  {% endblock link %}
 
@@ -35,6 +35,7 @@
       <!-- Event Add  Form -->
       <div class="card custom-form form-datas  w-100 ">
         <div class="card-header">
+          <img src="{% static 'Image/YIIMG.png' %}" alt="logo img" width="35px" height="35px" class="rounded-circle" > &nbsp;
           Add Yong India Events
         </div>
         <br>
@@ -103,7 +104,7 @@
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
-                <label >Members name(s)</label>
+                <b><label >Members name(s)</label></B>
                 <div class="tag-container" id="tagContainer">
                   <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" >
                   <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by">

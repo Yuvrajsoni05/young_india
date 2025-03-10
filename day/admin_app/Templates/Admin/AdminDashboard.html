@@ -31,7 +31,7 @@
                 <i class="bi bi-list-ol text-primary"></i>
               </div>
               <div class="ps-3">
-                <h6 class="counts fs-2">{{ total_event }}</h6>
+                <h6 class="counts fs-2">{{ total_event|floatformat:"g" }}</h6>
               </div>
             </div>
           </div>
@@ -48,7 +48,7 @@
                 <i class="bi bi-people text-success"></i>
               </div>
               <div class="ps-3">
-                <h6 class="count fs-2">{{ total_impact|floatformat:"g" }}</h6>
+                <h6 class="count fs-2">{{ total_impact|floatformat:"g"}}</h6>
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@
                 <i class="bi bi-currency-rupee text-danger"></i>
               </div>
               <div class="ps-3">
-                <h6 class="count fs-2">{{ total_expense|floatformat:"g" }}</h6>
+                <h6 class="count fs-2">{{ total_expense|floatformat:"2g" }}</h6>
               </div>
             </div>
           </div>
@@ -104,23 +104,23 @@
     <div class="card shadow-sm border-0 mb-4" id="table">
       <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
         <div class="d-flex align-items-center">
-          <div class="rounded-circle bg-primary p-2 me-3">
+          {% comment %} <div class="rounded-circle bg-primary p-2 me-3">
             <i class="bi bi-calendar-check text-white fs-5"></i>
-          </div>
-          <h5 class="m-0 text-primary">Yi Ahmedabad Events</h5>
+          </div> {% endcomment %}
+          <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
         </div>
         <div class="d-flex gap-2">
           <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
-            <select class="form-select form-select-sm" id="search" name="search" onchange="this.form.submit()">
+            {% comment %} <select class="form-select form-select-sm" id="search" name="search" onchange="this.form.submit()">
               <option value="" disabled selected>Choose by Name</option>
               <option value="all">All</option>
               {% for i in m1 %}
                 <option value="{{ i }}">{{ i }}</option>
               {% endfor %}
             </select>
-          </form>
-          <a href="{% url 'download_excel' %}" class="btn btn-success btn-sm">
-            <i class="bi bi-file-earmark-excel-fill"></i>&nbsp; Export
+          </form> {% endcomment %}
+          <a href="{% url 'download_excel' %}" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel-fill"></i>&nbsp; Download 
           </a>
         </div>
       </div>
@@ -129,14 +129,18 @@
         <div class="table-responsive">
           <table class="table table-borderless table-hover align-middle" id="eventTable">
             <thead class="table-light" >
-              <tr class="text-center">
+              <tr class="text-center text-nowrap">
                 <th>Sr.no</th>
                 <th>Date</th>
                 <th>Member</th>
-                <th>Event</th>
+                <th>Event Name</th>
+                <th>Verticals</th>
                 <th>Venue</th>
                 <th>Expense</th>
                 <th>Role</th>
+                <th>School</th>
+                <th>College</th>
+                <th>Associate Partner</th>
                 <th>Impact</th>
                 <th>Image</th>
                 <th>Actions</th>
@@ -145,14 +149,18 @@
             <tbody id="display" >
               {% if events %}
                 {% for event in events %}
-                  <tr class="text-center"data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                  <tr class="text-center text-nowrap"data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ event.date }}</td>
                     <td>{{ event.your_name }}</td>
                     <td>{{ event.event_name }}</td>
+                    <td>{{event.project_vertical}}
                     <td>{{ event.event_venue }}</td>
                     <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
                     <td>{{ event.role_yi }}</td>
+                    <td> {{ event.school  }}  </td>
+                    <td>{{event.collage}}</td>
+                    <td>{{event.associate_partner}}
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
                     <td>
                       {% if event.event_photo.all %}
@@ -241,7 +249,7 @@
                   </div>
                   
                   <!-- Edit Event Modal -->
-                  <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                  <div class="modal fade"  id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                       <div class="modal-content">
                         <div class="modal-header bg-light">
@@ -277,6 +285,21 @@
                                 <label for="project_verticals" class="form-label">Project Verticals</label>
                                 <select class="form-select" id="project_verticals" name="project_verticals">
                                   <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
+                                  <option value="Masoom">Masoom</option>
+                                  <option value="Road Safety">Road Safety</option>
+                                  <option value="Health">Health</option>
+                                  <option value="Sport">Sports</option>
+                                  <option value="Accessibility">Accessibility</option>
+                                  <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                                  <option value="Climate action">Climate action</option>
+                                  <option value="Innovation">Innovation</option>
+                                  <option value="Entrepreneurship">Entrepreneurship</option>
+                                  <option value="Branding & PR">Branding & PR</option>
+                                  <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                                  <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                                  <option value="Culture Connect">Culture Connect</option>
+                                  <option value="Yi Angel">Yi Angel</option>
+                                  <option value="Membership Engagement">Membership Engagement</option>
                                   <!-- Add all vertical options -->
                                 </select>
                               </div>
@@ -284,23 +307,25 @@
                                 <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
                                 <select class="form-select" id="project_stakeholder" name="project_stakeholder">
                                   <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
+                                  <option value="Yuva">Yuva</option>
+                                  <option value="Thalir">Thalir</option>
+                                  <option value="Rural Initiatives">Rural Initiatives</option>
+                                  <option value="General Public">General Public</option>
+                                  <option value="Associate Partner">Associate Partner</option>
+                                   <option value="">None</option>
                                   <!-- Add all stakeholder options -->
                                 </select>
                               </div>
                               
 
-                                    <div class="col-md-6">
-                                        <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
-                                        <select class="form-control" id="project_stakeholder" name="project_stakeholder">
-                                            <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
-                                            <!-- Add all stakeholder options -->
-                                        </select>
-                                    </div>
 
                                     <div class="col-md-6">
                                         <label for="yi_pillar" class="form-label">Yi Pillar</label>
                                         <select class="form-control" id="yi_pillar" name="yi_pillar">
                                             <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
+                                            <option value="Youth Leader">Youth Leader</option>
+                                            <option value="Thought Leader">Thought Leader</option>
+                                            <option value="Nation Building">Nation Building</option>
                                             <!-- Add all pillar options -->
                                         </select>
                                     </div>
@@ -323,7 +348,15 @@
                                     <div class="col-md-6" id="sig_div">
                                         <label for="sig_">Choose SIG</label>
                                         <select class="form-control" id="sig_" name="sig_">
+                                          {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
+
                                             <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
+                                            <option value="Active Living">Active Living</option>
+                                            <option value="Photography">Photography</option>
+                                            <option value="Trekking">Trekking</option>
+                                            <option value="Entrepreneurship">Entrepreneurship</option>
+                                            <option value="Community">Community</option>
+                                             <option value="">None</option>{% endif %}
                                             <!-- Add SIG options -->
                                         </select>
                                     </div>
@@ -332,6 +365,10 @@
                                         <label for="associate_partners">Associate Partner</label>
                                         <select class="form-control" id="associate_partners" name="associate_partners">
                                             <option value="{{ event.associate_partner }}">{{ event.associate_partner }}</option>
+                                            <option value="Big Bull">Big Bull</option>
+                                            <option value="EB">EB</option>
+                                            <option value="Yuvi">Yuvi</option>
+                                             <option value="">None</option>
                                             <!-- Add associate partners -->
                                         </select>
                                     </div>
@@ -371,28 +408,30 @@
     </table>
 
                 <!-- Pagination -->
-                <nav aria-label="Event table navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        {% comment %} <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li> {% endcomment %}
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                
             </div>
+            <nav aria-label="Event table navigation">
+              <ul class="pagination justify-content-center ">
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  {% comment %} <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">4</a></li>
+                  <li class="page-item"><a class="page-link" href="#">5</a></li> {% endcomment %}
+                  <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              </ul>
+          </nav> 
         </div>
+        
     </div>
 
 
     <div id="chart" >
-      <iframe width="1700" height="1050" src="https://lookerstudio.google.com/embed/reporting/56ad84bc-6bf3-448f-900c-e7152ce74a03/page/HFnbE" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+    
     </div>
 
 
@@ -406,36 +445,7 @@
   
   {% block script %}
   <script src="{% static 'js/dashboard.js' %}"></script>
-  {% comment %} <script>
-    $(document).ready(function() {
-      setInterval(function() {
-        $.ajax({
-          type: 'GET',
-          url: "{% url 'getuser' %}",  
-          success: function(response) {
-            console.log("Data Added");
-          },
-          error: function(response) {
-            alert("No Data Found");
-          }
-        });
-      }, 1000); 
-    });
-  </script> {% endcomment %}
-  
-
-
-  <script>$('.counts').each(function () {
-    $(this).prop('Counter',0).animate({
-        Counter: $(this).text()
-    }, {
-        duration: 3000,
-        easing: 'swing',
-        step: function (now) {
-            $(this).text(Math.ceil(now));
-        }
-    });
-});</script>
+ 
   {% endblock script %}
 
 

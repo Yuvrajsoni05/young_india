@@ -18,6 +18,7 @@ urlpatterns = [
     path('Admin-Logout',admin_logout,name='Admin_Logout'),
     path('Event-List',Event_list,name='Event_List'),
     path('EC-Member-List',manager_list,name='View-manager'),
+    # path('Ec-member',Ec_Member,name=Ec),
     path('download_excel',download_excel,name='download_excel'),
     path('Error',error_page,name='Error-Page'),
     path('admin-event-data',admin_event_data,name="admin_event_data" ),

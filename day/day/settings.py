@@ -38,20 +38,8 @@ ALLOWED_HOSTS = ['*']
 
 
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "console": {
-#             "class": "logging.StreamHandler",
-#         },
-#     },
-#     "root": {
-#         "handlers": ["console"],
-#         "level": "WARNING",
-#     },
-    
-# }
+ # Ensures the cookie is sent with top-level navigations.
+
 
 
 # Application definition
@@ -65,8 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'admin_app','manager_app',
     'rest_framework',
-    'django_extensions',
-    'django_browser_reload'
+    # 'django_extensions',
+    # 'django_browser_reload'
     
 
 ]
@@ -77,7 +65,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
+    # 'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -89,7 +77,9 @@ ROOT_URLCONF = 'day.urls'
 # WhiteNoise settings for serving static files
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Make sure this is in your main settings.py file
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+# SESSION_COOKIE_AGE = 5 * 60
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -178,3 +168,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER =  'soniyuvraj9499@gmail.com'
 EMAIL_HOST_PASSWORD = 'orge dlse yzrp ralx'
 
+# CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
+# SESSION_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
+# CSRF_COOKIE_SECURE = True  # Ensure the CSRF cookie is sent only over HTTPS
+# SESSION_COOKIE_SECURE = True  # Ensure the session cookie is sent only over HTTPS
