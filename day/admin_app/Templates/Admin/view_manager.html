@@ -65,21 +65,20 @@
         {% endfor %}
        </td>
         <td>{{ manager.phone_number }}</td>
-        <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
+        <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" border="1px" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
 
 <td>
     <form action="{% url 'Handler-Delete' handler_id=manager.id %}" method="post">
         {% csrf_token %}
-         <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+         <button class="btn  btn-outline-danger"><i class="bi bi-trash"></i></button>
 
     </form>
                 </td>
        <td>
-    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
+    <button type="button" class="btn  btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
         <i class="bi bi-pencil-square"></i>
     </button>
 </td>
-
         <td>
             <a class="btn btn-light rounded-circle" href="tel:{{manager.phone_number }}">
     <i class="bi bi-telephone-forward-fill"></i>
