@@ -1,0 +1,396 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Main Dashboard</title>
+
+  <!-- Favicons -->
+  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
+  <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
+ 
+
+
+</head>
+
+
+<body>
+
+    {% include 'components/header.html' %}
+    <!-- ======= Sidebar ======= -->
+    {% include 'components/side_navbar.html' %}
+
+    <main id="main" class="main">
+      <br>
+
+      <div class="pagetitle">
+        <h1> Welcome, {{user.first_name}} {{user.last_name}} </h1>
+       </div>
+       
+         <nav>
+           <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a href="">Home</a></li>
+             <li class="breadcrumb-item">Member</li>
+             <li class="breadcrumb-item active">Main Dashboard </li>
+           </ol>
+         </nav>
+       </div><!-- End Page Title -->
+
+
+        <section class="section dashboard">
+
+    <div class='row'>
+
+          <div class="col-xxl-6 col-md-6 col-sm-12 mb-4">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <h5 class="card-title">Total Event
+                  <span>Number of Event You Complete</span></h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-list-ol"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6>{{ total_event|floatformat:"0" }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-xxl-6 col-md-6 col-sm-12 mb-4">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <h5 class="card-title">Total Impact
+                <span>Number of people you impact</span></h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6>{{ total_impact|floatformat:"g" }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4" id="table">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <div class="d-flex align-items-center">
+          {% comment %} <div class="rounded-circle bg-primary p-2 me-3">
+            <i class="bi bi-calendar-check text-white fs-5"></i>
+          </div> {% endcomment %}
+          <h1 style="color:darkblue">Your Yi Ahmedabad Events</h1>
+        </div>
+        <div class="d-flex gap-2">
+
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-borderless table-hover align-middle" id="eventTable">
+            <thead class="table-light" >
+              <tr class="text-center text-nowrap">
+                <th>Sr.no</th>
+                <th>Date</th>
+                <th>Member</th>
+                <th>Event Name</th>
+                <th>Verticals</th>
+                <th>Ec Members Name</th>
+                <th>Venue</th>
+                <th>Expense</th>
+                <th>Role</th>
+                <th>School</th>
+                <th>College</th>
+                <th>Associate Partner</th>
+                <th>Impact</th>
+                <th>Image</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="display" >
+              {% if events %}
+                {% for event in events %}
+                  <tr class="text-center text-nowrap"data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ event.date }}</td>
+                    <td>{{ event.your_name }}</td>
+                    <td>{{ event.event_name }}</td>
+                    <td>{{event.project_vertical}}
+                    <td>{{ event.event_handle }}<br></td>
+                    <td>{{ event.event_venue }}</td>
+                    <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
+                    <td>{{ event.role_yi }}</td>
+                    <td> {{ event.school  }}  </td>
+                    <td>{{event.collage}}</td>
+                    <td>{{event.associate_partner}}
+                    <td>{{ event.total_impact|floatformat:"g" }}</td>
+                    <td>
+                      {% if event.event_photo.all %}
+                        {% with first_image=event.event_photo.first %}
+                          <img src="{{ first_image.event_photo.url }}" alt="Event Image" class="rounded" height="40" width="60" 
+                               data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
+                               data-image-url="{{ first_image.event_photo.url }}" style="cursor: pointer;">
+                        {% endwith %}
+                      {% else %}
+                        <span class="badge bg-light text-dark">No image</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <form method="post" action="{% url 'delete-event-usera' events_id=event.id %}" class="d-inline">
+                          {% csrf_token %}
+                          <button class="btn btn-sm btn-outline-danger ms-1" >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </form>
+                        {% comment %} <button type="button" class="btn btn-sm btn-outline-info ms-1" data-bs-toggle="collapse" data-bs-target="#details{{ event.id }}">
+                          <i class="bi bi-info-circle"></i>
+                          </button> {% endcomment %}
+                      </div>
+                    </td>
+                  </tr>
+                
+                  <!-- Image Modal -->
+                  <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Event Images</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                              {% for image in event.event_photo.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                  <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 400px; object-fit: contain;" alt="Event Image">
+                                  <div class="text-center mt-3">
+                                    <form method="POST" action="{% url 'delete_event_image' image_id=image.id %}" class="d-inline" enctype="multipart/form-data">
+                                      {% csrf_token %}
+                                      <button type="submit" class="btn btn-danger">Delete Image</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon bg-dark rounded p-2" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
+                              <span class="carousel-control-next-icon bg-dark rounded p-2" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Edit Event Modal -->
+                  <div class="modal fade"  id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header bg-light">
+                          <h5 class="modal-title">Edit Event</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="post" action="{% url 'update-event-data' update_id=event.id %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row g-3">
+                              <div class="col-md-6">
+                                <label for="event_date" class="form-label">Event Date</label>
+                                <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
+                              </div>
+                              <div class="col-md-6">
+                                <label for="event_name" class="form-label">Event Name</label>
+                                <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
+                              </div>
+                              <div class="col-md-6">
+                                <label for="event_handle" class="form-label">Members Name</label>
+                                <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
+                              </div>
+                              <div class="col-md-6">
+                                <label for="role_yi" class="form-label">YI Role</label>
+                                <select class="form-select" id="role_yi" name="role_yi">
+                                  <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
+                                  <option value="Vertical Chair">Vertical Chair</option>
+                                  <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                                  <option value="Team Member">Team Member</option>
+                                </select>
+                              </div>
+                              <div class="col-md-6">
+                                <label for="project_verticals" class="form-label">Project Verticals</label>
+                                <select class="form-select" id="project_verticals" name="project_verticals">
+                                  <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
+                                  <option value="Masoom">Masoom</option>
+                                  <option value="Road Safety">Road Safety</option>
+                                  <option value="Health">Health</option>
+                                  <option value="Sport">Sports</option>
+                                  <option value="Accessibility">Accessibility</option>
+                                  <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                                  <option value="Climate action">Climate action</option>
+                                  <option value="Innovation">Innovation</option>
+                                  <option value="Entrepreneurship">Entrepreneurship</option>
+                                  <option value="Branding & PR">Branding & PR</option>
+                                  <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                                  <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                                  <option value="Culture Connect">Culture Connect</option>
+                                  <option value="Yi Angel">Yi Angel</option>
+                                  <option value="Membership Engagement">Membership Engagement</option>
+                                  <!-- Add all vertical options -->
+                                </select>
+                              </div>
+                              <div class="col-md-6">
+                                <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
+                                <select class="form-select" id="project_stakeholder" name="project_stakeholder">
+                                  <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
+                                  <option value="Yuva">Yuva</option>
+                                  <option value="Thalir">Thalir</option>
+                                  <option value="Rural Initiatives">Rural Initiatives</option>
+                                  <option value="General Public">General Public</option>
+                                  <option value="Associate Partner">Associate Partner</option>
+                                   <option value="">None</option>
+                                  <!-- Add all stakeholder options -->
+                                </select>
+                              </div>
+                              
+
+
+                                    <div class="col-md-6">
+                                        <label for="yi_pillar" class="form-label">Yi Pillar</label>
+                                        <select class="form-control" id="yi_pillar" name="yi_pillar">
+                                            <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
+                                            <option value="Youth Leader">Youth Leader</option>
+                                            <option value="Thought Leader">Thought Leader</option>
+                                            <option value="Nation Building">Nation Building</option>
+                                            <!-- Add all pillar options -->
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                      <label for="social_link" class="form-label">Social Link</label>
+                                      <input type="url" class="form-control" id="social_link" name="social_link" value="{{ event.social_link }}">
+                                  </div>
+                                  
+                                    <div class="col-md-6">
+                                        <label for="total_impact" class="form-label">Impact</label>
+                                        <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="event_expense" class="form-label">Event Expense</label>
+                                        <input type="number" class="form-control" id="event_expense" name="event_expense" value="{{ event.event_expense }}">
+                                    </div>
+
+                                    <div class="col-md-6" id="sig_div">
+                                        <label for="sig_">Choose SIG</label>
+                                        <select class="form-control" id="sig_" name="sig_">
+                                          {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
+
+                                            <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
+                                            <option value="Active Living">Active Living</option>
+                                            <option value="Photography">Photography</option>
+                                            <option value="Trekking">Trekking</option>
+                                            <option value="Entrepreneurship">Entrepreneurship</option>
+                                            <option value="Community">Community</option>
+                                             <option value="">None</option>{% endif %}
+                                            <!-- Add SIG options -->
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6" id="associate_div">
+                                        <label for="associate_partners">Associate Partner</label>
+                                        <select class="form-control" id="associate_partners" name="associate_partners">
+                                            <option value="{{ event.associate_partner }}">{{ event.associate_partner }}</option>
+                                            <option value="Big Bull">Big Bull</option>
+                                            <option value="EB">EB</option>
+                                            <option value="Yuvi">Yuvi</option>
+                                             <option value="">None</option>
+                                            <!-- Add associate partners -->
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6" id="school_div">
+                                        <label for="school">School</label>
+                                        <input type="text" id="school" class="form-control" name="school" placeholder="School" value="{{ event.school }}">
+                                    </div>
+
+                                    <div class="col-md-6" id="collage_div">
+                                        <label for="collage">College</label>
+                                        <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
+                                    </div>
+                                    
+
+                                    <div class="col-md-6" id="collage_div">
+                                      <label for="event_image">Event Image</label>
+                                      <input type="file" id="event_image" class="form-control" name="event_image" multiple>
+                                  </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% else %}
+            <tr>
+              <td colspan="17" class="text-center"> No Event available </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+                
+            </div>
+            <nav aria-label="Event table navigation">
+              <ul class="pagination justify-content-center ">
+                  <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            
+                  <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              </ul>
+          </nav> 
+        </div>
+      </div>
+    </div>
+        </section>
+  </main><!-- End #main -->
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

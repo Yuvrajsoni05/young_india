@@ -14,18 +14,18 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link " href="{% url 'chart-dashbaord' %}">
+            <a class="nav-link " href="{% url 'member-dashbaord' %}">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li><!-- End Dashboard Nav -->
 
-        <li class="nav-item">
+        {% comment %} <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'event-list' %}">
                 <i class="bi bi-list-columns-reverse"></i>
                 <span>Your Yi Events</span>
             </a>
-        </li>
+        </li> {% endcomment %}
 
         <li class="nav-item">
             <a class="nav-link collapsed " href="{% url 'manager-dashboard' %}">
@@ -34,12 +34,15 @@
             </a>
         </li>
 
+
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'manager-logout' %}">
                 <i class="bi bi-box-arrow-left"></i>
                 <span>Logout</span>
             </a>
         </li><!-- End Login Page Nav -->
+
+        
     </ul>
 </aside>
 

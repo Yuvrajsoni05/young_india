@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 # import logging
 from django.http import HttpResponse
 import openpyxl
-
+from django.core.validators import FileExtensionValidator 
 from manager_app.models import Event_Data,Event_Image
 from django.contrib import messages
 
@@ -56,7 +56,7 @@ from django.urls import reverse_lazy
 # Create your views here.
 
 
-regex= r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{10}$'
+
 
 
 
@@ -212,7 +212,12 @@ def get_username(request):
     return JsonResponse(data)
 
 
-
+#    try:
+#                     validator = FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])
+#                     validator(profile_img)  # Validate the image extension
+#                 except ValidationError:
+#                     messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
+#                     return redirect('Admin_Signup')
 
 # Add new User Ec members
 @login_required(login_url='index')
@@ -228,12 +233,12 @@ def Admin_Signup(request):
         
         active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
         active_users_count = LoginSide.objects.filter(is_active=True).count()
-    
+        
         active_users_count = active_users.count()
 
         try:
             
-    
+            
             if request.method == 'POST':
                             
                 username = request.POST.get('add_username')
@@ -255,6 +260,16 @@ def Admin_Signup(request):
 
             
                 if profile_img is not  None:
+                    
+                    
+                    try:
+                        
+                        validator = FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])
+                        validator(profile_img)  
+                    except ValidationError:
+                        messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
+                        return redirect('Admin_Signup')
+                        
                     
                     if profile_img.size > 4*1024*1024  :
                         
@@ -628,7 +643,7 @@ def base(request):
 @login_required(login_url='index')
 def admin_event_data(request):
     try:
-        if not request.user.login_role.filter(name='Admin').exclude():
+        if not request.user.login_role.filter(name='Admin'):
             return redirect('Error-Page')
     except Exception:
         return redirect('Error-Page')
@@ -855,7 +870,7 @@ def manager_list(request):
     # Check if the user has the 'Admin' role
     
     try:
-        if not request.user.login_role.filter(name='Admin').exclude():
+        if not request.user.login_role.filter(name='Admin'):
             return redirect('Error-Page')
     except Exception:
         return redirect('Error-Page')  # Redirect if the user doesn't have the Admin role
@@ -863,7 +878,8 @@ def manager_list(request):
   
 
     # Make sure you're filtering by the 'user' field, not 'username'
-    manager = LoginSide.objects.all().distinct()
+    manager = LoginSide.objects.exclude(is_superuser=True)
+    
 
     # Fetch all login roles (you can filter this as needed)
     login_role = Login_Role.objects.all()
@@ -916,18 +932,19 @@ def delete_handler(request,handler_id):
 
 # Delete Yi Event
 @login_required(login_url='index')
-def delete_event(request,event_id):
+def delete_event(request, event_id):
+    # Ensure only admins can delete events
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
+    
     if request.method == 'POST':
-        delete_events = get_object_or_404(Event_Data,id=event_id)
-        # event_images = delete_events.event_photo.all()
-        # for event_image in event_images:
-        #     if event_image.event_photo():
-        #         event_images.event_photo.delete()
-        #     event_image.delete()
-            
-        delete_events.delete()
+        # Get the Event_Data instance to be deleted
+        event_to_delete = get_object_or_404(Event_Data, id=event_id)
+        
+        # Delete the Event_Data instance, which will also delete related Event_Image instances due to cascade
+        event_to_delete.delete()
+        
+    # Redirect back to the Admin Dashboard after deletion
     return redirect('Admin_Dashboard')
 
 @login_required(login_url='index')

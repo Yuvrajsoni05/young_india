@@ -11,6 +11,7 @@ from .models import Event_Data,Event_Image
 from  django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Sum
 import os
+from django.core.validators import FileExtensionValidator 
 # Create your views here.
 
 
@@ -168,7 +169,7 @@ def manager_dashboard(request):
     # user_vertical = LoginSide.objects.all()
     # Get the role from the session
     user_roles = request.session.get('userrole', [])
-
+    
     if user_roles:
         context = {
             'role': user_roles  # Pass the role to the template
@@ -179,14 +180,14 @@ def manager_dashboard(request):
             'role': 'Unknown'
         }
     
-    return render(request,'manager/manager_dashboard.html',context)
+    return render(request,'member/add_event.html',context)
 
 @login_required(login_url='index')
 def manager_profile(request):
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
 
-    return render(request,'manager/manager_profile.html')
+    return render(request,'member/member_profile.html')
 
 @login_required(login_url='index')
 def event_list(request):
@@ -200,18 +201,19 @@ def event_list(request):
         'user': user,
         'k1': all_event
     }
-    return render(request, 'manager/event_list.html', context)
+    return render(request, 'member/event_list.html', context)
 
 
 
 def delete_event_user(request,events_id):
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('Error-Page')
+  
     if request.method == 'POST':
         delete_events = get_object_or_404(Event_Data,id=events_id)
-        
         delete_events.delete()
-    return redirect('event-list')
+        
+        return redirect('member-dashbaord')
+    return render (request,'member/dashboard')
+
 
 
 def update_event_data(request,update_id):
@@ -232,20 +234,35 @@ def update_event_data(request,update_id):
         update_event.project_stakeholder = request.POST['project_stakeholder']
         update_event.yi_pillar = request.POST['yi_pillar']
         update_event.social_link = request.POST['social_link']
-        update_event.event_handle = request.POST['handel_by']
+        update_event.event_handle = request.POST['event_handle']
         update_event.total_impact = request.POST['total_impact']
         update_event.which_SIG  = request.POST['sig_']
 
         update_event.associate_partner = request.POST.get('associate_partners')
+        
+        event_image = request.FILES.getlist('event_image')
+
+        for image in event_image:
+            Event_Image.objects.create(event=update_event,event_photo = image)
         update_event.save()
+        
+        
         messages.success(request,'Data update')
-        return redirect('event-list')
+        return redirect('member-dashbaord')
     else:
         messages.error(request,'Data not update')
-    return render(request, 'manager/event_list.html')
+    return render(request, 'member/dashboard.html')
 
 
-
+def delete_event_image(request,image_id):
+    if request.method == 'POST':
+        image_to_delete = get_object_or_404(Event_Image,id = image_id )
+        if image_to_delete.event_photo:
+            image_to_delete.event_photo.delete()
+        image_to_delete.event_photo.delete()
+    return redirect('member-dashbaord')
+            
+    # return render(request, 'member/event_list.html')
 
 
 
@@ -309,7 +326,7 @@ def event_data(request):
         
         if any(i is None for i in event_date):
             messages.error(request,"Must Filed Requird Filed")
-            return redirect('event_data')
+            return redirect('manager-dashboard')
 
 
             # if event_images.size > 1 * 1024 * 1024:
@@ -324,12 +341,22 @@ def event_data(request):
             return redirect('manager-dashboard')
     
         valid_extensions = ['.jpeg', '.jpg', '.png']
+        
+        
 
         for img in event_image:
-            ext = os.path.splitext(img.name)[1]  # Get the file extension
-            if ext.lower() not in valid_extensions:
-                messages.error(request, f"Invalid file type: {img.name}. Only .jpg, .jpeg, and .png are allowed.")
-                return redirect('manager-dashboard') 
+            try:
+                validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
+                validator(img)
+            except Exception:
+                messages.error(request,"Invalid file type  Only .jpg , jpeg , and .png")
+                return redirect('manager-dashboard')
+            
+            
+            # ext = os.path.splitext(img.name)[1]  # Get the file extension
+            # if ext.lower() not in valid_extensions:
+            #     messages.error(request, f"Invalid file type: {img.name}. Only .jpg, .jpeg, and .png are allowed.")
+            #     return redirect('manager-dashboard') 
             # if event_image and event_image.size > 4 * 1024 * 1024:
             #       # 4MB size limit
             #     messages.error(request, 'Each image must be 4MB or less')
@@ -367,7 +394,7 @@ def event_data(request):
         messages.success(request, 'Thank you for insert data')
         return redirect('manager-dashboard')
             
-    return render(request, 'manager/manager_dashboard.html')
+    return render(request, 'member/add_event.html')
 
 
 
@@ -392,7 +419,8 @@ def chart(request):
     # Adjust event_impact to reflect the correct order of event_name
     # aligned_event_impact = [event_total_dict.get(event, 0) for event in event_name]
     
-
+    user = request.user
+    all_event = Event_Data.objects.filter(user=user)
     # print(event_name)
     # print(event_impact)
 
@@ -400,9 +428,10 @@ def chart(request):
                  'total_impact':total_impact,
                 #  'event_name': event_name,
                 #  'impact':aligned_event_impact,
+                    'events': all_event
                 }
 
-    return render(request,'chart/chart.html',context)
+    return render(request,'member/dashboard.html',context)
 
 
 

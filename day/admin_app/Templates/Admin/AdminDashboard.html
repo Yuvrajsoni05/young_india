@@ -110,8 +110,8 @@
           <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
         </div>
         <div class="d-flex gap-2">
-          <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
-            {% comment %} <select class="form-select form-select-sm" id="search" name="search" onchange="this.form.submit()">
+           {% comment %}<form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+            <select class="form-select form-select-sm" id="search" name="search" onchange="this.form.submit()">
               <option value="" disabled selected>Choose by Name</option>
               <option value="all">All</option>
               {% for i in m1 %}
@@ -149,7 +149,7 @@
             <tbody id="display" >
               {% if events %}
                 {% for event in events %}
-                  <tr class="text-center text-nowrap"data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                  <tr class="text-center text-nowrap">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ event.date }}</td>
                     <td>{{ event.your_name }}</td>
