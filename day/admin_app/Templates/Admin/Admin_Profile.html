@@ -26,7 +26,8 @@
           <div class="card mb-4">
             <!-- Cover Image - LinkedIn Style -->
             <div class="position-relative">
-              <div class="bg-primary bg-gradient text-white rounded-top" style="height: 180px; background-image: linear-gradient(to right, #4e73df, #224abe);"></div>
+              <img src="{% static 'Image/YI.jpg' %}" 
+              alt="Cover Photo" class="img-fluid rounded-top" style="height: 180px; width: 100%; object-fit: cover;">
               <!-- Profile Image Overlapping -->
               <div class="position-absolute" style="bottom: -50px; left: 50px;">
                 <div class="position-relative">
@@ -140,7 +141,7 @@
                           </div>
                         </div>
                       </div>
-
+                     
                       <div class="row mb-3">
                         <label for="admin_lastname" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                         <div class="col-md-8 col-lg-9">
@@ -166,7 +167,7 @@
                         <div class="col-md-8 col-lg-9">
                           <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                            <input name="admin_phone" type="number" minlength="10" maxlength="10" class="form-control" id="admin_phone" value="{{ user.phone_number }}">
+                            <input name="admin_phone" type="tel" minlength="10" maxlength="10" class="form-control" id="admin_phone" value="{{ user.phone_number }}">
                           </div>
                         </div>
                       </div>

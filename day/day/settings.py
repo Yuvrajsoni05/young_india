@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'admin_app','manager_app',
     'rest_framework',
+    # 'axes',
     # 'django_extensions',
     # 'django_browser_reload'
     
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # 'axes.middleware.AxesMiddleware',
     # 'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -172,3 +175,10 @@ EMAIL_HOST_PASSWORD = 'orge dlse yzrp ralx'
 # SESSION_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
 # CSRF_COOKIE_SECURE = True  # Ensure the CSRF cookie is sent only over HTTPS
 # SESSION_COOKIE_SECURE = True  # Ensure the session cookie is sent only over HTTPS
+# AUTHENTICATION_BACKENDS = [
+#    'axes.backends.AxesBackend', # Axes must be first
+#    'django.contrib.auth.backends.ModelBackend',
+# ]
+# AXES_FAILURE_LIMIT: 3
+# AXES_COOLOFF_TIME = timedelta(minutes=30) 
+

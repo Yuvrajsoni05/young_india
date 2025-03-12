@@ -206,12 +206,30 @@ def event_list(request):
 
 
 def delete_event_user(request,events_id):
-  
-    if request.method == 'POST':
-        delete_events = get_object_or_404(Event_Data,id=events_id)
-        delete_events.delete()
-        
-        return redirect('member-dashbaord')
+    
+    try:
+      
+      
+        if request.method == 'POST':
+            delete_events = get_object_or_404(Event_Data,id=events_id)
+            event_img  = delete_events.event_photo.all()
+            
+            for img in event_img:
+                try:
+                    path = img .event_photo.path
+                    print(path)
+                    if os.path.isfile(path):
+                        os.remove(path)
+                except Exception as e:
+                    messages.error(request,'Error deleteing image')
+                    img.delete()
+            
+            delete_events.delete()
+            
+            return redirect('member-dashbaord')
+    except Exception as e:
+        messages.error(request,'Something went Wrong plz Try Again Event was not Deleted ')
+
     return render (request,'member/dashboard')
 
 

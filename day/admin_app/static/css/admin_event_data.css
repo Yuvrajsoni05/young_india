@@ -3,7 +3,7 @@
     border-color: #4e73df;
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
     transition: all 0.3s ease;
-    font-family: Arial;
+    
     
   }
 
@@ -13,9 +13,9 @@
     color: #333;
 
     transition: all 0.3s ease;
-    font-size: medium;
-    font-family: Inter, sans-serif;
-    font-weight: lighter;
+    font-size: large;
+    font-family: Roboto;
+    /* font-weight: bold; */
     
   }
 
@@ -27,8 +27,8 @@
 .card-header {
     background-color: #1944c7;
     color: #fff;
-    font-family: Inter, sans-serif;
-    font-size: large;
+    font-family: Roboto;
+    font-size: larger;
     font-weight: 700;
 
   }
@@ -44,6 +44,7 @@
     width: auto; /* Let the button size adjust based on content */
     min-width: 150px; /* Ensure a minimum width for the button */
     max-width: 200px; /* Optionally set a max-width for a consistent look */
+    font-family: Roboto;
   }
 
 .btn-primary:hover {
@@ -54,11 +55,13 @@
   /* Form Control Styles */
 .form-control {
     height: 3.5rem; /* Adjust input height for a cleaner look */
-    font-size: medium; /* Slightly bigger font size for better readability */
+    font-size: large; /* Slightly bigger font size for better readability */
     border-radius: 0.375rem;
     padding: 0.75rem 1.25rem; /* Increase padding for better space inside input */
     border: 1px solid #ddd; /* Lighter border */
     transition: all 0.3s ease;
+    font-family: Roboto;
+
   }
 
 .form-control:focus {

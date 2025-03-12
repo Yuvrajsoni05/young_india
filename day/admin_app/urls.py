@@ -29,7 +29,7 @@ urlpatterns = [
     path('update-event-image/<int:image_id>/',event_image_delete,name='event_image_id'),
 
     path('update-event-data/<int:event_id>/',update_event_data,name='Update_event_data'),
-    path('update-manager/<uuid:manager_id>/',update_manager,name='Update_Manager'),
+    path('update-manager/<uuid:manager_id>/',update_memeber,name='Update_Manager'),
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
     path('Handler-Delete/<uuid:handler_id>/',delete_handler,name='Handler-Delete'),

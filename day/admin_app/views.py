@@ -936,19 +936,33 @@ def delete_event(request, event_id):
     # Ensure only admins can delete events
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
-    
-    if request.method == 'POST':
-        # Get the Event_Data instance to be deleted
-        event_to_delete = get_object_or_404(Event_Data, id=event_id)
+    try:
         
-        # Delete the Event_Data instance, which will also delete related Event_Image instances due to cascade
-        event_to_delete.delete()
-        
-    # Redirect back to the Admin Dashboard after deletion
-    return redirect('Admin_Dashboard')
+        if request.method == 'POST':
+            # Get the Event_Data instance to be deleted
+            event_to_delete = get_object_or_404(Event_Data, id=event_id)
+            event_image = event_to_delete.event_photo.all()     
+                
+            for img in event_image:
+                try:
+                    path = img.event_photo.path
+                    print(path)
+                    if os.path.isfile(path):
+                        os.remove(path)
+                except Exception as e:
+                    messages.error(request,'Error deleteing image')
+                    img.delete()
+                                        
+            # Delete the Event_Data instance, which will also delete related Event_Image instances due to cascade
+            event_to_delete.delete()
+           
+        # Redirect back to the Admin Dashboard after deletion
+        return redirect('Admin_Dashboard')
+    except Exception as e:
+        messages.error(request,"Somthing went Wrong plz Try Again Event was not deleted ")
 
 @login_required(login_url='index')
-def update_manager(request,manager_id):
+def update_memeber(request,manager_id):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
     update_manager_data = get_object_or_404(LoginSide,id=manager_id)

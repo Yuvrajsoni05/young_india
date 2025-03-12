@@ -22,7 +22,7 @@
     <!-- Stats Cards -->
     <div class="row mb-4">
       <!-- Total Events Card -->
-      <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Events</h5>
@@ -31,7 +31,7 @@
                 <i class="bi bi-list-ol text-primary"></i>
               </div>
               <div class="ps-3">
-                <h1 class="counts fs-2">{{ total_event|floatformat:"g" }}</h1>
+                <h6>{{ total_event|floatformat:"g" }}</h6>
               </div>
             </div>
           </div>
@@ -39,7 +39,7 @@
       </div>
 
       <!-- Impact Card -->
-      <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Impact</h5>
@@ -48,7 +48,7 @@
                 <i class="bi bi-people text-success"></i>
               </div>
               <div class="ps-3">
-                <h1 class="count fs-2">{{ total_impact|floatformat:"g"}}</h1>
+                <h6>{{ total_impact|floatformat:"g"}}</h6>
               </div>
             </div>
           </div>
@@ -56,7 +56,7 @@
       </div>
 
       <!-- Expense Card -->
-      <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Expense</h5>
@@ -65,7 +65,7 @@
                 <i class="bi bi-currency-rupee text-danger"></i>
               </div>
               <div class="ps-3">
-                <h2 class="count fs-2">{{ total_expense|floatformat:"2g" }}</h2>
+                <h6>{{ total_expense|floatformat:"2g" }}</h6>
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@
       </div>
 
       <!-- EC Members Card -->
-      <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total EC Members</h5>
@@ -82,7 +82,7 @@
                 <i class="bi bi-person text-info"></i>
               </div>
               <div class="ps-3">
-                <h2 class="count fs-2">{{ total_manager }}</h2>
+                <h6>{{ total_manager }}</h6>
               </div>
             </div>
           </div>

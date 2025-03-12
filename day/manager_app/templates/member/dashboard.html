@@ -43,8 +43,8 @@
        
          <nav>
            <ol class="breadcrumb">
-             <li class="breadcrumb-item"><a href="">Home</a></li>
-             <li class="breadcrumb-item">Member</li>
+            <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}" >Member</a></li>
              <li class="breadcrumb-item active">Main Dashboard </li>
            </ol>
          </nav>
@@ -186,12 +186,12 @@
                               {% for image in event.event_photo.all %}
                                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                                   <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 400px; object-fit: contain;" alt="Event Image">
-                                  <div class="text-center mt-3">
+                                  {% comment %} <div class="text-center mt-3">
                                     <form method="POST" action="{% url 'delete_event_image' image_id=image.id %}" class="d-inline" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <button type="submit" class="btn btn-danger">Delete Image</button>
                                     </form>
-                                  </div>
+                                  </div> {% endcomment %}
                                 </div>
                               {% endfor %}
                             </div>
@@ -211,13 +211,13 @@
                   
                   <!-- Edit Event Modal -->
                   <div class="modal fade"  id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
+                    <div class="modal-dialog modal-lg form-datas">
+                      <div class="modal-content ">
                         <div class="modal-header bg-light">
                           <h5 class="modal-title">Edit Event</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body form-datas">
                           <form method="post" action="{% url 'update-event-data' update_id=event.id %}" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="row g-3">
@@ -351,8 +351,9 @@
                                   </div>
                                     
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                               
+                                        <button type="submit" class="btn btn-primary sm-2">Save changes</button>
+                                        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
                                     </div>
                                 </form>
                             </div>
@@ -387,10 +388,55 @@
     </div>
         </section>
   </main><!-- End #main -->
+  {% if messages %}
+  <script>
+        {% for message in messages %}
+        Swal.fire({
+        title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+        text: "{{ message }}",
+        icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+        confirmButtonText: 'OK'
+        });
+        {% endfor %}
+</script>
+{% endif %}
   <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+  <script>
+    document.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+    });
+  </script>
 
 </body>
 </html>
+
+{% comment %} try:
+if request.method == 'POST':
+    # Get the Event_Data instance to be deleted
+    event_to_delete = get_object_or_404(Event_Data, id=event_id)
+    
+    # Delete associated images before deleting the event
+    event_images = event_to_delete.event_photo.all()  # Get all related Event_Image instances
+    for image in event_images:
+        if image.event_photo:
+            try:
+                # Construct the full file path and delete the file
+                file_path = image.event_photo.path
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            except Exception as e:
+                print(f"Error deleting image file: {e}")
+        image.delete()  # Delete the Event_Image instance from the database
+    
+    # Now delete the Event_Data instance
+    event_to_delete.delete()
+    
+# Redirect back to the Admin Dashboard after deletion
+return redirect('Admin_Dashboard')
+
+except Exception as e:
+messages.error(request, "Something went wrong. Please try again. Event was not deleted.")
+return redirect('Error-Page') {% endcomment %}

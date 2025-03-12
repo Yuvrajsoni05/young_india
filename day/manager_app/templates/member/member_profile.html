@@ -43,8 +43,8 @@
     </div>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="">Home</a></li>
-          <li class="breadcrumb-item">Member</li>
+          <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}" >Member</a></li>
           <li class="breadcrumb-item active">Profile</li>
         </ol>
       </nav>
@@ -52,17 +52,24 @@
 
     <section class="section profile">
       <div class="row">
-        <div class="col-xl-4">
-          <div class="card">
-            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-              <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" height="120px" width="120px" alt="Profile" class="rounded-circle">
-              <h2>{{ user.username }}</h2>
-
+       <div class="col-lg-12">
+          <!-- Profile Card with Cover Photo -->
+          <div class="card mb-4">
+            <!-- Cover Image - LinkedIn Style -->
+            <div class="position-relative">
+              <img src="{% static 'Image/YI.jpg' %}" 
+              alt="Cover Photo" class="img-fluid rounded-top" style="height: 280px; width: 100%; object-fit: cover;">
+              <!-- Profile Image Overlapping -->
+              <div class="position-absolute" style="bottom: -50px; left: 50px;">
+                <div class="position-relative">
+                  <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
+                       height="130px" width="130px" alt="Profile" 
+                       class="rounded-circle border border-4 border-white shadow">
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="col-xl-8">
+              <br><br><br>
+        <div class="col-xl-12">
           <div class="card">
             <div class="card-body pt-3">
               <!-- Bordered Tabs -->
@@ -107,18 +114,28 @@
                   <!-- Profile Edit Form -->
                   <form method="POST" action="{% url 'manager-update' manager_id=user.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="row mb-3">
-                      <label for="manager_profile_img" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                    <div class="row mb-4">
+                      <label for="admin_profile_img" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="manager_profile_img"  type="file" class="form-control" id="manager_profile_img" accept=".jpg, .jpeg, .png" >
+                        <div class="d-flex align-items-center">
+                          <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
+                              alt="Profile" class="rounded-circle border me-3" style="width: 70px; height: 70px; object-fit: cover;">
+                          <div class="flex-grow-1">
+                            <input name="manager_profile_img"  type="file" class="form-control" id="manager_profile_img" accept=".jpg, .jpeg, .png" >
+                            <small class="text-muted">Upload a new image (JPG, JPEG, PNG)</small>
+                          </div>
+                        </div>
                       </div>
                     </div>
+
+
                     <div class="row mb-3">
                       <label for="manager_first_name" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="manager_first_name" maxlength="20" type="text" class="form-control" id="manager_first_name" value="{{ user.first_name }}">
                       </div>
                     </div>
+
 
                     <div class="row mb-3">
                       <label for="manager_last_name" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
@@ -149,7 +166,12 @@
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save me-1"></i> Save Changes
+                      </button>
+                      <button type="reset" class="btn btn-secondary px-4 ms-2">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                      </button>
                     </div>
                   </form>
 
@@ -183,7 +205,12 @@
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Change Password</button>
+                      <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-check-circle me-1"></i> Change Password
+                      </button>
+                      <button type="reset" class="btn btn-secondary px-4 ms-2">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                      </button>
                     </div>
                   </form><!-- End Change Password Form -->
                 </div>

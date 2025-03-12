@@ -13,120 +13,114 @@
   </div>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="">Home</a></li>
-        <li class="breadcrumb-item">Manager</li>
+        <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
         <li class="breadcrumb-item active">Add EC Member</li>
       </ol>
     </nav>
   
 <section>
   <div class="container-fluid">
-    <div class="card custom-form w-100">
-      <div class="card-header">
-        Register New Executive Council Member
+    <div class="card shadow border-0 rounded-3">
+      <div class="card-header bg-primary text-white py-3 ">
+        <h4 class="mb-0 " style="font-family:Robot">Register New Executive Council Member</h4>
       </div>
   
-      <div class="card-body"> <br>
-        <form method="POST" enctype="multipart/form-data" class="w-100">
+      <div class="card-body p-4 ">
+        <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
           {% csrf_token %}
-
-          <div class="row"  >
-            <div class="col-md-6" style="margin-top: 15px;">
-              <div class="form-group">
-                <i class="bi bi-person-circle"></i> <label>Username</label>
-                <input type="text" class="form-control" name="add_username" maxlength="15" placeholder="Enter Username" required>
-              </div>
+  
+          <!-- Personal Information -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="username" class="form-label ">Username</label>
+              <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required>
+              <div class="invalid-feedback">Please provide a username.</div>
             </div>
-            <div class="col-md-6"style="margin-top: 15px;" >
-              <div class="form-group">
-                <label>First Name</label>
-                <input type="text" class="form-control" name="first_name" maxlength="15" placeholder="First Name" required>
-              </div>
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="first_name" maxlength="15" placeholder="First Name" required>
+              <div class="invalid-feedback">Please provide a first name.</div>
             </div>
           </div>
-          
-
-          <div class="row mt-3">
-            <div class="col-md-6"style="margin-top: 15px;" >
-              <div class="form-group">
-                <label>Last Name</label>
-                <input type="text" class="form-control"   maxlength="15"  name="last_name" placeholder="Last Name" required>
+  
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="last_name" maxlength="15" placeholder="Last Name" required>
+              <div class="invalid-feedback">Please provide a last name.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="add_email" maxlength="50" placeholder="Email Address" required>
+              <div class="invalid-feedback">Please provide a valid email address.</div>
+            </div>
+          </div>
+  
+          <!-- Contact & Role -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="phone" class="form-label">Phone</label>
+              <div class="input-group mb-3">
+                <span class="input-group-text bg-light">+91</span>
+                <input type="number" class="form-control" id="phone" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
+                <div class="invalid-feedback">Please provide a valid phone number.</div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group" style="margin-top: 15px;">
-                <i class="bi bi-envelope"></i> <label>Email</label>
-                <input type="email" class="form-control" maxlength="50"  name="add_email" placeholder="Email Address" required>
-              </div>
+              <label for="yi_role" class="form-label">Yi Role</label>
+              <select class="form-control" id="yi_role" name="yi_role" required aria-label="YI Role">
+                <option value="" disabled selected>Choose Yi Role</option>
+                <option value="Vertical Chair">Vertical Chair</option>
+                <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                <option value="Team Member">Team Member</option>
+              </select>
+              <div class="invalid-feedback">Please select a role.</div>
             </div>
           </div>
-
-          <div class="row mt-3">
-            <div class="col-md-6"style="margin-top: 15px;">
-              <div class="form-group">
-              <label>Phone</label>
-              <div class="input-group">
-                <span class="input-group-text">+91</span>
-                <input type="number" class="form-control" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
-              </div>
-            </div>
-          </div>
-            <div class="col-md-6"style="margin-top: 15px;">
-              <div class="form-group" >
-                <label>Yi Role</label>
-                <select class="form-control" id="yi_role" name="yi_role" required aria-label="YI Role">
-                  <option value="" disabled selected>Choose Yi Role</option>
-                  <option value="Vertical Chair">Vertical Chair</option>
-                  <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                  <option value="Team Member">Team Member</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-          <div class="form-group">
-            <div class="col-md-12">
-              <label>Executive Council Role</label>
-              <div class="checkbox-container">
+  
+          <!-- Executive Council Role -->
+          <div class="mb-4">
+            <label class="form-label">Executive Council Role</label>
+            <div class="card border p-3 bg-light">
+              <div class="d-flex flex-wrap gap-3">
                 {% for i in role %}
-                  <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}">
-                    <label class="form-check-label">{{ i.name }}</label>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="role_{{ i.name }}" name="login_role" value="{{ i.name }}">
+                    <label class="form-check-label" for="role_{{ i.name }}">{{ i.name }}</label>
                   </div>
                 {% endfor %}
               </div>
             </div>
           </div>
-        </div>
-
-          <div class="row mt-3">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label>Profile Image</label>
-                <input type="file" class="form-control" name="profile_img" accept=".jpeg,.png,jpg" >
-                <small class="form-text">Accepted formats: .jpg, .jpeg, .png</small>
-              </div>
+  
+          <!-- Profile Image -->
+          <div class="mb-4">
+            <label for="profile_img" class="form-label">Profile Image</label>
+            <input type="file" class="form-control" id="profile_img" name="profile_img" accept=".jpeg,.png,.jpg">
+            <div class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</div>
+          </div>
+  
+          <!-- Password -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label for="password1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password1" name="password1" minlength="8" maxlength="20" placeholder="Password" required>
+              <div class="invalid-feedback">Password must be 8-20 characters.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="password2" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="password2" name="password2" minlength="8" maxlength="20" placeholder="Confirm Password" required>
+              <div class="invalid-feedback">Passwords must match.</div>
             </div>
           </div>
-
-          <div class="row mt-3">
-            <div class="col-md-6"style="margin-top: 15px;">
-              <div class="form-group">
-                <label>Password <i class="bi bi-lock"></i></label>
-                <input type="password" minlength="8" maxlength="20" class="form-control" name="password1" placeholder="Password" required>
-              </div>
-            </div>
-            <div class="col-md-6"style="margin-top: 15px;">
-              <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" class="form-control" name="password2" minlength="8" maxlength="20"  placeholder="Confirm Password" required>
-              </div>
-            </div>
+  
+          <!-- Form Actions -->
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+        
+            <button type="submit" class="btn btn-primary px-4">Create Yi</button>
+            <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
           </div>
-
-          <button type="submit" class="btn btn-primary mt-4">Create Yi</button>
-          <button type="reset" class="btn btn-secondary mt-4">Reset</button>
         </form>
       </div>
     </div>
