@@ -110,10 +110,12 @@ def manager_update(request,manager_id):
         manager_profile.username = request.POST['username']
         manager_profile.phone_number = request.POST['phone_number']
         if 'manager_profile_img' in request.FILES:
+            os.remove(manager_profile.photo.path)
             manager_profile.photo = request.FILES['manager_profile_img']
             if manager_profile.photo.size > 4*1024*1024:
                 messages.error(request,'Image Size must be 4mb')
                 return redirect('manager-profile')
+            
         manager_profile.save()
         messages.success(request,'Profile Updated')
         return redirect('manager-profile')
@@ -383,7 +385,7 @@ def event_data(request):
     
 
 
-        demo = Event_Data.objects.create(
+        EventData = Event_Data.objects.create(
             your_name=your_name,
             date=event_date,
             role_yi=role_yi,
@@ -405,7 +407,7 @@ def event_data(request):
         )
 
         for image in event_image:
-            Event_Image.objects.create(event_photo=image,event=demo)
+            Event_Image.objects.create(event_photo=image,event=EventData)
 
         
             # return JsonResponse({'status':'Data inserted'})
@@ -418,7 +420,7 @@ def event_data(request):
 
 
 
-def chart(request):
+def dashboard(request):
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
     user = request.user

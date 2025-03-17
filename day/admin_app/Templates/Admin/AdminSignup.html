@@ -1,15 +1,15 @@
 {% extends "base/base.html" %}
 
-{% block title %} New EC Member {% endblock title %}
+{% block title %}New EC Member{% endblock title %}
 {% load static %}
 
-{% block link %}   <link href="{% static 'css/admin_signup.css' %}" rel="stylesheet"> {% endblock link %}
+{% block link %}<link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">{% endblock link %}
 
 {% block bodyblock %}
 <main id="main" class="main">
-<br>
+  <br>
   <div class="pagetitle">
-    <h1>Add EC Member </h1>
+    <h1>Add EC Member</h1>
   </div>
     <nav>
       <ol class="breadcrumb">
@@ -18,113 +18,137 @@
         <li class="breadcrumb-item active">Add EC Member</li>
       </ol>
     </nav>
+  </div>
   
-<section>
-  <div class="container-fluid">
-    <div class="card shadow border-0 rounded-3">
-      <div class="card-header bg-primary text-white py-3 ">
-        <h4 class="mb-0 " style="font-family:Robot">Register New Executive Council Member</h4>
-      </div>
-  
-      <div class="card-body p-4 ">
-        <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-          {% csrf_token %}
-  
-          <!-- Personal Information -->
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label for="username" class="form-label ">Username</label>
-              <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required>
-              <div class="invalid-feedback">Please provide a username.</div>
-            </div>
-            <div class="col-md-6">
-              <label for="firstName" class="form-label">First Name</label>
-              <input type="text" class="form-control" id="firstName" name="first_name" maxlength="15" placeholder="First Name" required>
-              <div class="invalid-feedback">Please provide a first name.</div>
-            </div>
-          </div>
-  
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label for="lastName" class="form-label">Last Name</label>
-              <input type="text" class="form-control" id="lastName" name="last_name" maxlength="15" placeholder="Last Name" required>
-              <div class="invalid-feedback">Please provide a last name.</div>
-            </div>
-            <div class="col-md-6">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="add_email" maxlength="50" placeholder="Email Address" required>
-              <div class="invalid-feedback">Please provide a valid email address.</div>
-            </div>
-          </div>
-  
-          <!-- Contact & Role -->
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label for="phone" class="form-label">Phone</label>
-              <div class="input-group mb-3">
-                <span class="input-group-text bg-light">+91</span>
-                <input type="number" class="form-control" id="phone" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
-                <div class="invalid-feedback">Please provide a valid phone number.</div>
+  <section>
+    <div class="container-fluid">
+      <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-primary text-white py-3">
+          <h4 class="mb-0">Register New Executive Council Member</h4>
+        </div>
+        <div class="card-body p-4">
+          <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <!-- Personal Information -->
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="username" class="form-label">Username *</label>
+                <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required>
+                <div class="invalid-feedback">Please provide a username.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="firstName" class="form-label">First Name *</label>
+                <input type="text" class="form-control" id="firstName" name="first_name" maxlength="15" placeholder="First Name" required>
+                <div class="invalid-feedback">Please provide a first name.</div>
               </div>
             </div>
-            <div class="col-md-6">
-              <label for="yi_role" class="form-label">Yi Role</label>
-              <select class="form-control" id="yi_role" name="yi_role" required aria-label="YI Role">
-                <option value="" disabled selected>Choose Yi Role</option>
-                <option value="Vertical Chair">Vertical Chair</option>
-                <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                <option value="Team Member">Team Member</option>
-              </select>
-              <div class="invalid-feedback">Please select a role.</div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="lastName" class="form-label">Last Name *</label>
+                <input type="text" class="form-control" id="lastName" name="last_name" maxlength="15" placeholder="Last Name" required>
+                <div class="invalid-feedback">Please provide a last name.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email *</label>
+                <input type="email" class="form-control" id="email" name="add_email" maxlength="50" placeholder="Email Address" required>
+                <div class="invalid-feedback">Please provide a valid email address.</div>
+              </div>
             </div>
-          </div>
-  
-          <!-- Executive Council Role -->
-          <div class="mb-4">
-            <label class="form-label">Executive Council Role</label>
-            <div class="card border p-3 bg-light">
-              <div class="d-flex flex-wrap gap-3">
-                {% for i in role %}
+            
+            <!-- Contact & Role -->
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="phone" class="form-label">Phone *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light">+91</span>
+                  <input type="number" class="form-control" id="phone" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
+                  <div class="invalid-feedback">Please provide a valid phone number.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="yi_role" class="form-label">Yi Role *</label>
+                <select class="form-select" id="yi_role" name="yi_role" required aria-label="YI Role">
+                  <option value="" disabled selected>Choose Yi Role</option>
+                  <option value="Vertical Chair">Vertical Chair</option>
+                  <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                  <option value="Team Member">Team Member</option>
+                </select>
+                <div class="invalid-feedback">Please select a role.</div>
+              </div>
+            </div>
+            
+            <!-- Executive Council Role -->
+            <div class="mb-4">
+              <label class="form-label">Executive Council Role *</label>
+              <div class="card border p-3 bg-light">
+                <div class="d-flex flex-wrap gap-3">
+                  {% for i in role %}
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="role_{{ i.name }}" name="login_role" value="{{ i.name }}">
                     <label class="form-check-label" for="role_{{ i.name }}">{{ i.name }}</label>
                   </div>
-                {% endfor %}
+                  {% endfor %}
+                </div>
               </div>
             </div>
-          </div>
-  
-          <!-- Profile Image -->
-          <div class="mb-4">
-            <label for="profile_img" class="form-label">Profile Image</label>
-            <input type="file" class="form-control" id="profile_img" name="profile_img" accept=".jpeg,.png,.jpg">
-            <div class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</div>
-          </div>
-  
-          <!-- Password -->
-          <div class="row g-3 mb-4">
-            <div class="col-md-6">
-              <label for="password1" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password1" name="password1" minlength="8" maxlength="20" placeholder="Password" required>
-              <div class="invalid-feedback">Password must be 8-20 characters.</div>
+            
+            <!-- Profile Image -->
+            <div class="mb-4">
+              <label for="profile_img" class="form-label">Profile Image</label>
+              <input type="file" class="form-control" id="profile_img" name="profile_img" accept=".jpeg,.png,.jpg">
+              <div class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</div>
             </div>
-            <div class="col-md-6">
-              <label for="password2" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="password2" name="password2" minlength="8" maxlength="20" placeholder="Confirm Password" required>
-              <div class="invalid-feedback">Passwords must match.</div>
+            
+            <!-- Password -->
+            <div class="row mb-4">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="password1" class="form-label">Password *</label>
+                <input type="password" class="form-control" id="password1" name="password1" minlength="8" maxlength="20" placeholder="Password" required>
+                <div class="form-text text-muted">Password must be at least 8 characters with one uppercase letter and one special character</div>
+               
+              </div>
+              <div class="col-md-6">
+                <label for="password2" class="form-label">Confirm Password *</label>
+                <input type="password" class="form-control" id="password2" name="password2" minlength="8" maxlength="20" placeholder="Confirm Password" required>
+            
+              </div>
             </div>
-          </div>
-  
-          <!-- Form Actions -->
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-        
-            <button type="submit" class="btn btn-primary px-4">Create Yi</button>
-            <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
-          </div>
-        </form>
+            
+            <div class="mb-3">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="showPassword" onclick="password()">
+                <label class="form-check-label" for="showPassword">Show Password</label>
+              </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+              <button type="submit" class="btn btn-primary px-4">Add Member</button>
+              <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 </main>
-</section>
 {% endblock %}
+
+{% block script %}
+<script>
+function password() {
+  var password1 = document.getElementById("password1");
+  var password2 = document.getElementById("password2");
+
+  if (password1.type === "password" && password2.type === "password") {
+    password1.type = "text";
+    password2.type = "text";
+  } else {
+    password1.type = "password";
+    password2.type = "password";
+  }
+}
+</script>
+{% endblock script %}

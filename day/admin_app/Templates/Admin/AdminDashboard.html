@@ -3,6 +3,16 @@
 {% block title %}Dashboard {% endblock title %}
 
 {% block bodyblock %}
+
+{% block static %}
+<style>
+
+.form-label{
+  font-weight:bold;
+
+}
+</style>
+{% endblock static %}
 <!-- Main Content -->
 <main id="main" class="main">
   <div class="pagetitle">
@@ -22,7 +32,7 @@
     <!-- Stats Cards -->
     <div class="row mb-4">
       <!-- Total Events Card -->
-      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Events</h5>
@@ -39,7 +49,7 @@
       </div>
 
       <!-- Impact Card -->
-      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Impact</h5>
@@ -56,7 +66,7 @@
       </div>
 
       <!-- Expense Card -->
-      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Expense</h5>
@@ -73,7 +83,7 @@
       </div>
 
       <!-- EC Members Card -->
-      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total EC Members</h5>
@@ -190,26 +200,7 @@
                       </div>
                     </td>
                   </tr>
-                  {% comment %} <tr class="bg-light">
-                    <td colspan="10" class="p-0">
-                      <div class="collapse" id="details{{ event.id }}">
-                        <div class="p-3">
-                          <div class="row">
-                            <div class="col-md-6">
-                              <p><strong>EC Members:</strong> {{ event.event_handle }}</p>
-                              <p><strong>Project Vertical:</strong> {{ event.project_vertical }}</p>
-                              <p><strong>School:</strong> {{ event.school }}</p>
-                            </div>
-                            <div class="col-md-6">
-                              <p><strong>College:</strong> {{ event.collage }}</p>
-                              <p><strong>Associate Partner:</strong> {{ event.associate_partner }}</p>
-                              <p><strong>S.I.G:</strong> {{ event.which_SIG }}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr> {% endcomment %}
+           
                   
                   <!-- Image Modal -->
                   <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
@@ -219,16 +210,18 @@
                           <h5 class="modal-title">Event Images</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body p-0">
                           <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                               {% for image in event.event_photo.all %}
                                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                  <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 400px; object-fit: contain;" alt="Event Image">
-                                  <div class="text-center mt-3">
+                                  <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Event Image">
+                                  <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
                                     <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" class="d-inline">
                                       {% csrf_token %}
-                                      <button type="submit" class="btn btn-danger">Delete Image</button>
+                                      <button type="submit" class="btn btn-danger btn-md">
+                                        <i class="bi bi-trash-fill me-1"></i> Delete Image
+                                      </button>
                                     </form>
                                   </div>
                                 </div>
@@ -261,11 +254,11 @@
                             {% csrf_token %}
                             <div class="row g-3">
                               <div class="col-md-6">
-                                <label for="event_date" class="form-label">Event Date</label>
+                                <label for="event_date" class="form-label">Event Date </label> *
                                 <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
                               </div>
                               <div class="col-md-6">
-                                <label for="event_name" class="form-label">Event Name</label>
+                                <label for="event_name" class="form-label">Event Name </label> * 
                                 <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
                               </div>
                               <div class="col-md-6">
@@ -273,7 +266,7 @@
                                 <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
                               </div>
                               <div class="col-md-6">
-                                <label for="role_yi" class="form-label">YI Role</label>
+                                <label for="role_yi" class="form-label">YI Role </label> *
                                 <select class="form-select" id="role_yi" name="role_yi">
                                   <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
                                   <option value="Vertical Chair">Vertical Chair</option>
@@ -282,7 +275,7 @@
                                 </select>
                               </div>
                               <div class="col-md-6">
-                                <label for="project_verticals" class="form-label">Project Verticals</label>
+                                <label for="project_verticals" class="form-label">Project Verticals </label> *
                                 <select class="form-select" id="project_verticals" name="project_verticals">
                                   <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
                                   <option value="Masoom">Masoom</option>
@@ -304,7 +297,7 @@
                                 </select>
                               </div>
                               <div class="col-md-6">
-                                <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
+                                <label for="project_stakeholder" class="form-label">Project Stakeholder </label> *
                                 <select class="form-select" id="project_stakeholder" name="project_stakeholder">
                                   <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
                                   <option value="Yuva">Yuva</option>
@@ -320,7 +313,7 @@
 
 
                                     <div class="col-md-6">
-                                        <label for="yi_pillar" class="form-label">Yi Pillar</label>
+                                        <label for="yi_pillar" class="form-label">Yi Pillar </label> *
                                         <select class="form-control" id="yi_pillar" name="yi_pillar">
                                             <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
                                             <option value="Youth Leader">Youth Leader</option>
@@ -336,7 +329,7 @@
                                   </div>
                                   
                                     <div class="col-md-6">
-                                        <label for="total_impact" class="form-label">Impact</label>
+                                        <label for="total_impact" class="form-label">Impact </label> *
                                         <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
                                     </div>
 
@@ -346,7 +339,7 @@
                                     </div>
 
                                     <div class="col-md-6" id="sig_div">
-                                        <label for="sig_">Choose SIG</label>
+                                        <label for="sig_" class="form-label">Choose SIG</label>
                                         <select class="form-control" id="sig_" name="sig_">
                                           {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
 
@@ -362,7 +355,7 @@
                                     </div>
 
                                     <div class="col-md-6" id="associate_div">
-                                        <label for="associate_partners">Associate Partner</label>
+                                        <label for="associate_partners" class="form-label">Associate Partner</label>
                                         <select class="form-control" id="associate_partners" name="associate_partners">
                                             <option value="{{ event.associate_partner }}">{{ event.associate_partner }}</option>
                                             <option value="Big Bull">Big Bull</option>
@@ -374,18 +367,18 @@
                                     </div>
 
                                     <div class="col-md-6" id="school_div">
-                                        <label for="school">School</label>
+                                        <label for="school" class="form-label">School</label>
                                         <input type="text" id="school" class="form-control" name="school" placeholder="School" value="{{ event.school }}">
                                     </div>
 
                                     <div class="col-md-6" id="collage_div">
-                                        <label for="collage">College</label>
+                                        <label for="collage" class="form-label">College</label>
                                         <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
                                     </div>
                                     
 
                                     <div class="col-md-6" id="collage_div">
-                                      <label for="event_image">Event Image</label>
+                                      <label for="event_image" class="form-label">Event Image</label>
                                       <input type="file" id="event_image" class="form-control" name="event_image" multiple>
                                   </div>
                                     
@@ -431,7 +424,7 @@
 
 
     <div id="chart" >
-    
+      <p> This Is Chart </p> 
     </div>
 
 

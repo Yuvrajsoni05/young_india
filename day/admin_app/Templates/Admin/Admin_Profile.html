@@ -27,7 +27,7 @@
             <!-- Cover Image - LinkedIn Style -->
             <div class="position-relative">
               <img src="{% static 'Image/YI.jpg' %}" 
-              alt="Cover Photo" class="img-fluid rounded-top" style="height: 180px; width: 100%; object-fit: cover;">
+              alt="Cover Photo" class="img-fluid rounded-top" style="height: 280px; width: 100%; object-fit: cover;">
               <!-- Profile Image Overlapping -->
               <div class="position-absolute" style="bottom: -50px; left: 50px;">
                 <div class="position-relative">
@@ -136,7 +136,7 @@
                         <label for="admin_firstname" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                         <div class="col-md-8 col-lg-9">
                           <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                          
                             <input name="admin_firstname" maxlength="15" type="text" class="form-control" id="admin_firstname" value="{{ user.first_name }}">
                           </div>
                         </div>
@@ -146,7 +146,6 @@
                         <label for="admin_lastname" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                         <div class="col-md-8 col-lg-9">
                           <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
                             <input name="admin_lastname" maxlength="15" type="text" class="form-control" id="admin_lastname" value="{{ user.last_name }}">
                           </div>
                         </div>
@@ -156,7 +155,6 @@
                         <label for="admin_username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                         <div class="col-md-8 col-lg-9">
                           <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-at"></i></span>
                             <input name="admin_username" type="text" maxlength="15" class="form-control" id="admin_username" value="{{ user.username }}">
                           </div>
                         </div>
@@ -166,7 +164,6 @@
                         <label for="admin_phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                         <div class="col-md-8 col-lg-9">
                           <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
                             <input name="admin_phone" type="tel" minlength="10" maxlength="10" class="form-control" id="admin_phone" value="{{ user.phone_number }}">
                           </div>
                         </div>
@@ -176,7 +173,6 @@
                         <label for="admin_email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                         <div class="col-md-8 col-lg-9">
                           <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                             <input name="admin_email" type="email" maxlength="40" class="form-control" id="admin_email" value="{{ user.email }}">
                           </div>
                         </div>
@@ -186,14 +182,15 @@
                         <button type="submit" class="btn btn-primary px-4">
                           <i class="bi bi-save me-1"></i> Save Changes
                         </button>
-                        <button type="reset" class="btn btn-secondary px-4 ms-2">
+                        
+                        <button type="reset" class="btn btn-outline-secondary px-4">
                           <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                         </button>
                       </div>
                     </div>
                   </form><!-- End Profile Edit Form -->
                 </div>
-
+                
                 <!-- Change Password Tab -->
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
@@ -223,7 +220,7 @@
                               <i class="bi bi-eye"></i>
                             </button>
                           </div>
-                          <div class="form-text">Password must be at least 8 characters long</div>
+                          <div class="form-text text-muted">Password must be at least 8 characters with one uppercase letter and one special character</div>
                         </div>
                       </div>
 
@@ -244,7 +241,7 @@
                         <button type="submit" class="btn btn-primary px-4">
                           <i class="bi bi-check-circle me-1"></i> Change Password
                         </button>
-                        <button type="reset" class="btn btn-secondary px-4 ms-2">
+                        <button type="reset" class="btn btn-outline-secondary px-4">
                           <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                         </button>
                       </div>
@@ -283,3 +280,20 @@
   });
 </script>
 {% endblock script %}
+{% comment %} 
+<script>
+  function togglePassword() {
+    var password1 = document.getElementById("password1");
+    var password2 = document.getElementById("password2");
+    
+    if (password1.type === "password" && password2.type === "password") {
+      password1.type = "text";
+      password2.type = "text";
+    } else {
+      password1.type = "password";
+      password2.type = "password";
+    }
+  }
+</script> {% endcomment %}
+
+

@@ -1,42 +1,14 @@
+{% extends "components/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% block title %} Member  Dashboard {% endblock title %}
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Main Dashboard</title>
+{% block link %}   
+<link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
+<link href="{% static 'css/inputfiled.css' %}" rel="stylesheet"> {% endblock link %}
 
-  <!-- Favicons -->
-  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-  <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
-  <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
- 
-
-
-</head>
-
-
-<body>
-
-    {% include 'components/header.html' %}
-    <!-- ======= Sidebar ======= -->
-    {% include 'components/side_navbar.html' %}
-
+{% block bodyblock %}
     <main id="main" class="main">
       <br>
-
       <div class="pagetitle">
         <h1> Welcome, {{user.first_name}} {{user.last_name}} </h1>
        </div>
@@ -172,42 +144,42 @@
                     </td>
                   </tr>
                 
-                  <!-- Image Modal -->
-                  <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Event Images</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                              {% for image in event.event_photo.all %}
-                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                  <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 400px; object-fit: contain;" alt="Event Image">
-                                  {% comment %} <div class="text-center mt-3">
-                                    <form method="POST" action="{% url 'delete_event_image' image_id=image.id %}" class="d-inline" enctype="multipart/form-data">
-                                      {% csrf_token %}
-                                      <button type="submit" class="btn btn-danger">Delete Image</button>
-                                    </form>
-                                  </div> {% endcomment %}
-                                </div>
-                              {% endfor %}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
-                              <span class="carousel-control-prev-icon bg-dark rounded p-2" aria-hidden="true"></span>
-                              <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
-                              <span class="carousel-control-next-icon bg-dark rounded p-2" aria-hidden="true"></span>
-                              <span class="visually-hidden">Next</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+               <!-- Image Modal -->
+<div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Event Images</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for image in event.event_photo.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 500px; object-fit: cover;" alt="Event Image">
+                {% comment %} <div class="text-center mt-3">
+                  <form method="POST" action="{% url 'delete_event_image' image_id=image.id %}" class="d-inline" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete Image</button>
+                  </form>
+                </div> {% endcomment %}
+              </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
                   
                   <!-- Edit Event Modal -->
                   <div class="modal fade"  id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
@@ -388,30 +360,9 @@
     </div>
         </section>
   </main><!-- End #main -->
-  {% if messages %}
-  <script>
-        {% for message in messages %}
-        Swal.fire({
-        title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
-        text: "{{ message }}",
-        icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-        confirmButtonText: 'OK'
-        });
-        {% endfor %}
-</script>
-{% endif %}
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-  <script>
-    document.addEventListener('contextmenu', function(event) {
-      event.preventDefault();
-    });
-  </script>
+{% endblock %}
 
-</body>
-</html>
+
 
 {% comment %} try:
 if request.method == 'POST':

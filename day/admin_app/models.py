@@ -55,7 +55,9 @@ class LoginSide(AbstractUser):
     def __str__(self):
         return f"{self.first_name} | {self.last_name} | {self.login_role}"
     
-
+    def delete(self,*args, **kwargs):
+        self.photo.delete()
+        super().delete(*args, **kwargs)
   
 
 

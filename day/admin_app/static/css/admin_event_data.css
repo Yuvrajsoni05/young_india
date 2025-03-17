@@ -13,9 +13,9 @@
     color: #333;
 
     transition: all 0.3s ease;
-    font-size: large;
-    font-family: Roboto;
-    /* font-weight: bold; */
+    font-size: medium;
+    font-family:sans-serif;
+    font-weight: bold; 
     
   }
 
@@ -33,24 +33,24 @@
 
   }
 
-  /* Button Styling */
-.btn-primary {
+  /* Button Styling 
+/* .btn-primary {
     background-color: #4e73df;
     border-color: #4e73df;
     transition: background-color 0.3s ease, border-color 0.3s ease;
     font-size: 1.125rem;
     border-radius: 0.375rem;
     padding: 0.75rem 1.5rem; /* Adjust padding for medium button size */
-    width: auto; /* Let the button size adjust based on content */
-    min-width: 150px; /* Ensure a minimum width for the button */
-    max-width: 200px; /* Optionally set a max-width for a consistent look */
+    /* width: auto; /* Let the button size adjust based on content */
+   /*  min-width: 150px; Ensure a minimum width for the button 
+    max-width: 200px; /* Optionally set a max-width for a consistent look 
     font-family: Roboto;
-  }
+  } 
 
-.btn-primary:hover {
+/* .btn-primary:hover {
     background-color: #2e59d9;
     border-color: #2e59d9;
-  }
+  } */
 
   /* Form Control Styles */
 .form-control {
@@ -79,14 +79,9 @@
     font-size: 1rem;
   }
 
-
 @media (max-width: 767px) {
     .form-control {
       font-size: 1rem;
     }
 
-    .btn-primary {
-      font-size: 1rem;
-      padding: 0.75rem 1.25rem; /* Adjust button padding for small screens */
-    }
   }

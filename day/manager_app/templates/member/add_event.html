@@ -1,40 +1,14 @@
+{% extends "components/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% block title %} Add - Event - Data {% endblock title %}
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Add Event</title>
+{% block link %} 
+<link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
+<link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
+ {% endblock link %}
 
-  <!-- Favicons -->
-  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-  <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
-    <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
-
-  <style>
-    .form-datas{
-      font-family:sans serif;
-    }
-  </style>
-</head>
-
-<body>
-
-  {% include 'components/header.html' %}
-  {% include 'components/side_navbar.html' %}
-
+{% block bodyblock %}
   <main id="main" class="main">
     <br>
     <div class="pagetitle">
@@ -58,11 +32,7 @@
           alt="Cover Photo" class="img-fluid rounded-top" style="height: 180px; width: 100%; object-fit: cover;">
           <!-- Profile Image Overlapping -->
           <div class="position-absolute" style="bottom: -50px; left: 50px;">
-            {% comment %} <div class="position-relative">
-              <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
-                   height="130px" width="130px" alt="Profile" 
-                   class="rounded-circle border border-4 border-white shadow">
-            </div> {% endcomment %}
+
           </div>
         </div>
         {% comment %} <div class="card-header ">
@@ -77,28 +47,28 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="your_name">Your Name</label>
+                  <label for="your_name">Your Name *</label>
                   <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name" aria-label="Your Name">
                 </div>
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="event_date">Event Date</label>
+                  <label for="event_date">Event Date *</label>
                   <input type="date" id="event_date" class="form-control" name="event_date" required aria-label="Event Date">
                 </div>
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="event_name">Event Name</label>
+                  <label for="event_name">Event Name *</label>
                   <input type="text" id="event_name" class="form-control" name="event_name" required aria-label="Event Name">
                 </div>
               </div>
 
                    <div class="col-12 col-sm-6 col-md-6">
                   <div class="form-group">
-                    <label for="event_venue">Event Venue</label>
+                    <label for="event_venue">Event Venue *</label>
                     <select id="event_venue" class="form-control" name="event_venue" required aria-label="Event Venue">
                       <option value="">Select a City</option>
                       <option value="Ahmedabad">Ahmedabad</option>
@@ -128,7 +98,7 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="role_yi">YI Role</label>
+                  <label for="role_yi">YI Role *</label>
                   <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" readonly>
                 
                 </div>
@@ -145,7 +115,7 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="project_verticals">Project Verticals</label>
+                  <label for="project_verticals">Project Verticals *</label>
                
                     <!--- <input class="form-control" id="project_verticals" name="project_verticals" value="{{ role }}" readonly > -->
 
@@ -180,7 +150,7 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="project_stakeholder">Project Stakeholder</label>
+                  <label for="project_stakeholder">Project Stakeholder *</label>
                   <select class="form-control" id="project_stakeholder" name="project_stakeholder" required aria-label="Project Stakeholder">
                     <option value="" disabled selected>Choose Project Stakeholder</option>
                     <option value="Yuva">Yuva</option>
@@ -195,7 +165,7 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="yi_pillar">YI Pillar Impact</label>
+                  <label for="yi_pillar">YI Pillar Impact *</label>
                   <select class="form-control" id="yi_pillar" name="yi_pillar" required aria-label="YI Pillar Impact">
                     <option value="" disabled selected>Choose YI Pillar Impact</option>
                     <option value="Youth Leader">Youth Leader</option>
@@ -214,7 +184,7 @@
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="total_impact">Total Impact</label>
+                  <label for="total_impact">Total Impact *</label>
                   <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact" aria-label="Total Impact">
                 </div>
               </div>
@@ -276,39 +246,15 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
-            <button type="reset" class="btn btn-primary btn-block mt-4">Reset</button>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-top mt-4">
+              <button type="submit" class="btn btn-primary btn-md">Submit</button>
+              <button type="reset" class="btn btn-outline-secondary btn-md">Reset</button>
+            </div>
+            
           </form>
         </div>
       </div>
     </div>
     
   </main>
-
-
-  {% if messages %}
-    <script>
-          {% for message in messages %}
-          Swal.fire({
-          title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
-          text: "{{ message }}",
-          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-          confirmButtonText: 'OK'
-          });
-          {% endfor %}
-</script>
-{% endif %}
-
-  <!-- Vendor JS Files -->
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-  <script src="{% static 'assets/js/event.js' %}"></script>
-
-  <script src="{% static 'js/inputfiled.js' %}" ></script>
-
-</body>
-
-</html>
+ {% endblock %}

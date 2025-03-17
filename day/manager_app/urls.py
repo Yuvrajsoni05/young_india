@@ -15,7 +15,7 @@ urlpatterns = [
         path('event_data',event_data,name='event_data'),
         path('logout',manager_logout,name='manager-logout'),
         path('password',manager_password,name='manager-password'),
-        path('dashboard',chart,name='member-dashbaord'),
+        path('dashboard',dashboard,name='member-dashbaord'),
         path('delete_event_image/<int:image_id>/',delete_event_image,name="delete_event_image"),
         
         # path('pie-chart',pie_chart,name='pie-chart-data'),

@@ -16,7 +16,7 @@ urlpatterns = [
     path('Admin-Update/<uuid:admin_id>/',Admin_update,name='Admin_Update'),
     path('Admin-Password',admin_password,name='Admin_Password'),
     path('Admin-Logout',admin_logout,name='Admin_Logout'),
-    path('Event-List',Event_list,name='Event_List'),
+    # path('Event-List',Event_list,name='Event_List'),
     path('EC-Member-List',manager_list,name='View-manager'),
     # path('Ec-member',Ec_Member,name=Ec),
     path('download_excel',download_excel,name='download_excel'),
@@ -32,7 +32,7 @@ urlpatterns = [
     path('update-manager/<uuid:manager_id>/',update_memeber,name='Update_Manager'),
     path('delete-event/<int:event_id>/',delete_event,name='delete_event'),
     path('Event-Data-API',EventDataAPI.as_view(),name = 'Event_Data_API'),
-    path('Handler-Delete/<uuid:handler_id>/',delete_handler,name='Handler-Delete'),
+    path('Member-Delete/<uuid:member_id>/',delete_member,name='Member-Delete'),
 
 
     # path('plot/',plot_chart, name='plot_view'),
@@ -44,11 +44,8 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/',CustomPasswordResetConfirm.as_view(), name='password_reset_confirm'),
     path('reset_done/',password_update_done, name='password_reset_complete'),
     # path('api/get-user-details/', get_logged_in_user_details, name='get-user-details'),
-    path('get-username/',get_username, name='get_username'),
-    
-
+    # path('get-username/',get_username, name='get_username'),
     # path('delete_events/',delete_multiple_events, name='delete_multiple_events'),
-
     # path('vertical_base', vertical_base,name='vertical_base')
 
 

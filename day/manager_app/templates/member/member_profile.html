@@ -1,43 +1,12 @@
+{% extends "components/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Dashboard</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-   <link href="{% static 'assets/css/footer.css' %}" rel="stylesheet">
-
-  <!-- Add custom style for fixed footer -->
+{% block title %} Member  Profile {% endblock title %}
 
 
-</head>
-
-<body>
-
-  {% include 'components/header.html' %}
-  <!-- ======= Sidebar ======= -->
-  {% include 'components/side_navbar.html' %}
-  <!-- End Sidebar -->
+{% block bodyblock %}
 
   <main id="main" class="main">
-    <br>
+
     <div class="pagetitle">
       <h1>Profile</h1>
     </div>
@@ -75,13 +44,19 @@
               <!-- Bordered Tabs -->
               <ul class="nav nav-tabs nav-tabs-bordered">
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">
+                    <i class="bi bi-person-lines-fill me-1"></i> Overview
+                  </button>
                 </li>
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                  </button>
                 </li>
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">
+                    <i class="bi bi-key me-1"></i> Change Password
+                  </button>
                 </li>
               </ul>
               <div class="tab-content pt-2">
@@ -130,8 +105,10 @@
 
 
                     <div class="row mb-3">
+                      
                       <label for="manager_first_name" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
+                        
                         <input name="manager_first_name" maxlength="20" type="text" class="form-control" id="manager_first_name" value="{{ user.first_name }}">
                       </div>
                     </div>
@@ -169,7 +146,7 @@
                       <button type="submit" class="btn btn-primary px-4">
                         <i class="bi bi-save me-1"></i> Save Changes
                       </button>
-                      <button type="reset" class="btn btn-secondary px-4 ms-2">
+                      <button type="reset" class="btn btn-outline-secondary px-4">
                         <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                       </button>
                     </div>
@@ -178,39 +155,59 @@
 
                   <!-- End Profile Edit Form -->
                 </div>
-
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form method="post" action="{% url 'manager-password' %}">
+                  <form method="post" action="{% url 'manager-password' %}" class="card shadow-sm border-0">
                     {% csrf_token %}
-                    <div class="row mb-3">
-                      <label for="old_password" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="old_password" type="password"  maxlength="20"  class="form-control" id="old_password">
+                    <div class="card-body">
+                      <div class="row mb-3">
+                        <label for="old_password" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input name="old_password" type="password" minlength="8" maxlength="20" class="form-control" id="old_password">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="old_password">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="row mb-3">
-                      <label for="new_password" class="col-md-4 col-lg-3 col-form-label">New Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="new_password" type="password" maxlength="20"  class="form-control" id="new_password">
+                      <div class="row mb-3">
+                        <label for="new_password" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input name="new_password" type="password" minlength="8" maxlength="20" class="form-control" id="new_password">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="new_password">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </div>
+                          <div class="form-text">Password must be at least 8 characters long</div>
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="row mb-3">
-                      <label for="confirm_password" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="confirm_password" type="password" maxlength="20"  class="form-control" id="confirm_password">
+                      <div class="row mb-3">
+                        <label for="confirm_password" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <input name="confirm_password" type="password" minlength="8" maxlength="20" class="form-control" id="confirm_password">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="confirm_password">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-check-circle me-1"></i> Change Password
-                      </button>
-                      <button type="reset" class="btn btn-secondary px-4 ms-2">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
-                      </button>
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary px-4">
+                          <i class="bi bi-check-circle me-1"></i> Change Password
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary px-4">
+                          <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                        </button>
+                      </div>
                     </div>
                   </form><!-- End Change Password Form -->
                 </div>
@@ -220,30 +217,37 @@
         </div>
       </div>
     </section>
-        {% if messages %}
-                  <script>
-    {% for message in messages %}
-        Swal.fire({
-            title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
-            text: "{{ message }}",
-            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-            confirmButtonText: 'OK'
-        });
-    {% endfor %}
-</script>
-          {% endif %}
+ 
 
   </main><!-- End #main -->
+  {% endblock %}
 
-  <!-- Footer -->
+{% block script %}
+
+<script>
+  // Toggle password visibility
+  document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      const icon = this.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      }
+    });
+  });
+</script>
 
 
-  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+{% endblock script %}
 
-  <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
 
-</body>
 
-</html>
+

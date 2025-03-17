@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{% block title %} Base Html {% endblock%} </title> 
+
+  <!-- Favicons -->
+  <link rel="icon" href="{% static 'image/YIIMG.png' %}" type="image/x-icon" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Nunito|Poppins" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  
+ 
+
+  {% block link %}   default Link {% endblock link %}
+
+
+</head>
+
+
+<body>
+    <!-- ======= Header ======= -->
+    {% include 'components/header.html' %}
+     <!-- ======= Sidebar ======= -->
+    {% include 'components/side_navbar.html' %}
+
+
+
+{% block bodyblock %}
+
+<h1> body block </h1>
+
+
+
+{% endblock bodyblock %}
+
+
+
+
+{% if messages %}
+<script>
+        {% for message in messages %}
+        Swal.fire({
+        title: '{% if message.tags == 'success' %}Success! {% else %} Error! {% endif %} ',
+        text: "{{ message }}",
+        icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+        confirmButtonText: 'OK'
+        });
+        {% endfor %}
+</script>
+{% endif %}
+
+
+<script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+
+
+
+<!-- Template Main JS File -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+
+
+{% block script %}
+
+{% endblock script %}
+
+</body>
+</html>
