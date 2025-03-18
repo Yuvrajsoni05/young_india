@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin-event-data',admin_event_data,name="admin_event_data" ),
     # path('header',header,name='header')
     # path('role_list',Role_List, name="Role_List"),
+    
 
 
     path('update-event-image/<int:image_id>/',event_image_delete,name='event_image_id'),

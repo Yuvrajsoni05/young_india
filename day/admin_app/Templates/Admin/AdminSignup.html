@@ -33,26 +33,26 @@
             <!-- Personal Information -->
             <div class="row mb-3">
               <div class="col-md-6 mb-3 mb-md-0">
-                <label for="username" class="form-label">Username *</label>
-                <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required>
+                <label for="username" class="form-label">Username</label><span style="color:red;"> *</span>
+                <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required value="{{form_data.username}}">
                 <div class="invalid-feedback">Please provide a username.</div>
               </div>
               <div class="col-md-6">
-                <label for="firstName" class="form-label">First Name *</label>
-                <input type="text" class="form-control" id="firstName" name="first_name" maxlength="15" placeholder="First Name" required>
+                <label for="firstName" class="form-label">First Name</label><span style="color:red;"> *</span>
+                <input type="text" class="form-control" id="firstName" name="first_name" maxlength="15" placeholder="First Name" value="{{form_data.first_name}}" required>
                 <div class="invalid-feedback">Please provide a first name.</div>
               </div>
             </div>
             
             <div class="row mb-3">
               <div class="col-md-6 mb-3 mb-md-0">
-                <label for="lastName" class="form-label">Last Name *</label>
-                <input type="text" class="form-control" id="lastName" name="last_name" maxlength="15" placeholder="Last Name" required>
+                <label for="lastName" class="form-label">Last Name</label><span style="color:red;"> *</span>
+                <input type="text" class="form-control" id="lastName" name="last_name" maxlength="15" placeholder="Last Name" value="{{form_data.last_name}}" required>
                 <div class="invalid-feedback">Please provide a last name.</div>
               </div>
               <div class="col-md-6">
-                <label for="email" class="form-label">Email *</label>
-                <input type="email" class="form-control" id="email" name="add_email" maxlength="50" placeholder="Email Address" required>
+                <label for="email" class="form-label">Email</label><span style="color:red;"> *</span>
+                <input type="email" class="form-control" id="email" name="add_email" maxlength="50" placeholder="Email Address" value="{{form_data.email}}" required>
                 <div class="invalid-feedback">Please provide a valid email address.</div>
               </div>
             </div>
@@ -60,15 +60,15 @@
             <!-- Contact & Role -->
             <div class="row mb-3">
               <div class="col-md-6 mb-3 mb-md-0">
-                <label for="phone" class="form-label">Phone *</label>
+                <label for="phone" class="form-label">Phone </label><span style="color:red;"> *</span>
                 <div class="input-group">
                   <span class="input-group-text bg-light">+91</span>
-                  <input type="number" class="form-control" id="phone" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" required>
+                  <input type="number" class="form-control" id="phone" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" value="{{form_data.phone}}" required>
                   <div class="invalid-feedback">Please provide a valid phone number.</div>
                 </div>
               </div>
               <div class="col-md-6">
-                <label for="yi_role" class="form-label">Yi Role *</label>
+                <label for="yi_role" class="form-label">Yi Role</label><span style="color:red;"> *</span>
                 <select class="form-select" id="yi_role" name="yi_role" required aria-label="YI Role">
                   <option value="" disabled selected>Choose Yi Role</option>
                   <option value="Vertical Chair">Vertical Chair</option>
@@ -81,7 +81,7 @@
             
             <!-- Executive Council Role -->
             <div class="mb-4">
-              <label class="form-label">Executive Council Role *</label>
+              <label class="form-label">Executive Council Role</label><span style="color:red;"> *</span>
               <div class="card border p-3 bg-light">
                 <div class="d-flex flex-wrap gap-3">
                   {% for i in role %}
@@ -96,7 +96,7 @@
             
             <!-- Profile Image -->
             <div class="mb-4">
-              <label for="profile_img" class="form-label">Profile Image</label>
+              <label for="profile_img" class="form-label">Profile Image</label><span style="color:red;"> *</span>
               <input type="file" class="form-control" id="profile_img" name="profile_img" accept=".jpeg,.png,.jpg">
               <div class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</div>
             </div>
@@ -104,13 +104,13 @@
             <!-- Password -->
             <div class="row mb-4">
               <div class="col-md-6 mb-3 mb-md-0">
-                <label for="password1" class="form-label">Password *</label>
+                <label for="password1" class="form-label">Password</label><span style="color:red;"> *</span>
                 <input type="password" class="form-control" id="password1" name="password1" minlength="8" maxlength="20" placeholder="Password" required>
                 <div class="form-text text-muted">Password must be at least 8 characters with one uppercase letter and one special character</div>
                
               </div>
               <div class="col-md-6">
-                <label for="password2" class="form-label">Confirm Password *</label>
+                <label for="password2" class="form-label">Confirm Password</label><span style="color:red;"> *</span>
                 <input type="password" class="form-control" id="password2" name="password2" minlength="8" maxlength="20" placeholder="Confirm Password" required>
             
               </div>
@@ -126,7 +126,7 @@
             <!-- Form Actions -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
               <button type="submit" class="btn btn-primary px-4">Add Member</button>
-              <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+              <button type="submit" name="resetbutton" class="btn btn-outline-secondary px-4">Reset</button>
             </div>
           </form>
         </div>
@@ -151,4 +151,7 @@ function password() {
   }
 }
 </script>
+
 {% endblock script %}
+
+

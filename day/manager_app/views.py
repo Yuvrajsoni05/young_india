@@ -102,26 +102,63 @@ def about_yi(request):
 def manager_update(request,manager_id):
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
-    if request.method == 'POST':
-        manager_profile = get_object_or_404(LoginSide, id=manager_id)
-        manager_profile.first_name = request.POST['manager_first_name']
-        manager_profile.last_name = request.POST['manager_last_name']
-        manager_profile.email = request.POST['manager_email']
-        manager_profile.username = request.POST['username']
-        manager_profile.phone_number = request.POST['phone_number']
-        if 'manager_profile_img' in request.FILES:
-            os.remove(manager_profile.photo.path)
-            manager_profile.photo = request.FILES['manager_profile_img']
-            if manager_profile.photo.size > 4*1024*1024:
-                messages.error(request,'Image Size must be 4mb')
-                return redirect('manager-profile')
+    
+    
+    try:
+        if request.method == 'POST':
+            first_name = request.POST['manager_first_name']
+            last_name = request.POST['manager_last_name']
+            username = request.POST['username']
+            # yi_role = request.POST['yi_role']
+            email = request.POST['manager_email']
+            # login_role = request.POST.getlist('login_role')
+            phone_number = request.POST['phone_number']
             
-        manager_profile.save()
-        messages.success(request,'Profile Updated')
+        
+        required_fields = {
+                'First Name': first_name,
+                'Last Name' :  last_name,
+                'Username' :username,
+                'Email':email,
+
+                'Phone Number':phone_number,
+                
+            }
+        for field,field_value in required_fields.items():
+            if not field_value:
+                messages.error(request,f"The {field} field is Required ")
+                return redirect('manager-profile')
+        
+        
+        if request.method == 'POST':
+            manager_profile = get_object_or_404(LoginSide, id=manager_id)
+        
+            manager_profile.first_name = first_name
+            manager_profile.last_name = last_name
+            manager_profile.email = email
+            manager_profile.username = username
+            manager_profile.phone_number = phone_number
+            if 'manager_profile_img' in request.FILES:
+                os.remove(manager_profile.photo.path)
+                manager_profile.photo = request.FILES['manager_profile_img']
+                if manager_profile.photo.size > 4*1024*1024:
+                    messages.error(request,'Image Size must be 4mb')
+                    return redirect('manager-profile')
+                
+            manager_profile.save()
+            messages.success(request,'Profile Updated')
+            return redirect('manager-profile')
+        else:
+            messages.error(request,'Profile Not updated')
+            return redirect('manager-profile')
+        
+        
+        
+    except Exception as e:
+        
+        messages.error(request,'Profile Not updated plese Try Again ')
         return redirect('manager-profile')
-    else:
-        messages.error(request,'Profile Not updated')
-        return redirect('manager-profile')
+        
 
     # return render(request,'manager/manager_profile.html')
 
@@ -240,38 +277,68 @@ def update_event_data(request,update_id):
 
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
-    # else:
-    if request.method == 'POST':
+    
+    try:
+        if request.method == 'POST':
+            update_event = get_object_or_404(Event_Data,id = update_id)
+            
+            if request.method == 'POST':
+            
+                event_name = request.POST.get('event_name')
+                project_vertical = request.POST.get('project_verticals')
+                project_stakeholder = request.POST.get('project_stakeholder')
+                yipiller = request.POST.get('yi_pillar')
+                total_impact = request.POST.get('total_impact')
+                event_date = request.POST.get('event_date')
+                yirole  = request.POST.get('role_yi')
+                
+            required_fields = {
+                    'Event Date': event_date,
+                    'Event Name': event_name,
+                    'Project Vertical': project_vertical,
+                    'Project Stakeholder': project_stakeholder,
+                    'Yi Piller': yipiller,
+            
+                    'Yi Role': yirole,
+                    'Total Impact': total_impact,}
+                
+            for field ,field_value in required_fields.items():
+                if not field_value:
+                    messages.error(request,f" The  {field} field is Required")
+                    return redirect('member-dashbaord') 
+            
+            update_event.event_name = event_name 
+            update_event.collage =  request.POST['collage']
+            update_event.school = request.POST['school']
+            update_event.date = event_date
+            update_event.role_yi = yirole
+            update_event.project_vertical = project_vertical
+            update_event.project_stakeholder = project_stakeholder
+            update_event.yi_pillar = yipiller
+            update_event.social_link = request.POST['social_link']
+            update_event.event_handle = request.POST['event_handle']
+            update_event.total_impact = total_impact
+            update_event.which_SIG  = request.POST['sig_']
 
+            update_event.associate_partner = request.POST.get('associate_partners')
+            
+            event_image = request.FILES.getlist('event_image')
 
-        update_event = get_object_or_404(Event_Data,id = update_id)
+            for image in event_image:
+                Event_Image.objects.create(event=update_event,event_photo = image)
+            update_event.save()
+            
+            
+            messages.success(request,'Data update')
+            return redirect('member-dashbaord')
+        else:
+            messages.error(request,'Data not update')
+            return render(request, 'member/dashboard.html')
+            
+    except Exception as e:
         
-        update_event.collage =  request.POST['collage']
-        update_event.school = request.POST['school']
-        update_event.date = request.POST['event_date']
-        update_event.role_yi = request.POST['role_yi']
-        update_event.project_vertical = request.POST['project_verticals']
-        update_event.project_stakeholder = request.POST['project_stakeholder']
-        update_event.yi_pillar = request.POST['yi_pillar']
-        update_event.social_link = request.POST['social_link']
-        update_event.event_handle = request.POST['event_handle']
-        update_event.total_impact = request.POST['total_impact']
-        update_event.which_SIG  = request.POST['sig_']
-
-        update_event.associate_partner = request.POST.get('associate_partners')
-        
-        event_image = request.FILES.getlist('event_image')
-
-        for image in event_image:
-            Event_Image.objects.create(event=update_event,event_photo = image)
-        update_event.save()
-        
-        
-        messages.success(request,'Data update')
-        return redirect('member-dashbaord')
-    else:
         messages.error(request,'Data not update')
-    return render(request, 'member/dashboard.html')
+        return render(request, 'member/dashboard.html')
 
 
 def delete_event_image(request,image_id):
@@ -322,97 +389,118 @@ from django.http import JsonResponse
 def event_data(request):
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
-    if request.method == 'POST':
-        your_name = request.POST['your_name']
-        event_date = request.POST['event_date']
-        role_yi = request.POST['role_yi']
-        sig_option = request.POST.get('sig_','')
-        event_handle = request.POST['handel_by']
-        project_verticals = request.POST['project_verticals']
-        project_stakeholder = request.POST['project_stakeholder']
-        yi_pillar = request.POST['yi_pillar']
-        social_link = request.POST['social_link']
-        total_impact = request.POST['total_impact']
-        event_expense = request.POST['event_expense']
-        event_venue = request.POST['event_venue']
-        event_name = request.POST['event_name']
-        # event_images =  request.FILES.get('event_img')
-        school = request.POST['school']
-        collage = request.POST['collage']
-        associate_partner = request.POST.get('associate_partner','')
-
-
-        event_data = [your_name,event_date,role_yi,project_verticals,project_stakeholder,yi_pillar,total_impact]
-        
-        if any(i is None for i in event_date):
-            messages.error(request,"Must Filed Requird Filed")
-            return redirect('manager-dashboard')
-
-
-            # if event_images.size > 1 * 1024 * 1024:
-            #     messages.error(request, 'Each image must be 4MB or less')
-            #     return redirect('event_data')
-            
-          
-        event_image = request.FILES.getlist('event_img')
-
-        if len(event_image) > 6 and event_image:  # event_images is a list of image files
-            messages.error(request, "You can Upload only 6 Images")
-            return redirect('manager-dashboard')
     
-        valid_extensions = ['.jpeg', '.jpg', '.png']
+    
+    try:
         
-        
+        if request.method == 'POST':
+            your_name = request.POST['your_name']
+            event_date = request.POST['event_date']
+            role_yi = request.POST['role_yi']
+            sig_option = request.POST.get('sig_','')
+            event_handle = request.POST['handel_by']
+            project_verticals = request.POST['project_verticals']
+            project_stakeholder = request.POST['project_stakeholder']
+            yi_pillar = request.POST['yi_pillar']
+            social_link = request.POST['social_link']
+            total_impact = request.POST['total_impact']
+            event_expense = request.POST['event_expense']
+            event_venue = request.POST['event_venue']
+            event_name = request.POST['event_name']
+            # event_images =  request.FILES.get('event_img')
+            school = request.POST['school']
+            collage = request.POST['collage']
+            associate_partner = request.POST.get('associate_partner','')
+            
+            
+            required_fields = {
+                        'Event Date': event_date,
+                        'Event Name': event_name,
+                        'Project Vertical': project_verticals,
+                        'Project Stakeholder': project_stakeholder,
+                        'Yi Piller':  yi_pillar,
+                        'Yi Role':  role_yi,
+                        'Total Impact': total_impact,
+            }
+            
+            for field ,field_value in required_fields.items():
+                
+                if not field_value:
+                    messages.error(request,f" The  {field} field is Required")
+                    return redirect('admin_event_data') 
 
-        for img in event_image:
-            try:
-                validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
-                validator(img)
-            except Exception:
-                messages.error(request,"Invalid file type  Only .jpg , jpeg , and .png")
+
+    
+
+
+                # if event_images.size > 1 * 1024 * 1024:
+                #     messages.error(request, 'Each image must be 4MB or less')
+                #     return redirect('event_data')
+                
+            
+            event_image = request.FILES.getlist('event_img')
+
+            if len(event_image) > 6 and event_image:  # event_images is a list of image files
+                messages.error(request, "You can Upload only 6 Images")
                 return redirect('manager-dashboard')
+        
+            valid_extensions = ['.jpeg', '.jpg', '.png']
             
             
-            # ext = os.path.splitext(img.name)[1]  # Get the file extension
-            # if ext.lower() not in valid_extensions:
-            #     messages.error(request, f"Invalid file type: {img.name}. Only .jpg, .jpeg, and .png are allowed.")
-            #     return redirect('manager-dashboard') 
-            # if event_image and event_image.size > 4 * 1024 * 1024:
-            #       # 4MB size limit
-            #     messages.error(request, 'Each image must be 4MB or less')
-            #     return redirect('')
 
-    
-
-
-        EventData = Event_Data.objects.create(
-            your_name=your_name,
-            date=event_date,
-            role_yi=role_yi,
-            event_handle=event_handle,
-            project_vertical=project_verticals,
-            which_SIG=sig_option,
-            project_stakeholder=project_stakeholder,
-            yi_pillar=yi_pillar,
-            social_link=social_link,
-            event_venue=event_venue,
-            event_expense=event_expense,
-            school=school,
-            collage=collage,
-            total_impact=total_impact,
-            event_name=event_name,
-            # event_photo=event_images,
-            associate_partner=associate_partner,
-            user=request.user
-        )
-
-        for image in event_image:
-            Event_Image.objects.create(event_photo=image,event=EventData)
+            for img in event_image:
+                try:
+                    validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
+                    validator(img)
+                except Exception:
+                    messages.error(request,"Invalid file type  Only .jpg , jpeg , and .png")
+                    return redirect('manager-dashboard')
+                
+                
+                # ext = os.path.splitext(img.name)[1]  # Get the file extension
+                # if ext.lower() not in valid_extensions:
+                #     messages.error(request, f"Invalid file type: {img.name}. Only .jpg, .jpeg, and .png are allowed.")
+                #     return redirect('manager-dashboard') 
+                # if event_image and event_image.size > 4 * 1024 * 1024:
+                #       # 4MB size limit
+                #     messages.error(request, 'Each image must be 4MB or less')
+                #     return redirect('')
 
         
-            # return JsonResponse({'status':'Data inserted'})
-        messages.success(request, 'Thank you for insert data')
+
+
+            EventData = Event_Data.objects.create(
+                your_name=your_name,
+                date=event_date,
+                role_yi=role_yi,
+                event_handle=event_handle,
+                project_vertical=project_verticals,
+                which_SIG=sig_option,
+                project_stakeholder=project_stakeholder,
+                yi_pillar=yi_pillar,
+                social_link=social_link,
+                event_venue=event_venue,
+                event_expense=event_expense,
+                school=school,
+                collage=collage,
+                total_impact=total_impact,
+                event_name=event_name,
+                # event_photo=event_images,
+                associate_partner=associate_partner,
+                user=request.user
+            )
+
+            for image in event_image:
+                Event_Image.objects.create(event_photo=image,event=EventData)
+
+            
+                # return JsonResponse({'status':'Data inserted'})
+            messages.success(request, 'Thank you for insert data')
+            return redirect('manager-dashboard')
+    except Exception as e:
+        messages.success(request, 'Something went Wrong Please  Try again ')
         return redirect('manager-dashboard')
+        
             
     return render(request, 'member/add_event.html')
 
@@ -513,3 +601,6 @@ def dashboard(request):
 #             # If the method is not POST, show an error message
 #             messages.error(request, 'Event not updated')
 #             return redirect('Admin_Dashboard')
+
+
+

@@ -145,6 +145,7 @@
                 <th>Member</th>
                 <th>Event Name</th>
                 <th>Verticals</th>
+                <th>Stakeholder</th>
                 <th>Venue</th>
                 <th>Expense</th>
                 <th>Role</th>
@@ -165,6 +166,8 @@
                     <td>{{ event.your_name }}</td>
                     <td>{{ event.event_name }}</td>
                     <td>{{event.project_vertical}}
+                      <td>{{event.project_stakeholder}}
+
                     <td>{{ event.event_venue }}</td>
                     <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
                     <td>{{ event.role_yi }}</td>
@@ -254,11 +257,11 @@
                             {% csrf_token %}
                             <div class="row g-3">
                               <div class="col-md-6">
-                                <label for="event_date" class="form-label">Event Date </label> *
+                                <label for="event_date" class="form-label">Event Date </label><span style="color:red;"> *</span>
                                 <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
                               </div>
                               <div class="col-md-6">
-                                <label for="event_name" class="form-label">Event Name </label> * 
+                                <label for="event_name" class="form-label">Event Name </label><span style="color:red;"> *</span>
                                 <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
                               </div>
                               <div class="col-md-6">
@@ -266,7 +269,7 @@
                                 <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
                               </div>
                               <div class="col-md-6">
-                                <label for="role_yi" class="form-label">YI Role </label> *
+                                <label for="role_yi" class="form-label">YI Role </label><span style="color:red;"> *</span>
                                 <select class="form-select" id="role_yi" name="role_yi">
                                   <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
                                   <option value="Vertical Chair">Vertical Chair</option>
@@ -275,7 +278,7 @@
                                 </select>
                               </div>
                               <div class="col-md-6">
-                                <label for="project_verticals" class="form-label">Project Verticals </label> *
+                                <label for="project_verticals" class="form-label">Project Verticals </label><span style="color:red;"> *</span>
                                 <select class="form-select" id="project_verticals" name="project_verticals">
                                   <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
                                   <option value="Masoom">Masoom</option>
@@ -297,7 +300,7 @@
                                 </select>
                               </div>
                               <div class="col-md-6">
-                                <label for="project_stakeholder" class="form-label">Project Stakeholder </label> *
+                                <label for="project_stakeholder" class="form-label">Project Stakeholder </label><span style="color:red;"> *</span>
                                 <select class="form-select" id="project_stakeholder" name="project_stakeholder">
                                   <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
                                   <option value="Yuva">Yuva</option>
@@ -313,7 +316,7 @@
 
 
                                     <div class="col-md-6">
-                                        <label for="yi_pillar" class="form-label">Yi Pillar </label> *
+                                        <label for="yi_pillar" class="form-label">Yi Pillar </label><span style="color:red;"> *</span>
                                         <select class="form-control" id="yi_pillar" name="yi_pillar">
                                             <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
                                             <option value="Youth Leader">Youth Leader</option>
@@ -329,7 +332,7 @@
                                   </div>
                                   
                                     <div class="col-md-6">
-                                        <label for="total_impact" class="form-label">Impact </label> *
+                                        <label for="total_impact" class="form-label">Impact</label><span style="color:red;"> *</span>
                                         <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
                                     </div>
 

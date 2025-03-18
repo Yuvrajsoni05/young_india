@@ -29,6 +29,7 @@ import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.drawing.image import Image
+from django.templatetags.static import static
 # from io import BytesIO
 # from PIL import Image as PILImage
 from django.http import HttpResponse
@@ -90,15 +91,17 @@ def Admin_Signup(request):
             return redirect('Error-Page')
         
         sessions = Session.objects.filter(expire_date__gte=now())
-    # Get user ids from the session data
+        # Get user ids from the session data
         user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
         # Query LoginSide objects for users
         active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
         active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
         active_users_count = LoginSide.objects.filter(is_active=True).count()
         active_users_count = active_users.count()
-
+        login_roles = Login_Role.objects.all()
+ 
         try:
+            
             if request.method == 'POST':        
                 username = request.POST.get('add_username')
                 first_name = request.POST.get('first_name')
@@ -110,47 +113,115 @@ def Admin_Signup(request):
                 phone = request.POST.get('add_phone')
                 yi_role = request.POST.get('yi_role')
                 login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
-                fields = [username, first_name, last_name, password, confirm_password, Admin_email, phone, yi_role, login_role]
-                if any(field is  None  for field in fields ):
-                    messages.error(request,"All Filed Are Required")
-                    return redirect('Admin_Signup') 
-                if profile_img is not  None:
+                # fields = [username, first_name, last_name, password, confirm_password, Admin_email, phone, yi_role, login_role]
+        
+                  
+             
+                required_fields = {
+                'Username': username,
+                'First Name': first_name,
+                'Last Name': last_name,
+                'Email': Admin_email,
+                'Phone': phone,
+                'Yi Role': yi_role,
+                'Login Role': login_role,
+                'Password': password,
+                'Confirm Password': confirm_password,
+                }
+                
+                form_data = {
+                    'username': username,
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'email': Admin_email,
+                    'phone': phone,
+                    'yi_role': yi_role,
+                    'login_role': login_role,
+                    
+         
+                }
+                
+                remove_data = {
+                      'username': '',
+                    'first_name': '',
+                    'last_name': '',
+                    'email': '',
+                    'phone': '',
+                    'yi_role': '',
+                    'login_role': [],
+                }
+                
+                if 'resetbutton' in request.POST:
+                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':remove_data}) 
+                    
+                
+                for field ,field_value in required_fields.items():
+                    if not field_value:
+                        messages.error(request,f"the {field} field is Required")
+                        return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':form_data}) 
+                        
+                
+                
+                # if any(field is  None  for field in fields ):
+                #     messages.error(request,"All * Filed Are Required")
+                #     return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                #                                                     'count':active_users_count,'form_data':form_data}) 
+                if profile_img:
+                   
+                   
                     try:
                         validator = FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])
-                        validator(profile_img)  
+                        validator(profile_img)
                     except ValidationError:
                         messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
-                        return redirect('Admin_Signup')
-                    if profile_img.size > 4*1024*1024  :
+                        return render(request, 'Admin/AdminSignup.html', {
+                            'role': login_roles,
+                            'name': active_user_names,
+                            'count': active_users_count,
+                            'form_data': form_data
+                        })
+                    if profile_img.size > 4 * 1024 * 1024:  # 4MB limit
+                        messages.error(request, 'Image size must be less than 4MB.')
+                        return render(request, 'Admin/AdminSignup.html', {
+                            'role': login_roles,
+                            'name': active_user_names,
+                            'count': active_users_count,
+                            'form_data': form_data
+                        })
+                
+                    # If no profile image, use default image
+                  
+                        
 
-                        messages.error(request,'Image Size must be 4mb')
-                        return redirect('Admin_Signup')
-                else:
-                    profile_img  = 'static/image/YIIMG.png'
-                    
                 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
             
                 
                 if not re.match(email_regex,Admin_email):
                     messages.error(request,'Enter Valid Email')
-                    return redirect('Admin_Signup')
+                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':form_data}) 
                 
                 
                 if LoginSide.objects.filter(email=Admin_email).exists() :
                     messages.error(request, "This email is already taken.")
-                    return redirect('Admin_Signup')
+                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':form_data}) 
 
                 if LoginSide.objects.filter(username=username).exists():
                     messages.error(request, "This Username is already taken.")
-                    return redirect('Admin_Signup')
+                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':form_data}) 
                 
                 
                 regex = r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$'
                 
                 if not re.match(regex,phone):
                     messages.error(request, "Phone number must be 10 digits. and valid phone number")
-                    return redirect('Admin_Signup')
+                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':form_data}) 
                     
                     
                 if len(password) < 8 or not any(c.isupper() for c in password) or not any(
@@ -161,7 +232,8 @@ def Admin_Signup(request):
 
                 if password != confirm_password:
                     messages.error(request, "Password and confirm Password must be same ")
-                    return redirect('Admin_Signup')
+                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
+                                                                    'count':active_users_count,'form_data':form_data}) 
 
                 # Create user
                 Admin_User = LoginSide.objects.create_user(
@@ -183,20 +255,19 @@ def Admin_Signup(request):
                 messages.success(request, "New Executive Council Member Add")
                 return redirect('Admin_Signup')
 
-            # Fetch all roles for the dropdown
-            login_role = Login_Role.objects.all()
-            context = {
-                'role': login_role,
-                'name':active_user_names,
-                'count':active_users_count
-            }
-            
-            return render(request, 'Admin/AdminSignup.html', context)
+          
+            return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names, 
+                                                        'count': active_users_count})
+    
     
         except Exception as e :
             messages.error(request,f'New User not Add Something went Worng Plz Try again ' )
             return render(request, 'Admin/AdminSignup.html')
    
+   
+   
+# def admin_signup_page(request):
+#     return render(request,'Admin/AdminSignup.html')
 
 
 
@@ -235,27 +306,57 @@ def Admin_update(request, admin_id):
         return redirect('Error-Page')
     
     try:
+        if request.method == 'POST':
+            first_name = request.POST['admin_firstname']
+            last_name = request.POST['admin_lastname']
+            username = request.POST['admin_username']
+            # yi_role = request.POST['yi_role']
+            email = request.POST['admin_email']
+            # login_role = request.POST.getlist('login_role')
+            phone_number = request.POST['admin_phone']
+            
+        
+        required_fields = {
+                'First Name': first_name,
+                'Last Name' :  last_name,
+                'Username' :username,
+                'Email':email,
+
+                'Phone Number':phone_number,
+                
+            }
+        
+        
+        for field,field_value in required_fields.items():
+            if not field_value:
+                messages.error(request,f"The {field} field is Required ")
+                return redirect('Admin_Profile')
+        
         # Ensure method is POST to update profile
         if request.method == 'POST':
             admin_profile = get_object_or_404(LoginSide, id=admin_id)
 
             # Update fields from POST data
-            admin_profile.first_name = request.POST.get('admin_firstname', admin_profile.first_name)
-            admin_profile.last_name = request.POST.get('admin_lastname', admin_profile.last_name)
-            admin_profile.email = request.POST.get('admin_email', admin_profile.email)
-            admin_profile.username = request.POST.get('admin_username', admin_profile.username)
-            admin_profile.phone_number = request.POST.get('admin_phone', admin_profile.phone_number)
+            admin_profile.first_name = first_name
+            admin_profile.last_name = last_name
+            admin_profile.email = email
+            admin_profile.username = username
+            admin_profile.phone_number = phone_number
+            
+            
+            # admin_profile.first_name = request.POST.get('admin_firstname', admin_profile.first_name)
+            # admin_profile.last_name = request.POST.get('admin_lastname', admin_profile.last_name)
+            # admin_profile.email = request.POST.get('admin_email', admin_profile.email)
+            # admin_profile.username = request.POST.get('admin_username', admin_profile.username)
+            # admin_profile.phone_number = request.POST.get('admin_phone', admin_profile.phone_number)
 
           
             if 'admin_profile_img' in request.FILES:
                 os.remove(admin_profile.photo.path)
                 admin_profile.photo = request.FILES['admin_profile_img']
+                           
                 
-                # photo = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
-                # photo(admin_profile.photo)
-                
-                
-                
+                    
                 if admin_profile.photo.size > 4*1024*1024:
                     messages.error(request,'Image Size must be 4mb')
                     return redirect('Admin_Profile')
@@ -407,53 +508,54 @@ def base(request):
 # Admin Side Event Data 
 @login_required(login_url='index')
 def admin_event_data(request):
-    try:
-        if not request.user.login_role.filter(name='Admin'):
-            return redirect('Error-Page')
-    except Exception:
+
+    if not request.user.login_role.filter(name='Admin'):
         return redirect('Error-Page')
+  
     
     sessions = Session.objects.filter(expire_date__gte=now())
-    # Get user ids from the session data
     user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
-    # Query LoginSide objects for users
-    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
-    
-    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
-    active_users_count = LoginSide.objects.filter(is_active=True).count()
-    active_users_count = active_users.count()
+    active_users = LoginSide.objects.filter(id__in=user_ids)
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]
+    active_users_count = active_users.count()  # Use this count
     
     try:
-         
-        if request.method  == 'POST':
-            your_name = request.POST['your_name']
-            event_date = request.POST['event_date']
-            role_yi = request.POST['role_yi']
-            sig_option = request.POST.get('sig_','')
-            event_handle = request.POST['handel_by']
-            project_verticals = request.POST['project_verticals']
+        if request.method == 'POST':
+            
+            event_name = request.POST['event_name']
+            project_vertical = request.POST['project_verticals']
             project_stakeholder = request.POST['project_stakeholder']
-            yi_pillar = request.POST['yi_pillar']
-            social_link = request.POST['social_link']
+            yipiller = request.POST['yi_pillar']
             total_impact = request.POST['total_impact']
+            event_date = request.POST['event_date']
+            yirole = request.POST['role_yi']
+            your_name = request.POST['your_name']
+            sig_option = request.POST.get('sig_', '')
+            event_handle = request.POST['handel_by']
+            social_link = request.POST['social_link']
             event_expense = request.POST['event_expense']
             event_venue = request.POST['event_venue']
-            event_name = request.POST['event_name']
-    
             school = request.POST['school']
             collage = request.POST['collage']
-            associate_partner = request.POST.get('associate_partner','')
-
+            associate_partner = request.POST.get('associate_partner', '')
             event_image = request.FILES.getlist('event_img')
-            
-            
-            
-            fields  = [your_name,event_date,role_yi,project_verticals,project_stakeholder,yi_pillar,total_impact,event_name,event_venue]
-
-            if any(field is None for field in fields ):
-                messages.error(request,"* Fields Are Required ")
-                return redirect('admin_event_data')
-            
+        
+            required_fields = {
+                        'Event Date': event_date,
+                        'Event Name': event_name,
+                        'Project Vertical': project_vertical,
+                        'Project Stakeholder': project_stakeholder,
+                        'Yi Piller': yipiller,
+                        'Yi Role': yirole,
+                        'Total Impact': total_impact,
+            }
+            for field ,field_value in required_fields.items():
+                
+                if not field_value:
+                    messages.error(request,f" The  {field} field is Required")
+                    return redirect('admin_event_data') 
+        
+        
             if len(event_image)>6 and event_image:
                 messages.error(request,"You can Upload only 6 Image")
                 return redirect('admin_event_data')
@@ -468,14 +570,15 @@ def admin_event_data(request):
                     return redirect('admin_event_data')
 
             event_data = Event_Data.objects.create(
-                        your_name=your_name,
+                
+                your_name=your_name,
                 date=event_date,
-                role_yi=role_yi,
+                role_yi=yirole,
                 event_handle=event_handle,
-                project_vertical=project_verticals,
+                project_vertical=project_vertical,
                 which_SIG=sig_option,
                 project_stakeholder=project_stakeholder,
-                yi_pillar=yi_pillar,
+                yi_pillar=yipiller,
                 social_link=social_link,
                 event_venue=event_venue,
                 event_expense=event_expense,
@@ -483,7 +586,6 @@ def admin_event_data(request):
                 collage=collage,
                 total_impact=total_impact,
                 event_name=event_name,
-            
                 associate_partner=associate_partner,
                 user=request.user
             )
@@ -638,12 +740,12 @@ def delete_member(request,member_id):
         
         if request.method == 'POST':
             member = get_object_or_404(LoginSide, id=member_id)
-            if member.photo:
-                member.photo.delete()
+        
             member.delete()
             messages.success(request,"Ec Member Deleted Succssfully")
         return redirect('View-manager')
     except Exception as e:
+        
         messages.error(request,'Something Went Wrong Please  Try Again')
         return redirect('View-manager')
 
@@ -687,16 +789,46 @@ def update_memeber(request,manager_id):
     update_manager_data = get_object_or_404(LoginSide,id=manager_id)
     try:
         if request.method == 'POST':
-            update_manager_data.first_name = request.POST['manager_first_name']
-            update_manager_data.last_name = request.POST['manager_last_name']
-            update_manager_data.username = request.POST['manager_username']
-            update_manager_data.yi_role = request.POST['yi_role']
-            update_manager_data.email = request.POST['manager_email']
-            login_roles = request.POST.getlist('login_role')
+            first_name = request.POST['manager_first_name']
+            last_name = request.POST['manager_last_name']
+            username = request.POST['manager_username']
+            yi_role = request.POST['yi_role']
+            email = request.POST['manager_email']
+            login_role = request.POST.getlist('login_role')
+            phone_number = request.POST['manager_phone_number']
+            
+        
+        required_fields = {
+                'First Name': first_name,
+                'Last Name' :  last_name,
+                'Username' :username,
+                'Yi Role' : yi_role,
+                'Login Role':login_role,
+                'Phone Number':phone_number,
+                
+            }
+        
+        
+        for field,field_value in required_fields.items():
+            if not field_value:
+                messages.error(request,f"The {field} firld is Required ")
+                return redirect('View-manager')
+            
+        
+        
+        
+        
+        if request.method == 'POST':
+            update_manager_data.first_name = first_name
+            update_manager_data.last_name =  last_name 
+            update_manager_data.username = username
+            update_manager_data.yi_role = yi_role
+            update_manager_data.email = email
+            login_roles = login_role
             update_manager_data.login_role.set(Login_Role.objects.filter(name__in=login_roles))# many to many filed change with set() in django
 
             # update_manager_data.password = request.POST['manager_password']
-            update_manager_data.phone_number = request.POST['manager_phone_number']
+            update_manager_data.phone_number =  phone_number 
 
             print(update_manager_data.login_role)
             
@@ -753,37 +885,61 @@ def update_event_data(request,event_id):
             update_event = get_object_or_404(Event_Data, id=event_id)
             
             if request.method == 'POST':
+                
+                event_name = request.POST.get('event_name')
+                project_vertical = request.POST.get('project_verticals')
+                project_stakeholder = request.POST.get('project_stakeholder')
+                yipiller = request.POST.get('yi_pillar')
+                total_impact = request.POST.get('total_impact')
+                event_date = request.POST.get('event_date')
+                yirole  = request.POST.get('role_yi')
+            
+            
+            required_fields = {
+                    'Event Date': event_date,
+                    'Event Name': event_name,
+                    'Project Vertical': project_vertical,
+                    'Project Stakeholder': project_stakeholder,
+                    'Yi Piller': yipiller,
+            
+                    'Yi Role': yirole,
+                    'Total Impact': total_impact,
+                    
+         
+                }    
+            for field ,field_value in required_fields.items():
+                    if not field_value:
+                        messages.error(request,f" The  {field} field is Required")
+                        return redirect('Admin_Dashboard') 
+                
+                
+            
+            
+            if request.method == 'POST':
                 update_event.school  = request.POST['school']
                 update_event.collage =  request.POST['collage']
-                update_event.date = request.POST['event_date']
-                update_event.event_name = request.POST['event_name']
+                update_event.date = event_date
+                update_event.event_name = event_name
                 update_event.event_expense = request.POST['event_expense']
-                update_event.role_yi = request.POST['role_yi']
-                update_event.project_vertical = request.POST['project_verticals']
-                update_event.project_stakeholder = request.POST['project_stakeholder']
-                update_event.yi_pillar = request.POST['yi_pillar']
+                update_event.role_yi = yirole
+                update_event.project_vertical = project_vertical
+                update_event.project_stakeholder = project_stakeholder
+                update_event.yi_pillar = yipiller
                 update_event.social_link = request.POST['social_link']
                 update_event.event_handle = request.POST['event_handle']
-                update_event.total_impact = request.POST['total_impact']
+                update_event.total_impact = total_impact
                 update_event.which_SIG = request.POST['sig_']
                 update_event.associate_partner = request.POST.get('associate_partners')
 
 
                 event_image = request.FILES.getlist('event_image')
                 
-                
-                
-                fields  = [ update_event.event_name ,
-                           update_event.project_vertical,
-                           update_event.project_stakeholder,
-                           update_event.yi_pillar,
-                            update_event.role_yi,
-                        update_event.date,
-                           update_event.total_impact]
+        
+     
+                        
+           
 
-                if any(field is None for field in fields ):
-                    messages.error(request,"* Fields Are Required ")
-                    return redirect('Admin_Dashboard')
+
                 
 
                 for image in event_image:
@@ -797,7 +953,7 @@ def update_event_data(request,event_id):
                 return redirect('Admin_Dashboard')
         except Exception:
             messages.error(request,'Something Went Wrong Please  Try Again')
-            return redirect('Admmin_Dashboard')
+            return redirect('Admin_Dashboard')
 
 @login_required(login_url='index')
 def event_image_delete(request, image_id):
