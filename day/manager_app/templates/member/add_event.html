@@ -2,49 +2,34 @@
 {% load static %}
 {% block title %} Add - Event - Data {% endblock title %}
 
-{% block link %} 
+{% block link %}
 <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
- {% endblock link %}
-
+{% endblock link %}
 
 {% block bodyblock %}
-  <main id="main" class="main">
-    <br>
-    <div class="pagetitle">
-      <h1>Add Yong India Event</h1>
-    </div>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}">Home</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}" >Member</a></li>
-          <li class="breadcrumb-item active">Add new Yi Event </li>
-        </ol>
-      </nav>
- 
-
-    <div class="container-fluid">
-      <!-- Event Add  Form -->
-      <div class="card custom-form w-100 ">
-        <div class="card custom-form form-datas  w-100 ">
-          <div class="position-relative">
-          <img src="{% static 'Image/YI.jpg' %}" 
-          alt="Cover Photo" class="img-fluid rounded-top" style="height: 180px; width: 100%; object-fit: cover;">
+<main id="main" class="main">
+  <br>
+  <div class="pagetitle">
+    <h1>Add Young India Event</h1>
+  </div>
+  
+  <div class="container-fluid">
+    <!-- Event Add Form -->
+    <div class="card custom-form w-100">
+      <div class="card custom-form form-datas w-100">
+        <div class="position-relative">
+          <img src="{% static 'Image/YI.jpg' %}" alt="Cover Photo" class="img-fluid rounded-top" style="height: 180px; width: 100%; object-fit: cover;">
           <!-- Profile Image Overlapping -->
-          <div class="position-absolute" style="bottom: -50px; left: 50px;">
-
-          </div>
+          <div class="position-absolute" style="bottom: -50px; left: 50px;"></div>
         </div>
-        {% comment %} <div class="card-header ">
-          <img src="{% static 'Image/YIIMG.png' %}" alt="logo img" width="35px" height="35px" class="rounded-circle" >
-          <strong>Add Young India Event </strong>
-        </div> {% endcomment %}
         <br>
-        <div class="card-body ">
-          <form method="POST" action="{% url 'event_data' %}"  enctype="multipart/form-data" class="w-100">
+        <div class="card-body">
+          <form method="POST" action="{% url 'event_data' %}" enctype="multipart/form-data" class="w-100">
             {% csrf_token %}
             <div class="row">
-
+              
+              <!-- Your Name -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="your_name">Your Name</label><span style="color:red;"> *</span>
@@ -52,6 +37,7 @@
                 </div>
               </div>
 
+              <!-- Event Date -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_date">Event Date</label><span style="color:red;"> *</span>
@@ -59,95 +45,83 @@
                 </div>
               </div>
 
+              <!-- Event Name -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_name">Event Name</label><span style="color:red;"> *</span>
-                  <input type="text" id="event_name" class="form-control" name="event_name" required aria-label="Event Name">
+                  <input type="text" id="event_name" class="form-control" name="event_name" required placeholder="Event Name" aria-label="Event Name">
                 </div>
               </div>
 
-                   <div class="col-12 col-sm-6 col-md-6">
-                  <div class="form-group">
-                    <label for="event_venue">Event Venue</label><span style="color:red;"> *</span>
-                    <select id="event_venue" class="form-control" name="event_venue" required aria-label="Event Venue">
-                      <option value="">Select a City</option>
-                      <option value="Ahmedabad">Ahmedabad</option>
-                      <option value="Surat">Surat</option>
-                      <option value="Vadodara">Vadodara</option>
-                      <option value="Rajkot">Rajkot</option>
-                      <option value="Bhavnagar">Bhavnagar</option>
-                      <option value="Gandhinagar">Gandhinagar</option>
-                      <option value="Junagadh">Junagadh</option>
-                      <option value="Navsari">Navsari</option>
-                      <option value="Anand">Anand</option>
-                      <option value="Mehsana">Mehsana</option>
-                      <option value="Palanpur">Palanpur</option>
-                      <option value="Valsad">Valsad</option>
-                      <option value="Nadiad">Nadiad</option>
-                      <option value="Bharuch">Bharuch</option>
-                      <option value="Kheda">Kheda</option>
-                      <option value="Porbandar">Porbandar</option>
-                      <option value="Amreli">Amreli</option>
-                      <option value="Vapi">Vapi</option>
-                      <option value="Himmatnagar">Himmatnagar</option>
-                      <option value="Alang">Alang</option>
-                    </select>
-                  </div>
+              <!-- Event Venue -->
+              <div class="col-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                  <label for="event_venue">Event Venue</label><span style="color:red;"> *</span>
+                  <input type="text" id="event_venue" class="form-control" name="event_venue" required placeholder="Event Venue" aria-label="Event Venue">
                 </div>
+              </div>
 
-
+              <!-- YI Role -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="role_yi">YI Role</label><span style="color:red;"> *</span>
                   <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" readonly>
-                
                 </div>
               </div>
 
+              <!-- Members Name -->
               <div class="col-12 col-sm-6 col-md-6">
-                <label for="tagInput">Members name(s)</label>
+                <b><label for="tagInput">Members name(s)</label></b>
                 <div class="tag-container form-group" id="tagContainer">
-                  <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" >
-                  <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by">
+                  <input type="text" id="tagInput" class="form-control" placeholder="Type EC member's name">
+                  <input type="hidden" id="hiddenInput" name="handel_by">
+                </div>
+              </div>
+              
+              <!-- Project Verticals -->
+              <div class="col-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                  <label for="project_verticals">Project Verticals</label><span style="color:red;"> *</span>
+                  {% if role|length > 1 and 'Special Interest Group (S.I.G)' in role  %}
+                    <select class="form-control" id="project_verticals" name="project_verticals" required>
+                  
+                      {% for i in role %}
+                        <option value="{{ i }}">{{ i }}</option>
+                      {% endfor %}
+                    </select>
+                    
+                  {% elif   'Special Interest Group (S.I.G)' in role %}
+                    <!-- If role is S.I.G, display SIG options -->
+                    <select class="form-control" name="sig_">
+                      <option value="">Select S.I.G</option>
+                      <option value="Active Living">Active Living</option>
+                      <option value="Photography">Photography</option>
+                      <option value="Trekking">Trekking</option>
+                      <option value="Entrepreneurship">Entrepreneurship</option>
+                      <option value="Community">Community</option>
+                      <option value="">None</option>
+                    </select>
+                    <select class="form-control" hidden="True" id="project_verticals" name="project_verticals" required>
+                      <option value="Special Interest Group (S.I.G)"> Special Interest Group (S.I.G)</option>
+                    </select>
+                  {% else %}
+                    <!-- Otherwise, show a combined select for all project verticals -->
+                    <select class="form-control" id="project_verticals" name="project_verticals" required>
+                 
+                      {% for i in role %}
+                        <option value="{{ i }}">{{ i }}</option>
+                      {% endfor %}
+                    </select>
+                  {% endif %}
                 </div>
               </div>
               
 
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="project_verticals">Project Verticals</label><span style="color:red;"> *</span>
-               
-                    <!--- <input class="form-control" id="project_verticals" name="project_verticals" value="{{ role }}" readonly > -->
+              
+              
+              
 
-                  <select class="form-control"id="project_verticals" name="project_verticals">
-                    {% for i in role  %}
-                    <option value={{i}}> {{i}} </option>
-                    {% endfor %}
-                  </select> 
-
-                  <!--- <option value="" disabled selected>Choose Project/Initiative</option>
-                    <option value="Masoom">Masoom</option>
-                    <option value="Road Safety">Road Safety</option>
-                    <option value="Health">Health</option>
-                    <option value="Sport">Sports</option>
-                    <option value="Accessibility">Accessibility</option>
-                    <option value="Learning(YI Talks)">Learning(YI Talks)</option>
-                    <option value="Climate action">Climate action</option>
-                    <option value="Innovation">Innovation</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Branding & PR">Branding & PR</option>
-                    <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
-                    <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
-                    <option value="Culture Connect">Culture Connect</option>
-                    <option value="Yi Angel">Yi Angel</option>
-                    <option value="Membership Engagement">Membership Engagement</option>
-                    <option value="Other">Other</option>
-                     <option value="">None</option>
-                  </input> --> 
-                </div>
-              </div>
-
-
+              <!-- Project Stakeholder -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="project_stakeholder">Project Stakeholder</label><span style="color:red;"> *</span>
@@ -157,12 +131,13 @@
                     <option value="Thalir">Thalir</option>
                     <option value="Rural Initiatives">Rural Initiatives</option>
                     <option value="General Public">General Public</option>
-                    <option value="Associate Partner">Associate Partner</option>
-                     <option value="">None</option>
+                    <option value="Member">Member</option>
+                    <option value="">None</option>
                   </select>
                 </div>
               </div>
 
+              <!-- YI Pillar Impact -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="yi_pillar">YI Pillar Impact</label><span style="color:red;"> *</span>
@@ -175,33 +150,39 @@
                 </div>
               </div>
 
+              <!-- Social Link -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="social_link">Social Link</label>
-                  <input type="url" id="social_link" class="form-control" name="social_link"  placeholder="Enter your social media link" aria-label="Social Link">
+                  <input type="url" id="social_link" class="form-control" name="social_link" placeholder="Enter your social media link" aria-label="Social Link">
                 </div>
               </div>
 
+              <!-- Total Impact -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="total_impact">Total Impact</label><span style="color:red;"> *</span>
-                  <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact" aria-label="Total Impact">
+                  <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Total impact" aria-label="Total Impact">
                 </div>
               </div>
 
+              <!-- Event Expense -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_expense">Event Expense</label>
-                  <input type="number" id="event_expense" class="form-control" name="event_expense" required placeholder="Event Expense" aria-label="Event Expense">
+                  <input type="number" id="event_expense" class="form-control" name="event_expense" placeholder="Event Expense" aria-label="Event Expense">
                 </div>
               </div>
 
+
+              <!-- Event Image -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_img">Event Image</label>
                   <input type="file" id="event_img" class="form-control" name="event_img" accept=".jpg, .jpeg, .png" aria-label="Event Image" multiple>
                 </div>
               </div>
+
 
               <div class="col-12 col-sm-6 col-md-6" id="sig_div" style="display: none;">
                 <div class="form-group">
@@ -218,18 +199,6 @@
                 </div>
               </div>
 
-              <div class="col-12 col-sm-6 col-md-6" id="associate_div" style="display: none;">
-                <div class="form-group">
-                  <label for="associate_partners">Associate Partner</label>
-                  <select class="form-control" id="associate_partners" name="associate_partner">
-                    <option value="" disabled selected>Choose Associate</option>
-                    <option value="Big Bull">Big Bull</option>
-                    <option value="EB">EB</option>
-                    <option value="Yuvi">Yuvi</option>
-                     <option value="">None</option>
-                  </select>
-                </div>
-              </div>
 
               <div class="col-12 col-sm-6 col-md-6" id="school_div" style="display: none;">
                 <div class="form-group">
@@ -246,15 +215,22 @@
               </div>
             </div>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-top mt-4">
-              <button type="submit" class="btn btn-primary btn-md">Submit</button>
-              <button type="reset" class="btn btn-outline-secondary btn-md">Reset</button>
             </div>
-            
+
+            <!-- Submit Buttons -->
+            <div class="col-12">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-top mt-4 " style="margin-left:23px;">
+         
+                <button type="submit" class="btn btn-primary px-4">Submit</button>
+                <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+              </div>
+            </div>
           </form>
         </div>
       </div>
     </div>
-    
-  </main>
- {% endblock %}
+  </div>
+</main>
+{% endblock %}
+
+

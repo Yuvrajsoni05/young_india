@@ -69,36 +69,15 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_name">Event Name</label><span style="color:red;"> *</span>
-                  <input type="text" id="event_name" class="form-control" name="event_name" required aria-label="Event Name">
+                  <input type="text" id="event_name" class="form-control" name="event_name" placeholder="Event Name" required aria-label="Event Name">
                 </div>
               </div>
 
                    <div class="col-12 col-sm-6 col-md-6">
                   <div class="form-group">
                     <label for="event_venue">Event Venue</label><span style="color:red;"> *</span>
-                    <select id="event_venue" class="form-control" name="event_venue" required aria-label="Event Venue">
-                      <option value="">Select a City</option>
-                      <option value="Ahmedabad">Ahmedabad</option>
-                      <option value="Surat">Surat</option>
-                      <option value="Vadodara">Vadodara</option>
-                      <option value="Rajkot">Rajkot</option>
-                      <option value="Bhavnagar">Bhavnagar</option>
-                      <option value="Gandhinagar">Gandhinagar</option>
-                      <option value="Junagadh">Junagadh</option>
-                      <option value="Navsari">Navsari</option>
-                      <option value="Anand">Anand</option>
-                      <option value="Mehsana">Mehsana</option>
-                      <option value="Palanpur">Palanpur</option>
-                      <option value="Valsad">Valsad</option>
-                      <option value="Nadiad">Nadiad</option>
-                      <option value="Bharuch">Bharuch</option>
-                      <option value="Kheda">Kheda</option>
-                      <option value="Porbandar">Porbandar</option>
-                      <option value="Amreli">Amreli</option>
-                      <option value="Vapi">Vapi</option>
-                      <option value="Himmatnagar">Himmatnagar</option>
-                      <option value="Alang">Alang</option>
-                    </select>
+                    <input type="text" id="event_venue" class="form-control" name="event_venue" placeholder="Event Venue" required>
+                    
                   </div>
                 </div>
 
@@ -112,10 +91,10 @@
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
-                <b><label >Members name(s)</label></B>
-                <div class="tag-container" id="tagContainer">
-                  <input type="text" id="tagInput" class="form-control" placeholder="Type and press Enter (e.g., John, Mike)" >
-                  <input type="hidden" id="hiddenInput" class="form-control"  name="handel_by">
+               <b> <label for="tagInput">Members name(s)</label></b>
+                <div class="tag-container form-group" id="tagContainer">
+                  <input type="text" id="tagInput" class="form-control" placeholder="Type EC member's name">
+                  <input type="hidden" id="hiddenInput" name="handel_by">
                 </div>
               </div>
 
@@ -127,9 +106,7 @@
                     <!--- <input class="form-control" id="project_verticals" name="project_verticals" value="{{ role }}" readonly > -->
 
                   <select class="form-control"id="project_verticals" name="project_verticals">
-                    {% comment %} {% for i in role  %}
-                    <option value={{i}}> {{i}} </option>
-                    {% endfor %} {% endcomment %}
+                  
               
                 <option value="" disabled selected>Choose Project/Initiative</option><span style="color:red;"> *</span>
                     <option value="Masoom">Masoom</option>
@@ -192,14 +169,14 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="total_impact">Total Impact</label><span style="color:red;"> *</span>
-                  <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Enter total impact" aria-label="Total Impact">
+                  <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="total impact" aria-label="Total Impact">
                 </div>
               </div>
 
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_expense">Event Expense</label>
-                  <input type="number" id="event_expense" class="form-control" name="event_expense" required placeholder="Event Expense" aria-label="Event Expense">
+                  <input type="number" id="event_expense" class="form-control" name="event_expense"  placeholder="Event Expense" aria-label="Event Expense">
                 </div>
               </div>
 
@@ -251,10 +228,12 @@
                   <input type="text" id="collage" class="form-control" name="collage" placeholder="College" aria-label="Collage">
                 </div>
               </div>
+
+
+          
             </div>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-top mt-4">
-        
               <button type="submit" class="btn btn-primary px-4">Submit</button>
               <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
             </div>

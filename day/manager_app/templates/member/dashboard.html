@@ -7,17 +7,17 @@
 
 {% block bodyblock %}
     <main id="main" class="main">
-      <br>
+
       <div class="pagetitle">
         <h1> Welcome, {{user.first_name}} {{user.last_name}} </h1>
        </div>
        
          <nav>
-           <ol class="breadcrumb">
+           {% comment %} <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}" >Member</a></li>
              <li class="breadcrumb-item active">Main Dashboard </li>
-           </ol>
+           </ol> {% endcomment %}
          </nav>
        </div><!-- End Page Title -->
 
@@ -29,8 +29,8 @@
           <div class="col-xxl-6 col-md-6 col-sm-12 mb-4">
             <div class="card info-card sales-card">
               <div class="card-body">
-                <h5 class="card-title">Total Event
-                  <span>Number of Event You Complete</span></h5>
+                <h5 class="card-title">Total Event's
+                  </h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                     <i class="bi bi-list-ol"></i>
@@ -47,8 +47,7 @@
           <div class="col-xxl-6 col-md-6 col-sm-12 mb-4">
             <div class="card info-card sales-card">
               <div class="card-body">
-                <h5 class="card-title">Total Impact
-                <span>Number of people you impact</span></h5>
+                <h5 class="card-title">Total Impact</h5> 
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                     <i class="bi bi-people-fill"></i>
@@ -68,7 +67,7 @@
           {% comment %} <div class="rounded-circle bg-primary p-2 me-3">
             <i class="bi bi-calendar-check text-white fs-5"></i>
           </div> {% endcomment %}
-          <h1 style="color:darkblue">Your Yi Ahmedabad Events</h1>
+          <h1 style="color:darkblue">Event Summary </h1>
         </div>
         <div class="d-flex gap-2">
 
@@ -80,39 +79,54 @@
           <table class="table table-borderless table-hover align-middle" id="eventTable">
             <thead class="table-light" >
               <tr class="text-center text-nowrap">
-                <th>Sr.no</th>
+                <th>Sr No</th>
                 <th>Date</th>
-                <th>Member</th>
-                <th>Event Name</th>
-                <th>Verticals</th>
-                <th>Ec Members Name</th>
                 <th>Venue</th>
-                <th>Expense</th>
+                <th>Member Name</th>
+                <th>Event Name</th>
+              
+                <th>Ec Members Name</th>
+                <th>Stakeholder</th>
+                
+                {% comment %} <th>Expense</th> {% endcomment %}
                 <th>Role</th>
+                <th> Yi Pillar   </th>
                 <th>School</th>
                 <th>College</th>
-                <th>Associate Partner</th>
+                
+   
+                  <th>S.I.G</th>
+                 
+                <th> Social Link </th>
                 <th>Impact</th>
                 <th>Image</th>
-                <th>Actions</th>
+                {% comment %} <th>Actions</th> {% endcomment %}
               </tr>
             </thead>
             <tbody id="display" >
               {% if events %}
                 {% for event in events %}
-                  <tr class="text-center text-nowrap"data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                  <tr class="text-center text-nowrap">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ event.date }}</td>
+                    <td>{{ event.event_venue }}</td>
                     <td>{{ event.your_name }}</td>
                     <td>{{ event.event_name }}</td>
-                    <td>{{event.project_vertical}}
-                    <td>{{ event.event_handle }}<br></td>
-                    <td>{{ event.event_venue }}</td>
-                    <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
+               
+                    <td>{{ event.event_handle }} </td>
+                    <td>{{ event.project_stakeholder  }}</td>
+        
+                    {% comment %} <td>₹ {{ event.event_expense|floatformat:"2" }}</td> {% endcomment %}
                     <td>{{ event.role_yi }}</td>
+                    <td>{{ event.yi_pillar }}</td>
                     <td> {{ event.school  }}  </td>
                     <td>{{event.collage}}</td>
-                    <td>{{event.associate_partner}}
+                    
+                    <td>{{event.which_SIG}}</td>
+                    <td><a href="{{event.social_link}}"> click me  </a>  </td>
+               
+                
+                    {% comment %} <td>{{event.associate_partner}} {% endcomment %}
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
                     <td>
                       {% if event.event_photo.all %}
@@ -125,22 +139,7 @@
                         <span class="badge bg-light text-dark">No image</span>
                       {% endif %}
                     </td>
-                    <td>
-                      <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
-                          <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <form method="post" action="{% url 'delete-event-usera' events_id=event.id %}" class="d-inline">
-                          {% csrf_token %}
-                          <button class="btn btn-sm btn-outline-danger ms-1" >
-                            <i class="bi bi-trash"></i>
-                          </button>
-                        </form>
-                        {% comment %} <button type="button" class="btn btn-sm btn-outline-info ms-1" data-bs-toggle="collapse" data-bs-target="#details{{ event.id }}">
-                          <i class="bi bi-info-circle"></i>
-                          </button> {% endcomment %}
-                      </div>
-                    </td>
+                   
                   </tr>
                 
                <!-- Image Modal -->
@@ -243,7 +242,7 @@
                                   <option value="Thalir">Thalir</option>
                                   <option value="Rural Initiatives">Rural Initiatives</option>
                                   <option value="General Public">General Public</option>
-                                  <option value="Associate Partner">Associate Partner</option>
+                                  <option value="Member">Member</option>
                                    <option value="">None</option>
                                   <!-- Add all stakeholder options -->
                                 </select>
@@ -293,7 +292,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-6" id="associate_div">
+                                    {% comment %} <div class="col-md-6" id="associate_div">
                                         <label for="associate_partners">Associate Partner</label>
                                         <select class="form-control" id="associate_partners" name="associate_partners">
                                             <option value="{{ event.associate_partner }}">{{ event.associate_partner }}</option>
@@ -303,7 +302,7 @@
                                              <option value="">None</option>
                                             <!-- Add associate partners -->
                                         </select>
-                                    </div>
+                                    </div> {% endcomment %}
 
                                     <div class="col-md-6" id="school_div">
                                         <label for="school">School</label>
@@ -348,6 +347,7 @@
                       <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                   </li>
                   <li class="page-item active"><a class="page-link" href="#">1</a></li>
+             
             
                   <li class="page-item">
                       <a class="page-link" href="#">Next</a>
@@ -359,34 +359,21 @@
     </div>
         </section>
   </main><!-- End #main -->
+
+
+  {% block script %}
+
+
+  <script src="{% static 'js/tabel.js' %}"> </script>
+
+
+
+{% endblock script %}
 {% endblock %}
 
 
 
-{% comment %} try:
-if request.method == 'POST':
-    # Get the Event_Data instance to be deleted
-    event_to_delete = get_object_or_404(Event_Data, id=event_id)
-    
-    # Delete associated images before deleting the event
-    event_images = event_to_delete.event_photo.all()  # Get all related Event_Image instances
-    for image in event_images:
-        if image.event_photo:
-            try:
-                # Construct the full file path and delete the file
-                file_path = image.event_photo.path
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
-            except Exception as e:
-                print(f"Error deleting image file: {e}")
-        image.delete()  # Delete the Event_Image instance from the database
-    
-    # Now delete the Event_Data instance
-    event_to_delete.delete()
-    
-# Redirect back to the Admin Dashboard after deletion
-return redirect('Admin_Dashboard')
 
-except Exception as e:
-messages.error(request, "Something went wrong. Please try again. Event was not deleted.")
-return redirect('Error-Page') {% endcomment %}
+
+
+

@@ -119,28 +119,31 @@
           </div> {% endcomment %}
           <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
         </div>
-        <div class="d-flex gap-2">
-           {% comment %}<form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
-            <select class="form-select form-select-sm" id="search" name="search" onchange="this.form.submit()">
-              <option value="" disabled selected>Choose by Name</option>
+        <div class="d-flex gap-2 form">
+          <form method="get"  action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+            <select class="form-select" id="search" name="search" onchange="this.form.submit()">
+              <option value="" disabled selected>filter by Name</option>
               <option value="all">All</option>
               {% for i in m1 %}
-                <option value="{{ i }}">{{ i }}</option>
+                <option value="{{ i }}"{% if  i == request.GET.search %} selected {% endif %}>{{ i }}</option>
               {% endfor %}
             </select>
-          </form> {% endcomment %}
+          </form> 
           <a href="{% url 'download_excel' %}" class="btn btn-success">
-            <i class="bi bi-file-earmark-excel-fill"></i>&nbsp; Download 
+            <i class="bi bi-file-earmark-excel-fill"></i>&nbsp; Download Data
           </a>
         </div>
       </div>
+
+
+    
 
       <div class="card-body">
         <div class="table-responsive">
           <table class="table table-borderless table-hover align-middle" id="eventTable">
             <thead class="table-light" >
               <tr class="text-center text-nowrap">
-                <th>Sr.no</th>
+                <th>Sr No</th>
                 <th>Date</th>
                 <th>Member</th>
                 <th>Event Name</th>
@@ -148,11 +151,14 @@
                 <th>Stakeholder</th>
                 <th>Venue</th>
                 <th>Expense</th>
-                <th>Role</th>
+                <th>EC member's Name</th>
+                <th>Yi Role</th>
+                <th>Yi Pillar</th>
                 <th>School</th>
                 <th>College</th>
-                <th>Associate Partner</th>
+                <th>S.I.G</th>
                 <th>Impact</th>
+                <th>Social Link</th>
                 <th>Image</th>
                 <th>Actions</th>
               </tr>
@@ -166,15 +172,20 @@
                     <td>{{ event.your_name }}</td>
                     <td>{{ event.event_name }}</td>
                     <td>{{event.project_vertical}}
-                      <td>{{event.project_stakeholder}}
+                    <td>{{event.project_stakeholder}}
 
                     <td>{{ event.event_venue }}</td>
                     <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
+
+
+                    <td>{{ event.event_handle }} </td>
                     <td>{{ event.role_yi }}</td>
+                    <td>{{ event.yi_pillar }}</td>
                     <td> {{ event.school  }}  </td>
                     <td>{{event.collage}}</td>
-                    <td>{{event.associate_partner}}
+                    <td>{{event.which_SIG}}</td>
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
+                    <td><a href="{{ event.social_link}}" >click me</a></td>
                     <td>
                       {% if event.event_photo.all %}
                         {% with first_image=event.event_photo.first %}
@@ -356,7 +367,7 @@
                                             <!-- Add SIG options -->
                                         </select>
                                     </div>
-
+{% comment %} 
                                     <div class="col-md-6" id="associate_div">
                                         <label for="associate_partners" class="form-label">Associate Partner</label>
                                         <select class="form-control" id="associate_partners" name="associate_partners">
@@ -367,7 +378,7 @@
                                              <option value="">None</option>
                                             <!-- Add associate partners -->
                                         </select>
-                                    </div>
+                                    </div> {% endcomment %}
 
                                     <div class="col-md-6" id="school_div">
                                         <label for="school" class="form-label">School</label>

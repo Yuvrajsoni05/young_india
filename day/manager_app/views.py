@@ -230,9 +230,7 @@ def manager_profile(request):
 
 @login_required(login_url='index')
 def event_list(request):
-    # Ensure the user has the 'Manager' role
-    # if not request.user.login_role.filter(name='Manager').exists():
-    #     return redirect('manager-profile')
+
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
 
@@ -394,23 +392,29 @@ def event_data(request):
     try:
         
         if request.method == 'POST':
-            your_name = request.POST['your_name']
-            event_date = request.POST['event_date']
-            role_yi = request.POST['role_yi']
-            sig_option = request.POST.get('sig_','')
-            event_handle = request.POST['handel_by']
-            project_verticals = request.POST['project_verticals']
-            project_stakeholder = request.POST['project_stakeholder']
-            yi_pillar = request.POST['yi_pillar']
-            social_link = request.POST['social_link']
-            total_impact = request.POST['total_impact']
-            event_expense = request.POST['event_expense']
-            event_venue = request.POST['event_venue']
-            event_name = request.POST['event_name']
-            # event_images =  request.FILES.get('event_img')
-            school = request.POST['school']
-            collage = request.POST['collage']
-            associate_partner = request.POST.get('associate_partner','')
+            your_name = request.POST.get('your_name', '')
+            event_date = request.POST.get('event_date', '')
+            role_yi = request.POST.get('role_yi', '')
+            sig_option = request.POST.get('sig_', '')
+            event_handle = request.POST.get('handel_by', '')
+            project_verticals = request.POST.get('project_verticals', '')
+            project_stakeholder = request.POST.get('project_stakeholder', '')
+            yi_pillar = request.POST.get('yi_pillar', '')
+            social_link = request.POST.get('social_link', '')
+            total_impact = request.POST.get('total_impact', '')
+            event_expense = request.POST.get('event_expense', '')
+            event_venue = request.POST.get('event_venue', '')
+            event_name = request.POST.get('event_name', '')
+            school = request.POST.get('school', '')
+            collage = request.POST.get('collage', '')
+            associate_partner = request.POST.get('associate_partner', '')
+            
+            
+            
+            if event_expense is None or ' ':
+                event_expense = 0
+                
+            
             
             
             required_fields = {
@@ -457,14 +461,7 @@ def event_data(request):
                     return redirect('manager-dashboard')
                 
                 
-                # ext = os.path.splitext(img.name)[1]  # Get the file extension
-                # if ext.lower() not in valid_extensions:
-                #     messages.error(request, f"Invalid file type: {img.name}. Only .jpg, .jpeg, and .png are allowed.")
-                #     return redirect('manager-dashboard') 
-                # if event_image and event_image.size > 4 * 1024 * 1024:
-                #       # 4MB size limit
-                #     messages.error(request, 'Each image must be 4MB or less')
-                #     return redirect('')
+              
 
         
 
@@ -498,7 +495,7 @@ def event_data(request):
             messages.success(request, 'Thank you for insert data')
             return redirect('manager-dashboard')
     except Exception as e:
-        messages.success(request, 'Something went Wrong Please  Try again ')
+        messages.error(request, f"Something went wrong: {str(e)}")
         return redirect('manager-dashboard')
         
             
@@ -526,7 +523,12 @@ def dashboard(request):
 
     # Adjust event_impact to reflect the correct order of event_name
     # aligned_event_impact = [event_total_dict.get(event, 0) for event in event_name]
+   
     
+    
+        
+              # Pass the role to the template
+       
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
     # print(event_name)
@@ -536,7 +538,8 @@ def dashboard(request):
                  'total_impact':total_impact,
                 #  'event_name': event_name,
                 #  'impact':aligned_event_impact,
-                    'events': all_event
+                    'events': all_event,
+                    
                 }
 
     return render(request,'member/dashboard.html',context)

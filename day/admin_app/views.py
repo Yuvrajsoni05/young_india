@@ -71,7 +71,7 @@ def index(request):
                 else:
                     roles = user.login_role.all() 
                     request.session['userrole'] = [role.name for role in roles]  # Get all roles associated with the user
-                    return redirect('manager-dashboard')
+                    return redirect('member-dashbaord')
             else:
               
                 messages.error(request, "Invalid credentials, please try again.")
@@ -466,7 +466,8 @@ def Admin_Dashboard(request):
     # Handle search filtering
     search = request.GET.get('search')
     if search and search != 'all':
-        event_list = Event_Data.objects.filter(your_name__icontains=search)  # Using icontains for partial match
+        event_list = Event_Data.objects.filter(your_name__icontains=search) 
+        # Using icontains for partial match
     else:
         event_list = Event_Data.objects.all()
 
@@ -539,6 +540,12 @@ def admin_event_data(request):
             collage = request.POST['collage']
             associate_partner = request.POST.get('associate_partner', '')
             event_image = request.FILES.getlist('event_img')
+            
+            
+            
+            if event_expense is None or ' ':
+                event_expense = 0
+                
         
             required_fields = {
                         'Event Date': event_date,
@@ -620,8 +627,8 @@ def download_excel(request):
 
     # Set the headers in the first row
     headers = [
-        'Event Date', 'Manager Name', 'Event Name', 'Event Venue', 'Event Expense', 'Role YI', 'Project Verticals',
-        'Project Stakeholder', 'YI Pillar', 'SIG', 'School', 'Collage', 'Associate Partner', 'Event Handle', 'Impact', 'Image'
+        'Event Date', 'Ec Members Name', 'Event Name', 'Event Venue', 'Event Expense', 'Role YI', 'Project Verticals',
+        'Project Stakeholder', 'YI Pillar', 'SIG', 'School', 'Collage', 'Social Link', 'Ec Member', 'Impact', 'Image'
     ]
 
     # Set the headers row
@@ -639,7 +646,7 @@ def download_excel(request):
     for i in event_data:
         row = [
             i.date, i.your_name, i.event_name, i.event_venue, i.event_expense, i.role_yi, i.project_vertical,
-            i.project_stakeholder, i.yi_pillar, i.which_SIG, i.school, i.collage, i.associate_partner,
+            i.project_stakeholder, i.yi_pillar, i.which_SIG, i.school, i.collage, i.social_link,
             i.event_handle, i.total_impact
         ]
         sheet.append(row)

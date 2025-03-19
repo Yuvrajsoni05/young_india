@@ -68,9 +68,13 @@
         <td>{{ manager.email }}</td>
         <td>{{ manager.yi_role }}</td>
        <td> 
-        {% for role in manager.login_role.all %}
-            <li  value="{{ role.name }}">{{ role.name }}</li>
-        {% endfor %}
+       
+        <select class="form-select" aria-label="Default select example">
+              {% for role in manager.login_role.all %}
+              <option > {{role.name}} </option>
+              {% endfor %}
+            </select>
+   
        </td>
         <td>{{ manager.phone_number }}</td>
         <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" border="1px" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
