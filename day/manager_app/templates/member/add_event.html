@@ -33,7 +33,7 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="your_name">Your Name</label><span style="color:red;"> *</span>
-                  <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name" aria-label="Your Name">
+                  <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name" aria-label="Your Name" readonly style="background-color:rgb(235, 236, 247);">
                 </div>
               </div>
 
@@ -65,7 +65,7 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="role_yi">YI Role</label><span style="color:red;"> *</span>
-                  <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" readonly>
+                  <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" readonly style="background-color:rgb(235, 236, 247);">
                 </div>
               </div>
 

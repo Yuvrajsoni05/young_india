@@ -120,21 +120,24 @@
           <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
         </div>
         <div class="d-flex gap-2 form">
-          <form method="get"  action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
-            <select class="form-select" id="search" name="search" onchange="this.form.submit()">
-              <option value="" disabled selected>filter by Name</option>
-              <option value="all">All</option>
-              {% for i in m1 %}
-                <option value="{{ i }}"{% if  i == request.GET.search %} selected {% endif %}>{{ i }}</option>
-              {% endfor %}
-            </select>
-          </form> 
+         
           <a href="{% url 'download_excel' %}" class="btn btn-success">
-            <i class="bi bi-file-earmark-excel-fill"></i>&nbsp; Download Data
+            <i class="bi bi-file-earmark-excel-fill"></i>&nbsp; Download
           </a>
         </div>
+        
       </div>
-
+    
+      <form method="get"  action="{% url 'Admin_Dashboard' %}" id="managerFilterForm">
+        <select class="form-select" id="search" name="search" onchange="this.form.submit()">
+          <option value="" disabled selected>Filter by Name</option>
+          <option value="all">All</option>
+          {% for i in m1 %}
+            <option value="{{ i }}"{% if  i == request.GET.search %} selected {% endif %}>{{ i }}</option>
+          {% endfor %}
+        </select>
+      </form> 
+    </div>
 
     
 
@@ -178,14 +181,14 @@
                     <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
 
 
-                    <td>{{ event.event_handle }} </td>
+                    <td class="event-handle" justify>{{ event.event_handle }}</td>
                     <td>{{ event.role_yi }}</td>
                     <td>{{ event.yi_pillar }}</td>
-                    <td> {{ event.school  }}  </td>
+                    <td> {{ event.school  }}</td>
                     <td>{{event.collage}}</td>
                     <td>{{event.which_SIG}}</td>
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
-                    <td><a href="{{ event.social_link}}" >click me</a></td>
+                    <td><a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
                     <td>
                       {% if event.event_photo.all %}
                         {% with first_image=event.event_photo.first %}
@@ -452,6 +455,48 @@
   
   {% block script %}
   <script src="{% static 'js/dashboard.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all the event-handle elements in the table
+        const eventHandles = document.querySelectorAll('.event-handle');
+
+        // Loop through each event-handle element
+        eventHandles.forEach(function (eventHandleElement) {
+            // Get the event_handle content
+            const eventHandle = eventHandleElement.innerText;
+
+            // Split the data by commas
+            const names = eventHandle.split(',');
+
+            // Create a container for the names
+            const container = document.createElement('div');
+
+            // Loop through each name and create a link for it
+            names.forEach(function (name) {
+                // Trim any extra spaces from the name
+                const trimmedName = name.trim();
+
+                // Create the link element
+                const link = document.createElement('span');
+                link.href = "#";  // Replace with the actual link if needed
+                 
+                link.innerText = trimmedName;
+
+                // Append the link to the container
+                container.appendChild(link);
+
+                // Add a <br> tag to add line break after each link
+                container.appendChild(document.createElement('br'));
+            });
+
+            // Clear the original content in the <td>
+            eventHandleElement.innerHTML = '';
+
+            // Append the new formatted content with links and line breaks
+            eventHandleElement.appendChild(container);
+        });
+    });
+</script>
  
   {% endblock script %}
 

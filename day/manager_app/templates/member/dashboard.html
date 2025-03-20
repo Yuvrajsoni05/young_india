@@ -4,7 +4,6 @@
  
 
 
-
 {% block bodyblock %}
     <main id="main" class="main">
 
@@ -20,8 +19,6 @@
            </ol> {% endcomment %}
          </nav>
        </div><!-- End Page Title -->
-
-
         <section class="section dashboard">
 
     <div class='row'>
@@ -113,7 +110,8 @@
                     <td>{{ event.your_name }}</td>
                     <td>{{ event.event_name }}</td>
                
-                    <td>{{ event.event_handle }} </td>
+                    <td class="event-handle" justify>{{ event.event_handle }}</td>
+
                     <td>{{ event.project_stakeholder  }}</td>
         
                     {% comment %} <td>₹ {{ event.event_expense|floatformat:"2" }}</td> {% endcomment %}
@@ -123,7 +121,7 @@
                     <td>{{event.collage}}</td>
                     
                     <td>{{event.which_SIG}}</td>
-                    <td><a href="{{event.social_link}}"> click me  </a>  </td>
+                    <td><a href="{{event.social_link}}"> <i class="bi bi-link"></i> </a>  </td>
                
                 
                     {% comment %} <td>{{event.associate_partner}} {% endcomment %}
@@ -366,6 +364,48 @@
 
   <script src="{% static 'js/tabel.js' %}"> </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all the event-handle elements in the table
+        const eventHandles = document.querySelectorAll('.event-handle');
+
+        // Loop through each event-handle element
+        eventHandles.forEach(function (eventHandleElement) {
+            // Get the event_handle content
+            const eventHandle = eventHandleElement.innerText;
+
+            // Split the data by commas
+            const names = eventHandle.split(',');
+
+            // Create a container for the names
+            const container = document.createElement('div');
+
+            // Loop through each name and create a link for it
+            names.forEach(function (name) {
+                // Trim any extra spaces from the name
+                const trimmedName = name.trim();
+
+                // Create the link element
+                const link = document.createElement('span');
+                link.href = "#";  // Replace with the actual link if needed
+                 
+                link.innerText = trimmedName;
+
+                // Append the link to the container
+                container.appendChild(link);
+
+                // Add a <br> tag to add line break after each link
+                container.appendChild(document.createElement('br'));
+            });
+
+            // Clear the original content in the <td>
+            eventHandleElement.innerHTML = '';
+
+            // Append the new formatted content with links and line breaks
+            eventHandleElement.appendChild(container);
+        });
+    });
+</script>
 
 
 {% endblock script %}

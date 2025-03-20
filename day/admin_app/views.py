@@ -87,37 +87,32 @@ def index(request):
 # Add new User Ec members
 @login_required(login_url='index')
 def Admin_Signup(request):
-        if not request.user.login_role.filter(name='Admin').exists():
-            return redirect('Error-Page')
-        
-        sessions = Session.objects.filter(expire_date__gte=now())
-        # Get user ids from the session data
-        user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
-        # Query LoginSide objects for users
-        active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
-        active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
-        active_users_count = LoginSide.objects.filter(is_active=True).count()
-        active_users_count = active_users.count()
-        login_roles = Login_Role.objects.all()
- 
-        try:
-            
-            if request.method == 'POST':        
-                username = request.POST.get('add_username')
-                first_name = request.POST.get('first_name')
-                last_name = request.POST.get('last_name')
-                password = request.POST.get('password1')
-                profile_img = request.FILES.get('profile_img')
-                confirm_password = request.POST.get('password2')
-                Admin_email = request.POST.get('add_email')
-                phone = request.POST.get('add_phone')
-                yi_role = request.POST.get('yi_role')
-                login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
-                # fields = [username, first_name, last_name, password, confirm_password, Admin_email, phone, yi_role, login_role]
-        
-                  
-             
-                required_fields = {
+    if not request.user.login_role.filter(name='Admin').exists():
+        return redirect('Error-Page')
+
+    sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]
+    active_users_count = active_users.count()
+    login_roles = Login_Role.objects.all()
+
+    try:
+        if request.method == 'POST':
+            username = request.POST.get('add_username')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            password = request.POST.get('password1')
+            profile_img = request.FILES.get('profile_img')
+            confirm_password = request.POST.get('password2')
+            Admin_email = request.POST.get('add_email')
+            phone = request.POST.get('add_phone')
+            yi_role = request.POST.get('yi_role')
+            login_role = request.POST.getlist('login_role')  # Use getlist to fetch multiple roles
+
+            required_fields = {
                 'Username': username,
                 'First Name': first_name,
                 'Last Name': last_name,
@@ -127,147 +122,107 @@ def Admin_Signup(request):
                 'Login Role': login_role,
                 'Password': password,
                 'Confirm Password': confirm_password,
-                }
-                
-                form_data = {
-                    'username': username,
-                    'first_name': first_name,
-                    'last_name': last_name,
-                    'email': Admin_email,
-                    'phone': phone,
-                    'yi_role': yi_role,
-                    'login_role': login_role,
-                    
-         
-                }
-                
-                remove_data = {
-                      'username': '',
-                    'first_name': '',
-                    'last_name': '',
-                    'email': '',
-                    'phone': '',
-                    'yi_role': '',
-                    'login_role': [],
-                }
-                
-                if 'resetbutton' in request.POST:
-                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':remove_data}) 
-                    
-                
-                for field ,field_value in required_fields.items():
-                    if not field_value:
-                        messages.error(request,f"the {field} field is Required")
-                        return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':form_data}) 
-                        
-                
-                
-                # if any(field is  None  for field in fields ):
-                #     messages.error(request,"All * Filed Are Required")
-                #     return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                #                                                     'count':active_users_count,'form_data':form_data}) 
-                if profile_img:
-                   
-                   
-                    try:
-                        validator = FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])
-                        validator(profile_img)
-                    except ValidationError:
-                        messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
-                        return render(request, 'Admin/AdminSignup.html', {
-                            'role': login_roles,
-                            'name': active_user_names,
-                            'count': active_users_count,
-                            'form_data': form_data
-                        })
-                    if profile_img.size > 4 * 1024 * 1024:  # 4MB limit
-                        messages.error(request, 'Image size must be less than 4MB.')
-                        return render(request, 'Admin/AdminSignup.html', {
-                            'role': login_roles,
-                            'name': active_user_names,
-                            'count': active_users_count,
-                            'form_data': form_data
-                        })
-                
-                    # If no profile image, use default image
-                  
-                        
+            }
 
-                email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            form_data = {
+                'username': username,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': Admin_email,
+                'phone': phone,
+                'yi_role': yi_role,
+                'login_role': login_role,
+            }
 
-            
-                
-                if not re.match(email_regex,Admin_email):
-                    messages.error(request,'Enter Valid Email')
-                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':form_data}) 
-                
-                
-                if LoginSide.objects.filter(email=Admin_email).exists() :
-                    messages.error(request, "This email is already taken.")
-                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':form_data}) 
+            if 'resetbutton' in request.POST:
+                return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                'count': active_users_count, 'form_data': {}})
 
-                if LoginSide.objects.filter(username=username).exists():
-                    messages.error(request, "This Username is already taken.")
-                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':form_data}) 
-                
-                
-                regex = r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$'
-                
-                if not re.match(regex,phone):
-                    messages.error(request, "Phone number must be 10 digits. and valid phone number")
-                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':form_data}) 
-                    
-                    
-                if len(password) < 8 or not any(c.isupper() for c in password) or not any(
-                        c in "!@#$%^&*()_+-={}[]\\:;\"'<>,.?/~`" for c in password):
-                    messages.error(request,
-                                "Password must be at least 8 characters with one uppercase letter and one special character")
-                    return redirect('Admin_Signup')
+            # Validation for required fields
+            for field, field_value in required_fields.items():
+                if not field_value:
+                    messages.error(request, f"The {field} field is required")
+                    return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                    'count': active_users_count, 'form_data': form_data})
 
-                if password != confirm_password:
-                    messages.error(request, "Password and confirm Password must be same ")
-                    return render(request,'Admin/AdminSignup.html',{'role':login_roles,'name':active_user_names,
-                                                                    'count':active_users_count,'form_data':form_data}) 
+            # Profile image handling
+            if profile_img:
+                try:
+                    validator = FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])
+                    validator(profile_img)
+                except ValidationError:
+                    messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
+                    return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                    'count': active_users_count, 'form_data': form_data})
 
-                # Create user
-                Admin_User = LoginSide.objects.create_user(
-                        username=username,
-                        first_name=first_name,
-                        last_name=last_name,
-                        photo=profile_img,
-                        password=password,
-                        email=Admin_email,
-                        yi_role=yi_role,
-                        phone_number=phone
-                    )
-                    # Assign selected roles to the user
-                roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
-                Admin_User.login_role.set(roles)  # Assign multiple roles
-           
-                Admin_User.full_clean()
-                Admin_User.save()
-                messages.success(request, "New Executive Council Member Add")
-                return redirect('Admin_Signup')
+                if profile_img.size > 4 * 1024 * 1024:  # 4MB limit
+                    messages.error(request, 'Image size must be less than 4MB.')
+                    return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                    'count': active_users_count, 'form_data': form_data})
+            else:
+                # Assign default image if no profile image is uploaded
+                profile_img = 'default_profile_image.jpg'  # You should adjust this according to your model's field default.
 
-          
-            return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names, 
-                                                        'count': active_users_count})
-    
-    
-        except Exception as e :
-            messages.error(request,f'New User not Add Something went Worng Plz Try again ' )
-            return render(request, 'Admin/AdminSignup.html')
-   
-   
-   
-# def admin_signup_page(request):
-#     return render(request,'Admin/AdminSignup.html')
+            # Email and phone validation
+            email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if not re.match(email_regex, Admin_email):
+                messages.error(request, 'Enter a valid email address.')
+                return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                'count': active_users_count, 'form_data': form_data})
+
+            if LoginSide.objects.filter(email=Admin_email).exists():
+                messages.error(request, "This email is already taken.")
+                return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                'count': active_users_count, 'form_data': form_data})
+
+            regex = r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$'
+            if not re.match(regex, phone):
+                messages.error(request, "Phone number must be 10 digits and valid.")
+                return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                'count': active_users_count, 'form_data': form_data})
+
+            if len(password) < 8 or not any(c.isupper() for c in password) or not any(
+                    c in "!@#$%^&*()_+-={}[]\\:;\"'<>,.?/~`" for c in password):
+                messages.error(request,
+                               "Password must be at least 8 characters with one uppercase letter and one special character.")
+                return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                'count': active_users_count, 'form_data': form_data})
+
+            if password != confirm_password:
+                messages.error(request, "Password and confirm password must match.")
+                return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                                'count': active_users_count, 'form_data': form_data})
+
+            # Create user
+            Admin_User = LoginSide.objects.create_user(
+                username=username,
+                first_name=first_name,
+                last_name=last_name,
+                photo=profile_img,
+                password=password,
+                email=Admin_email,
+                yi_role=yi_role,
+                phone_number=phone
+            )
+
+            # Assign selected roles to the user
+            roles = Login_Role.objects.filter(name__in=login_role)  # Filter roles based on selected ones
+            Admin_User.login_role.set(roles)  # Assign multiple roles
+
+            Admin_User.full_clean()
+            Admin_User.save()
+            messages.success(request, "New Executive Council Member Added")
+            return redirect('Admin_Signup')
+
+        return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                           'count': active_users_count})
+
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
+                                                           'count': active_users_count})
+
+
 
 
 
@@ -302,7 +257,7 @@ def Admin_Profile(request):
 def Admin_update(request, admin_id):
     # Check if the user has 'Admin' role
     if not request.user.login_role.filter(name='Admin').exists():
-        messages.error(request, 'You do not have permission to access this page.')
+       
         return redirect('Error-Page')
     
     try:
@@ -343,23 +298,18 @@ def Admin_update(request, admin_id):
             admin_profile.username = username
             admin_profile.phone_number = phone_number
             
-            
-            # admin_profile.first_name = request.POST.get('admin_firstname', admin_profile.first_name)
-            # admin_profile.last_name = request.POST.get('admin_lastname', admin_profile.last_name)
-            # admin_profile.email = request.POST.get('admin_email', admin_profile.email)
-            # admin_profile.username = request.POST.get('admin_username', admin_profile.username)
-            # admin_profile.phone_number = request.POST.get('admin_phone', admin_profile.phone_number)
-
-          
             if 'admin_profile_img' in request.FILES:
-                os.remove(admin_profile.photo.path)
+    
+                if admin_profile.photo and hasattr(admin_profile.photo, 'path') and os.path.exists(admin_profile.photo.path):
+                    print(admin_profile.photo.path)
+                    os.remove(admin_profile.photo.path)
                 admin_profile.photo = request.FILES['admin_profile_img']
                            
                 
                     
-                if admin_profile.photo.size > 4*1024*1024:
-                    messages.error(request,'Image Size must be 4mb')
-                    return redirect('Admin_Profile')
+            if admin_profile.photo.size > 4*1024*1024:
+                messages.error(request,'Image Size must be 4mb')
+                return redirect('Admin_Profile')
             try:
                 admin_profile.full_clean()
                 admin_profile.save()
@@ -371,9 +321,7 @@ def Admin_update(request, admin_id):
                         messages.error(request,f"{error} ")
                     return redirect('Admin_Profile')
         # If the method is not POST, show an error
-        else:
-            messages.error(request, 'Invalid request method. Profile not updated.')
-            return redirect('Admin_Profile')
+
 
     except Exception as e:
         # Handle any other errors during the process
@@ -852,16 +800,24 @@ def update_memeber(request,manager_id):
             
             
             
-            
 
             if 'manager_profile_img' in request.FILES:
               
+                update_manager_data.photo = request.FILES['manager_profile_img']
+                if update_manager_data.photo and hasattr(update_manager_data.photo, 'path') and os.path.exists(update_manager_data.photo.path):
+                    print(update_manager_data.photo.path)
+                    os.remove(update_manager_data.photo.path)
                 update_manager_data.photo = request.FILES['manager_profile_img']
                     
 
                 if update_manager_data.photo.size > 4*1024*1024:
                     messages.error(request,'Image Size must be 4mb ')
                     return redirect('View-manager')
+                
+                
+                
+                
+                
             try:
 
                 update_manager_data.full_clean() 

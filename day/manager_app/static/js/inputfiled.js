@@ -7,7 +7,7 @@ container.addEventListener('click', () => input.focus());
 
 // Keydown event to add tag on "Enter" or ","
 input.addEventListener('keydown', function(event) {
-  if (event.key === 'Enter' || event.key === ',') {
+  if (event.key === 'Enter' || event.key === '<br>') {
     event.preventDefault();
     addTagFromInput();
   }

@@ -132,35 +132,37 @@ def manager_update(request,manager_id):
         
         if request.method == 'POST':
             manager_profile = get_object_or_404(LoginSide, id=manager_id)
-        
             manager_profile.first_name = first_name
             manager_profile.last_name = last_name
             manager_profile.email = email
             manager_profile.username = username
             manager_profile.phone_number = phone_number
+            
             if 'manager_profile_img' in request.FILES:
-                os.remove(manager_profile.photo.path)
-                manager_profile.photo = request.FILES['manager_profile_img']
-                if manager_profile.photo.size > 4*1024*1024:
-                    messages.error(request,'Image Size must be 4mb')
-                    return redirect('manager-profile')
+            
+                if manager_profile.photo and hasattr(manager_profile.photo, 'path') and os.path.exists(manager_profile.photo.path):
+                    os.remove(manager_profile.photo.path)
+                manager_profile.photo.photo = request.FILES['manager_profile_img']
+
                 
-            manager_profile.save()
-            messages.success(request,'Profile Updated')
-            return redirect('manager-profile')
-        else:
-            messages.error(request,'Profile Not updated')
-            return redirect('manager-profile')
-        
-        
-        
+            if manager_profile.photo.size > 4*1024*1024:
+                messages.error(request,'Image Size must be 4mb')
+                return redirect('manager-profile')
+            try:      
+                manager_profile.save()
+                messages.success(request,'Profile Updated')
+                return redirect('manager-profile')
+            except Exception as e:
+                for field,errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request,f"{error} ")
+                    return redirect('manager-profile')
     except Exception as e:
-        
-        messages.error(request,'Profile Not updated plese Try Again ')
+        messages.error(request, f'Error updating profile: {str(e)}')
         return redirect('manager-profile')
         
 
-    # return render(request,'manager/manager_profile.html')
+
 
 
     # if update_manager_data.photo.size > 4*1024*1024:
@@ -409,14 +411,9 @@ def event_data(request):
             collage = request.POST.get('collage', '')
             associate_partner = request.POST.get('associate_partner', '')
             
-            
-            
             if event_expense is None or ' ':
                 event_expense = 0
-                
-            
-            
-            
+          
             required_fields = {
                         'Event Date': event_date,
                         'Event Name': event_name,
@@ -433,15 +430,6 @@ def event_data(request):
                     messages.error(request,f" The  {field} field is Required")
                     return redirect('admin_event_data') 
 
-
-    
-
-
-                # if event_images.size > 1 * 1024 * 1024:
-                #     messages.error(request, 'Each image must be 4MB or less')
-                #     return redirect('event_data')
-                
-            
             event_image = request.FILES.getlist('event_img')
 
             if len(event_image) > 6 and event_image:  # event_images is a list of image files
@@ -449,9 +437,7 @@ def event_data(request):
                 return redirect('manager-dashboard')
         
             valid_extensions = ['.jpeg', '.jpg', '.png']
-            
-            
-
+       
             for img in event_image:
                 try:
                     validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
@@ -460,11 +446,6 @@ def event_data(request):
                     messages.error(request,"Invalid file type  Only .jpg , jpeg , and .png")
                     return redirect('manager-dashboard')
                 
-                
-              
-
-        
-
 
             EventData = Event_Data.objects.create(
                 your_name=your_name,
