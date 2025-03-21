@@ -4,178 +4,217 @@
 {% load static %}
 
 {% block link %}   
-
 <style>
-  .form-label{
-    font-weight : bold;
+  .form-label {
+    font-weight: bold;
+  }
+  
+  /* Responsive table improvements */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix small screen tables */
+  @media (max-width: 767.98px) {
+    .action-btn-group {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      justify-content: center;
+    }
+    
+    .mobile-label {
+      font-weight: bold;
+      display: none;
+    }
+  }
+  
+  /* Custom styles for EC role select */
+  .ec-role-select {
+    min-width: 150px;
+    max-width: 200px;
   }
 </style>
-
 {% endblock link %}
 
+{% block bodyblock %}
+<main id="main" class="main">
+  <br>
+  <div class="pagetitle d-flex justify-content-between align-items-center">
+    <h1>EC Members List</h1>
+    <a href="{% url 'Admin_Signup' %}" class="ms-auto"> 
+      <button type="button" class="btn btn-primary">
+        <i class="bi bi-person-plus-fill"></i>&nbsp; Add EC Member
+      </button>
+    </a>
+  </div>
 
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
+      <li class="breadcrumb-item active">EC Member List</li>
+    </ol>
+  </nav>
+  <!-- End Page Title -->
 
-  {% block bodyblock %}
-
-  <main id="main" class="main">
-<br>
-    <div class="pagetitle">
-      <h1>EC Members List</h1>
-      <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add Ec Member</button></a></div>
-
-    </div>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
-          <li class="breadcrumb-item active">EC Member List</li>
-        </ol>
-      </nav>
-    <!-- End Page Title -->
-
-    <!-- Table for Event Data -->
-  <div class="table-responsive">
-
-
-    <table class="table table-hover">
-        <thead>
-            <tr class="text-nowrap" align="center">
-                <th>Sr.no</th>
-                <th>Name</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Yi Role</th>
-                <th>EC Role</th>
-                <th>Phone Number</th>
-                <th>Profile Image</th>
-                <th colspan="3">Action</th>
-
-
+  <!-- Table for Event Data -->
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr class="text-nowrap text-center">
+              <th>Sr.no</th>
+              <th>Name</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Yi Role</th>
+              <th>EC Role</th>
+              <th>Phone Number</th>
+              <th>Profile Image</th>
+              <th colspan="3">Action</th>
             </tr>
-        </thead>
-        <tbody>
-
-      {% for manager in managers %}
-    <tr class="text-nowrap" align="center" >
-
-        <td>{{ forloop.counter }}</td>
-        <td>{{ manager.first_name }} {{ manager.last_name }}</td>
-        <td>{{ manager.first_name }}</td>
-        <td>{{ manager.last_name }}</td>
-        <td>{{ manager.username }}</td>
-        <td>{{ manager.email }}</td>
-        <td>{{ manager.yi_role }}</td>
-       <td> 
-       
-        <select class="form-select" aria-label="Default select example">
-              {% for role in manager.login_role.all %}
-              <option > {{role.name}} </option>
-              {% endfor %}
-            </select>
-   
-       </td>
-        <td>{{ manager.phone_number }}</td>
-        <td><img src="{% if  manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" border="1px" height="45px" width="45px"  alt="Profile" class="rounded-circle"></td>
-
-<td>
-    <form action="{% url 'Member-Delete' member_id=manager.id %}" method="post">
-        {% csrf_token %}
-         <button class="btn  btn-outline-danger"><i class="bi bi-trash"></i></button>
-
-    </form>
-                </td>
-       <td>
-    <button type="button" class="btn  btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
-        <i class="bi bi-pencil-square"></i>
-    </button>
-</td>
-        <td>
-            <a class="btn btn-light rounded-circle" href="tel:{{manager.phone_number }}">
-    <i class="bi bi-telephone-forward-fill"></i>
-</a> </td>
+          </thead>
+          <tbody>
+            {% for manager in managers %}
+            <tr class="text-nowrap text-center">
+              <td>{{ forloop.counter }}</td>
+              <td>{{ manager.first_name }} {{ manager.last_name }}</td>
+              <td>{{ manager.first_name }}</td>
+              <td>{{ manager.last_name }}</td>
+              <td>{{ manager.username }}</td>
+              <td>{{ manager.email }}</td>
+              <td>{{ manager.yi_role }}</td>
+              <td>
+                <select class="form-select form-select-sm ec-role-select" aria-label="EC Role">
+                  {% for role in manager.login_role.all %}
+                  <option>{{role.name}}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td>{{ manager.phone_number }}</td>
+              <td>
+                <img src="{% if manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
+                     border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
+              </td>
+              <td class="action-btn-group">
+                <form action="{% url 'Member-Delete' member_id=manager.id %}" method="post" class="d-inline">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-outline-danger" type="submit">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ manager.id }}">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </td>
+              <td>
+                <a class="btn btn-sm btn-light rounded-circle" href="tel:{{manager.phone_number }}">
+                  <i class="bi bi-telephone-forward-fill"></i>
+                </a>
+              </td>
             </tr>
 
-      <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
-  <div class="modal-dialog yi-event-model">
-    <div class="modal-content ">
-      <div class="modal-header ">
-        <h5 class="modal-title" id="editModalLabel">Edit Member</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body ">
-        <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <input type="hidden" name="manager_id" id="manager_id" value="">
-          <div class="mb-3">
-            <label for="manager_first_name" class="form-label">First Name</label><span style="color:red;"> *</span>
-            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}" required>
-          </div>
-          <div class="mb-3">
-            <label for="manager_last_name" class="form-label">Last Name</label><span style="color:red;"> *</span>
-            <input type="text" class="form-control" maxlength="20" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}" required>
-          </div>
-          <div class="mb-3">
-            <label for="manager_username" class="form-label">Username</label><span style="color:red;"> *</span>
-            <input type="text" class="form-control" maxlength="15"  id="manager_username" name="manager_username" value="{{manager.username}}" required>
-          </div>
-          <div class="mb-3">
-            <label for="manager_email" class="form-label">Email</label><span style="color:red;"> *</span>
-            <input type="email" class="form-control" maxlength="50" id="manager_email" name="manager_email" value="{{ manager.email }}" required>
-          </div>
+            <!-- Edit Modal for each member -->
+            <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-lg yi-event-model">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Member</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <input type="hidden" name="manager_id" id="manager_id" value="">
+                      
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_first_name" class="form-label">First Name</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_last_name" class="form-label">Last Name</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control" maxlength="20" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}" required>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_username" class="form-label">Username</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control" maxlength="15" id="manager_username" name="manager_username" value="{{manager.username}}" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_email" class="form-label">Email</label><span class="text-danger"> *</span>
+                            <input type="email" class="form-control" maxlength="50" id="manager_email" name="manager_email" value="{{ manager.email }}" required>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="yi_role" class="form-label">Yi Role</label><span class="text-danger"> *</span>
+                            <select class="form-select" id="yi_role" name="yi_role" required>
+                              <option value="{{manager.yi_role}}">{{ manager.yi_role }}</option>
+                              <option value="Vertical Chair">Vertical Chair</option>
+                              <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                              <option value="Team Member">Team Member</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_phone_number" class="form-label">Phone Number</label><span class="text-danger"> *</span>
+                            <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="mb-4">
+                        <label for="manager_role" class="form-label">EC Role:</label><span class="text-danger"> *</span>
+                        <div class="d-flex flex-wrap gap-3">
+                          {% for i in role %}
+                          <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role_{{ i.id }}_{{ manager.id }}" {% if i in manager.login_role.all %} checked {% endif %}>
+                            <label class="form-check-label" for="login_role_{{ i.id }}_{{ manager.id }}">{{ i.name }}</label>
+                          </div>
+                          {% endfor %}
+                        </div>
+                      </div>
 
-          <div class="mb-3">
-            <label for="manager_email" class="form-label">Yi Role</label><span style="color:red;"> *</span>
-            <select type="text" class="form-control"  id="yi_role" name="yi_role" required>
-              <option value="{{manager.yi_role}}">{{ manager.yi_role  }}</option>
-              <option value="Vertical Chair">Vertical Chair</option>
-              <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-              <option value="Team Member">Team Member</option>
-              
-            </select>
-          </div>
+                      <div class="mb-3">
+                        <label for="manager_profile_img" class="form-label">Profile Image</label>
+                        <input type="file" class="form-control" id="manager_profile_img" name="manager_profile_img" accept=".jpeg,.png,.jpg">
+                      </div>
 
-          <div class="mb-3">
-            <label for="manager_phone_number" class="form-label">Phone Number</label><span style="color:red;"> *</span>
-            <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
-          </div>
-          <div class="mb-4">
-            <label for="manager_role" class="form-label">EC Role:</label><span style="color:red;"> *</span>
-            <div class="d-flex flex-wrap gap-3">
-                {% for i in role %}
-                    <div class="form-check form-check-inline">
-                        <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role{{ manager.id }}" {% if i in manager.login_role.all  %} checked {% endif %}>
-                        <label class="form-check-label" for="login_role{{ manager.id }}">{{ i.name }}</label>
-                    </div>
-                {% endfor %}
+                      <div class="modal-footer px-0 pb-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
-        
-
-
-          <div class="mb-3">
-            <label for="manager_profile_img" class="form-label">Profile Image</label>
-            <input type="file" class="form-control" id="manager_profile_img" name="manager_profile_img" accept=".jpeg ,.png ,.jpg">
-          </div>
-          <!-- Closing the form here -->
-
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-      </form>
-     
- </div>
     </div>
   </div>
-         {% endfor %}
-        </tbody>
-    </table>
-</div>
-<!-- Modal -->
-  </main><!-- End #main -->
-  {% endblock %} 
-
-
+</main><!-- End #main -->
+{% endblock %}
