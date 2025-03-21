@@ -99,7 +99,8 @@
               <td>{{ manager.phone_number }}</td>
               <td>
                 <img src="{% if manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
-                     border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
+                border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
+
               </td>
               <td class="action-btn-group">
                 <form action="{% url 'Member-Delete' member_id=manager.id %}" method="post" class="d-inline">

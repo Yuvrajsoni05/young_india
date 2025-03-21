@@ -101,3 +101,11 @@ function chart() {
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('chart').style.display = 'none';
 });
+
+
+
+function data() {
+    document.getElementById('data').style.display = 'block';
+    document.getElementById('data1').style.display = 'none';
+
+}

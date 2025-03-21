@@ -17,7 +17,7 @@ input.addEventListener('keydown', function(event) {
 function addTagFromInput() {
   let value = input.value.trim().replace(/,$/, "");
   if (value !== '') {
-    if (document.querySelectorAll('.tag').length < 10) {  // Limit to 10 tags
+    if (document.querySelectorAll('.tag').length < 22) {  // Limit to 10 tags
       addTag(value);
       input.value = '';  // Reset input field after adding tag
     } else {

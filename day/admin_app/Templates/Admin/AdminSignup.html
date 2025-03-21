@@ -34,25 +34,28 @@
             <div class="row mb-3">
               <div class="col-md-6 mb-3 mb-md-0">
                 <label for="username" class="form-label">Username</label><span style="color:red;"> *</span>
-                <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required value="{{form_data.username}}">
-                <div class="invalid-feedback">Please provide a username.</div>
+                <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required value="{{form_data.username}}" oninput="data()">
+                <div class="invalid-feedback" > Please provide a username.</div>
+                
               </div>
               <div class="col-md-6">
                 <label for="firstName" class="form-label">First Name</label><span style="color:red;"> *</span>
-                <input type="text" class="form-control" id="firstName" name="first_name" maxlength="15" placeholder="First Name" value="{{form_data.first_name}}" required>
+                <input type="text" class="form-control" id="firstname" name="first_name" maxlength="15" placeholder="First Name" value="{{form_data.first_name}}" oninput="data()" required>
                 <div class="invalid-feedback">Please provide a first name.</div>
               </div>
             </div>
+
+            
             
             <div class="row mb-3">
               <div class="col-md-6 mb-3 mb-md-0">
                 <label for="lastName" class="form-label">Last Name</label><span style="color:red;"> *</span>
-                <input type="text" class="form-control" id="lastName" name="last_name" maxlength="15" placeholder="Last Name" value="{{form_data.last_name}}" required>
-                <div class="invalid-feedback">Please provide a last name.</div>
+                <input type="text" class="form-control" id="lastname" name="last_name" maxlength="15" placeholder="Last Name" value="{{form_data.last_name}}" oninput="data()" required>
+                <div class="invalid-feedback" id="last_name">Please provide a last name.</div>
               </div>
               <div class="col-md-6">
                 <label for="email" class="form-label">Email</label><span style="color:red;"> *</span>
-                <input type="email" class="form-control" id="email" name="add_email" maxlength="50" placeholder="Email Address" value="{{form_data.email}}" required>
+                <input type="email" class="form-control" id="add_email" name="add_email" maxlength="50" placeholder="Email Address" value="{{form_data.email}}" oninput="data()" required>
                 <div class="invalid-feedback">Please provide a valid email address.</div>
               </div>
             </div>
@@ -63,10 +66,12 @@
                 <label for="phone" class="form-label">Phone </label><span style="color:red;"> *</span>
                 <div class="input-group">
                   <span class="input-group-text bg-light">+91</span>
-                  <input type="number" class="form-control" id="phone" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" value="{{form_data.phone}}" required>
-                  <div class="invalid-feedback">Please provide a valid phone number.</div>
+                  <input type="number" class="form-control" id="phone_number" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" oninput="data()" value="{{form_data.phone}}" required>
+                  <div class="invalid-feedback">Please provide a valid Phone Number.</div>
                 </div>
+                
               </div>
+              
               <div class="col-md-6">
                 <label for="yi_role" class="form-label">Yi Role</label><span style="color:red;"> *</span>
                 <select class="form-select" id="yi_role" name="yi_role" required aria-label="YI Role">
@@ -123,6 +128,12 @@
               </div>
             </div>
             
+              <div style="color:red">
+
+                {% comment %} <span>* Are mandatory Fields</span> {% endcomment %}
+              </div>
+
+
             <!-- Form Actions -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
               <button type="submit" class="btn btn-primary px-4">Add Member</button>
@@ -151,6 +162,70 @@ function password() {
   }
 }
 </script>
+<script>
+  function data() {
+    var username = document.getElementById("username");
+    if (username.value === "" || username.value === null ) {
+      document.getElementById('data').style.display = 'block';
+     
+    } else {
+      document.getElementById('data').style.display = 'none';
+    
+    }
+
+    var firstname = document.getElementById("firstname");
+    if (firstname.value === "" || firstname.value === null ) {
+      document.getElementById('first_name').style.display = 'block';
+     
+    } else {
+      document.getElementById('first_name').style.display = 'none';
+    
+    }
+
+    var lastname = document.getElementById("lastname");
+    if (lastname.value === "" || lastname.value === null ) {
+      document.getElementById('last_name').style.display = 'block';
+     
+    } else {
+      document.getElementById('last_name').style.display = 'none';
+    
+    }
+
+
+    var phone = document.getElementById("phone_number");
+    if (phone.value === "" || phone.value === null ) {
+      document.getElementById('phone').style.display = 'block';
+     
+    } else {
+      document.getElementById('phone').style.display = 'none';
+    
+    }
+
+
+    var phone = document.getElementById("phone_number");
+    if (phone.value === "" || phone.value === null ) {
+      document.getElementById('phone').style.display = 'block';
+     
+    } else {
+      document.getElementById('phone').style.display = 'none';
+    
+    }
+    var email = document.getElementById("add_email");
+    if (email.value === "" || email.value === null ) {
+      document.getElementById('email').style.display = 'block';
+     
+    } else {
+      document.getElementById('email').style.display = 'none';
+    
+    }
+
+  }
+
+
+</script>
+
+
+
 
 {% endblock script %}
 

@@ -89,7 +89,6 @@ from django.core.validators import FileExtensionValidator
 def manager_logout(request):
     logout(request)
     request.session.clear()
-    
     return redirect('index')
 
 
@@ -120,7 +119,6 @@ def manager_update(request,manager_id):
                 'Last Name' :  last_name,
                 'Username' :username,
                 'Email':email,
-
                 'Phone Number':phone_number,
                 
             }
@@ -137,17 +135,18 @@ def manager_update(request,manager_id):
             manager_profile.email = email
             manager_profile.username = username
             manager_profile.phone_number = phone_number
-            
-            if 'manager_profile_img' in request.FILES:
-            
-                if manager_profile.photo and hasattr(manager_profile.photo, 'path') and os.path.exists(manager_profile.photo.path):
-                    os.remove(manager_profile.photo.path)
-                manager_profile.photo.photo = request.FILES['manager_profile_img']
-
+        
                 
-            if manager_profile.photo.size > 4*1024*1024:
-                messages.error(request,'Image Size must be 4mb')
-                return redirect('manager-profile')
+            if 'manager_profile_img' in request.FILES:
+    
+                if manager_profile.photo and hasattr(manager_profile.photo, 'path') and os.path.exists(manager_profile.photo.path):
+                    print(manager_profile.photo.path)
+                    os.remove(manager_profile.photo.path)
+                manager_profile.photo = request.FILES['manager_profile_img']
+                
+                if manager_profile.photo.size > 4*1024*1024:
+                    messages.error(request,'Image Size must be 4mb')
+                    return redirect('manager-profile')
             try:      
                 manager_profile.save()
                 messages.success(request,'Profile Updated')
@@ -165,9 +164,7 @@ def manager_update(request,manager_id):
 
 
 
-    # if update_manager_data.photo.size > 4*1024*1024:
-    #         messages.error(request,'Image Size must be 4mb ')
-    #         return redirect('View-manager')
+ 
 
 @login_required(login_url='index')
 def manager_password(request):
@@ -436,7 +433,7 @@ def event_data(request):
                 messages.error(request, "You can Upload only 6 Images")
                 return redirect('manager-dashboard')
         
-            valid_extensions = ['.jpeg', '.jpg', '.png']
+
        
             for img in event_image:
                 try:

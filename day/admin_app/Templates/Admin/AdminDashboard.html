@@ -1,4 +1,4 @@
-{% extends "base/base.html" %}
+ {% extends "base/base.html" %}
 {% load static %}
 {% block title %}Dashboard {% endblock title %}
 
@@ -17,7 +17,9 @@
 <main id="main" class="main">
   <div class="pagetitle">
     <h1>Dashboard</h1>
+    
     <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add Ec Member</button></a></div>
+  </div>
 
   </div>
     <nav>
@@ -101,14 +103,14 @@
     </div>
 
     <!-- View Toggle Buttons -->
-    <div class="mb-3">
+    {% comment %} <div class="mb-3">
       <button type="button" onclick="table()" class="btn btn-outline-primary me-2">
         <i class="bi bi-table"></i>&nbsp; Show Table
       </button>
       <button type="button" onclick="chart()" class="btn btn-outline-primary">
         <i class="bi bi-bar-chart-line-fill"></i>&nbsp; Show Chart
       </button>
-    </div>
+    </div> {% endcomment %}
 
     <!-- Table Section -->
     <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
@@ -448,8 +450,12 @@
   </main><!-- End #main -->
   {% endblock bodyblock %} 
   
+
+
   {% block script %}
-  <script src="{% static 'js/dashboard.js' %}"></script>
+  <script src="{% static 'js/dashboard.js' %}">
+    
+  </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Get all the event-handle elements in the table
@@ -492,7 +498,8 @@
         });
     });
 </script>
- 
+
+
   {% endblock script %}
 
 

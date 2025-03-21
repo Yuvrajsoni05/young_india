@@ -159,9 +159,7 @@ def Admin_Signup(request):
                     messages.error(request, 'Image size must be less than 4MB.')
                     return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
                                                                     'count': active_users_count, 'form_data': form_data})
-            else:
-                # Assign default image if no profile image is uploaded
-                profile_img = 'default_profile_image.jpg'  # You should adjust this according to your model's field default.
+             # You should adjust this according to your model's field default.
 
             # Email and phone validation
             email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -304,7 +302,14 @@ def Admin_update(request, admin_id):
                     print(admin_profile.photo.path)
                     os.remove(admin_profile.photo.path)
                 admin_profile.photo = request.FILES['admin_profile_img']
-                           
+                        
+                if admin_profile.photo:
+                    try:
+                        validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg' ,'png'])
+                        validator(admin_profile.photo)
+                    except ValidationError:
+                        messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
+                        return redirect('Admin_Profile')
                 
                     
             if admin_profile.photo.size > 4*1024*1024:
@@ -461,7 +466,7 @@ def admin_event_data(request):
     if not request.user.login_role.filter(name='Admin'):
         return redirect('Error-Page')
   
-    
+    ec_member = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
     sessions = Session.objects.filter(expire_date__gte=now())
     user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
     active_users = LoginSide.objects.filter(id__in=user_ids)
@@ -480,7 +485,7 @@ def admin_event_data(request):
             yirole = request.POST['role_yi']
             your_name = request.POST['your_name']
             sig_option = request.POST.get('sig_', '')
-            event_handle = request.POST['handel_by']
+            event_handle = request.POST['select_member']
             social_link = request.POST['social_link']
             event_expense = request.POST['event_expense']
             event_venue = request.POST['event_venue']
@@ -503,6 +508,7 @@ def admin_event_data(request):
                         'Yi Piller': yipiller,
                         'Yi Role': yirole,
                         'Total Impact': total_impact,
+                        
             }
             for field ,field_value in required_fields.items():
                 
@@ -551,7 +557,8 @@ def admin_event_data(request):
             return redirect('Admin_Dashboard')
         context = {
         'count':active_users_count,
-        'name':active_user_names
+        'name':active_user_names,
+        'ec_member':ec_member,
     }
 
         return render(request,'Admin/Admin_Event_data.html',context)
@@ -793,6 +800,10 @@ def update_memeber(request,manager_id):
                 messages.error(request,"* Fields Are Required ")
                 return redirect('View-manager')
             
+            
+            
+            
+            
             email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
             if not re.match(email_regex,update_manager_data.email):
                 messages.error(request,"Enter Valid Email")
@@ -808,6 +819,16 @@ def update_memeber(request,manager_id):
                     print(update_manager_data.photo.path)
                     os.remove(update_manager_data.photo.path)
                 update_manager_data.photo = request.FILES['manager_profile_img']
+                
+                
+                if update_manager_data.photo:
+                    try:
+                        validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
+                        validator(update_manager_data.photo)
+                    except ValidationError:
+                        
+                        messages.error(request,'Invalid file type. Only .jpeg, .jpg, .png allowed.')
+                        return redirect('View-manager')
                     
 
                 if update_manager_data.photo.size > 4*1024*1024:
