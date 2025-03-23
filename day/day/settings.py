@@ -67,6 +67,9 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',  # Before other middleware
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',  # After other middleware
     # 'axes.middleware.AxesMiddleware',
     # 'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,6 +101,10 @@ TEMPLATES = [
         },
     },
 ]
+
+CACHE_MIDDLEWARE_SECONDS = 0  # Disables caching
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
+CACHE_MIDDLEWARE_ALIAS = 'default'
 
 WSGI_APPLICATION = 'day.wsgi.application'
 

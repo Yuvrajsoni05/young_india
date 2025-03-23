@@ -1,58 +1,69 @@
-from collections import Counter
-# from io import BytesIO
+# Standard library imports
+import os
 import re
-# from openpyxl.drawing.image import Image
+from collections import Counter
+
+
+# Django imports
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, update_session_auth_hash, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
+from django.contrib.sessions.models import Session
 from django.core.paginator import Paginator
-# import matplotlib
+from django.core.validators import FileExtensionValidator, ValidationError
+from django.db.models import Avg, Sum
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from django.views.decorators.cache import never_cache
+
+# Third-party imports
+# from io import BytesIO
 import numpy as np
 from PIL.Image import Image
 from asgiref.typing import HTTPResponseBodyEvent
-from django.db.models import Avg, Sum
-from django.shortcuts import render,redirect,get_object_or_404
 from matplotlib import pyplot as plt
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font
+from openpyxl.drawing.image import Image
+# import matplotlib
+# import logging
+
+import openpyxl
+# from PIL import Image as PILImage
+
+# DRF imports
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.reverse import reverse_lazy
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import *
-from django.contrib.auth import login, authenticate, update_session_auth_hash ,logout
-from django.contrib.auth.decorators import login_required
-# import logging
-from django.http import HttpResponse
-# import openpyxl
-from django.core.validators import FileExtensionValidator 
-from manager_app.models import Event_Data,Event_Image
-from django.contrib import messages
 
-from django.shortcuts import render
-from django.views.decorators.cache import never_cache
-import openpyxl
-from openpyxl import Workbook
-from openpyxl.styles import Alignment
-from openpyxl.drawing.image import Image
-from django.templatetags.static import static
-# from io import BytesIO
-# from PIL import Image as PILImage
-from django.http import HttpResponse
-import os
-from django.conf import settings
-from openpyxl.styles import Alignment, Font
-from django.contrib.sessions.models import Session
-from django.utils.timezone import now
-from django.contrib.auth.models import User
-#Json Response
-from django.http import JsonResponse
-# DRF API
+# Local imports
+from .models import *
+from manager_app.models import Event_Data, Event_Image
 from .serializer import EventDataSerializer
-from django.utils.decorators import method_decorator
-from rest_framework import status
-# Password Side
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
-from django.urls import reverse_lazy
+
+
+
+
+from django.utils.decorators import decorator_from_middleware
+from django.middleware.cache import CacheMiddleware
+from django.views.decorators.cache import cache_control, never_cache
 
 # Create your views here.
 
 
-# login Page 
+# login Page
+
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def index(request):
     try:
         if request.method == 'POST':
@@ -83,8 +94,10 @@ def index(request):
     return render(request, 'index.html')
 
 
-
 # Add new User Ec members
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def Admin_Signup(request):
     if not request.user.login_role.filter(name='Admin').exists():
@@ -220,12 +233,10 @@ def Admin_Signup(request):
         return render(request, 'Admin/AdminSignup.html', {'role': login_roles, 'name': active_user_names,
                                                            'count': active_users_count})
 
-
-
-
-
 # Admin Profie  HTML Page
 
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def Admin_Profile(request):
     if not request.user.login_role.filter(name='Admin').exists():
@@ -251,6 +262,8 @@ def Admin_Profile(request):
 
 #Admin profile Update View Code 
 
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def Admin_update(request, admin_id):
     # Check if the user has 'Admin' role
@@ -278,7 +291,6 @@ def Admin_update(request, admin_id):
                 'Phone Number':phone_number,
                 
             }
-        
         
         for field,field_value in required_fields.items():
             if not field_value:
@@ -310,7 +322,6 @@ def Admin_update(request, admin_id):
                     except ValidationError:
                         messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
                         return redirect('Admin_Profile')
-                
                     
             if admin_profile.photo.size > 4*1024*1024:
                 messages.error(request,'Image Size must be 4mb')
@@ -327,19 +338,20 @@ def Admin_update(request, admin_id):
                     return redirect('Admin_Profile')
         # If the method is not POST, show an error
 
-
     except Exception as e:
         # Handle any other errors during the process
         messages.error(request, f'Error updating profile: {str(e)}')
         return redirect('Admin_Profile')
 
+
 #Admin password  Update
 
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def admin_password(request):
     if request.user.login_role.filter(name='Admin').exists():
         try:
-
 
             if request.method == 'POST':
                 old_password = request.POST.get('old_password')
@@ -372,6 +384,8 @@ def admin_password(request):
 
 # Admin Logout
 
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def admin_logout(request):
     logout(request)
@@ -382,6 +396,8 @@ def admin_logout(request):
 
 # Admin Dashboard 
 
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def Admin_Dashboard(request):
     
@@ -405,10 +421,8 @@ def Admin_Dashboard(request):
     total_expense = total_expense_result['event_expense__sum'] if total_expense_result['event_expense__sum'] is not None else 0
     total_impact_result = Event_Data.objects.aggregate(Sum('total_impact'))
     total_impact = total_impact_result['total_impact__sum'] if total_impact_result['total_impact__sum'] is not None else 0
-
     impact_avg = Event_Data.objects.aggregate(Avg('total_impact'))
     avg_impact = impact_avg['total_impact__avg'] if impact_avg['total_impact__avg'] is not None else 0
-
     # Retrieve all distinct users and roles
     all_user = LoginSide.objects.all().distinct()
     login_role = Login_Role.objects.all().distinct()
@@ -442,6 +456,9 @@ def Admin_Dashboard(request):
     return render(request, 'Admin/AdminDashboard.html', context)
 
 # Base file 
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def base(request):
     sessions = Session.objects.filter(expire_date__gte=now())
@@ -460,6 +477,9 @@ def base(request):
 
 
 # Admin Side Event Data 
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def admin_event_data(request):
 
@@ -570,10 +590,16 @@ def admin_event_data(request):
 
 
 # Error Page
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def error_page(request ):
     return render(request,'Admin/components/Error_404.html',)
 
 # Download Excel File 
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def download_excel(request):
     workbook = Workbook()
@@ -607,10 +633,8 @@ def download_excel(request):
         sheet.append(row)
         # Now, for each event, if there are related images, we add them as hyperlinks.
         event_images = Event_Image.objects.filter(event=i)  # Access related Event_Image for each Event_Data
-
         # Initialize a list to store image URLs
         img_urls = []
-
         # Loop through all images for this event and generate URLs for the images
         for img in event_images:
             if img.event_photo:
@@ -647,14 +671,15 @@ def download_excel(request):
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     response['Content-Disposition'] = 'attachment; filename="Event_Data.xlsx"'
-
     workbook.save(response)
     return response
 
 @login_required(login_url='index')
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def manager_list(request):
     # Check if the user has the 'Admin' role
-    
     try:
         if not request.user.login_role.filter(name='Admin'):
             return redirect('Error-Page')
@@ -672,12 +697,9 @@ def manager_list(request):
     user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
     # Query LoginSide objects for users
     active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
-    
     active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]  
     active_users_count = LoginSide.objects.filter(is_active=True).count()
-  
     active_users_count = active_users.count()
-    
     # Prepare context to pass to the template
     context = {
         'role': login_role,
@@ -686,18 +708,14 @@ def manager_list(request):
         'count':active_users_count,
         'name':active_user_names
     }
-    
- 
     return render(request, 'Admin/view_manager.html', context)
-
-
 
 # Delete Ec  Member 
 @login_required(login_url='index')
 def delete_member(request,member_id):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
-    
+  
     try:
         
         if request.method == 'POST':
@@ -711,9 +729,10 @@ def delete_member(request,member_id):
         messages.error(request,'Something Went Wrong Please  Try Again')
         return redirect('View-manager')
 
-
-
 # Delete Yi Event
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 @login_required(login_url='index')
 def delete_event(request, event_id):
     # Ensure only admins can delete events
@@ -725,7 +744,7 @@ def delete_event(request, event_id):
             # Get the Event_Data instance to be deleted
             event_to_delete = get_object_or_404(Event_Data, id=event_id)
             event_image = event_to_delete.event_photo.all()     
-                
+    
             for img in event_image:
                 try:
                     path = img.event_photo.path
@@ -735,16 +754,18 @@ def delete_event(request, event_id):
                 except Exception as e:
                     messages.error(request,'Error deleteing image')
                     img.delete()
-                                        
+    
             # Delete the Event_Data instance, which will also delete related Event_Image instances due to cascade
-            event_to_delete.delete()
-           
+            event_to_delete.delete()  
         # Redirect back to the Admin Dashboard after deletion
         return redirect('Admin_Dashboard')
     except Exception as e:
          messages.error(request,'Something Went Wrong Please  Try Again')
 
+
 @login_required(login_url='index')
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def update_memeber(request,manager_id):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
@@ -759,7 +780,6 @@ def update_memeber(request,manager_id):
             login_role = request.POST.getlist('login_role')
             phone_number = request.POST['manager_phone_number']
             
-        
         required_fields = {
                 'First Name': first_name,
                 'Last Name' :  last_name,
@@ -770,16 +790,11 @@ def update_memeber(request,manager_id):
                 
             }
         
-        
         for field,field_value in required_fields.items():
             if not field_value:
                 messages.error(request,f"The {field} firld is Required ")
                 return redirect('View-manager')
             
-        
-        
-        
-        
         if request.method == 'POST':
             update_manager_data.first_name = first_name
             update_manager_data.last_name =  last_name 
@@ -791,18 +806,12 @@ def update_memeber(request,manager_id):
 
             # update_manager_data.password = request.POST['manager_password']
             update_manager_data.phone_number =  phone_number 
-
             print(update_manager_data.login_role)
-            
             
             fields  = [update_manager_data.first_name,update_manager_data.last_name,update_manager_data.yi_role ,update_manager_data.email,update_manager_data.login_role, update_manager_data.phone_number]
             if any(field is None for field in fields ):
                 messages.error(request,"* Fields Are Required ")
                 return redirect('View-manager')
-            
-            
-            
-            
             
             email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
             if not re.match(email_regex,update_manager_data.email):
@@ -810,8 +819,6 @@ def update_memeber(request,manager_id):
                 return redirect('View-manager')
             
             
-            
-
             if 'manager_profile_img' in request.FILES:
               
                 update_manager_data.photo = request.FILES['manager_profile_img']
@@ -820,7 +827,7 @@ def update_memeber(request,manager_id):
                     os.remove(update_manager_data.photo.path)
                 update_manager_data.photo = request.FILES['manager_profile_img']
                 
-                
+ 
                 if update_manager_data.photo:
                     try:
                         validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
@@ -829,16 +836,12 @@ def update_memeber(request,manager_id):
                         
                         messages.error(request,'Invalid file type. Only .jpeg, .jpg, .png allowed.')
                         return redirect('View-manager')
-                    
 
+                    
                 if update_manager_data.photo.size > 4*1024*1024:
                     messages.error(request,'Image Size must be 4mb ')
                     return redirect('View-manager')
-                
-                
-                
-                
-                
+                            
             try:
 
                 update_manager_data.full_clean() 
@@ -854,13 +857,15 @@ def update_memeber(request,manager_id):
                     for error in errors:
                         messages.error(request, f"{field}: {error}")
                     return redirect('View-manager')
-    
+
     except Exception:
         messages.error(request,"EC Member profile not Updated Please  Try Again")
         return redirect('View-manager')
 
-
 @login_required(login_url='index')
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def update_event_data(request,event_id):
     if not request.user.login_role.filter(name='Admin').exists():
         return redirect('Error-Page')
@@ -895,9 +900,6 @@ def update_event_data(request,event_id):
                     if not field_value:
                         messages.error(request,f" The  {field} field is Required")
                         return redirect('Admin_Dashboard') 
-                
-                
-            
             
             if request.method == 'POST':
                 update_event.school  = request.POST['school']
@@ -914,24 +916,12 @@ def update_event_data(request,event_id):
                 update_event.total_impact = total_impact
                 update_event.which_SIG = request.POST['sig_']
                 update_event.associate_partner = request.POST.get('associate_partners')
-
-
                 event_image = request.FILES.getlist('event_image')
-                
-        
-     
-                        
-           
-
-
-                
-
                 for image in event_image:
                     Event_Image.objects.create(event=update_event,event_photo = image)
                 update_event.save()
                 messages.success(request,'Event Update Successfully')
                 return redirect('Admin_Dashboard')
-
             else:
                 messages.error(request,'Event not updated')
                 return redirect('Admin_Dashboard')
@@ -939,7 +929,11 @@ def update_event_data(request,event_id):
             messages.error(request,'Something Went Wrong Please  Try Again')
             return redirect('Admin_Dashboard')
 
+
 @login_required(login_url='index')
+
+@never_cache
+@cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def event_image_delete(request, image_id):
     if request.method == 'POST':
         image_to_delete = get_object_or_404(Event_Image, id=image_id)
@@ -947,8 +941,6 @@ def event_image_delete(request, image_id):
             image_to_delete.event_photo.delete()
         image_to_delete.delete()  # Delete the image record
     return redirect('Admin_Dashboard')
-
-
 
 
 class EventDataAPI(APIView):
@@ -968,22 +960,17 @@ class EventDataAPI(APIView):
     def delete(self, request):
         # Ensure the 'id' is passed and object exists
         try:
-     
             event= Event_Data.request.query_params.get('id')
             event.delete()  # Delete the object
-
             return Response({'message': 'Event deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Event_Data.DoesNotExist:
             return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request):
-
         # Get the event instance based on the provided ID
         event = Event_Data.objects.get(pk=request.data.get('id'))
-
         # Pass the event instance and updated data to the serializer
         serializer = EventDataSerializer(event, data=request.data, partial=False)
-
         # Validate and save the data
         if serializer.is_valid():
             serializer.save()  # Save the updated event
@@ -992,28 +979,23 @@ class EventDataAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 # Admin Side Chart 
-
 def admin_chart(request):
     event_data = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
     # event_impact = Event_Data.objects.all().values_list('total_impact',flat=True).annotate(Sum('total_impact'))
     event_impact_by_name = Event_Data.objects.values('your_name').annotate(total_impact=Sum('total_impact')).order_by('your_name')
 
-
     project_verticals = Event_Data.objects.all().values_list('project_vertical', flat=True).distinct()
     # event_impact = Event_Data.objects.all().values_list('total_impact',flat=True).annotate(Sum('total_impact'))
     project_verticals_by_name = Event_Data.objects.values('your_name').annotate(total_impact=Sum('project_vertical')).order_by('project_vertical')
 
-
     context = {
         'name': event_data,
         'impact_data':event_impact_by_name,
-        'verticals':project_verticals,
-       
+        'verticals':project_verticals,       
     }
     return render(request, 'Admin/chart/admin_chart.html', context)
+
 
 # ForgotPasssword Side 
 class CustomPasswordResetView(PasswordResetView):
@@ -1030,13 +1012,6 @@ class CustomPasswordResetConfirm(PasswordResetConfirmView):
 
 def password_update_done(request):
     return render(request,'Admin/components/password_update_done.html')
-
-
-
-
-
-
-
 
 
 # Utility functions
