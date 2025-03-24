@@ -11,13 +11,13 @@
   <div class="pagetitle">
     <h1>Add EC Member</h1>
   </div>
-    <nav>
+    {% comment %} <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
         <li class="breadcrumb-item active">Add EC Member</li>
       </ol>
-    </nav>
+    </nav> {% endcomment %}
   </div>
   
   <section>
@@ -66,7 +66,7 @@
                 <label for="phone" class="form-label">Phone </label><span style="color:red;"> *</span>
                 <div class="input-group">
                   <span class="input-group-text bg-light">+91</span>
-                  <input type="number" class="form-control" id="phone_number" name="add_phone" minlength="10" maxlength="10" placeholder="Enter phone number" oninput="data()" value="{{form_data.phone}}" required>
+                  <input type="tel" class="form-control" id="phone_number" name="add_phone" maxlength="10" placeholder="Enter phone number" oninput="data()" value="{{form_data.phone}}" required>
                   <div class="invalid-feedback">Please provide a valid Phone Number.</div>
                 </div>
                 

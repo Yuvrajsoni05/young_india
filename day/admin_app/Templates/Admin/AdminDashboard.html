@@ -22,12 +22,12 @@
   </div>
 
   </div>
-    <nav>
+    {% comment %} <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
         <li class="breadcrumb-item active">Admin</li>
       </ol>
-    </nav>
+    </nav> {% endcomment %}
 
 
     
@@ -37,14 +37,14 @@
     <!-- Stats Cards -->
     <div class="row mb-4">
       <!-- Total Events Card -->
-      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Events</h5>
             <div class="d-flex align-items-center">
-              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary-light">
+              {% comment %} <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary-light">
                 <i class="bi bi-list-ol text-primary"></i>
-              </div>
+              </div> {% endcomment %}
               <div class="ps-3">
                 <h6>{{ total_event|floatformat:"g" }}</h6>
               </div>
@@ -54,14 +54,14 @@
       </div>
 
       <!-- Impact Card -->
-      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Impact</h5>
             <div class="d-flex align-items-center">
-              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-success-light">
+              {% comment %} <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-success-light">
                 <i class="bi bi-people text-success"></i>
-              </div>
+              </div> {% endcomment %}
               <div class="ps-3">
                 <h6>{{ total_impact|floatformat:"g"}}</h6>
               </div>
@@ -71,22 +71,20 @@
       </div>
 
       <!-- Expense Card -->
-      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title">Total Expense</h5>
             <div class="d-flex align-items-center">
-              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-danger-light">
-                <i class="bi bi-currency-rupee text-danger"></i>
-              </div>
+            
               <div class="ps-3">
-                <h6>{{ total_expense|floatformat:"2g" }}</h6>
+                <h6>{{ total_expense }}</h6>
               </div>
             </div>
           </div>
         </div>
       </div>
-
+{% comment %} 
       <!-- EC Members Card -->
       <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
@@ -103,7 +101,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> {% endcomment %}
 
     <!-- View Toggle Buttons -->
     {% comment %} <div class="mb-3">
@@ -145,7 +143,7 @@
                 <th>Date</th>
                 <th>Member</th>
                 <th>Event Name</th>
-                <th>Verticals</th>
+                <th>Yi Verticals</th>
                 <th>Stakeholder</th>
                 <th>Venue</th>
                 <th>Expense</th>
@@ -183,7 +181,13 @@
                     <td>{{event.collage}}</td>
                     <td>{{event.which_SIG}}</td>
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
-                    <td><a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
+                    <td>
+                      {% if event.social_link == '' %}
+                      <a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
+                      {% else %}
+                      <span class="badge bg-light text-dark">No link</span>
+
+                      {% endif %}
                     <td>
                       {% if event.event_photo.all %}
                         {% with first_image=event.event_photo.first %}
@@ -227,7 +231,7 @@
                             <div class="carousel-inner">
                               {% for image in event.event_photo.all %}
                                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                  <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Event Image">
+                                  <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 800px; object-fit: cover;" alt="Event Image">
                                   <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
                                     <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" class="d-inline">
                                       {% csrf_token %}
@@ -391,7 +395,7 @@
 
                                     <div class="col-md-6" id="collage_div">
                                       <label for="event_image" class="form-label">Event Image</label>
-                                      <input type="file" id="event_image" class="form-control" name="event_image" multiple>
+                                      <input type="file" id="event_image" class="form-control" name="event_image" multiple accept=".jpeg , .png, .jpg">
                                   </div>
                                     
                                     <div class="modal-footer">
@@ -415,21 +419,25 @@
                 <!-- Pagination -->
                 
             </div>
-            <nav aria-label="Event table navigation">
-              <ul class="pagination justify-content-center ">
-                  <li class="page-item disabled">
-                      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                  </li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  {% comment %} <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">4</a></li>
-                  <li class="page-item"><a class="page-link" href="#">5</a></li> {% endcomment %}
-                  <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                  </li>
-              </ul>
-          </nav> 
+     <nav aria-label="Event table navigation">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <li class="page-item active">
+      <a class="page-link" href="#">1</a>
+    </li>
+    <!-- Optional pagination links if needed -->
+    <!-- <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">4</a></li>
+    <li class="page-item"><a class="page-link" href="#">5</a></li> -->
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
+
         </div>
         
     </div>

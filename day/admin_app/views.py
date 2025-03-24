@@ -309,12 +309,21 @@ def Admin_update(request, admin_id):
             admin_profile.phone_number = phone_number
             
             if 'admin_profile_img' in request.FILES:
+            
+                    
+                if admin_profile.photo.size > 4*1024*1024:
+                    messages.error(request,'Image Size must be 4mb')
+                    return redirect('Admin_Profile')
     
                 if admin_profile.photo and hasattr(admin_profile.photo, 'path') and os.path.exists(admin_profile.photo.path):
                     print(admin_profile.photo.path)
                     os.remove(admin_profile.photo.path)
+                    
                 admin_profile.photo = request.FILES['admin_profile_img']
-                        
+                
+                
+                
+                
                 if admin_profile.photo:
                     try:
                         validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg' ,'png'])
@@ -322,10 +331,10 @@ def Admin_update(request, admin_id):
                     except ValidationError:
                         messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
                         return redirect('Admin_Profile')
+                        
+             
                     
-            if admin_profile.photo.size > 4*1024*1024:
-                messages.error(request,'Image Size must be 4mb')
-                return redirect('Admin_Profile')
+     
             try:
                 admin_profile.full_clean()
                 admin_profile.save()
@@ -515,8 +524,7 @@ def admin_event_data(request):
             event_image = request.FILES.getlist('event_img')
             
             
-            
-            if event_expense is None or ' ':
+            if event_expense ==  '':
                 event_expense = 0
                 
         
@@ -543,7 +551,7 @@ def admin_event_data(request):
             
             valid_extension = ['.jpeg','.jpg','.png']
 
-
+        
             for img in event_image:
                 ext =  os.path.splitext(img.name)[1]
                 if ext.lower() not in valid_extension:
@@ -821,7 +829,7 @@ def update_memeber(request,manager_id):
             
             if 'manager_profile_img' in request.FILES:
               
-                update_manager_data.photo = request.FILES['manager_profile_img']
+                
                 if update_manager_data.photo and hasattr(update_manager_data.photo, 'path') and os.path.exists(update_manager_data.photo.path):
                     print(update_manager_data.photo.path)
                     os.remove(update_manager_data.photo.path)
@@ -833,11 +841,8 @@ def update_memeber(request,manager_id):
                         validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
                         validator(update_manager_data.photo)
                     except ValidationError:
-                        
                         messages.error(request,'Invalid file type. Only .jpeg, .jpg, .png allowed.')
                         return redirect('View-manager')
-
-                    
                 if update_manager_data.photo.size > 4*1024*1024:
                     messages.error(request,'Image Size must be 4mb ')
                     return redirect('View-manager')
@@ -852,8 +857,7 @@ def update_memeber(request,manager_id):
             except Exception as e:
                 # print(e.message_dict.items())
                 for field, errors in e.message_dict.items():
-                    # print(field)
-                    # print(errors)
+                 
                     for error in errors:
                         messages.error(request, f"{field}: {error}")
                     return redirect('View-manager')
@@ -918,6 +922,13 @@ def update_event_data(request,event_id):
                 update_event.associate_partner = request.POST.get('associate_partners')
                 event_image = request.FILES.getlist('event_image')
                 for image in event_image:
+                    if image:
+                        try:
+                            validator = FileExtensionValidator(allowed_extensions=['jpeg','jpg','png'])
+                            validator(image)
+                        except Exception as e:
+                            messages.error(request,'Invalid file type. Only .jpeg, .jpg, .png allowed.')
+                            return redirect('Admin_Dashboard')     
                     Event_Image.objects.create(event=update_event,event_photo = image)
                 update_event.save()
                 messages.success(request,'Event Update Successfully')
@@ -935,11 +946,16 @@ def update_event_data(request,event_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age = 0)
 def event_image_delete(request, image_id):
-    if request.method == 'POST':
-        image_to_delete = get_object_or_404(Event_Image, id=image_id)
-        if image_to_delete.event_photo:
-            image_to_delete.event_photo.delete()
-        image_to_delete.delete()  # Delete the image record
+    try:
+        
+        if request.method == 'POST':
+            image_to_delete = get_object_or_404(Event_Image, id=image_id)
+            if image_to_delete.event_photo:
+                image_to_delete.event_photo.delete()
+                messages.success(request,"Image Delete")
+            image_to_delete.delete()  # Delete the image record
+    except Exception as e:
+        messages.error(request,"Event Image not delete try again ")
     return redirect('Admin_Dashboard')
 
 

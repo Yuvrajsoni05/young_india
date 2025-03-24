@@ -8,7 +8,7 @@
     <main id="main" class="main">
 
       <div class="pagetitle">
-        <h1> Welcome, {{user.first_name}} {{user.last_name}} </h1>
+
        </div>
        
          <nav>
@@ -23,15 +23,43 @@
 
     <div class='row'>
 
-          <div class="col-xxl-6 col-md-6 col-sm-12 mb-4">
+
+      <div class="col-xxl-2 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card sales-card">
+          <div class="card-body">
+            <h5 class="card-title">Member Detail
+              </h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h3>{{ user.first_name  }} {{ user.last_name }}</h3>
+           
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xxl-2 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card sales-card">
+          <div class="card-body">
+            <h5 class="card-title">Member Detail
+              </h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h3>{{ user.first_name  }} {{ user.last_name }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+          <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
             <div class="card info-card sales-card">
               <div class="card-body">
-                <h5 class="card-title">Total Event's
+                <h5 class="card-title">Total Events
                   </h5>
                 <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-list-ol"></i>
-                  </div>
+                 
                   <div class="ps-3">
                     <h6>{{ total_event|floatformat:"0" }}</h6>
                   </div>
@@ -41,14 +69,12 @@
           </div>
 
 
-          <div class="col-xxl-6 col-md-6 col-sm-12 mb-4">
+          <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
             <div class="card info-card sales-card">
               <div class="card-body">
                 <h5 class="card-title">Total Impact</h5> 
                 <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-people-fill"></i>
-                  </div>
+               
                   <div class="ps-3">
                     <h6>{{ total_impact|floatformat:"g" }}</h6>
                   </div>
@@ -86,7 +112,7 @@
                 <th>Stakeholder</th>
                 
                 {% comment %} <th>Expense</th> {% endcomment %}
-                <th>Role</th>
+                <th>Yi Role</th>
                 <th> Yi Pillar   </th>
                 <th>School</th>
                 <th>College</th>
@@ -110,7 +136,7 @@
                     <td>{{ event.your_name }}</td>
                     <td>{{ event.event_name }}</td>
                
-                    <td class="event-handle" justify>{{ event.event_handle }}</td>
+                    <td class="event-handle">{{ event.event_handle }}</td>
 
                     <td>{{ event.project_stakeholder  }}</td>
         
@@ -121,8 +147,12 @@
                     <td>{{event.collage}}</td>
                     
                     <td>{{event.which_SIG}}</td>
-                    <td><a href="{{event.social_link}}"> <i class="bi bi-link"></i> </a>  </td>
-               
+                    <td>
+                      {% if event.social_link == ''  %}
+                      <span class="badge bg-light text-dark">No Link</span>
+                      {% else %}
+                      <a href="{{event.social_link}}"> <i class="bi bi-link"></i> </a>  </td>
+                      {% endif %}
                 
                     {% comment %} <td>{{event.associate_partner}} {% endcomment %}
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
@@ -153,7 +183,7 @@
           <div class="carousel-inner">
             {% for image in event.event_photo.all %}
               <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 500px; object-fit: cover;" alt="Event Image">
+                <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 800px; object-fit: cover;" alt="Event Image">
                 {% comment %} <div class="text-center mt-3">
                   <form method="POST" action="{% url 'delete_event_image' image_id=image.id %}" class="d-inline" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -340,18 +370,23 @@
                 
             </div>
             <nav aria-label="Event table navigation">
-              <ul class="pagination justify-content-center ">
-                  <li class="page-item disabled">
-                      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                  </li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-             
-            
-                  <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                  </li>
+              <ul class="pagination justify-content-center flex-wrap">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <!-- Optional pagination links if needed -->
+                <!-- <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li> -->
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
               </ul>
-          </nav> 
+            </nav>
         </div>
       </div>
     </div>
@@ -391,7 +426,7 @@
                  
                 link.innerText = trimmedName;
 
-                // Append the link to the container
+                // Append the link to the container 
                 container.appendChild(link);
 
                 // Add a <br> tag to add line break after each link

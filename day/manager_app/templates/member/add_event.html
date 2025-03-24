@@ -165,12 +165,12 @@
               <div class="form-group mb-3">
                 <label for="event_img" class="form-label">Event Image</label>
                 <input type="file" id="event_img" class="form-control" name="event_img" accept=".jpg, .jpeg, .png" multiple>
-                <small class="form-text text-muted">Images will be displayed responsively</small>
+                <small class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</small>
               </div>
             </div>
 
             <!-- SIG Division (hidden by default) -->
-            <div class="col-md-6 d-none" id="sig_div">
+            <div class="col-md-6 " id="sig_div" style="display: none;">
               <div class="form-group mb-3">
                 <label for="sig_" class="form-label">Choose SIG</label>
                 <select class="form-control" name="sig_">
@@ -185,16 +185,16 @@
               </div>
             </div>
 
-            <!-- School Division (hidden by default) -->
-            <div class="col-md-6 d-none" id="school_div">
+        
+            <div class="col-md-6 " id="school_div" style="display: none;">
               <div class="form-group mb-3">
                 <label for="school" class="form-label">School</label>
                 <input type="text" id="school" class="form-control" name="school" placeholder="School">
               </div>
             </div>
 
-            <!-- College Division (hidden by default) -->
-            <div class="col-md-6 d-none" id="collage_div">
+       
+            <div class="col-md-6 " id="collage_div" style="display: none;">
               <div class="form-group mb-3">
                 <label for="collage" class="form-label">College</label>
                 <input type="text" id="collage" class="form-control" name="collage" placeholder="College">
@@ -215,11 +215,11 @@
   </div>
 </main>
 
-<!-- Add JavaScript to handle responsive image preview for file input -->
-<script>
-  document.getElementById('event_img').addEventListener('change', function(event) {
-    // Code for preview could be added here if needed
-    console.log('Files selected:', this.files.length);
-  });
-</script>
+
+{% block scripts %}
+<script src="{% static 'js/event.js' %}"> </script>
+<script src="{% static 'js/inputfiled.js' %}"></script>
+
+{% endblock scripts %}
+
 {% endblock %}

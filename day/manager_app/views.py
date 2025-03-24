@@ -102,7 +102,6 @@ def manager_update(request,manager_id):
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
     
-    
     try:
         if request.method == 'POST':
             first_name = request.POST['manager_first_name']
@@ -113,20 +112,17 @@ def manager_update(request,manager_id):
             # login_role = request.POST.getlist('login_role')
             phone_number = request.POST['phone_number']
             
-        
         required_fields = {
                 'First Name': first_name,
                 'Last Name' :  last_name,
                 'Username' :username,
                 'Email':email,
                 'Phone Number':phone_number,
-                
             }
         for field,field_value in required_fields.items():
             if not field_value:
                 messages.error(request,f"The {field} field is Required ")
                 return redirect('manager-profile')
-        
         
         if request.method == 'POST':
             manager_profile = get_object_or_404(LoginSide, id=manager_id)
@@ -135,13 +131,13 @@ def manager_update(request,manager_id):
             manager_profile.email = email
             manager_profile.username = username
             manager_profile.phone_number = phone_number
-        
-                
+            
             if 'manager_profile_img' in request.FILES:
     
                 if manager_profile.photo and hasattr(manager_profile.photo, 'path') and os.path.exists(manager_profile.photo.path):
                     print(manager_profile.photo.path)
                     os.remove(manager_profile.photo.path)
+                    manager_profile.photo.path.delete()
                 manager_profile.photo = request.FILES['manager_profile_img']
                 
                 if manager_profile.photo.size > 4*1024*1024:
@@ -159,12 +155,7 @@ def manager_update(request,manager_id):
     except Exception as e:
         messages.error(request, f'Error updating profile: {str(e)}')
         return redirect('manager-profile')
-        
 
-
-
-
- 
 
 @login_required(login_url='index')
 def manager_password(request):
@@ -202,10 +193,7 @@ def manager_password(request):
 def manager_dashboard(request):
     if  request.user.login_role.filter(name='Admin').exclude():
         return redirect('Error-Page')
-    # all_user = LoginSide.objects.filter(login_role__in=['Manager','Admin']).distinct()
-
-    # user_vertical = LoginSide.objects.all()
-    # Get the role from the session
+ 
     user_roles = request.session.get('userrole', [])
     
     if user_roles:
@@ -213,7 +201,6 @@ def manager_dashboard(request):
             'role': user_roles  # Pass the role to the template
         }
     else:
-        # Handle the case where no role is found in the session (maybe unauthorized access)
         context = {
             'role': 'Unknown'
         }
@@ -242,10 +229,7 @@ def event_list(request):
 
 
 def delete_event_user(request,events_id):
-    
     try:
-      
-      
         if request.method == 'POST':
             delete_events = get_object_or_404(Event_Data,id=events_id)
             event_img  = delete_events.event_photo.all()
@@ -295,7 +279,6 @@ def update_event_data(request,update_id):
                     'Project Vertical': project_vertical,
                     'Project Stakeholder': project_stakeholder,
                     'Yi Piller': yipiller,
-            
                     'Yi Role': yirole,
                     'Total Impact': total_impact,}
                 
@@ -316,11 +299,8 @@ def update_event_data(request,update_id):
             update_event.event_handle = request.POST['event_handle']
             update_event.total_impact = total_impact
             update_event.which_SIG  = request.POST['sig_']
-
             update_event.associate_partner = request.POST.get('associate_partners')
-            
             event_image = request.FILES.getlist('event_image')
-
             for image in event_image:
                 Event_Image.objects.create(event=update_event,event_photo = image)
             update_event.save()
@@ -339,12 +319,19 @@ def update_event_data(request,update_id):
 
 
 def delete_event_image(request,image_id):
-    if request.method == 'POST':
-        image_to_delete = get_object_or_404(Event_Image,id = image_id )
-        if image_to_delete.event_photo:
+    try:
+        
+        
+        if request.method == 'POST':
+            image_to_delete = get_object_or_404(Event_Image,id = image_id )
+            if image_to_delete.event_photo:
+                image_to_delete.event_photo.delete()
             image_to_delete.event_photo.delete()
-        image_to_delete.event_photo.delete()
-    return redirect('member-dashbaord')
+        return redirect('member-dashbaord')
+    except Exception as e:
+        messages.error(request,'image not deleted ')
+        return render(request, 'member/dashboard.html')
+        
             
     # return render(request, 'member/event_list.html')
 
@@ -408,9 +395,12 @@ def event_data(request):
             collage = request.POST.get('collage', '')
             associate_partner = request.POST.get('associate_partner', '')
             
-            if event_expense is None or ' ':
+            if event_expense ==  '':
                 event_expense = 0
+
           
+          
+
             required_fields = {
                         'Event Date': event_date,
                         'Event Name': event_name,
@@ -425,7 +415,7 @@ def event_data(request):
                 
                 if not field_value:
                     messages.error(request,f" The  {field} field is Required")
-                    return redirect('admin_event_data') 
+                    return redirect('manager-dashboard') 
 
             event_image = request.FILES.getlist('event_img')
 
@@ -467,11 +457,11 @@ def event_data(request):
 
             for image in event_image:
                 Event_Image.objects.create(event_photo=image,event=EventData)
-
+            messages.success(request, 'Thank you for insert data')
+            return redirect('member-dashbaord')
             
                 # return JsonResponse({'status':'Data inserted'})
-            messages.success(request, 'Thank you for insert data')
-            return redirect('manager-dashboard')
+           
     except Exception as e:
         messages.error(request, f"Something went wrong: {str(e)}")
         return redirect('manager-dashboard')

@@ -21,19 +21,8 @@
           <!-- Profile Card with Cover Photo -->
           <div class="card mb-4">
             <!-- Cover Image - LinkedIn Style -->
-            <div class="position-relative">
-              <img src="{% static 'Image/YI.jpg' %}" 
-              alt="Cover Photo" class="img-fluid rounded-top" style="height: 280px; width: 100%; object-fit: cover;">
-              <!-- Profile Image Overlapping -->
-              <div class="position-absolute" style="bottom: -50px; left: 50px;">
-                <div class="position-relative">
-                  <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
-                       height="130px" width="130px" alt="Profile" 
-                       class="rounded-circle border border-4 border-white shadow">
-                </div>
-              </div>
-            </div>
-              <br><br><br>
+           
+            
         <div class="col-xl-12">
           <div class="card">
             <div class="card-body pt-3">

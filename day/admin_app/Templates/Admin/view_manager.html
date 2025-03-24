@@ -50,13 +50,13 @@
     </a>
   </div>
 
-  <nav>
+  {% comment %} <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
       <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
       <li class="breadcrumb-item active">EC Member List</li>
     </ol>
-  </nav>
+  </nav> {% endcomment %}
   <!-- End Page Title -->
 
   <!-- Table for Event Data -->
@@ -177,8 +177,11 @@
                             </select>
                           </div>
                         </div>
+                        
                         <div class="col-md-6">
+                         
                           <div class="mb-3">
+                            
                             <label for="manager_phone_number" class="form-label">Phone Number</label><span class="text-danger"> *</span>
                             <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
                           </div>

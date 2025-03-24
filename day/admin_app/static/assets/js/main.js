@@ -1,10 +1,3 @@
-/**
-* Template Name: NiceAdmin
-* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-* Updated: Apr 20 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
 
 (function() {
   "use strict";
@@ -184,7 +177,6 @@
    * Initiate TinyMCE Editor
    */
 
-  
   /**
    * Initiate Bootstrap validation check
    */
@@ -230,31 +222,31 @@
 
 })();
 
-// Disable caching on AJAX requests and unregister service workers
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function (registrations) {
-      for (let registration of registrations) {
-          registration.unregister(); // Unregister service workers to prevent caching
-      }
-  });
-}
+// // Disable caching on AJAX requests and unregister service workers
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.getRegistrations().then(function (registrations) {
+//       for (let registration of registrations) {
+//           registration.unregister(); // Unregister service workers to prevent caching
+//       }
+//   });
+// }
 
-// Force fresh request by adding timestamp to URL
-function disableCache(url) {
-  return url + (url.includes("?") ? "&" : "?") + "no_cache=" + new Date().getTime();
-}
+// // Force fresh request by adding timestamp to URL
+// function disableCache(url) {
+//   return url + (url.includes("?") ? "&" : "?") + "no_cache=" + new Date().getTime();
+// }
 
-// Redirect to error page when offline
-window.addEventListener("offline", function () {
-  console.log("Network offline. Redirecting to error page...");
-  window.location.href = "/Error"; // Make sure this route exists in Django
-});
+// // Redirect to error page when offline
+// window.addEventListener("offline", function () {
+//   console.log("Network offline. Redirecting to error page...");
+//   window.location.href = "/Error"; // Make sure this route exists in Django
+// });
 
-// Reload when online to get fresh data
-window.addEventListener("online", function () {
-  console.log("Network restored. Reloading...");
-  location.reload(); // Reloads page to get fresh data
-});
+// // Reload when online to get fresh data
+// window.addEventListener("online", function () {
+//   console.log("Network restored. Reloading...");
+//   location.reload(); // Reloads page to get fresh data
+// });
 
 
 // [22/Mar/2025 23:17:06,397] - Broken pipe from ('127.0.0.1', 51766)
