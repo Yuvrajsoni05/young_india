@@ -495,7 +495,8 @@ def admin_event_data(request):
     if not request.user.login_role.filter(name='Admin'):
         return redirect('Error-Page')
   
-    ec_member = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
+    ec_member = LoginSide.objects.all().exclude(is_superuser=True)
+    ec_member_names = [f"{member.first_name} {member.last_name}" for member in ec_member.distinct()]
     sessions = Session.objects.filter(expire_date__gte=now())
     user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
     active_users = LoginSide.objects.filter(id__in=user_ids)
@@ -514,7 +515,8 @@ def admin_event_data(request):
             yirole = request.POST['role_yi']
             your_name = request.POST['your_name']
             sig_option = request.POST.get('sig_', '')
-            event_handle = request.POST['select_member']
+            event_member = request.POST['event_member']
+            select_ec_member = request.POST.get('select_member', '')
             social_link = request.POST['social_link']
             event_expense = request.POST['event_expense']
             event_venue = request.POST['event_venue']
@@ -563,7 +565,7 @@ def admin_event_data(request):
                 your_name=your_name,
                 date=event_date,
                 role_yi=yirole,
-                event_handle=event_handle,
+                event_member=event_member,
                 project_vertical=project_vertical,
                 which_SIG=sig_option,
                 project_stakeholder=project_stakeholder,
@@ -576,6 +578,7 @@ def admin_event_data(request):
                 total_impact=total_impact,
                 event_name=event_name,
                 associate_partner=associate_partner,
+                select_ec_member=select_ec_member,
                 user=request.user
             )
             for image in event_image:
@@ -586,7 +589,7 @@ def admin_event_data(request):
         context = {
         'count':active_users_count,
         'name':active_user_names,
-        'ec_member':ec_member,
+        'ec_member':ec_member_names,
     }
 
         return render(request,'Admin/Admin_Event_data.html',context)
@@ -636,7 +639,7 @@ def download_excel(request):
         row = [
             i.date, i.your_name, i.event_name, i.event_venue, i.event_expense, i.role_yi, i.project_vertical,
             i.project_stakeholder, i.yi_pillar, i.which_SIG, i.school, i.collage, i.social_link,
-            i.event_handle, i.total_impact
+            i.event_member, i.total_impact
         ]
         sheet.append(row)
         # Now, for each event, if there are related images, we add them as hyperlinks.
@@ -916,7 +919,7 @@ def update_event_data(request,event_id):
                 update_event.project_stakeholder = project_stakeholder
                 update_event.yi_pillar = yipiller
                 update_event.social_link = request.POST['social_link']
-                update_event.event_handle = request.POST['event_handle']
+                update_event.event_member = request.POST['event_handle']
                 update_event.total_impact = total_impact
                 update_event.which_SIG = request.POST['sig_']
                 update_event.associate_partner = request.POST.get('associate_partners')

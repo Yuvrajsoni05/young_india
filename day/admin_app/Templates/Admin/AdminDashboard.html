@@ -1,5 +1,6 @@
  {% extends "base/base.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}Dashboard {% endblock title %}
 
 {% block bodyblock %}
@@ -16,9 +17,8 @@
 <!-- Main Content -->
 <main id="main" class="main">
   <div class="pagetitle">
-    <h1>Dashboard</h1>
     
-    <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add Ec Member</button></a></div>
+    <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add EC Member</button></a></div>
   </div>
 
   </div>
@@ -70,6 +70,8 @@
         </div>
       </div>
 
+      
+
       <!-- Expense Card -->
       <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
@@ -78,12 +80,13 @@
             <div class="d-flex align-items-center">
             
               <div class="ps-3">
-                <h6>{{ total_expense }}</h6>
+                <h6>{{ total_expense|intcomma }}</h6>
               </div>
             </div>
           </div>
         </div>
       </div>
+      
 {% comment %} 
       <!-- EC Members Card -->
       <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
@@ -136,7 +139,7 @@
   
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table table-borderless table-hover align-middle" id="eventTable">
+          <table class="table table-hover table-bordered align-middle" id="eventTable">
             <thead class="table-light" >
               <tr class="text-center text-nowrap">
                 <th>Sr No</th>
@@ -147,7 +150,8 @@
                 <th>Stakeholder</th>
                 <th>Venue</th>
                 <th>Expense</th>
-                <th>EC member's Name</th>
+                <th>EC members Name</th>
+                <th>Members</th>
                 <th>Yi Role</th>
                 <th>Yi Pillar</th>
                 <th>School</th>
@@ -174,7 +178,8 @@
                     <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
 
 
-                    <td class="event-handle" justify>{{ event.event_handle }}</td>
+                    <td class="event-handle" justify>{{ event.select_ec_member }}</td>
+                    <td class="event-handle" justify>{{ event.event_member }}</td>
                     <td>{{ event.role_yi }}</td>
                     <td>{{ event.yi_pillar }}</td>
                     <td> {{ event.school  }}</td>
@@ -464,45 +469,48 @@
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Get all the event-handle elements in the table
-        const eventHandles = document.querySelectorAll('.event-handle');
-
-        // Loop through each event-handle element
-        eventHandles.forEach(function (eventHandleElement) {
-            // Get the event_handle content
-            const eventHandle = eventHandleElement.innerText;
-
-            // Split the data by commas
-            const names = eventHandle.split(',');
-
-            // Create a container for the names
-            const container = document.createElement('div');
-
-            // Loop through each name and create a link for it
-            names.forEach(function (name) {
-                // Trim any extra spaces from the name
-                const trimmedName = name.trim();
-
-                // Create the link element
-                const link = document.createElement('span');
-                link.href = "#";  // Replace with the actual link if needed
-                 
-                link.innerText = trimmedName;
-
-                // Append the link to the container
-                container.appendChild(link);
-
-                // Add a <br> tag to add line break after each link
-                container.appendChild(document.createElement('br'));
-            });
-
-            // Clear the original content in the <td>
-            eventHandleElement.innerHTML = '';
-
-            // Append the new formatted content with links and line breaks
-            eventHandleElement.appendChild(container);
-        });
-    });
+      // Get all the event-handle elements in the table
+      const eventHandles = document.querySelectorAll('.event-handle');
+      
+      // Loop through each event-handle element
+      eventHandles.forEach(function (eventHandleElement) {
+          // Get the event_handle content
+          const eventHandle = eventHandleElement.innerText;
+          
+          // Split the data by commas
+          const names = eventHandle.split(',');
+          
+          // Create a select element
+          const select = document.createElement('select');
+          select.className = 'event-handle form-control-sm border'; // Add a class for styling if needed
+          
+          // Create a default option
+          const defaultOption = document.createElement('option');
+          defaultOption.text = 'See Name';
+          defaultOption.value = '';
+          select.appendChild(defaultOption);
+          
+          // Loop through each name and create an option for it
+          names.forEach(function (name) {
+              // Trim any extra spaces from the name
+              const trimmedName = name.trim();
+              
+              // Create the option element
+              const option = document.createElement('option');
+              option.value = trimmedName;
+              option.text = trimmedName;
+              
+              // Append the option to the select
+              select.appendChild(option);
+          });
+          
+          // Clear the original content in the <td>
+          eventHandleElement.innerHTML = '';
+          
+          // Append the new formatted select menu
+          eventHandleElement.appendChild(select);
+      });
+  });
 </script>
 
 

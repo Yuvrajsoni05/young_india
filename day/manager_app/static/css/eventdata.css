@@ -69,4 +69,43 @@
 
 }
 
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: normal;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkBoxes {
+display: none;
+border: 1px solid #ced4da;
+background-color: white;
+border-radius: 0.25rem;
+padding: 0.5rem;
+margin-top: -1px;
+position: absolute;
+width: 100%;
+z-index: 100;
+}
+#checkBoxes label {
+  display: block;
+  padding: 0.3rem 0;
+}
+
+#checkBoxes label:hover {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+
 

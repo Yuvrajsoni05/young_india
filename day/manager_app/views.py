@@ -195,14 +195,18 @@ def manager_dashboard(request):
         return redirect('Error-Page')
  
     user_roles = request.session.get('userrole', [])
-    
+    # ec_member = LoginSide.objects.all().values_list('first_name', flat=True).distinct().exclude(is_superuser=True)
+    ec_member = LoginSide.objects.all().distinct().exclude(is_superuser=True)
+    ec_member_names = [f"{member.first_name} {member.last_name}"for member in ec_member]
     if user_roles:
         context = {
-            'role': user_roles  # Pass the role to the template
+            'role': user_roles,
+            'ec_member':ec_member_names ,# Pass the role to the template
         }
     else:
         context = {
-            'role': 'Unknown'
+            'role': 'Unknown',
+            'ec_member':ec_member_names ,
         }
     
     return render(request,'member/add_event.html',context)
@@ -227,8 +231,7 @@ def event_list(request):
     return render(request, 'member/event_list.html', context)
 
 
-
-def delete_event_user(request,events_id):
+def delete_event_data(request,events_id):
     try:
         if request.method == 'POST':
             delete_events = get_object_or_404(Event_Data,id=events_id)
@@ -250,7 +253,7 @@ def delete_event_user(request,events_id):
     except Exception as e:
         messages.error(request,'Something went Wrong plz Try Again Event was not Deleted ')
 
-    return render (request,'member/dashboard')
+    return render (request,'member/dashboard.html')
 
 
 
@@ -296,7 +299,8 @@ def update_event_data(request,update_id):
             update_event.project_stakeholder = project_stakeholder
             update_event.yi_pillar = yipiller
             update_event.social_link = request.POST['social_link']
-            update_event.event_handle = request.POST['event_handle']
+            update_event.event_member = request.POST['event_member']
+            update_event.select_ec_member = request.POST['select_ec_member']
             update_event.total_impact = total_impact
             update_event.which_SIG  = request.POST['sig_']
             update_event.associate_partner = request.POST.get('associate_partners')
@@ -306,7 +310,7 @@ def update_event_data(request,update_id):
             update_event.save()
             
             
-            messages.success(request,'Data update')
+            messages.success(request,'Event updated succssfully')
             return redirect('member-dashbaord')
         else:
             messages.error(request,'Data not update')
@@ -320,8 +324,7 @@ def update_event_data(request,update_id):
 
 def delete_event_image(request,image_id):
     try:
-        
-        
+   
         if request.method == 'POST':
             image_to_delete = get_object_or_404(Event_Image,id = image_id )
             if image_to_delete.event_photo:
@@ -377,12 +380,14 @@ def event_data(request):
     
     try:
         
+        
         if request.method == 'POST':
             your_name = request.POST.get('your_name', '')
             event_date = request.POST.get('event_date', '')
             role_yi = request.POST.get('role_yi', '')
             sig_option = request.POST.get('sig_', '')
-            event_handle = request.POST.get('handel_by', '')
+            event_member = request.POST.get('handel_by', '')
+            select_ec_member = request.POST.get('select_member', '')
             project_verticals = request.POST.get('project_verticals', '')
             project_stakeholder = request.POST.get('project_stakeholder', '')
             yi_pillar = request.POST.get('yi_pillar', '')
@@ -438,7 +443,7 @@ def event_data(request):
                 your_name=your_name,
                 date=event_date,
                 role_yi=role_yi,
-                event_handle=event_handle,
+                event_member=event_member,
                 project_vertical=project_verticals,
                 which_SIG=sig_option,
                 project_stakeholder=project_stakeholder,
@@ -450,6 +455,7 @@ def event_data(request):
                 collage=collage,
                 total_impact=total_impact,
                 event_name=event_name,
+                select_ec_member=select_ec_member,
                 # event_photo=event_images,
                 associate_partner=associate_partner,
                 user=request.user
@@ -481,7 +487,7 @@ def dashboard(request):
     total_event = Event_Data.objects.filter(user=user).count()
     total_impact_data =  Event_Data.objects.filter(user=user).aggregate(Sum('total_impact'))
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
-
+    user_roles = request.session.get('userrole', [])
     # event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     
@@ -507,6 +513,7 @@ def dashboard(request):
                 #  'event_name': event_name,
                 #  'impact':aligned_event_impact,
                     'events': all_event,
+                    'role':user_roles,
                     
                 }
 

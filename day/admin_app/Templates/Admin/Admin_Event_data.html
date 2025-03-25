@@ -100,13 +100,25 @@
               <!-- Members name(s) field -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <b><label for="tagInput">Members name(s)</label></b>
-                  <div class="tag-container form-group" id="tagContainer">
-                    <input type="text" id="tagInput" class="form-control" placeholder="Type EC member's name">
-                    <input type="hidden" id="hiddenInput" name="#">
+                  <label for="select_member" class="form-label">Select Ec Member</label>
+                  <div class="selectBox" onclick="toggleCheckboxes()">
+                    <select class="form-control" id="select_member_display">
+                      <option>Select Ec Member</option>
+                    </select>
+                    <div class="overSelect"></div>
                   </div>
+                  <div id="checkBoxes">
+                    {% for i in ec_member  %}
+                    <label>
+                      <input type="checkbox" name="select_member[]" value="{{i}}" /> {{i}}
+                    </label>
+                    {% endfor %}
+                  </div>
+                  <!-- Hidden field to store the concatenated values -->
+                  <input type="hidden" id="select_member_hidden" name="select_member" value="">
                 </div>
               </div>
+          
           
               <!-- Project Verticals field -->
               <div class="col-12 col-sm-6 col-md-6">
@@ -167,24 +179,16 @@
               </div>
           
               <!-- Select Ec Member field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="select_member" class="form-label">Select Ec Member</label>
-                  <div class="selectBox" onclick="toggleCheckboxes()">
-                    <select class="form-control" id="select_member_display">
-                      <option>Select Ec Member</option>
-                    </select>
-                    <div class="overSelect"></div>
+            
+
+
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label for="tagInput" class="form-label">Members names</label>
+                  <div class="tag-container" id="tagContainer">
+                    <input type="text" id="tagInput" class="form-control" placeholder="Type EC member's name">
+                    <input type="hidden" id="hiddenInput" name="event_member">
                   </div>
-                  <div id="checkBoxes">
-                    {% for i in ec_member  %}
-                    <label>
-                      <input type="checkbox" name="select_member[]" value="{{i}}" /> {{i}}
-                    </label>
-                    {% endfor %}
-                  </div>
-                  <!-- Hidden field to store the concatenated values -->
-                  <input type="hidden" id="select_member_hidden" name="select_member" value="">
                 </div>
               </div>
           

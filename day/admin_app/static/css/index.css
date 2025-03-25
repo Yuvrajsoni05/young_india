@@ -221,9 +221,9 @@ img { max-width: 100%; height: auto; }
     }
     
     .form-img {
-        width: 470px;
+        width: 480px;
         height: 550px;
-        margin-right: 2rem;
+        margin-right: 15rem;
         margin-bottom: 0;
     }
 }

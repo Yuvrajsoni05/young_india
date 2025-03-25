@@ -1,7 +1,26 @@
 {% extends "components/base.html" %}
 {% load static %}
 {% block title %} Member  Dashboard {% endblock title %}
+
+
+
+{% block link %}
+
+ <style>
+.form-label
+  {
+    font-weight:bold;
+  }
+
+ </style>
+
+{% endblock link %}
+
+
  
+
+
+
 
 
 {% block bodyblock %}
@@ -10,58 +29,65 @@
       <div class="pagetitle">
 
        </div>
-       
+{% comment %}        
          <nav>
            {% comment %} <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'member-dashbaord' %}" >Member</a></li>
              <li class="breadcrumb-item active">Main Dashboard </li>
-           </ol> {% endcomment %}
-         </nav>
+           </ol> 
+         </nav> {% endcomment %}
        </div><!-- End Page Title -->
         <section class="section dashboard">
-
-    <div class='row'>
-
-
-      <div class="col-xxl-2 col-md-6 col-sm-12 mb-4">
-        <div class="card info-card sales-card">
-          <div class="card-body">
-            <h5 class="card-title">Member Detail
-              </h5>
-            <div class="d-flex align-items-center">
-              <div class="ps-3">
-                <h3>{{ user.first_name  }} {{ user.last_name }}</h3>
-           
+<br>
+          <div class='row'>
+            <div class="col-xxl-2 col-md-6 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body p-0">
+                  <img src="{% static 'Image/YIIMG.png' %}" class="card-img-top" style="height: 140px; object-fit: cover;" alt="Profile Image">
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xxl-2 col-md-6 col-sm-12 mb-4">
-        <div class="card info-card sales-card">
-          <div class="card-body">
-            <h5 class="card-title">Member Detail
-              </h5>
-            <div class="d-flex align-items-center">
-              <div class="ps-3">
-                <h3>{{ user.first_name  }} {{ user.last_name }}</h3>
+          
+            <div class="col-xxl-3 col-md-6 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+              
+                  <br>
+                  <div class="d-flex flex-column">
+                    <p class="mb-2" style="color:darkblue"><strong>Full Name : </strong>{{ user.full_name }}</p>
+                    <p class="mb-2" style="color:darkblue"><strong>Yi Vertical  : </strong> {% for i in role %}
+                      {{ i }}
+                    {% endfor %}</p>
+                    <p class="mb-2"style="color:darkblue"><strong>Yi Role: </strong>  {{ user.yi_role }}</p>
+                    
+                
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-          <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
-            <div class="card info-card sales-card">
-              <div class="card-body">
-                <h5 class="card-title">Total Events
-                  </h5>
-                <div class="d-flex align-items-center">
-                 
-                  <div class="ps-3">
-                    <h6>{{ total_event|floatformat:"0" }}</h6>
+          
+            <div class="col-xxl-3 col-md-6 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Events</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="ps-3">
+                      <h6>{{ total_event }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Impact</h5> 
+                  <div class="d-flex align-items-center">
+                    <div class="ps-3">
+                      <h6>{{ total_impact}}</h6>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -69,19 +95,7 @@
           </div>
 
 
-          <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
-            <div class="card info-card sales-card">
-              <div class="card-body">
-                <h5 class="card-title">Total Impact</h5> 
-                <div class="d-flex align-items-center">
-               
-                  <div class="ps-3">
-                    <h6>{{ total_impact|floatformat:"g" }}</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+  
     </div>
 
     <div class="card shadow-sm border-0 mb-4" id="table">
@@ -105,10 +119,11 @@
                 <th>Sr No</th>
                 <th>Date</th>
                 <th>Venue</th>
-                <th>Member Name</th>
+                {% comment %} <th>Member Name</th> {% endcomment %}
                 <th>Event Name</th>
               
-                <th>Ec Members Name</th>
+                <th>EC Members </th>
+                <th> Member </th>
                 <th>Stakeholder</th>
                 
                 {% comment %} <th>Expense</th> {% endcomment %}
@@ -123,7 +138,7 @@
                 <th> Social Link </th>
                 <th>Impact</th>
                 <th>Image</th>
-                {% comment %} <th>Actions</th> {% endcomment %}
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="display" >
@@ -133,10 +148,12 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ event.date }}</td>
                     <td>{{ event.event_venue }}</td>
-                    <td>{{ event.your_name }}</td>
+                    {% comment %} <td>{{ event.your_name }}</td> {% endcomment %}
                     <td>{{ event.event_name }}</td>
                
-                    <td class="event-handle">{{ event.event_handle }}</td>
+                    <td class="event-handle">{{ event.select_ec_member}}</td>
+                    <td class="event-handle">{{ event.event_member}}</td>
+                  
 
                     <td>{{ event.project_stakeholder  }}</td>
         
@@ -167,9 +184,24 @@
                         <span class="badge bg-light text-dark">No image</span>
                       {% endif %}
                     </td>
-                   
+                    <td>
+                      <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <form method="post" action="{% url 'delete_event_data' events_id=event.id %}" class="d-inline">
+                          {% csrf_token %}
+                          <button class="btn btn-sm btn-outline-danger ms-1" >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </form>
+                        {% comment %} <button type="button" class="btn btn-sm btn-outline-info ms-1" data-bs-toggle="collapse" data-bs-target="#details{{ event.id }}">
+                          <i class="bi bi-info-circle"></i>
+                        </button> {% endcomment %}
+                      </div>
+                    </td>
                   </tr>
-                
+  
                <!-- Image Modal -->
 <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -227,24 +259,24 @@
                                 <label for="event_name" class="form-label">Event Name</label>
                                 <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
                               </div>
-                              <div class="col-md-6">
+                              {% comment %} <div class="col-md-6">
                                 <label for="event_handle" class="form-label">Members Name</label>
                                 <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
-                              </div>
+                              </div> {% endcomment %}
                               <div class="col-md-6">
                                 <label for="role_yi" class="form-label">YI Role</label>
-                                <select class="form-select" id="role_yi" name="role_yi">
-                                  <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
-                                  <option value="Vertical Chair">Vertical Chair</option>
+                                {% comment %} <select class="form-select" id="role_yi" name="role_yi" readonly> {% endcomment %}
+                                  <input class="form-control"  value="{{ event.role_yi }}" id="role_yi" name="role_yi" readonly style="background-color:rgb(235, 236, 247);"> 
+                                  {% comment %} <option value="Vertical Chair">Vertical Chair</option>
                                   <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                                  <option value="Team Member">Team Member</option>
+                                  <option value="Team Member">Team Member</option> {% endcomment %}
                                 </select>
                               </div>
                               <div class="col-md-6">
-                                <label for="project_verticals" class="form-label">Project Verticals</label>
-                                <select class="form-select" id="project_verticals" name="project_verticals">
-                                  <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
-                                  <option value="Masoom">Masoom</option>
+                                <label for="project_verticals" class="form-label">Yi Verticals</label>
+                                {% comment %} <select class="form-select" id="project_verticals" name="project_verticals"> {% endcomment %}
+                                  <input class="form-control"  name="project_verticals" value="{{ event.project_vertical }}" readonly style="background-color:rgb(235, 236, 247);">
+                                  {% comment %} <option value="Masoom">Masoom</option>
                                   <option value="Road Safety">Road Safety</option>
                                   <option value="Health">Health</option>
                                   <option value="Sport">Sports</option>
@@ -258,12 +290,12 @@
                                   <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
                                   <option value="Culture Connect">Culture Connect</option>
                                   <option value="Yi Angel">Yi Angel</option>
-                                  <option value="Membership Engagement">Membership Engagement</option>
+                                  <option value="Membership Engagement">Membership Engagement</option> {% endcomment %}
                                   <!-- Add all vertical options -->
                                 </select>
                               </div>
                               <div class="col-md-6">
-                                <label for="project_stakeholder" class="form-label">Project Stakeholder</label>
+                                <label for="project_stakeholder" class="form-label">Stakeholder</label>
                                 <select class="form-select" id="project_stakeholder" name="project_stakeholder">
                                   <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
                                   <option value="Yuva">Yuva</option>
@@ -280,7 +312,7 @@
 
                                     <div class="col-md-6">
                                         <label for="yi_pillar" class="form-label">Yi Pillar</label>
-                                        <select class="form-control" id="yi_pillar" name="yi_pillar">
+                                        <select class="form-select" id="yi_pillar" name="yi_pillar">
                                             <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
                                             <option value="Youth Leader">Youth Leader</option>
                                             <option value="Thought Leader">Thought Leader</option>
@@ -288,6 +320,19 @@
                                             <!-- Add all pillar options -->
                                         </select>
                                     </div>
+
+
+                                    <div class="col-md-6">
+                                      <label for="select_ec_member" class="form-label">Select EC members</label>
+                                      <input type="text" class="form-control" id="select_ec_member" name="select_ec_member" value="{{ event.select_ec_member }}">
+                                  </div>
+
+
+
+                                  <div class="col-md-6">
+                                    <label for="social_link" class="form-label">Members</label>
+                                    <input type="text" class="form-control" id="event_member" name="event_member" value="{{ event.event_member }}">
+                                </div>
 
                                     <div class="col-md-6">
                                       <label for="social_link" class="form-label">Social Link</label>
@@ -298,15 +343,15 @@
                                         <label for="total_impact" class="form-label">Impact</label>
                                         <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
                                     </div>
-
+{% comment %} 
                                     <div class="col-md-6">
                                         <label for="event_expense" class="form-label">Event Expense</label>
                                         <input type="number" class="form-control" id="event_expense" name="event_expense" value="{{ event.event_expense }}">
-                                    </div>
+                                    </div> {% endcomment %}
 
                                     <div class="col-md-6" id="sig_div">
-                                        <label for="sig_">Choose SIG</label>
-                                        <select class="form-control" id="sig_" name="sig_">
+                                        <label for="sig_" class="form-label">Choose SIG</label>
+                                        <select class="form-select" id="sig_" name="sig_">
                                           {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
 
                                             <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
@@ -333,18 +378,18 @@
                                     </div> {% endcomment %}
 
                                     <div class="col-md-6" id="school_div">
-                                        <label for="school">School</label>
+                                        <label class="form-label" for="school">School</label>
                                         <input type="text" id="school" class="form-control" name="school" placeholder="School" value="{{ event.school }}">
                                     </div>
 
                                     <div class="col-md-6" id="collage_div">
-                                        <label for="collage">College</label>
+                                        <label class="form-label" for="collage">College</label>
                                         <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
                                     </div>
                                     
 
                                     <div class="col-md-6" id="collage_div">
-                                      <label for="event_image">Event Image</label>
+                                      <label class="form-label" for="event_image">Event Image</label>
                                       <input type="file" id="event_image" class="form-control" name="event_image" multiple>
                                   </div>
                                     
@@ -394,58 +439,57 @@
   </main><!-- End #main -->
 
 
-  {% block script %}
+ 
+{% endblock %}
+{% block script %}
 
 
-  <script src="{% static 'js/tabel.js' %}"> </script>
+<script src="{% static 'js/tabel.js' %}"> </script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get all the event-handle elements in the table
-        const eventHandles = document.querySelectorAll('.event-handle');
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      // Get all the event-handle elements in the table
+      const eventHandles = document.querySelectorAll('.event-handle');
 
-        // Loop through each event-handle element
-        eventHandles.forEach(function (eventHandleElement) {
-            // Get the event_handle content
-            const eventHandle = eventHandleElement.innerText;
+      // Loop through each event-handle element
+      eventHandles.forEach(function (eventHandleElement) {
+          // Get the event_handle content
+          const eventHandle = eventHandleElement.innerText;
 
-            // Split the data by commas
-            const names = eventHandle.split(',');
+          // Split the data by commas
+          const names = eventHandle.split(',');
 
-            // Create a container for the names
-            const container = document.createElement('div');
+          // Create a container for the names
+          const container = document.createElement('div');
 
-            // Loop through each name and create a link for it
-            names.forEach(function (name) {
-                // Trim any extra spaces from the name
-                const trimmedName = name.trim();
+          // Loop through each name and create a link for it
+          names.forEach(function (name) {
+              // Trim any extra spaces from the name
+              const trimmedName = name.trim();
 
-                // Create the link element
-                const link = document.createElement('span');
-                link.href = "#";  // Replace with the actual link if needed
-                 
-                link.innerText = trimmedName;
+              // Create the link element
+              const link = document.createElement('span');
+              link.href = "#";  // Replace with the actual link if needed
+               
+              link.innerText = trimmedName;
 
-                // Append the link to the container 
-                container.appendChild(link);
+              // Append the link to the container
+              container.appendChild(link);
 
-                // Add a <br> tag to add line break after each link
-                container.appendChild(document.createElement('br'));
-            });
+              // Add a <br> tag to add line break after each link
+              container.appendChild(document.createElement('br'));
+          });
 
-            // Clear the original content in the <td>
-            eventHandleElement.innerHTML = '';
+          // Clear the original content in the <td>
+          eventHandleElement.innerHTML = '';
 
-            // Append the new formatted content with links and line breaks
-            eventHandleElement.appendChild(container);
-        });
-    });
+          // Append the new formatted content with links and line breaks
+          eventHandleElement.appendChild(container);
+      });
+  });
 </script>
 
-
 {% endblock script %}
-{% endblock %}
-
 
 
 

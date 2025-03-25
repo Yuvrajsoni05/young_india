@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'admin_app','manager_app',
     'rest_framework',
     # 'axes',
@@ -84,7 +85,7 @@ ROOT_URLCONF = 'day.urls'
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Make sure this is in your main settings.py file
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_COOKIE_AGE = 5 * 60
 TEMPLATES = [
     {

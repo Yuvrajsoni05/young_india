@@ -53,6 +53,15 @@
                 <input type="text" class="form-control" id="lastname" name="last_name" maxlength="15" placeholder="Last Name" value="{{form_data.last_name}}" oninput="data()" required>
                 <div class="invalid-feedback" id="last_name">Please provide a last name.</div>
               </div>
+
+
+     
+               
+               
+      
+             
+
+
               <div class="col-md-6">
                 <label for="email" class="form-label">Email</label><span style="color:red;"> *</span>
                 <input type="email" class="form-control" id="add_email" name="add_email" maxlength="50" placeholder="Email Address" value="{{form_data.email}}" oninput="data()" required>
@@ -78,6 +87,8 @@
                   <option value="" disabled selected>Choose Yi Role</option>
                   <option value="Vertical Chair">Vertical Chair</option>
                   <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                  <option value="Chapter Chair">Chapter Chair</option>
+                  <option value="Chapter Co-Chair">Chapter Co-Chair</option>
                   <option value="Team Member">Team Member</option>
                 </select>
                 <div class="invalid-feedback">Please select a role.</div>
@@ -86,7 +97,7 @@
             
             <!-- Executive Council Role -->
             <div class="mb-4">
-              <label class="form-label">Executive Council Role</label><span style="color:red;"> *</span>
+              <label class="form-label">Vertical Role</label><span style="color:red;"> *</span>
               <div class="card border p-3 bg-light">
                 <div class="d-flex flex-wrap gap-3">
                   {% for i in role %}
