@@ -497,6 +497,15 @@ def dashboard(request):
 
     # Adjust event_impact to reflect the correct order of event_name
     # aligned_event_impact = [event_total_dict.get(event, 0) for event in event_name]
+    
+    
+    def formatImpact(total_impact):
+        s, *d = str(total_impact).partition(".")
+        r = ",".join([s[x-2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+        return "".join([r] + d)
+    
+    
+    total_impact = formatImpact(total_impact)
    
     
     

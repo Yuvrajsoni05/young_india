@@ -23,6 +23,8 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.decorators.cache import never_cache
 
+from babel.numbers import format_currency
+
 # Third-party imports
 # from io import BytesIO
 import numpy as np
@@ -331,9 +333,7 @@ def Admin_update(request, admin_id):
                     except ValidationError:
                         messages.error(request, "Invalid file type. Only .jpeg, .jpg, .png allowed.")
                         return redirect('Admin_Profile')
-                        
-             
-                    
+
      
             try:
                 admin_profile.full_clean()
@@ -435,18 +435,63 @@ def Admin_Dashboard(request):
     # Retrieve all distinct users and roles
     all_user = LoginSide.objects.all().distinct()
     login_role = Login_Role.objects.all().distinct()
+    
+    
+    def formatINR(total_expense):
+        s, *d = str(total_expense).partition(".")
+        r = ",".join([s[x-2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+        return "".join([r] + d)
+    
+    total_expense = formatINR(total_expense)
+    
+    
+    
+    def formatImpact(total_impact):
+        s, *d = str(total_impact).partition(".")
+        r = ",".join([s[x-2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+        return "".join([r] + d)
+    total_impact = formatImpact(total_impact)
 
     # Manager names from Event_Data
     member_name = Event_Data.objects.all().values_list('your_name', flat=True).distinct()
-    
+    vertical_name = Event_Data.objects.all().values_list('project_vertical', flat=True).distinct()
+    stakeholder_name = Event_Data.objects.all().values_list('project_stakeholder', flat=True).distinct()
+    yi_pillar_name = Event_Data.objects.all().values_list('yi_pillar',flat=True).distinct()
+    yi_role_name = Event_Data.objects.all().values_list('role_yi',flat=True).distinct()
+    total_vertical = vertical_name.count()
+    event_list = Event_Data.objects.all()
     # Handle search filtering
-    search = request.GET.get('search')
-    if search and search != 'all':
-        event_list = Event_Data.objects.filter(your_name__icontains=search) 
+    ec_name = request.GET.get('ec_name')
+    if ec_name and ec_name != 'all':
+        event_list = Event_Data.objects.filter(your_name__icontains=ec_name) 
         # Using icontains for partial match
-    else:
-        event_list = Event_Data.objects.all()
-
+    
+    
+    verticals = request.GET.get('verticals')
+    if verticals and verticals != 'all':
+        event_list = Event_Data.objects.filter(project_vertical__icontains=verticals) 
+        # Using icontains for partial match
+   
+   
+    yi_pillar =  request.GET.get('yi_pillar')
+    if yi_pillar and yi_pillar != 'all':
+        event_list = Event_Data.objects.filter(yi_pillar__icontains=yi_pillar)
+   
+    stakeholder =  request.GET.get('stakeholder')
+    if stakeholder and stakeholder != 'all':
+        event_list = Event_Data.objects.filter(project_stakeholder__icontains=stakeholder)
+        
+        
+    yi_role =  request.GET.get('yi_role')
+    if yi_role and yi_role != 'all':
+        event_list = Event_Data.objects.filter(role_yi__icontains=yi_role)
+        
+    date =  request.GET.get('date')
+    if date:
+        event_list = Event_Data.objects.filter(date=date)
+   
+   
+   
     context = {
         'user_id':user_id,
         'users_data': all_user,
@@ -457,8 +502,12 @@ def Admin_Dashboard(request):
         'impact_avg': avg_impact,
         'total_expense': total_expense,
         'events': event_list,
-        'm1': member_name,
-        
+        'member_name': member_name,
+        'verticals':vertical_name,
+        'stakeholder':stakeholder_name,
+        'yi_pillar':yi_pillar_name,
+        'yi_role':yi_role_name,
+        'total_vertical':total_vertical,
         'count':active_users_count,
         'name':active_user_names
     }
