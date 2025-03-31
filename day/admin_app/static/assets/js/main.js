@@ -36,23 +36,33 @@
  /**
  * Sidebar toggle (Ensures full expansion on mobile)
  */
-if (select('.toggle-sidebar-btn')) {
+ if (select('.toggle-sidebar-btn')) {
   on('click', '.toggle-sidebar-btn', function(e) {
     const body = select('body');
+    const movieIcon = select('.movie-view-icon'); // Select your movie view icon element
 
     if (window.innerWidth <= 1199) {
       // Mobile View: Fully expand sidebar when clicked
       if (body.classList.contains("toggle-sidebar")) {
         body.classList.remove("toggle-sidebar"); // Collapse sidebar
+        movieIcon.style.display = 'none'; // Hide movie view icon when collapsed
       } else {
         body.classList.add("toggle-sidebar"); // Expand sidebar
+        movieIcon.style.display = 'block'; // Show movie view icon when expanded
       }
     } else {
       // Desktop View: Normal behavior
       body.classList.toggle("toggle-sidebar");
+      // Here you can decide if you want to show or hide the icon depending on the state of the sidebar
+      if (body.classList.contains("toggle-sidebar")) {
+        movieIcon.style.display = 'block'; // Ensure icon is visible on desktop
+      } else {
+        movieIcon.style.display = 'none'; // Hide icon if sidebar is collapsed on desktop
+      }
     }
-  })
+  });
 }
+
 
   /**
    * Search bar toggle

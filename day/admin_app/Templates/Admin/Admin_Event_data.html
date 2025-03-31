@@ -47,8 +47,8 @@
               </div>
             </div>
         <br>
-        <div class="card-body  p-4">
-          <form method="POST" action="{% url 'admin_event_data' %}" enctype="multipart/form-data" class="was-validated w-100">
+        <div class="card-body  pt-3">
+          <form method="POST" id="myForm" action="{% url 'admin_event_data' %}" enctype="multipart/form-data" >
             {% csrf_token %}
             <div class="row">
               
@@ -65,7 +65,8 @@
               <div class="col-12 col-sm-6 col-md-6 mb-md-0">
                 <div class="form-group">
                   <label for="event_date" class="form-label">Event Date</label><span style="color:red;"> *</span>
-                  <input type="date" id="event_date" class="form-control" name="event_date" required aria-label="Event Date">
+                  <input type="date" id="event_date" class="form-control" name="event_date"  aria-label="Event Date">
+                  <div class="invalid-feedback" id="event_date_error">Please provide an event date.</div>
           
                 </div>
               </div>
@@ -75,7 +76,7 @@
                 <div class="form-group">
                   <label for="event_name" class="form-label">Event Name</label><span style="color:red;"> *</span>
                   <input type="text" id="event_name" class="form-control" name="event_name" placeholder="Event Name" required aria-label="Event Name">
-               
+                  <div class="invalid-feedback" id="event_name_error">Please provide an event name.</div>               
                 </div>
               </div>
           
@@ -83,17 +84,18 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="event_venue" class="form-label">Event Venue</label><span style="color:red;"> *</span>
-                  <input type="text" id="event_venue" class="form-control" name="event_venue" placeholder="Event Venue" required>
-             
+                  <input type="text" id="event_venue" class="form-control" name="event_venue" placeholder="Event Venue">
+                  <div class="invalid-feedback" id="event_venue_error">Please provide an event venue.</div>               
                 </div>
               </div>
+              
           
               <!-- YI Role field -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="role_yi" class="form-label">YI Role</label><span style="color:red;"> *</span>
                   <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" style="background-color:rgb(235, 236, 247);" required>
-                
+                  <div class="invalid-feedback" id="event_yi_role_error">Please provide an event name.</div>
                 </div>
               </div>
           
@@ -102,7 +104,7 @@
                 <div class="form-group">
                   <label for="select_member" class="form-label">Select EC Member</label>
                   <div class="selectBox" onclick="toggleCheckboxes()">
-                    <select class="form-control" id="select_member_display">
+                    <select class="form-control form-select" id="select_member_display">
                       <option>Select Ec Member</option>
                     </select>
                     <div class="overSelect"></div>
@@ -124,7 +126,7 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="project_verticals" class="form-label">Project Verticals</label><span style="color:red;"> *</span>
-                  <select class="form-control" id="project_verticals" name="project_verticals" required>
+                  <select class="form-control form-select" id="project_verticals" name="project_verticals" required>
                     <option value="" disabled selected>Choose Project/Initiative</option>
                     <option value="Masoom">Masoom</option>
                     <option value="Road Safety">Road Safety</option>
@@ -141,9 +143,10 @@
                     <option value="Culture Connect">Culture Connect</option>
                     <option value="Yi Angel">Yi Angel</option>
                     <option value="Membership Engagement">Membership Engagement</option>
-                    <option value="">None</option>
+                    <option value="none">None</option>
                   </select>
-                
+                  <div id="project_vertical_error" class="invalid-feedback">This field is required.</div>
+
                 </div>
               </div>
           
@@ -151,7 +154,7 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="project_stakeholder" class="form-label">Project Stakeholder</label><span style="color:red;"> *</span>
-                  <select class="form-control" id="project_stakeholder" name="project_stakeholder" required aria-label="Project Stakeholder">
+                  <select class="form-control form-select"  id="project_stakeholder" name="project_stakeholder" required aria-label="Project Stakeholder">
                     <option value="" disabled selected>Choose Project Stakeholder</option>
                     <option value="Yuva">Yuva</option>
                     <option value="Thalir">Thalir</option>
@@ -160,7 +163,8 @@
                     <option value="Member">Member</option>
                     <option value="">None</option>
                   </select>
-            
+                  <div id="project_stakeholder_error" class="invalid-feedback" >This field is required.</div>
+
                 </div>
               </div>
           
@@ -168,13 +172,14 @@
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
                   <label for="yi_pillar" class="form-label">YI Pillar Impact</label><span style="color:red;"> *</span>
-                  <select class="form-control" id="yi_pillar" name="yi_pillar" required aria-label="YI Pillar Impact">
+                  <select class="form-control form-select" id="yi_pillar" name="yi_pillar" required aria-label="YI Pillar Impact">
                     <option value="" disabled selected>Choose YI Pillar Impact</option>
                     <option value="Youth Leader">Youth Leader</option>
                     <option value="Thought Leader">Thought Leader</option>
                     <option value="Nation Building">Nation Building</option>
                   </select>
-                 
+                  <div id="project_yipillar_error" class="invalid-feedback">This field is required.</div>
+
                 </div>
               </div>
           
@@ -205,7 +210,8 @@
                 <div class="form-group">
                   <label for="total_impact" class="form-label">Total Impact</label><span style="color:red;"> *</span>
                   <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="total impact" aria-label="Total Impact">
-                 
+                  <div class="invalid-feedback" id="event_impact_error">Please provide an event imapct.</div>
+
                 </div>
               </div>
           
@@ -353,6 +359,140 @@
     });
  });
 </script>
+
+<script>
+
+// Event Date Validation
+var event_date = document.getElementById('event_date');
+var event_date_error = document.getElementById('event_date_error'); // changed variable name to avoid conflict
+
+function checkEventDate() {
+  if (event_date.value.trim() === '') {
+    event_date_error.style.display = "block";
+    return false;
+  } else {
+    event_date_error.style.display = "none";
+    return true;
+  }
+}
+
+event_date.addEventListener('input', checkEventDate); // Add the event listener for event date
+checkEventDate(); // Initial check
+
+// Event Name Validation
+
+var event_name = document.getElementById('event_name');
+var event_name_error = document.getElementById('event_name_error'); // changed variable name to avoid conflict
+
+function checkEventName() {
+  if (event_name.value.trim() === '') {
+    event_name_error.style.display = "block";
+    return false;
+  } else {
+    event_name_error.style.display = "none";
+    return true;
+  }
+}
+
+event_name.addEventListener('input', checkEventName); // Add the event listener for event name
+checkEventName();
+
+// Event Name Validation
+
+var event_impact = document.getElementById('total_impact');
+var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
+
+function checkEventImpact() {
+  if (event_impact.value.trim() === '') {
+    event_impact_error.style.display = "block";
+    return false;
+  } else {
+    event_impact_error.style.display = "none";
+    return true;
+  }
+}
+event_impact.addEventListener('input', checkEventImpact); // Add the event listener for event name
+checkEventImpact();
+
+
+var project_stakeholder = document.getElementById('project_stakeholder');
+var project_stakeholder_error = document.getElementById('project_stakeholder_error');
+
+function checkProjectStakeholder() {
+  if (project_stakeholder.value === '') {
+    project_stakeholder_error.style.display = "block"; 
+  } else {
+    project_stakeholder_error.style.display = "none"; 
+  }
+}
+project_stakeholder.addEventListener('input', checkProjectStakeholder);
+checkProjectStakeholder();
+
+
+
+
+
+var yi_pillar = document.getElementById('yi_pillar');
+var project_yipillar_error = document.getElementById('project_yipillar_error');
+
+function checkProjectYipillar() {
+  if (yi_pillar.value.trim() === '') {
+    project_yipillar_error.style.display = "block"; 
+  } else {
+    project_yipillar_error.style.display = "none"; 
+  }
+}
+yi_pillar.addEventListener('change', checkProjectYipillar);
+checkProjectYipillar();
+
+
+
+var project_venue = document.getElementById('event_venue');
+var project_venue_error = document.getElementById('event_venue_error');
+
+function checkProjectVenue() {
+  if (project_venue.value.trim() === '') {
+    project_venue_error.style.display = "block"; 
+  } else {
+    project_venue_error.style.display = "none"; 
+  }
+}
+project_venue.addEventListener('change', checkProjectVenue);
+checkProjectVenue();
+
+
+
+
+var project_vertical = document.getElementById('project_verticals');
+var project_vertical_errors = document.getElementById('project_vertical_error');
+
+function checkProjectVertical() {
+  if (project_vertical.value.trim() === '') {
+    project_vertical_errors.style.display = "block"; 
+  } else {
+    project_vertical_errors.style.display = "none"; 
+  }
+}
+project_vertical.addEventListener('change', checkProjectVertical);
+checkProjectVertical();
+
+
+// Submit Form Validation
+document.getElementById('myForm').addEventListener('submit', function(event) {
+  var isEventNameValid = checkEventName(); // Check event name
+  var isEventDateValid = checkEventDate();
+  var isEventImpact = checkEventImpact();
+  var isStakeholder =checkProjectStakeholder();
+  var isYiPillar  = checkProjectYipillar();  
+  var isVertical  = checkProjectVertical();
+  var isVenue = checkProjectVenue();
+
+  if (!isEventNameValid || !isEventDateValid || !isEventImpact || !isStakeholder  || !isYiPillar || !isVertical || !isVenue ) {
+    event.preventDefault(); // Prevent form submission if either validation fails
+  }
+});
+</script>
+
   <script src="{% static 'assets/js/event.js' %}"></script>
   <script src="{% static 'js/input.js' %}" ></script>
   {% endblock script %}

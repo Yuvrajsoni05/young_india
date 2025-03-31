@@ -97,8 +97,8 @@
             
             <!-- Executive Council Role -->
             <div class="mb-4">
-              <label class="form-label">Vertical Role</label><span style="color:red;"> *</span>
-              <div class="card border p-3 bg-light">
+              <button id="VerticalBtn" class="btn btn-outline-primary">Vertical Role</button>  &nbsp;<button id ="stakeholder" class="btn btn-outline-primary"> Stakeholder Role </button><br> 
+              <div class="card border p-3 bg-light" id="vertical_role">
                 <div class="d-flex flex-wrap gap-3">
                   {% for i in role %}
                   <div class="form-check">
@@ -107,6 +107,19 @@
                   </div>
                   {% endfor %}
                 </div>
+
+                <div class="d-flex flex-wrap gap-3" id="stakeholder_role">
+                  {% for i in role %}
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="role_{{ i.name }}" name="login_role" value="{{ i.name }}">
+                    <label class="form-check-label" for="role_{{ i.name }}">{{ i.name }}</label>
+                  </div>
+                  {% endfor %}
+                </div>
+
+
+
+
               </div>
             </div>
             
@@ -236,7 +249,34 @@ function password() {
 </script> {% endcomment %}
 
 
+<script>
 
+document.addEventListener('DOMContentLoaded', function() {
+    const VerticalBtn = document.getElementById('VerticalBtn');
+    const StakeholderBtn = document.getElementById('StakeholderBtn');
+    const vertical_role = document.getElementById('vertical_role');
+    const stakeholder_role = document.getElementById('stakeholder_role');
+
+    function toggleView(showVertical){
+      if(showVertical){
+      vertical_role.style.display = 'block';
+      stakeholder_role.style.display = 'none';
+
+      }
+      else{
+        vertical_role.style.display = 'none';
+      stakeholder_role.style.display = 'block';
+      }
+      
+    }
+    VerticalBtn.addEventListener('click',() => toggleView(true));
+    StakeholderBtn.addEventListener('click',() => toggleView(false));
+
+
+
+
+});
+</script>
 
 {% endblock script %}
 

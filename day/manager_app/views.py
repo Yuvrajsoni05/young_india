@@ -408,7 +408,6 @@ def event_data(request):
 
             required_fields = {
                         'Event Date': event_date,
-                        'Event Name': event_name,
                         'Project Vertical': project_verticals,
                         'Project Stakeholder': project_stakeholder,
                         'Yi Piller':  yi_pillar,
@@ -416,8 +415,8 @@ def event_data(request):
                         'Total Impact': total_impact,
             }
             
+            
             for field ,field_value in required_fields.items():
-                
                 if not field_value:
                     messages.error(request,f" The  {field} field is Required")
                     return redirect('manager-dashboard') 

@@ -363,16 +363,18 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                           </div>
                                           <div class="modal-body">
-                                            <form method="post" action="{% url 'Update_event_data' event_id=event.id %}" enctype="multipart/form-data">
+                                            <form method="post" id="edit_event" action="{% url 'Update_event_data' event_id=event.id %}" enctype="multipart/form-data">
                                               {% csrf_token %}
                                               <div class="row g-3">
                                                 <div class="col-md-6">
                                                   <label for="event_date" class="form-label">Event Date </label><span style="color:red;"> *</span>
                                                   <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
+                                                  <div class="invalid-feedback" id="event_date_error">Please provide an event date.</div>
                                                 </div>
                                                 <div class="col-md-6">
                                                   <label for="event_name" class="form-label">Event Name </label><span style="color:red;"> *</span>
                                                   <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
+                                                  <div class="invalid-feedback" id="event_name_error">Please provide an event name.</div>
                                                 </div>
                                                 <div class="col-md-6">
                                                   <label for="event_handle" class="form-label">Members Name</label>
@@ -386,6 +388,7 @@
                                                     <option value="Vertical Co-Chair">Vertical Co-Chair</option>
                                                     <option value="Team Member">Team Member</option>
                                                   </select>
+                                                  <div class="invalid-feedback" id="event_yi_role_error">Please provide an event Yi Role.</div>
                                                 </div>
                                                 <div class="col-md-6">
                                                   <label for="project_verticals" class="form-label">Project Verticals </label><span style="color:red;"> *</span>
@@ -408,6 +411,7 @@
                                                     <option value="Membership Engagement">Membership Engagement</option>
                                                     <!-- Add all vertical options -->
                                                   </select>
+                                                  <div class="invalid-feedback" id="event_yi_vertical_error">Please provide an event Yi Vertical .</div>
                                                 </div>
                                                 <div class="col-md-6">
                                                   <label for="project_stakeholder" class="form-label">Project Stakeholder </label><span style="color:red;"> *</span>
@@ -421,6 +425,7 @@
                                                     <option value="">None</option>
                                                     <!-- Add all stakeholder options -->
                                                   </select>
+                                                  <div class="invalid-feedback" id="event_yi_stakeholder_error">Please provide an event Yi Stakeholder .</div>
                                                 </div>
                                                       <div class="col-md-6">
                                                           <label for="yi_pillar" class="form-label">Yi Pillar </label><span style="color:red;"> *</span>
@@ -431,6 +436,7 @@
                                                               <option value="Nation Building">Nation Building</option>
                                                               <!-- Add all pillar options -->
                                                           </select>
+                                                          <div class="invalid-feedback" id="event_yi_pillar_error">Please provide an event Yi Pillar .</div>
                                                       </div>
                                                       <div class="col-md-6">
                                                         <label for="social_link" class="form-label">Social Link</label>
@@ -439,6 +445,7 @@
                                                       <div class="col-md-6">
                                                           <label for="total_impact" class="form-label">Impact</label><span style="color:red;"> *</span>
                                                           <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
+                                                          <div class="invalid-feedback" id="event_total_impact_error">Please provide an event Total Impact .</div>
                                                       </div>
 
                                                       <div class="col-md-6">
@@ -448,8 +455,9 @@
                                                       <div class="col-md-6" id="sig_div">
                                                           <label for="sig_" class="form-label">Choose SIG</label>
                                                           <select class="form-control" id="sig_" name="sig_">
-                                                            {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
-
+                                                            {% if event.which_SIG  == ' ' %} 
+                                                            <option value="Choose SIG">Choose SIG</option>
+                                                            {% else %}
                                                               <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
                                                               <option value="Active Living">Active Living</option>
                                                               <option value="Photography">Photography</option>
@@ -611,6 +619,140 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+
+
+<script>
+
+  // Event Date Validation
+  var event_date = document.getElementById('event_date');
+  var event_date_error = document.getElementById('event_date_error'); // changed variable name to avoid conflict
+  
+  function checkEventDate() {
+    if (event_date.value.trim() === '') {
+      event_date_error.style.display = "block";
+      return false;
+    } else {
+      event_date_error.style.display = "none";
+      return true;
+    }
+  }
+  event_date.addEventListener('input', checkEventDate); // Add the event listener for event date
+  checkEventDate(); // Initial check
+  
+  // Event Name Validation
+  
+  var event_name = document.getElementById('event_name');
+  var event_name_error = document.getElementById('event_name_error'); // changed variable name to avoid conflict
+  
+  function checkEventName() {
+    if (event_name.value.trim() === '') {
+      event_name_error.style.display = "block";
+      return false;
+    } else {
+      event_name_error.style.display = "none";
+      return true;
+    }
+  }
+  
+  event_name.addEventListener('input', checkEventName); // Add the event listener for event name
+  checkEventName();
+  
+  // Event Name Validation
+  
+  var event_impact = document.getElementById('total_impact');
+  var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
+  
+  function checkEventImpact() {
+    if (event_impact.value.trim() === '') {
+      event_impact_error.style.display = "block";
+      return false;
+    } else {
+      event_impact_error.style.display = "none";
+      return true;
+    }
+  }
+  event_impact.addEventListener('input', checkEventImpact); // Add the event listener for event name
+  checkEventImpact();
+  
+  
+  var project_stakeholder = document.getElementById('project_stakeholder');
+  var project_stakeholder_error = document.getElementById('project_stakeholder_error');
+  
+  function checkProjectStakeholder() {
+    if (project_stakeholder.value === '') {
+      project_stakeholder_error.style.display = "block"; 
+    } else {
+      project_stakeholder_error.style.display = "none"; 
+    }
+  }
+  project_stakeholder.addEventListener('input', checkProjectStakeholder);
+  checkProjectStakeholder();
+  
+  
+  
+  
+  
+  var yi_pillar = document.getElementById('yi_pillar');
+  var project_yipillar_error = document.getElementById('project_yipillar_error');
+  
+  function checkProjectYipillar() {
+    if (yi_pillar.value.trim() === '') {
+      project_yipillar_error.style.display = "block"; 
+    } else {
+      project_yipillar_error.style.display = "none"; 
+    }
+  }
+  yi_pillar.addEventListener('change', checkProjectYipillar);
+  checkProjectYipillar();
+  
+  
+  
+  var project_venue = document.getElementById('event_venue');
+  var project_venue_error = document.getElementById('event_venue_error');
+  
+  function checkProjectVenue() {
+    if (project_venue.value.trim() === '') {
+      project_venue_error.style.display = "block"; 
+    } else {
+      project_venue_error.style.display = "none"; 
+    }
+  }
+  project_venue.addEventListener('change', checkProjectVenue);
+  checkProjectVenue();
+  
+  
+  
+  
+  var project_vertical = document.getElementById('project_verticals');
+  var project_vertical_errors = document.getElementById('project_vertical_error');
+  
+  function checkProjectVertical() {
+    if (project_vertical.value.trim() === '') {
+      project_vertical_errors.style.display = "block"; 
+    } else {
+      project_vertical_errors.style.display = "none"; 
+    }
+  }
+  project_vertical.addEventListener('change', checkProjectVertical);
+  checkProjectVertical();
+  
+  
+  // Submit Form Validation
+  document.getElementById('edit_event').addEventListener('submit', function(event) {
+    var isEventNameValid = checkEventName(); // Check event name
+    var isEventDateValid = checkEventDate();
+    var isEventImpact = checkEventImpact();
+    var isStakeholder =checkProjectStakeholder();
+    var isYiPillar  = checkProjectYipillar();  
+    var isVertical  = checkProjectVertical();
+    var isVenue = checkProjectVenue();
+  
+    if (!isEventNameValid || !isEventDateValid || !isEventImpact || !isStakeholder  || !isYiPillar || !isVertical || !isVenue ) {
+      event.preventDefault(); 
+    }
+  });
+  </script>
 
 
   {% endblock script %}

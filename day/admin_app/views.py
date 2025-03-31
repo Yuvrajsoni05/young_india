@@ -459,7 +459,7 @@ def Admin_Dashboard(request):
     yi_pillar_name = Event_Data.objects.all().values_list('yi_pillar',flat=True).distinct()
     yi_role_name = Event_Data.objects.all().values_list('role_yi',flat=True).distinct()
     total_vertical = vertical_name.count()
-    event_list = Event_Data.objects.all()
+    # event_list = Event_Data.objects.all()
 
 
     selected_vertical = request.GET.get('vertical', 'all') 
@@ -467,38 +467,38 @@ def Admin_Dashboard(request):
     if selected_vertical == "all":
         total_vertical = vertical_name.count() 
     else:
-        total_vertical = Event_Data.objects.filter(project_vertical=selected_vertical).count()  # Count selected vertical
+        total_vertical = Event_Data.objects.filter(project_vertical=selected_vertical).count()  
 
-    # Handle search filtering
+    event_list = Event_Data.objects.all()
+
+ 
     ec_name = request.GET.get('ec_name')
     if ec_name and ec_name != 'all':
-        event_list = Event_Data.objects.filter(your_name__icontains=ec_name) 
-        # Using icontains for partial match
-    
-    
+        event_list = event_list.filter(your_name__icontains=ec_name) 
+
+   
     verticals = request.GET.get('verticals')
     if verticals and verticals != 'all':
-        event_list = Event_Data.objects.filter(project_vertical__icontains=verticals) 
-        # Using icontains for partial match
-   
-   
-    yi_pillar =  request.GET.get('yi_pillar')
-    if yi_pillar and yi_pillar != 'all':
-        event_list = Event_Data.objects.filter(yi_pillar__icontains=yi_pillar)
-   
-    stakeholder =  request.GET.get('stakeholder')
-    if stakeholder and stakeholder != 'all':
-        event_list = Event_Data.objects.filter(project_stakeholder__icontains=stakeholder)
-        
-        
-    yi_role =  request.GET.get('yi_role')
-    if yi_role and yi_role != 'all':
-        event_list = Event_Data.objects.filter(role_yi__icontains=yi_role)
-        
-    date =  request.GET.get('date')
-    if date:
-        event_list = Event_Data.objects.filter(date=date)
+        event_list = event_list.filter(project_vertical__icontains=verticals)
 
+  
+    yi_pillar = request.GET.get('yi_pillar')
+    if yi_pillar and yi_pillar != 'all':
+        event_list = event_list.filter(yi_pillar__icontains=yi_pillar)
+
+   
+    stakeholder = request.GET.get('stakeholder')
+    if stakeholder and stakeholder != 'all':
+        event_list = event_list.filter(project_stakeholder__icontains=stakeholder)
+
+   
+    yi_role = request.GET.get('yi_role')
+    if yi_role and yi_role != 'all':
+        event_list = event_list.filter(role_yi__icontains=yi_role)
+
+    date = request.GET.get('date')
+    if date:
+        event_list = event_list.filter(date=date)
 
     
    
