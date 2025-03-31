@@ -1,59 +1,29 @@
 <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
+  <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'Admin_Dashboard' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <!-- End Components Nav -->
-
-      
-
-        {% comment %} <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Event_List' %}">
-          <i class="bi bi-list-columns-reverse"></i>
-          <span>View Events</span>
-        </a>
-      </li> {% endcomment %}
-
-
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'View-manager' %}">
-          <i class="bi bi-people-fill"></i>
-          <span>Executive Council Members</span>
-        </a>
+          <a class="nav-link" href="{% url 'Admin_Dashboard' %}">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+          </a>
       </li>
-
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'admin_event_data' %}">
-          <i class="bi bi-calendar2-plus"></i>
-          <span>Add Yi Event </span>
-        </a>
+          <a class="nav-link collapsed" href="{% url 'View-manager' %}">
+              <i class="bi bi-people-fill"></i>
+              <span>Executive Council Members</span>
+          </a>
       </li>
-        {% comment %} <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'admin_chart' %}">
-         <i class="bi bi-bar-chart-line-fill"></i>
-          <span>chart</span>
-        </a>
-      </li> {% endcomment %}
-
-
-
-
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Admin_Logout' %}">
-          <i class="bi bi-box-arrow-left"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Login Page Nav -->
+          <a class="nav-link collapsed " href="{% url 'admin_event_data' %}">
+              <i class="bi bi-calendar2-plus"></i>
+              <span>Add Yi Event</span>
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link collapsed " href="{% url 'Admin_Logout' %}">
+              <i class="bi bi-box-arrow-left"></i>
+              <span>Logout</span>
+          </a>
+      </li>
+  </ul>
+</aside>
 
-
-    </ul>
-
-  </aside>

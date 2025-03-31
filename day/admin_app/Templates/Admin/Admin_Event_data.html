@@ -57,7 +57,7 @@
                 <div class="form-group">
                   <label for="your_name" class="form-label">Your Name</label><span style="color:red;"> *</span>
                   <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{ user.last_name }}" required placeholder="Enter your full name" aria-label="Your Name" style="background-color:rgb(235, 236, 247);">
-                  <div class="invalid-feedback">Please provide your name.</div>
+              
                 </div>
               </div>
           
@@ -66,7 +66,7 @@
                 <div class="form-group">
                   <label for="event_date" class="form-label">Event Date</label><span style="color:red;"> *</span>
                   <input type="date" id="event_date" class="form-control" name="event_date" required aria-label="Event Date">
-                  <div class="invalid-feedback">Please select an event date.</div>
+          
                 </div>
               </div>
           
@@ -75,7 +75,7 @@
                 <div class="form-group">
                   <label for="event_name" class="form-label">Event Name</label><span style="color:red;"> *</span>
                   <input type="text" id="event_name" class="form-control" name="event_name" placeholder="Event Name" required aria-label="Event Name">
-                  <div class="invalid-feedback">Please provide an event name.</div>
+               
                 </div>
               </div>
           
@@ -84,7 +84,7 @@
                 <div class="form-group">
                   <label for="event_venue" class="form-label">Event Venue</label><span style="color:red;"> *</span>
                   <input type="text" id="event_venue" class="form-control" name="event_venue" placeholder="Event Venue" required>
-                  <div class="invalid-feedback">Please provide an event venue.</div>
+             
                 </div>
               </div>
           
@@ -93,7 +93,7 @@
                 <div class="form-group">
                   <label for="role_yi" class="form-label">YI Role</label><span style="color:red;"> *</span>
                   <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" style="background-color:rgb(235, 236, 247);" required>
-                  <div class="invalid-feedback">Please provide your YI role.</div>
+                
                 </div>
               </div>
           
@@ -115,7 +115,7 @@
                     {% endfor %}
                   </div>
                   <!-- Hidden field to store the concatenated values -->
-                  <input type="hidden" id="select_member_hidden" name="select_member" value="">
+        
                 </div>
               </div>
           
@@ -143,7 +143,7 @@
                     <option value="Membership Engagement">Membership Engagement</option>
                     <option value="">None</option>
                   </select>
-                  <div class="invalid-feedback">Please select a project vertical.</div>
+                
                 </div>
               </div>
           
@@ -160,7 +160,7 @@
                     <option value="Member">Member</option>
                     <option value="">None</option>
                   </select>
-                  <div class="invalid-feedback">Please select a project stakeholder.</div>
+            
                 </div>
               </div>
           
@@ -174,7 +174,7 @@
                     <option value="Thought Leader">Thought Leader</option>
                     <option value="Nation Building">Nation Building</option>
                   </select>
-                  <div class="invalid-feedback">Please select a YI pillar impact.</div>
+                 
                 </div>
               </div>
           
@@ -205,7 +205,7 @@
                 <div class="form-group">
                   <label for="total_impact" class="form-label">Total Impact</label><span style="color:red;"> *</span>
                   <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="total impact" aria-label="Total Impact">
-                  <div class="invalid-feedback">Please provide total impact.</div>
+                 
                 </div>
               </div>
           
@@ -353,13 +353,6 @@
     });
  });
 </script>
-
-
-
-
-
-
-
   <script src="{% static 'assets/js/event.js' %}"></script>
   <script src="{% static 'js/input.js' %}" ></script>
   {% endblock script %}

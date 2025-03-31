@@ -460,6 +460,15 @@ def Admin_Dashboard(request):
     yi_role_name = Event_Data.objects.all().values_list('role_yi',flat=True).distinct()
     total_vertical = vertical_name.count()
     event_list = Event_Data.objects.all()
+
+
+    selected_vertical = request.GET.get('vertical', 'all') 
+
+    if selected_vertical == "all":
+        total_vertical = vertical_name.count() 
+    else:
+        total_vertical = Event_Data.objects.filter(project_vertical=selected_vertical).count()  # Count selected vertical
+
     # Handle search filtering
     ec_name = request.GET.get('ec_name')
     if ec_name and ec_name != 'all':
@@ -489,6 +498,9 @@ def Admin_Dashboard(request):
     date =  request.GET.get('date')
     if date:
         event_list = Event_Data.objects.filter(date=date)
+
+
+    
    
    
    

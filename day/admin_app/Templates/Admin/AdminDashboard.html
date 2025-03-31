@@ -42,21 +42,29 @@
       <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
           <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <a class="icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots"></i>
+            </a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
               <li class="dropdown-header text-start">
                 <h6>Vertical</h6>
               </li>
+      
+              <!-- Show "All" option by default -->
+              <li><a class="dropdown-item" href="?vertical=all">All Verticals</a></li>
+      
+              <!-- Loop through verticals -->
               {% for i in verticals %}
-              <li><a class="dropdown-item" href="#">{{i}}</a></li>
-             
+              <li><a class="dropdown-item" href="?vertical={{ i }}">{{ i }}</a></li>
               {% endfor %}
             </ul>
           </div>
+      
           <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-list-ol text-primary"></i>&nbsp; Vertical</h5>
+            <h5 class="card-title">
+              <i class="bi bi-list-ol text-primary"></i>&nbsp; Vertical
+            </h5>
             <div class="d-flex align-items-center">
-             
               <div class="ps-3">
                 <h6>{{ total_vertical }}</h6>
               </div>
@@ -64,6 +72,7 @@
           </div>
         </div>
       </div>
+      
 
 
     <!-- Stats Cards -->

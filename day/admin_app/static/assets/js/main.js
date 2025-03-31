@@ -32,23 +32,48 @@
     el.addEventListener('scroll', listener)
   }
 
-  /**
-   * Sidebar toggle
-   */
-  if (select('.toggle-sidebar-btn')) {
-    on('click', '.toggle-sidebar-btn', function(e) {
-      select('body').classList.toggle('toggle-sidebar')
-    })
-  }
+
+ /**
+ * Sidebar toggle (Ensures full expansion on mobile)
+ */
+if (select('.toggle-sidebar-btn')) {
+  on('click', '.toggle-sidebar-btn', function(e) {
+    const body = select('body');
+
+    if (window.innerWidth <= 1199) {
+      // Mobile View: Fully expand sidebar when clicked
+      if (body.classList.contains("toggle-sidebar")) {
+        body.classList.remove("toggle-sidebar"); // Collapse sidebar
+      } else {
+        body.classList.add("toggle-sidebar"); // Expand sidebar
+      }
+    } else {
+      // Desktop View: Normal behavior
+      body.classList.toggle("toggle-sidebar");
+    }
+  })
+}
 
   /**
    * Search bar toggle
    */
-  if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function(e) {
-      select('.search-bar').classList.toggle('search-bar-show')
-    })
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const sidebarToggle = document.querySelector("#sidebarToggle");
+    const sidebarIcon = document.querySelector("#sidebarIcon");
+    const body = document.body;
+  
+    sidebarToggle.addEventListener("click", function () {
+      body.classList.toggle("toggle-sidebar");
+  
+      // Change icon when sidebar is toggled
+      if (body.classList.contains("toggle-sidebar")) {
+        sidebarIcon.classList.replace("bi-list", "bi-x-lg"); // Change to '×' icon
+      } else {
+        sidebarIcon.classList.replace("bi-x-lg", "bi-list"); // Change back to menu icon
+      }
+    });
+  });
+  
 
   /**
    * Navbar links active state on scroll

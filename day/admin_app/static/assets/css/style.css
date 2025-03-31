@@ -620,64 +620,101 @@ h6 {
 /*--------------------------------------------------------------
 # Sidebar
 --------------------------------------------------------------*/
+/* Default Sidebar - Expanded */
 .sidebar {
   position: fixed;
   top: 60px;
   left: 0;
   bottom: 0;
-  width: 300px;
+  width: 300px; /* Expanded width */
   z-index: 996;
-  transition: all 0.3s;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
   padding: 20px;
   overflow-y: auto;
-  /* scrollbar-width: thin;
-  scrollbar-color: #aab7cf transparent; */
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
   background-color: #fff;
 }
 
+/* Content Area Adjusts when Sidebar is Open */
+#main,
+#footer {
+  margin-left: 300px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* COLLAPSED SIDEBAR (Desktop & Mobile) */
+.toggle-sidebar .sidebar {
+  width: 80px; /* Keep only icons visible */
+  padding: 20px 10px;
+}
+
+/* Adjust content when sidebar is collapsed */
+.toggle-sidebar #main,
+.toggle-sidebar #footer {
+  margin-left: 80px;
+}
+
+/* Hide text when sidebar is collapsed */
+.toggle-sidebar .sidebar .nav-link span {
+  display: none;
+}
+
+/* Keep icons centered when collapsed */
+.toggle-sidebar .sidebar .nav-link i {
+  margin-right: 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* 🛠 MOBILE VIEW: Show Only Icons By Default */
 @media (max-width: 1199px) {
   .sidebar {
-    left: -300px;
+    width: 80px; /* Default: Show only icons */
+    padding: 20px 5px;
   }
-}
-
-.sidebar::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
-  background-color: #fff;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background-color: #aab7cf;
-}
-
-@media (min-width: 1200px) {
 
   #main,
   #footer {
-    margin-left: 300px;
+    margin-left: 80px;
+  }
+
+  /* Hide text in collapsed state */
+  .sidebar .nav-link span {
+    display: none;
+  }
+
+  /* Keep icons centered */
+  .sidebar .nav-link i {
+    margin-right: 0;
+    text-align: center;
+    width: 100%;
   }
 }
 
+/* 🛠 MOBILE VIEW: When Toggled, Expand Fully */
 @media (max-width: 1199px) {
   .toggle-sidebar .sidebar {
-    left: 0;
+    width: 250px;  /* Expand fully */
   }
-}
-
-@media (min-width: 1200px) {
 
   .toggle-sidebar #main,
   .toggle-sidebar #footer {
-    margin-left: 0;
+    margin-left: 0; /* Prevent content shifting */
   }
 
-  .toggle-sidebar .sidebar {
-    left: -300px;
+  /* Show text when expanded */
+  .toggle-sidebar .sidebar .nav-link span {
+    display: inline;
+  }
+
+  .toggle-sidebar .sidebar .nav-link i {
+    margin-right: 10px;
+    width: auto;
+    text-align: left;
   }
 }
 
+/* Sidebar Navigation Styles */
 .sidebar-nav {
   padding: 0;
   margin: 0;
@@ -702,13 +739,14 @@ h6 {
   margin: 10px 0 5px 15px;
 }
 
+/* Sidebar Links */
 .sidebar-nav .nav-link {
   display: flex;
   align-items: center;
   font-size: 15px;
   font-weight: 600;
   color: #4154f1;
-  transition: 0.3;
+  transition: 0.3s;
   background: #f6f9ff;
   padding: 10px 15px;
   border-radius: 4px;
@@ -720,6 +758,7 @@ h6 {
   color: #4154f1;
 }
 
+/* Collapsed Links */
 .sidebar-nav .nav-link.collapsed {
   color: #012970;
   background: #fff;
@@ -729,6 +768,7 @@ h6 {
   color: #899bbd;
 }
 
+/* Hover Effects */
 .sidebar-nav .nav-link:hover {
   color: #4154f1;
   background: #f6f9ff;
@@ -738,6 +778,7 @@ h6 {
   color: #4154f1;
 }
 
+/* Dropdown Arrow */
 .sidebar-nav .nav-link .bi-chevron-down {
   margin-right: 0;
   transition: transform 0.2s ease-in-out;
@@ -747,6 +788,7 @@ h6 {
   transform: rotate(180deg);
 }
 
+/* Sidebar Submenu */
 .sidebar-nav .nav-content {
   padding: 5px 0 0 0;
   margin: 0;
@@ -759,9 +801,8 @@ h6 {
   font-size: 14px;
   font-weight: 600;
   color: #012970;
-  transition: 0.3;
-  padding: 10px 0 10px 40px;
   transition: 0.3s;
+  padding: 10px 0 10px 40px;
 }
 
 .sidebar-nav .nav-content a i {
@@ -771,6 +812,7 @@ h6 {
   border-radius: 50%;
 }
 
+/* Active & Hover States */
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
   color: #4154f1;
@@ -779,6 +821,7 @@ h6 {
 .sidebar-nav .nav-content a.active i {
   background-color: #4154f1;
 }
+
 
 /*--------------------------------------------------------------
 # Dashboard
