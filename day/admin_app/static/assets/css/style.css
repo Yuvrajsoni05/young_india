@@ -621,6 +621,10 @@ h6 {
 # Sidebar
 --------------------------------------------------------------*/
 /* Default Sidebar - Expanded */
+/*--------------------------------------------------------------
+# Sidebar
+--------------------------------------------------------------*/
+/* Default Sidebar - Expanded */
 .sidebar {
   position: fixed;
   top: 60px;
@@ -642,7 +646,7 @@ h6 {
   transition: margin-left 0.3s ease-in-out;
 }
 
-/* COLLAPSED SIDEBAR (Desktop & Mobile) */
+/* COLLAPSED SIDEBAR (Desktop) */
 .toggle-sidebar .sidebar {
   width: 80px; /* Keep only icons visible */
   padding: 20px 10px;
@@ -666,43 +670,32 @@ h6 {
   width: 100%;
 }
 
-/* 🛠 MOBILE VIEW: Show Only Icons By Default */
+/* 🛠 MOBILE VIEW: Hide Sidebar Initially */
 @media (max-width: 1199px) {
   .sidebar {
-    width: 80px; /* Default: Show only icons */
-    padding: 20px 5px;
+    left: -300px; /* Hide it completely */
+    width: 250px; /* Keep it wide for when it appears */
   }
 
   #main,
   #footer {
-    margin-left: 80px;
-  }
-
-  /* Hide text in collapsed state */
-  .sidebar .nav-link span {
-    display: none;
-  }
-
-  /* Keep icons centered */
-  .sidebar .nav-link i {
-    margin-right: 0;
-    text-align: center;
-    width: 100%;
+    margin-left: 0; /* Content takes full width when sidebar is hidden */
   }
 }
 
-/* 🛠 MOBILE VIEW: When Toggled, Expand Fully */
+/* 🛠 MOBILE VIEW: When Toggled, Show Sidebar */
 @media (max-width: 1199px) {
   .toggle-sidebar .sidebar {
+    left: 0; /* Bring sidebar into view */
     width: 250px;  /* Expand fully */
   }
 
   .toggle-sidebar #main,
   .toggle-sidebar #footer {
-    margin-left: 0; /* Prevent content shifting */
+    margin-left: 0; /* Keep content in place */
   }
 
-  /* Show text when expanded */
+  /* Show text when sidebar is visible on mobile */
   .toggle-sidebar .sidebar .nav-link span {
     display: inline;
   }
@@ -821,7 +814,6 @@ h6 {
 .sidebar-nav .nav-content a.active i {
   background-color: #4154f1;
 }
-
 
 /*--------------------------------------------------------------
 # Dashboard
