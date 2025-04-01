@@ -145,70 +145,66 @@
             <div id="tableView">
 
                 <!-- View Toggle Buttons -->
-                    <div class="card-header bg-white py-3">
-                      <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
-                        <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
-                        
-                        <div class="d-flex gap-2">
-                           
-                            <a href="{% url 'download_excel' %}" class="btn btn-success">
+                <div class="card-header bg-white py-3">
+                  <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
+                      <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
+              
+                      <div class="d-flex gap-2">
+                          <a href="{% url 'download_excel' %}" class="btn btn-success">
                               <i class="bi bi-download"></i>&nbsp; Download
-                            </a>
-                        </div>
+                          </a>
                       </div>
-                        
-                          <div class="col-12 col-md-12">
-                              <div class="row g-2">
-
-                                  <div class="col-12 col-sm-6 col-lg-2">
-                                    <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex">
-                                      <input type="date" class="form-control me-2" id="date" name="date" onchange="this.form.submit()">
-                                    </form>
-                                  </div>
-                                  
-                                  <!-- Date Range Search -->
-                                  <div class="col-12 col-sm-6 col-lg-2">
-                                    <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex">
+                  </div>
+              
+                  <div class="col-12">
+                      <div class="row g-2">
+                          <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex flex-wrap">
+                              {% comment %} <div class="col-12 col-sm-6 col-lg-2">
+                              
+                              <input type="date" class="form-control me-2" id="date" name="date" onchange="this.form.submit()">
+                              
+                              </div> {% endcomment %}
+              
+                              <!-- Date Range Search -->
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
                                       <select class="form-select me-2" id="stakeholder" name="stakeholder" onchange="this.form.submit()">
                                           <option value="" disabled selected>Stakeholder</option>
                                           <option value="all">All</option>
                                           {% for i in stakeholder %}
-                                              <option value="{{ i }}"{% if i == request.GET.demo %} selected {% endif %}>{{ i }}</option>
+                                              <option value="{{ i }}"{% if i == request.GET.stakeholder %} selected {% endif %}>{{ i }}</option>
                                           {% endfor %}
                                       </select>
-                                    </form>
-                                  </div> 
-
-                                  <div class="col-12 col-sm-6 col-lg-2">
-                                    <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex">
+                                  </div>
+                              </div>
+              
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
                                       <select class="form-select me-2" id="ec_name" name="ec_name" onchange="this.form.submit()">
                                           <option value="" disabled selected>EC Member Name</option>
                                           <option value="all">All</option>
                                           {% for i in member_name %}
-                                              <option value="{{ i }}"{% if i == request.GET.search %} selected {% endif %}>{{ i }}</option>
+                                              <option value="{{ i }}"{% if i == request.GET.ec_name %} selected {% endif %}>{{ i }}</option>
                                           {% endfor %}
                                       </select>
-                                    </form>
                                   </div>
-                                
-
-
-                                <div class="col-12 col-sm-6 col-lg-2">
-                                  <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex">
-                                    <select class="form-select me-2" id="yi_role" name="yi_role" onchange="this.form.submit()">
-                                        <option value="" disabled selected>Yi Role</option>
-                                        <option value="all">All</option>
-                                        {% for i in yi_role %}
-                                            <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
-                                        {% endfor %}
-                                    </select>
-                                  </form>
-                                </div>
-
-
-                                  <!-- Event Name Search -->
-                                <div class="col-12 col-sm-6 col-lg-2">
-                                    <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex">
+                              </div>
+              
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      <select class="form-select me-2" id="yi_role" name="yi_role" onchange="this.form.submit()">
+                                          <option value="" disabled selected>Yi Role</option>
+                                          <option value="all">All</option>
+                                          {% for i in yi_role %}
+                                              <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select>
+                                  </div>
+                              </div>
+              
+                              <!-- Event Name Search -->
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
                                       <select class="form-select me-2" id="yi_pillar" name="yi_pillar" onchange="this.form.submit()">
                                           <option value="" disabled selected>Yi Pillar</option>
                                           <option value="all">All</option>
@@ -216,36 +212,43 @@
                                               <option value="{{ i }}"{% if i == request.GET.yi_pillar %} selected {% endif %}>{{ i }}</option>
                                           {% endfor %}
                                       </select>
-                                  </form>
-                                </div>
-                    
-                                <!-- Vertical Search Dropdown -->
-                                <div class="col-12 col-sm-6 col-lg-2">
-                                  <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex">
-                                    <select class="form-select me-2" id="verticals" name="verticals" onchange="this.form.submit()">
-                                        <option value="" disabled selected>Verticals</option>
-                                        <option value="all">All</option>
-                                        {% for i in verticals %}
-                                            <option value="{{ i }}"{% if i == request.GET.demo %} selected {% endif %}>{{ i }}</option>
-                                        {% endfor %}
-                                    </select>
-                                  </form>
+                                  </div>
+                              </div>
+              
+                              <!-- Vertical Search Dropdown -->
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      <select class="form-select me-2" id="verticals" name="verticals" onchange="this.form.submit()">
+                                          <option value="" disabled selected>Verticals</option>
+                                          <option value="all">All</option>
+                                          {% for i in verticals %}
+                                              <option value="{{ i }}"{% if i == request.GET.verticals %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select>
+                                  </div>
+                              </div>
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="d-flex">
+                                  <a href="{% url 'Admin_Dashboard' %}" class="btn btn-secondary">
+                                      &nbsp; Reset
+                                  </a>
                                 </div>
                               </div>
-
-                         
-                        
-                          </div>
-                        
+                          </form>
                       </div>
+                  </div>
+              </div>
+              
+
+
                         <div class="card-body">
                           <div class="table-responsive">
-                            <table class="table table-hover bordered align-middle" >
+                            <table class="table table-hover bordered align-middle"  id="eventTable">
                               <thead class="table-light"  style="overflow-y:auto;">
                                 <tr class="text-center text-nowrap">
                                   <th>Sr No</th>
                                   <th>Date</th>
-                                  <th>EC Members Name</th>
+                                  <th>Members Name</th>
                                   <th>Event Name</th>
                                   <th>Yi Verticals</th>
                                   <th>Stakeholder</th>
@@ -271,11 +274,11 @@
                                       <td>{{ forloop.counter }}</td>
                                       <td>{{ event.date }}</td>
                                       <td>{{ event.your_name }}</td>
-                                      <td>{{ event.event_name }}</td>
+                                      <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_name}}">{{ event.event_name }}</span></td>
                                       <td>{{event.project_vertical}}
-                                      <td>{{event.project_stakeholder}}
+                                      <td >{{event.project_stakeholder}}
                                       <td>{{ event.event_venue }}</td>
-                                      <td>₹ {{ event.event_expense|floatformat:"2" }}</td>
+                                      <td>₹ {{ event.event_expense|intcomma }}</td>
                                       <td class="event-handle" justify>{{ event.select_ec_member }}</td>
                                       <td class="event-handle" justify>{{ event.event_member }}</td>
                                       <td>{{ event.role_yi }}</td>
@@ -539,7 +542,7 @@
 
 
   {% block script %}
-  <script src="{% static 'js/dashboard.js' %}"></script>
+  
 
 
 
@@ -753,7 +756,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   </script>
-
+  <script src="{% static 'js/dashboard.js' %}"></script>
 
   {% endblock script %}
 

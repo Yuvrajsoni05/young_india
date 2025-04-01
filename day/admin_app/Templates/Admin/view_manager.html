@@ -63,10 +63,10 @@
   <div class="card">
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped" id="example">
           <thead>
             <tr class="text-nowrap text-center">
-              <th>Sr.no</th>
+              <th>Sr No</th>
               <th>Name</th>
               <th>First Name</th>
               <th>Last Name</th>
@@ -83,7 +83,7 @@
             {% for manager in managers %}
             <tr class="text-nowrap text-center">
               <td>{{ forloop.counter }}</td>
-              <td>{{ manager.first_name }} {{ manager.last_name }}</td>
+              <td>{{ manager.full_name }}</td>
               <td>{{ manager.first_name }}</td>
               <td>{{ manager.last_name }}</td>
               <td>{{ manager.username }}</td>
@@ -139,13 +139,13 @@
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_first_name" class="form-label">First Name</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}" required>
+                            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}" >
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_last_name" class="form-label">Last Name</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control" maxlength="20" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}" required>
+                            <input type="text" class="form-control" maxlength="20" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}" >
                           </div>
                         </div>
                       </div>
@@ -154,13 +154,14 @@
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_username" class="form-label">Username</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control" maxlength="15" id="manager_username" name="manager_username" value="{{manager.username}}" required>
+                            <input type="text" class="form-control" maxlength="15" id="manager_username" name="manager_username" value="{{manager.username}}" >
+                            <div class="invalid-feedback" id="username_error">Please Prvide Username.</div>
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_email" class="form-label">Email</label><span class="text-danger"> *</span>
-                            <input type="email" class="form-control" maxlength="50" id="manager_email" name="manager_email" value="{{ manager.email }}" required>
+                            <input type="email" class="form-control" maxlength="50" id="manager_email" name="manager_email" value="{{ manager.email }}" >
                           </div>
                         </div>
                       </div>
@@ -169,10 +170,12 @@
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="yi_role" class="form-label">Yi Role</label><span class="text-danger"> *</span>
-                            <select class="form-select" id="yi_role" name="yi_role" required>
+                            <select class="form-select" id="yi_role" name="yi_role" >
                               <option value="{{manager.yi_role}}">{{ manager.yi_role }}</option>
                               <option value="Vertical Chair">Vertical Chair</option>
                               <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                              <option value="Chapter Chair">Chapter Chair</option>
+                              <option value="Chapter Co-Chair">Chapter Co-Chair</option>
                               <option value="Team Member">Team Member</option>
                             </select>
                           </div>
@@ -183,7 +186,7 @@
                           <div class="mb-3">
                             
                             <label for="manager_phone_number" class="form-label">Phone Number</label><span class="text-danger"> *</span>
-                            <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" required>
+                            <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" >
                           </div>
                         </div>
                       </div>
@@ -222,3 +225,9 @@
   </div>
 </main><!-- End #main -->
 {% endblock %}
+{% block script %}
+
+
+
+
+{% endblock script %}

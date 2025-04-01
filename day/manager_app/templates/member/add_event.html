@@ -39,7 +39,7 @@
             <div class="col-md-6">
               <div class="form-group mb-3">
                 <label for="event_date" class="form-label fw-bold fw-bold">Event Date<span class="text-danger"> *</span></label>
-                <input type="date" id="event_date" class="form-control-lg rounded form-control" name="event_date" >
+                <input type="date" id="event_date" class="form-control date" name="event_date" >
                 <div class="invalid-feedback" id="event_date_error">Please provide an event date.</div>
               </div>
             </div>
@@ -237,6 +237,7 @@
             <div class="col-12">
               <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn btn-primary px-4">Submit</button>
+
                 <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
               </div>
             </div>
@@ -305,7 +306,6 @@
   });
 </script>
 
-
 <script>
   // Event Date Validation
   var event_date = document.getElementById('event_date');
@@ -320,7 +320,6 @@
       return true;
     }
   }
-
   event_date.addEventListener('input', checkEventDate); // Add the event listener for event date
   checkEventDate(); // Initial check
 
@@ -343,7 +342,6 @@
   checkEventName();
 
   // Event Name Validation
-
   var event_impact = document.getElementById('total_impact');
   var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
 
@@ -359,27 +357,22 @@
   event_impact.addEventListener('input', checkEventImpact); // Add the event listener for event name
   checkEventImpact();
 
-
-
-  
   var event_venue = document.getElementById('event_venue');
   var event_venue_error = document.getElementById('event_venue_error'); // changed variable name to avoid conflict
 
   function checkEventVenue() {
     if (event_venue.value.trim() === '') {
       event_venue_error.style.display = "block";
+      return false;
      
     } else {
       event_venue_error.style.display = "none";
+      return true;
       
     }
   }
   event_venue.addEventListener('input', checkEventVenue); // Add the event listener for event name
   checkEventVenue();
-
-
-
-
 
   var project_stakeholder = document.getElementById('project_stakeholder');
   var project_stakeholder_error = document.getElementById('project_stakeholder_error');
@@ -387,16 +380,14 @@
   function checkProjectStakeholder() {
     if (project_stakeholder.value === '') {
       project_stakeholder_error.style.display = "block"; 
+      return false;
     } else {
       project_stakeholder_error.style.display = "none"; 
+      return true;
     }
   }
   project_stakeholder.addEventListener('input', checkProjectStakeholder);
   checkProjectStakeholder();
-
-
-
-
 
   var yi_pillar = document.getElementById('yi_pillar');
   var project_yipillar_errors = document.getElementById('project_yipillar_error');
@@ -404,23 +395,16 @@
   function checkProjectYipillar() {
     if (yi_pillar.value.trim() === '') {
       project_yipillar_errors.style.display = "block"; 
+      return false;
+
     } else {
       project_yipillar_errors.style.display = "none"; 
+      return true;
     }
   }
   yi_pillar.addEventListener('change', checkProjectYipillar);
   checkProjectYipillar();
 
-
-
-
-  
-
-
-
-
-
- 
   document.getElementById('myForm').addEventListener('submit', function(event) {
     var isEventNameValid = checkEventName(); // Check event name
     var isEventDateValid = checkEventDate();

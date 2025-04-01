@@ -7,7 +7,8 @@
 {% block link %}   <link href="{% static 'css/Admin_Event_data.css' %}" rel="stylesheet">
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
 <style>
- 
+ /* For mobile devices */
+
 </style>
  {% endblock link %}
 
@@ -36,12 +37,15 @@
         <!-- Event Add Form -->
         <div class="card custom-form form-datas w-100 p-4 shadow rounded">
           <div class="position-relative">
-            <img src="{% static 'Image/YI.jpg' %}" alt="Cover Photo" class="w-100 rounded-top" style="max-height: 180px; object-fit: cover;">
-            <!-- Profile Image Overlapping -->
-           
+              <img src="{% static 'Image/YI.jpg' %}" 
+                   alt="Cover Photo" 
+                   class="w-100 rounded-top img-fluid d-block mx-auto h-auto" 
+                   style="max-height: 350px; object-fit: cover;">
           </div>
+      
         
-        <div class="card-body  pt-5">
+        
+        <div class="card-body form-col pt-5">
           <form method="POST" id="myForm" action="{% url 'admin_event_data' %}" enctype="multipart/form-data" >
             {% csrf_token %}
             <div class="row">
@@ -59,7 +63,7 @@
               <div class="col-12 col-sm-6 col-md-6 mb-md-0">
                 <div class="form-group">
                   <label for="event_date" class="form-label fw-bold">Event Date</label><span style="color:red;"> *</span>
-                  <input type="date" id="event_date" class="form-control form-control-lg rounded" name="event_date"  aria-label="Event Date">
+                  <input type="date" id="event_date" class="form-control-date" name="event_date"  aria-label="Event Date">
                   <span class="invalid-feedback" id="event_date_error">Please provide an event date.</span>
           
                 </div>
@@ -165,7 +169,7 @@
               <!-- YI Pillar Impact field -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="yi_pillar" class="form-label fw-bold">YI Pillar Impact</label><span style="color:red;"> *</span>
+                  <label for="yi_pillar" class="form-label fw-bold">YI Pillar Impacted</label><span style="color:red;"> *</span>
                   <select class="form-control form-control-lg rounded form-select" id="yi_pillar" name="yi_pillar" required aria-label="YI Pillar Impact">
                     <option value="" disabled selected>Choose YI Pillar Impact</option>
                     <option value="Youth Leader">Youth Leader</option>
@@ -183,7 +187,7 @@
 
               <div class="col-md-6">
                 <div class="form-group mb-3">
-                  <label for="tagInput" class="form-label fw-bold">Members names</label>
+                  <label for="tagInput" class="form-label fw-bold">Member names</label>
                   <div class="tag-container" id="tagContainer">
                     <input type="text" id="tagInput" class="form-control form-control-lg rounded" placeholder="Type EC member's name">
                     <input type="hidden" id="hiddenInput" name="event_member">
@@ -220,8 +224,8 @@
               <!-- Event Image field -->
               <div class="col-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                  <label for="event_img" class="form-label fw-bold">Event Image</label>
-                  <input type="file" id="event_img" class="form-control form-control-lg rounded" name="event_img" accept=".jpg, .jpeg, .png" aria-label="Event Image" multiple>
+                  <label for="event_img" class="form-label fw-bold">Event Image</label><br>
+                  <input type="file" id="event_img" class="form-control-file"  name="event_img" accept=".jpg, .jpeg, .png" aria-label="Event Image" multiple>
                 </div>
               </div>
 
@@ -232,7 +236,7 @@
               <div class="col-12 col-sm-6 col-md-6" id="sig_div" style="display: none;">
                 <div class="form-group">
                   <label for="sig_" class="form-label fw-bold">Choose SIG</label>
-                  <select class="form-control form-control-lg rounded" name="sig_">
+                  <select class="form-control form-control-lg rounded form-select" name="sig_">
                     <option value="" disabled selected>Choose Special Interest Group</option>
                     <option value="Active Living">Active Living</option>
                     <option value="Photography">Photography</option>
@@ -248,7 +252,7 @@
               <div class="col-12 col-sm-6 col-md-6" id="associate_div" style="display: none;">
                 <div class="form-group">
                   <label for="associate_partners" class="form-label fw-bold">Associate Partner</label>
-                  <select class="form-control form-control-lg rounded" id="associate_partners" name="associate_partner">
+                  <select class="form-control form-control-lg rounded form-select"  id="associate_partners" name="associate_partner">
                     <option value="" disabled selected>Choose Associate</option>
                     <option value="Big Bull">Big Bull</option>
                     <option value="EB">EB</option>
@@ -397,7 +401,7 @@ var event_impact = document.getElementById('total_impact');
 var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
 
 function checkEventImpact() {
-  if (event_impact.value.trim() === '') {
+  if (event_impact.value.trim() === ''  ) {
     event_impact_error.style.display = "block";
     return false;
   } else {
@@ -415,8 +419,10 @@ var project_stakeholder_error = document.getElementById('project_stakeholder_err
 function checkProjectStakeholder() {
   if (project_stakeholder.value === '') {
     project_stakeholder_error.style.display = "block"; 
+    return false;
   } else {
     project_stakeholder_error.style.display = "none"; 
+    return true;
   }
 }
 project_stakeholder.addEventListener('input', checkProjectStakeholder);
@@ -432,11 +438,13 @@ var project_yipillar_error = document.getElementById('project_yipillar_error');
 function checkProjectYipillar() {
   if (yi_pillar.value.trim() === '') {
     project_yipillar_error.style.display = "block"; 
+    return false;
   } else {
     project_yipillar_error.style.display = "none"; 
+    return true;
   }
 }
-yi_pillar.addEventListener('change', checkProjectYipillar);
+yi_pillar.addEventListener('input', checkProjectYipillar);
 checkProjectYipillar();
 
 
@@ -447,11 +455,13 @@ var project_venue_error = document.getElementById('event_venue_error');
 function checkProjectVenue() {
   if (project_venue.value.trim() === '') {
     project_venue_error.style.display = "block"; 
+    return false;
   } else {
     project_venue_error.style.display = "none"; 
+    return true;
   }
 }
-project_venue.addEventListener('change', checkProjectVenue);
+project_venue.addEventListener('input', checkProjectVenue);
 checkProjectVenue();
 
 
@@ -463,11 +473,13 @@ var project_vertical_errors = document.getElementById('project_vertical_error');
 function checkProjectVertical() {
   if (project_vertical.value.trim() === '') {
     project_vertical_errors.style.display = "block"; 
+    return false;
   } else {
     project_vertical_errors.style.display = "none"; 
+    return true;
   }
 }
-project_vertical.addEventListener('change', checkProjectVertical);
+project_vertical.addEventListener('input', checkProjectVertical);
 checkProjectVertical();
 
 

@@ -72,7 +72,7 @@
 
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                   <!-- Profile Edit Form -->
-                  <form method="POST" action="{% url 'manager-update' manager_id=user.id %}" enctype="multipart/form-data">
+                  <form method="POST" id="member_profile" action="{% url 'manager-update' manager_id=user.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row mb-4">
                       <label for="admin_profile_img" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
@@ -95,6 +95,7 @@
                       <div class="col-md-8 col-lg-9">
                         
                         <input name="manager_first_name" maxlength="20" type="text" class="form-control" id="manager_first_name" value="{{ user.first_name }}">
+                        <span class="invalid-feedback" id="manager_first_name_error">Please provide an FirstName.</span>
                       </div>
                     </div>
 
@@ -103,6 +104,7 @@
                       <label for="manager_last_name" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="manager_last_name" maxlength="20" type="text" class="form-control" id="manager_last_name" value="{{ user.last_name }}">
+                        <span class="invalid-feedback" id="manager_last_name_error">Please provide an LastName.</span>
                       </div>
                     </div>
 
@@ -110,13 +112,16 @@
                       <label for="username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="username" type="text" maxlength="15" class="form-control" id="username" value="{{ user.username }}">
+                        <span class="invalid-feedback" id="manager_username_error">Please provide an Username.</span>
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="phone_number" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                       <div class="col-md-8 col-lg-9">
+                       
                         <input name="phone_number" type="text" maxlength="10"  class="form-control" id="phone_number" value="{{ user.phone_number }}">
+                        <span class="invalid-feedback" id="manager_phone_error">Please Provide an Phone.</span>
                       </div>
                     </div>
 
@@ -124,6 +129,7 @@
                       <label for="manager_email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="manager_email" type="email" class="form-control" maxlength="50 " id="manager_email" value="{{ user.email }}">
+                        <span class="invalid-feedback" id="manager_email_error">Please Provide an Email.</span>
                       </div>
                     </div>
 
@@ -228,6 +234,138 @@
       }
     });
   });
+</script>
+
+
+
+<script>
+
+
+  var admin_username = document.getElementById('username');
+  var admin_username_error = document.getElementById('manager_username_error');
+  
+  function checkAdminUsername() {
+    if (admin_username.value.trim() === '') {
+      admin_username_error.style.display = "block"; 
+      return false;
+    } else {
+      admin_username_error.style.display = "none"; 
+      return true;
+    }
+  }
+  admin_username.addEventListener('input',checkAdminUsername);
+  checkAdminUsername();
+  
+
+
+  var admin_firstname = document.getElementById('manager_first_name');
+  var admin_firstname_error = document.getElementById('manager_first_name_error');
+  
+  function checkAdminfirstname() {
+    if (admin_firstname.value.trim() === '') {
+      admin_firstname_error.style.display = "block"; 
+      return false;
+    } else {
+      admin_firstname_error.style.display = "none"; 
+      return true;
+    }
+  }
+
+  admin_firstname.addEventListener('input',checkAdminfirstname);
+  checkAdminfirstname();
+
+  var admin_lastname = document.getElementById('manager_last_name');
+  var admin_lastname_error = document.getElementById('manager_last_name_error');
+  
+  function checkAdminlastname() {
+    if (admin_lastname.value.trim() === '') {
+      admin_lastname_error.style.display = "block"; 
+      return false;
+    } else {
+      admin_lastname_error.style.display = "none"; 
+      return true;
+    }
+  }
+  checkAdminlastname();
+  admin_lastname.addEventListener('input',checkAdminlastname);
+  
+  
+  var admin_phone = document.getElementById('phone_number');
+  var admin_phone_error = document.getElementById('manager_phone_error');
+
+  var PhonePattern = /^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/;
+  
+  function checkAdminphone() {
+    if (admin_phone.value.trim() === '') {
+      admin_phone_error.style.display = "block"; 
+      admin_phone_error.textContent = "Phone Number is required.";
+      return false;
+    }
+    else if(!PhonePattern.test(admin_phone.value.trim())){
+
+      admin_phone_error.style.display = "block";
+      admin_phone_error.textContent = "Please enter a valid Phone .";
+
+
+
+    } else {
+      admin_phone_error.style.display = "none"; 
+      
+      return true;
+    }
+  }
+  checkAdminphone();
+  admin_phone.addEventListener('input',checkAdminphone);
+  
+
+
+
+  var admin_email = document.getElementById('manager_email');
+  var admin_email_error = document.getElementById('manager_email_error');
+  
+  // Regex pattern for validating email format
+  var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  function checkAdminemail() {
+    // Check if the email is empty
+    if (admin_email.value.trim() === '') {
+      admin_email_error.style.display = "block";
+      admin_email_error.textContent = "Email is required.";  // Optional message
+      return false;
+    } 
+    // Check if the email format is valid
+    else if (!emailPattern.test(admin_email.value.trim())) {
+      admin_email_error.style.display = "block";
+      admin_email_error.textContent = "Please enter a valid email address.";  // Optional message
+      return false;
+    } 
+    // If email is valid
+    else {
+      admin_email_error.style.display = "none";
+      return true;
+    }
+  }
+  checkAdminemail();
+  admin_email.addEventListener('input', checkAdminemail);
+    // Call once on page load to hide the error if the field is already filled.
+  
+
+  document.getElementById('member_profile').addEventListener('submit', function(event) {
+    var isAdminFirstname = checkAdminfirstname();
+    var isAdminUsername = checkAdminUsername();
+    var isAdminLastname = checkAdminlastname();
+    var isAdminPhone = checkAdminphone();
+    var isAdminEmail = checkAdminemail(); // Check event name
+
+   // Check event name
+
+  
+    if (!isAdminUsername ||!isAdminFirstname ||!isAdminLastname || !isAdminPhone ||!isAdminEmail ) {
+      event.preventDefault(); // Prevent form submission if either validation fails
+    }
+});
+
+
 </script>
 
 

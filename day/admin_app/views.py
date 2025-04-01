@@ -436,7 +436,9 @@ def Admin_Dashboard(request):
     all_user = LoginSide.objects.all().distinct()
     login_role = Login_Role.objects.all().distinct()
     
+  
     
+        
     def formatINR(total_expense):
         s, *d = str(total_expense).partition(".")
         r = ",".join([s[x-2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
@@ -462,17 +464,23 @@ def Admin_Dashboard(request):
     # event_list = Event_Data.objects.all()
 
 
-    selected_vertical = request.GET.get('vertical', 'all') 
+   
+        
+        
 
-    if selected_vertical == "all":
-        total_vertical = vertical_name.count() 
-    else:
-        total_vertical = Event_Data.objects.filter(project_vertical=selected_vertical).count()  
+        
 
     event_list = Event_Data.objects.all()
 
+
+
+    selected_vertical = request.GET.get('vertical','all') 
+    if selected_vertical != "all":
+        total_vertical = Event_Data.objects.filter(project_vertical=selected_vertical).count() 
+        event_list = event_list.filter(project_vertical__icontains = selected_vertical)
  
-    ec_name = request.GET.get('ec_name')
+ 
+    ec_name = request.GET.get('ec_name','all')
     if ec_name and ec_name != 'all':
         event_list = event_list.filter(your_name__icontains=ec_name) 
 
@@ -521,7 +529,8 @@ def Admin_Dashboard(request):
         'yi_role':yi_role_name,
         'total_vertical':total_vertical,
         'count':active_users_count,
-        'name':active_user_names
+        'name':active_user_names,
+        
     }
     return render(request, 'Admin/AdminDashboard.html', context)
 
@@ -864,7 +873,7 @@ def update_memeber(request,manager_id):
         
         for field,field_value in required_fields.items():
             if not field_value:
-                messages.error(request,f"The {field} firld is Required ")
+                messages.error(request,f"The {field} field is Required ")
                 return redirect('View-manager')
             
         if request.method == 'POST':
@@ -891,14 +900,14 @@ def update_memeber(request,manager_id):
                 return redirect('View-manager')
             
             
-            if 'manager_profile_img' in request.FILES:
-              
-                
+            if 'manager_profile_img' in request.FILES: 
                 if update_manager_data.photo and hasattr(update_manager_data.photo, 'path') and os.path.exists(update_manager_data.photo.path):
                     print(update_manager_data.photo.path)
                     os.remove(update_manager_data.photo.path)
                 update_manager_data.photo = request.FILES['manager_profile_img']
                 
+ 
+ 
  
                 if update_manager_data.photo:
                     try:
@@ -907,6 +916,7 @@ def update_memeber(request,manager_id):
                     except ValidationError:
                         messages.error(request,'Invalid file type. Only .jpeg, .jpg, .png allowed.')
                         return redirect('View-manager')
+                    
                 if update_manager_data.photo.size > 4*1024*1024:
                     messages.error(request,'Image Size must be 4mb ')
                     return redirect('View-manager')
