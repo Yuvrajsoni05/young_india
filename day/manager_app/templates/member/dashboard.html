@@ -41,12 +41,20 @@
         <section class="section dashboard">
 <br>
           <div class='row'>
-            <div class="col-xxl-2 col-md-6 col-sm-12 mb-4">
-            
-          
-                  <img src="{% static 'Image/YIIMG.png' %}" class="card-img-top" style="height: 140px; object-fit: cover;" alt="Profile Image">
-             
-        
+            {% comment %} <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
+              <div class="card">
+                <div class="container" style="height: 150px; overflow: hidden; position: relative;">
+                  <img src="{{ request.session.image }}" class="card-img-top w-100 h-100" style="object-fit: contain;" alt="Profile Image">
+                </div>
+              </div>
+            </div> {% endcomment %}
+
+            <div class="col-xxl-3 col-md-6 col-sm-12 mb-4">
+              <div style="border-radius: 8px; overflow: hidden;">
+                <div style="height: 150px; display: flex; align-items: center; justify-content: center;">
+                  <img src="{{ request.session.image }}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Profile Image">
+                </div>
+              </div>
             </div>
           
             <div class="col-xxl-3 col-md-6 col-sm-12 mb-4">
@@ -80,7 +88,7 @@
               </div>
             </div>
           
-            <div class="col-xxl-4 col-md-6 col-sm-12 mb-4">
+            <div class="col-xxl-3 col-md-6 col-sm-12 mb-4">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-people text-success"></i>&nbsp;Total Impact</h5> 
@@ -470,8 +478,8 @@
         select.className = 'event-handle form-select fomr-control border'; // Add a class for styling if needed
         
         // Create a default option
-        const defaultOption = document.createElement('option');
-        defaultOption.text = 'Click Me';
+        const defaultOption = document.createElement('link');
+        defaultOption.text = 'See Member';
         defaultOption.value = '';
         select.appendChild(defaultOption);
         

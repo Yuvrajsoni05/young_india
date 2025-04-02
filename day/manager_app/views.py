@@ -487,6 +487,7 @@ def dashboard(request):
     total_impact_data =  Event_Data.objects.filter(user=user).aggregate(Sum('total_impact'))
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
     user_roles = request.session.get('userrole', [])
+    image = request.session.get('image', None)
     # event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     
@@ -522,6 +523,7 @@ def dashboard(request):
                 #  'impact':aligned_event_impact,
                     'events': all_event,
                     'role':user_roles,
+                    'image':image
                     
                 }
 

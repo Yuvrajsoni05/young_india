@@ -38,7 +38,22 @@ class Event_Image(models.Model):
 
 
 
+# receiver_email = "saium@abcinc.com"
+# template_name = "email/template/path/in/template/folder/filename.html"
+# convert_to_html_content =  render_to_string(
+#   template_name=template_name,
+#   context=context
+# )
+# plain_message = strip_tags(convert_to_html_content)
 
+# yo_send_it = send_mail(
+#   subject="Receiver information from a form",
+#   message=plain_message,
+#   from_email=settings.EMAIL_HOST_USER,
+#   recipient_list=[receiver_email,]   # recipient_list is self explainatory
+#   html_message=convert_to_html_content
+#   fail_silently=True    # Optional
+# )
 
 
 
