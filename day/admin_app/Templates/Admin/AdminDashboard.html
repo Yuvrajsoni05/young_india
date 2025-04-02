@@ -14,6 +14,7 @@
 
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock static %}
 <!-- Main Content -->
 <main id="main" class="main">
@@ -521,16 +522,66 @@
                        </div>   
                   </div>
 
-
-        <div id="chartView" class="card-body" style="display: none;">
-          <h5 class="card-title">Event Analytics</h5>
-          <div class="card">
-                <iframe width="1500" height="430" src="https://lookerstudio.google.com/embed/reporting/56ad84bc-6bf3-448f-900c-e7152ce74a03/page/HFnbE" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
-          </div>
-        </div>
+                  <div id="chartView" class="card-body" style="display: none;">
+                    <h5 class="card-title">Event Analytics</h5>
+                    
+                    <div class="row">
+                        <!-- Card 1: Line and Bar Chart Combination -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Line & Bar Chart</h6>
+                                    <canvas id="lineBarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Card 2: Simple Bar Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Bar Chart</h6>
+                                    <canvas id="barChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Card 3: Pie Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pie Chart</h6>
+                                    <canvas id="pieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Card 4: Another Pie Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pie Chart 2</h6>
+                                    <canvas id="pieChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <!-- Card 5: Column Chart -->
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Column Chart</h6>
+                                    <canvas id="columnChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
     
-
-
 
     </section>
 
@@ -543,8 +594,6 @@
 
   {% block script %}
   
-
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -757,7 +806,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
   <script src="{% static 'js/dashboard.js' %}"></script>
-
+  <script src="{% static 'js/chart/lineBarChart.js' %}"></script>
+  <script src="{% static 'js/chart/barChart.js' %}"></script>
+  <script src="{% static 'js/chart/pieChart.js' %}"></script>
+  <script src="{% static 'js/chart/pieChart2.js' %}"></script>
+  <script src="{% static 'js/chart/columnChart.js' %}"></script>
+  
   {% endblock script %}
 
 
