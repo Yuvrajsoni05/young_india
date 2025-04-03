@@ -314,12 +314,13 @@ def update_event_data(request,update_id):
             return redirect('member-dashbaord')
         else:
             messages.error(request,'Data not update')
-            return render(request, 'member/dashboard.html')
+            return redirect('member-dashbaord')
             
     except Exception as e:
         
         messages.error(request,'Data not update')
-        return render(request, 'member/dashboard.html')
+        return redirect('member-dashbaord')
+    return render (request,'member/dashboard.html')
 
 
 def delete_event_image(request,image_id):
@@ -396,6 +397,7 @@ def event_data(request):
             event_expense = request.POST.get('event_expense', '')
             event_venue = request.POST.get('event_venue', '')
             event_name = request.POST.get('event_name', '')
+            event_description = request.POST.get('event_description', '')
             school = request.POST.get('school', '')
             collage = request.POST.get('collage', '')
             associate_partner = request.POST.get('associate_partner', '')
@@ -455,6 +457,7 @@ def event_data(request):
                 total_impact=total_impact,
                 event_name=event_name,
                 select_ec_member=select_ec_member,
+                event_description=event_description,
                 # event_photo=event_images,
                 associate_partner=associate_partner,
                 user=request.user
@@ -488,6 +491,8 @@ def dashboard(request):
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
     user_roles = request.session.get('userrole', [])
     image = request.session.get('image', None)
+    ec_member = LoginSide.objects.all().distinct().exclude(is_superuser=True)
+    ec_member_names = [f"{member.first_name} {member.last_name}"for member in ec_member]
     # event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     
@@ -523,7 +528,8 @@ def dashboard(request):
                 #  'impact':aligned_event_impact,
                     'events': all_event,
                     'role':user_roles,
-                    'image':image
+                    'image':image,
+                    'ec_member ':ec_member_names                   
                     
                 }
 

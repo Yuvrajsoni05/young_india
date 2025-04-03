@@ -153,7 +153,7 @@ def Admin_Signup(request):
                 "Email": Admin_email,
                 "Phone": phone,
                 "Yi Role": yi_role,
-                "Login Role": login_role,
+                "EC Role": login_role,
                 "Password": password,
                 "Confirm Password": confirm_password,
             }
@@ -614,14 +614,14 @@ def Admin_Dashboard(request):
         r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
         return "".join([r] + d)
 
-    total_expense = formatINR(total_expense)
+    
 
     def formatImpact(total_impact):
         s, *d = str(total_impact).partition(".")
         r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
         return "".join([r] + d)
 
-    total_impact = formatImpact(total_impact)
+    
 
     # Manager names from Event_Data
     member_name = (
@@ -638,11 +638,17 @@ def Admin_Dashboard(request):
     yi_pillar_name = (
         Event_Data.objects.all().values_list("yi_pillar", flat=True).distinct()
     )
+    event_date = (
+        Event_Data.objects.all().values_list("date",flat=True).distinct()
+    )
     yi_role_name = Event_Data.objects.all().values_list("role_yi", flat=True).distinct()
     total_vertical = vertical_name.count()
     # event_list = Event_Data.objects.all()
 
     event_list = Event_Data.objects.all()
+    # event_count = Event_Data.objects.all().count()
+    
+    
 
     selected_vertical = request.GET.get("vertical", "all")
     if selected_vertical != "all":
@@ -650,31 +656,105 @@ def Admin_Dashboard(request):
             project_vertical=selected_vertical
         ).count()
         event_list = event_list.filter(project_vertical__icontains=selected_vertical)
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+        
 
     ec_name = request.GET.get("ec_name", "all")
     if ec_name and ec_name != "all":
         event_list = event_list.filter(your_name__icontains=ec_name)
+        total_event = event_list.filter(your_name__icontains=ec_name).count
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+        
+        
+        
 
     verticals = request.GET.get("verticals")
     if verticals and verticals != "all":
         event_list = event_list.filter(project_vertical__icontains=verticals)
+        total_event = event_list.filter(project_vertical__icontains=verticals).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
 
     yi_pillar = request.GET.get("yi_pillar")
     if yi_pillar and yi_pillar != "all":
         event_list = event_list.filter(yi_pillar__icontains=yi_pillar)
+        total_event = event_list.filter(yi_pillar__icontains=yi_pillar).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
 
     stakeholder = request.GET.get("stakeholder")
     if stakeholder and stakeholder != "all":
         event_list = event_list.filter(project_stakeholder__icontains=stakeholder)
+        total_event = event_list.filter(project_stakeholder__icontains=stakeholder).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
 
     yi_role = request.GET.get("yi_role")
     if yi_role and yi_role != "all":
         event_list = event_list.filter(role_yi__icontains=yi_role)
+        total_event = event_list.filter(role_yi__icontains=yi_role).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+        total_expense_result["event_expense__sum"]
+        if total_expense_result["event_expense__sum"] is not None
+        else 0
+    )
 
-    date = request.GET.get("date")
-    if date:
-        event_list = event_list.filter(date=date)
-
+    date = request.GET.get("event_date")
+    if date and date != "all": 
+        event_list = event_list.filter(date__icontains=date)
+        total_event = event_list.filter(date__icontains=date).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+    total_impact = formatImpact(total_impact)
+    total_expense = formatINR(total_expense)
     context = {
         "user_id": user_id,
         "users_data": all_user,
@@ -693,6 +773,8 @@ def Admin_Dashboard(request):
         "total_vertical": total_vertical,
         "count": active_users_count,
         "name": active_user_names,
+        "event_date":event_date,
+        
     }
     return render(request, "Admin/AdminDashboard.html", context)
 
@@ -830,8 +912,6 @@ def admin_event_data(request):
 
 
 # Error Page
-
-
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def error_page(request):
@@ -842,8 +922,6 @@ def error_page(request):
 
 
 # Download Excel File
-
-
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
@@ -870,6 +948,7 @@ def download_excel(request):
         "EC Member",
         "Member Name",
         "Impact",
+        "Event Description"
         "Image",
     ]
 
@@ -903,6 +982,7 @@ def download_excel(request):
             i.select_ec_member,
             i.event_member,
             i.total_impact,
+            i.event_description
         ]
         sheet.append(row)
         # Now, for each event, if there are related images, we add them as hyperlinks.
@@ -922,7 +1002,7 @@ def download_excel(request):
             # Concatenate all image URLs into one string, separated by commas (optional)
             image_link = ", ".join(img_urls)
             # Write the image links into the last column
-            cell = f"P{sheet.max_row}"
+            cell = f"R{sheet.max_row}"
             sheet[cell] = image_link
             # Make the cell contents a clickable link by adding the hyperlink to each image URL.
             sheet[cell].hyperlink = image_link
@@ -1007,11 +1087,14 @@ def delete_member(request, member_id):
 
         messages.error(request, "Something Went Wrong Please  Try Again")
         return redirect("View-manager")
+#Delete Multiple Event 
+
+def delte_multiple(request):
+    if request.method == 'POST':
+        get_id = request.POST.getlist('delete_multiple')
 
 
 # Delete Yi Event
-
-
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
@@ -1066,7 +1149,7 @@ def update_memeber(request, manager_id):
             "Last Name": last_name,
             "Username": username,
             "Yi Role": yi_role,
-            "Login Role": login_role,
+            "EC Role": login_role,
             "Phone Number": phone_number,
         }
 
@@ -1200,10 +1283,12 @@ def update_event_data(request, event_id):
                 update_event.yi_pillar = yipiller
                 update_event.social_link = request.POST["social_link"]
                 update_event.event_member = request.POST["event_handle"]
+                update_event.select_ec_member = request.POST['select_ec_member']
                 update_event.total_impact = total_impact
                 update_event.which_SIG = request.POST["sig_"]
                 update_event.associate_partner = request.POST.get("associate_partners")
                 event_image = request.FILES.getlist("event_image")
+                
                 for image in event_image:
                     if image:
                         try:

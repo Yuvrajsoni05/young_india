@@ -30,7 +30,8 @@ class Event_Data(models.Model):
     school = models.CharField(max_length=200,blank=True,null=True)
     collage = models.CharField(max_length=200,blank=True,null=True)
     associate_partner = models.CharField(max_length=200,null=True,blank=True)
-
+    event_description =  models.TextField(max_length=700,null=True,blank=True)
+    
 
 class Event_Image(models.Model):
     event = models.ForeignKey(Event_Data,related_name='event_photo',on_delete=models.CASCADE)

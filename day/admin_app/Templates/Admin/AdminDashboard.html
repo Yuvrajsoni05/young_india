@@ -88,7 +88,7 @@
                 <i class="bi bi-list-ol text-primary"></i>
               </div> {% endcomment %}
               <div class="ps-3">
-                <h6>{{ total_event|floatformat:"g" }}</h6>
+                <h6>  {{total_event}}</h6>
               </div>
             </div>
           </div>
@@ -150,21 +150,35 @@
                   <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
                       <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
               
-                      <div class="d-flex gap-2">
-                          <a href="{% url 'download_excel' %}" class="btn btn-success">
-                              <i class="bi bi-download"></i>&nbsp; Download
-                          </a>
-                      </div>
+                       <div class="d-flex gap-2">
+                        <div class="d-flex">
+                                  <a href="{% url 'Admin_Dashboard' %}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                  </a>&nbsp;&nbsp;
+                                  <a href="{% url 'download_excel' %}" class="btn btn-success">
+                                    <i class="bi bi-download"></i>
+                                </a> &nbsp;&nbsp;
+                                {% comment %} <a href="#" class="btn btn-outline-dark">
+                                  {{event_count}}
+                              </a>  {% endcomment %}
+                                </div>
+                      </div> 
                   </div>
               
                   <div class="col-12">
                       <div class="row g-2">
                           <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex flex-wrap">
-                              {% comment %} <div class="col-12 col-sm-6 col-lg-2">
-                              
-                              <input type="date" class="form-control me-2" id="date" name="date" onchange="this.form.submit()">
-                              
-                              </div> {% endcomment %}
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  <select class="form-select me-2" id="event_date" name="event_date" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Event Date</option>
+                                      <option value="all">All</option>
+                                      {% for i in event_date %}
+                                          <option value="{{ i }}"{% if i == request.GET.event_date %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
               
                               <!-- Date Range Search -->
                               <div class="col-12 col-sm-6 col-md-4 col-lg-2">
@@ -229,41 +243,38 @@
                                   </div>
                               </div>
                               <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                                <div class="d-flex">
-                                  <a href="{% url 'Admin_Dashboard' %}" class="btn btn-secondary">
-                                      &nbsp; Reset
-                                  </a>
-                                </div>
+                                
                               </div>
                           </form>
                       </div>
                   </div>
               </div>
               
-
-
                         <div class="card-body">
                           <div class="table-responsive">
                             <table class="table table-hover bordered align-middle"  id="eventTable">
                               <thead class="table-light"  style="overflow-y:auto;">
                                 <tr class="text-center text-nowrap">
+                                  {% comment %} <th>Select </th> {% endcomment %}
                                   <th>Sr No</th>
                                   <th>Date</th>
-                                  <th>Members Name</th>
+                                  <th>Member Name</th>
                                   <th>Event Name</th>
                                   <th>Yi Verticals</th>
                                   <th>Stakeholder</th>
                                   <th>Venue</th>
                                   <th>Expense</th>
-                                  <th>EC members Name</th>
-                                  <th>Members Name</th>
+                                  <th>EC Members Name</th>
+                                  <th>Event Members Name</th>
                                   <th>Yi Role</th>
                                   <th>Yi Pillar</th>
                                   <th>School</th>
                                   <th>College</th>
                                   <th>S.I.G</th>
                                   <th>Impact</th>
+                                  <th>Event Description</th>
                                   <th>Social Link</th>
+                                  
                                   <th>Image</th>
                                   <th>Actions</th>
                                 </tr>
@@ -272,6 +283,7 @@
                                 {% if events %}
                                   {% for event in events %}
                                     <tr class="text-center text-nowrap">
+                                      {% comment %} <td><input type="checkbox" value={{event.id}} name="delete_multiple"></td> {% endcomment %}
                                       <td>{{ forloop.counter }}</td>
                                       <td>{{ event.date }}</td>
                                       <td>{{ event.your_name }}</td>
@@ -280,20 +292,34 @@
                                       <td >{{event.project_stakeholder}}
                                       <td>{{ event.event_venue }}</td>
                                       <td>₹ {{ event.event_expense|intcomma }}</td>
+                                      {% if event.select_ec_member == '' or event.select_ec_member == None   %}
+                                     <td> <span class="badge bg-light text-dark">No Members</span></td>
+                                      {% else %}
                                       <td class="event-handle" justify>{{ event.select_ec_member }}</td>
+                                      {% endif %}
+                                      
+                                      {% if event.event_member == '' or event.event_member == None %}
+                                      <td> <span class="badge bg-light text-dark">No Members</span></td>
+                                      {% else %}
                                       <td class="event-handle" justify>{{ event.event_member }}</td>
+                                      {% endif %}
+                                    
                                       <td>{{ event.role_yi }}</td>
                                       <td>{{ event.yi_pillar }}</td>
                                       <td> {{ event.school  }}</td>
                                       <td>{{event.collage}}</td>
                                       <td>{{event.which_SIG}}</td>
+                              
                                       <td>{{ event.total_impact|floatformat:"g" }}</td>
-                                      <td>
+                                      <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_description}}">{{event.event_description}}</td>
+                                      
                                         {% if event.social_link == '' %}
-                                        <a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
+                                       
+                                        <td><span class="badge bg-light text-dark">No link</span></td>
                                         {% else %}
-                                        <span class="badge bg-light text-dark">No link</span>
+                                       <td><a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
                                         {% endif %}
+                                      
                                       <td>
                                         {% if event.event_photo.all %}
                                           {% with first_image=event.event_photo.first %}
@@ -328,16 +354,16 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                           </div>
                                           <div class="modal-body p-0">
-                                            <div id="imageGallery{{ event.id }}" class="carousel slide" data-bs-ride="carousel">
+                                            <div id="imageGallery{{ event.id }}"  class="carousel slide carousel-fade" data-bs-ride="carousel">
                                               <div class="carousel-inner">
                                                 {% for image in event.event_photo.all %}
                                                   <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                    <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 800px; object-fit: cover;" alt="Event Image">
-                                                    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-                                                      <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" class="d-inline">
+                                                    <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 500px; display: flex; object-fit: contain;" alt="Event Image">
+                                                    <div class="position-absolute bottom-0  translate--x mb-3">
+                                                      &nbsp;<form method="POST" action="{% url 'event_image_id'  image_id=image.id %}" class="d-inline" >
                                                         {% csrf_token %}
                                                         <button type="submit" class="btn btn-danger btn-md">
-                                                          <i class="bi bi-trash-fill me-1"></i> Delete Image
+                                                          <i class="bi bi-trash-fill me-1"></i> 
                                                         </button>
                                                       </form>
                                                     </div>
@@ -345,11 +371,11 @@
                                                 {% endfor %}
                                               </div>
                                               <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon bg-dark rounded p-2" aria-hidden="true"></span>
+                                                <span class="carousel-control-prev-icon visually-hidden  rounded p-2" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Previous</span>
                                               </button>
                                               <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon bg-dark rounded p-2" aria-hidden="true"></span>
+                                                <span class="carousel-control-next-icon bg-dark visually-hidden rounded p-2" aria-hidden="false"></span>
                                                 <span class="visually-hidden">Next</span>
                                               </button>
                                             </div>
@@ -382,15 +408,24 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                   <label for="event_handle" class="form-label">Members Name</label>
-                                                  <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_handle }}">
+                                                  <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_member }}">
                                                 </div>
+
+
+                                                <div class="col-md-6">
+                                                  <label for="select_ec_member" class="form-label">EC Members Name</label>
+                                                  <input type="text" class="form-control" id="select_ec_member" name="select_ec_member" value="{{ event.select_ec_member }}">
+                                                </div>
+
                                                 <div class="col-md-6">
                                                   <label for="role_yi" class="form-label">YI Role </label><span style="color:red;"> *</span>
                                                   <select class="form-select" id="role_yi" name="role_yi">
                                                     <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
                                                     <option value="Vertical Chair">Vertical Chair</option>
                                                     <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                                                    <option value="Team Member">Team Member</option>
+                                                    <option value="Chapter Chair">Chapter Chair</option>
+                                                    <option value="Chapter Co-Chair">Chapter Co-Chair</option>
+                                                    <option value="Admin">Admin</option>
                                                   </select>
                                                   <div class="invalid-feedback" id="event_yi_role_error">Please provide an event Yi Role.</div>
                                                 </div>
@@ -458,10 +493,17 @@
                                                       </div>
                                                       <div class="col-md-6" id="sig_div">
                                                           <label for="sig_" class="form-label">Choose SIG</label>
-                                                          <select class="form-control" id="sig_" name="sig_">
-                                                            {% if event.which_SIG  == ' ' %} 
-                                                            <option value="Choose SIG">Choose SIG</option>
+                                                          <select class="form-control form-select" id="sig_" name="sig_">
+                                                            {% if event.which_SIG  == '' or event.which_SIG == None %} 
+                                                            <option   value="" >Choose SIG</option>
+                                                            <option value="Active Living">Active Living</option>
+                                                            <option value="Photography">Photography</option>
+                                                            <option value="Trekking">Trekking</option>
+                                                            <option value="Entrepreneurship">Entrepreneurship</option>
+                                                            <option value="Community">Community</option>
+                                                            <option value="">None</option>
                                                             {% else %}
+                                                              
                                                               <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
                                                               <option value="Active Living">Active Living</option>
                                                               <option value="Photography">Photography</option>
@@ -501,6 +543,7 @@
                                       </tr>
                                       {% endif %}
                                   </tbody>
+                                 
                               </table>
                                   <!-- Pagination -->
                               </div>
@@ -581,13 +624,26 @@
                         </div>
                     </div>
                   </div>
-    
 
-    </section>
 
-    
+                  
+</section>
 
-  </main><!-- End #main -->
+<div class="container">
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2021 Company, Inc</p>
+  </footer>
+  </div>
+
+  </main>
+<!-- End #main -->
   {% endblock bodyblock %} 
   
 
@@ -644,8 +700,8 @@ document.addEventListener('DOMContentLoaded', function() {
         select.className = 'event-handle form-select fomr-control border'; // Add a class for styling if needed
         
         // Create a default option
-        const defaultOption = document.createElement('option');
-        defaultOption.text = 'Click Me';
+        const defaultOption = document.createElement('link');
+        defaultOption.text = 'See Member';
         defaultOption.value = '';
         select.appendChild(defaultOption);
         
@@ -795,7 +851,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var isEventNameValid = checkEventName(); // Check event name
     var isEventDateValid = checkEventDate();
     var isEventImpact = checkEventImpact();
-    var isStakeholder =checkProjectStakeholder();
+    var isStakeholder = checkProjectStakeholder();
     var isYiPillar  = checkProjectYipillar();  
     var isVertical  = checkProjectVertical();
     var isVenue = checkProjectVenue();

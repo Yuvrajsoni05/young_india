@@ -17,13 +17,13 @@
     <!-- Event Add Form -->
     <div class="card custom-form form-datas w-100 p-4 shadow rounded ">
       
-        <div style="border-radius: 10px; background:skyblue" >
+        <div style="border-radius: 10px; " >
           <div style="height: 80px; display: flex; align-items: center; justify-content: center;">
             <img src="{{ request.session.image }}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Role Image">
           </div>
         
           <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
-              <h3 style="color:darkblue;">Add Young India Event</h3>
+              <h2 style="color:darkblue; font-weight:blod">Add Young India Event</h2>
           </div>
 
         </div>
@@ -59,6 +59,9 @@
                 <div class="invalid-feedback" id="event_name_error">Please provide an event name.</div>
               </div>
             </div>
+
+
+            
 
             <!-- Event Venue -->
             <div class="col-md-6">
@@ -165,6 +168,8 @@
               </div>
             </div>
 
+            
+
             <!-- Member names -->
             <div class="col-md-6">
               <div class="form-group mb-3">
@@ -207,6 +212,15 @@
                 <label for="event_img" class="form-label fw-bold fw-bold">Event Image</label>
                 <input type="file" id="event_img" class="form-control-lg rounded form-control" name="event_img" accept=".jpg, .jpeg, .png" multiple>
                 <small class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</small>
+              </div>
+            </div>
+
+
+
+            <div class="col-md-6">
+              <div class="orm-group mb-3">
+                <label for="event_description" class="form-label">Event Description</label>
+                <textarea class="form-control" name="event_description" id="event_description" rows="3"></textarea>
               </div>
             </div>
 
