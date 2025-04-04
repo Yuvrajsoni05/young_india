@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.forms import ValidationError
 from django.core.validators import validate_email
 from django.core.validators import RegexValidator
-
+from django.core.validators import FileExtensionValidator, ValidationError
 
 ROLE_CHOICES = [
     ("Admin", "Admin"),
@@ -47,7 +47,7 @@ class LoginSide(AbstractUser):
     first_name = models.CharField(max_length=200, null=True, verbose_name="FirstName")
     last_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200, unique=True, validators=[validate_email])
-    photo = models.ImageField(upload_to="user_photo/", null=True, blank=True)
+    photo = models.ImageField(upload_to="user_photo/", null=True, blank=True, validators = [FileExtensionValidator(allowed_extensions=["jpeg", "jpg", "png"])])
     yi_role = models.CharField(max_length=200, null=True)
 
     phone_number = models.CharField(

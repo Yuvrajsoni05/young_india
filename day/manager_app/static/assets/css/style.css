@@ -1217,17 +1217,21 @@ h6 {
 }
 .ellipsis {
   position: relative;
+  display: block;   /* Ensure the element takes up space */
+  width: 100%;      /* Or specify a width to restrict the container */
+  white-space: normal;  /* Allow text to wrap onto the next line */
+  word-wrap: break-word; /* Ensure words break when needed */
 }
+
 .ellipsis:before {
-  content: '&nbsp;';
+  content: '\00a0'; /* Non-breaking space */
   visibility: hidden;
 }
+
 .ellipsis span {
-  position: absolute;
-  left: 0;
-  right: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: inline-block; /* Ensure span behaves like text */
+  max-width: 100%; /* Prevent span from overflowing */
+  white-space: normal;  /* Allow wrapping */
 }
+
 

@@ -84,9 +84,10 @@ def index(request):
             if user is not None:
                 login(request, user)  # Log the user in
 
-                if user.login_role.filter(name="Admin").exists():
-                    # print(f"{username} , {password}")
-                    # logger.info(f"Someone is trying to login Name : {username} {password}")
+                # if user.login_role.filter(name="Admin").exists():
+                #     # print(f"{username} , {password}")
+                #     # logger.info(f"Someone is trying to login Name : {username} {password}")
+                if user.yi_role == 'Chapter Co-Chair' or user.yi_role == 'Co-Chair' or user.yi_role == 'Admin':
                     return redirect("Admin_Dashboard")
                 else:
                     roles = user.login_role.all()
@@ -119,8 +120,8 @@ def index(request):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Signup(request):
-    if not request.user.login_role.filter(name="Admin").exists():
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
     # Get user ids from the session data
@@ -153,7 +154,7 @@ def Admin_Signup(request):
                 "Email": Admin_email,
                 "Phone": phone,
                 "Yi Role": yi_role,
-                "EC Role": login_role,
+                # "EC Role": login_role,
                 "Password": password,
                 "Confirm Password": confirm_password,
             }
@@ -165,7 +166,7 @@ def Admin_Signup(request):
                 "email": Admin_email,
                 "phone": phone,
                 "yi_role": yi_role,
-                "login_role": login_role,
+                # "login_role": login_role,
             }
 
             if "resetbutton" in request.POST:
@@ -318,32 +319,32 @@ def Admin_Signup(request):
                 phone_number=phone,
             )
             
-            user_info = {
-                    "username": username,
-                    "password": password,
-                    "yi_role": yi_role,
-                    "login_role": login_role,
+            # user_info = {
+            #         "username": username,
+            #         "password": password,
+            #         "yi_role": yi_role,
+            #         "login_role": login_role,
                     
-            }
+            # }
             
-            receiver_email =  Admin_email
-            template_name = "base/email.html"
+            # receiver_email =  Admin_email
+            # template_name = "base/email.html"
 
-            convert_to_html_content =  render_to_string(
-            template_name=template_name,
-            context=user_info
+            # convert_to_html_content =  render_to_string(
+            # template_name=template_name,
+            # context=user_info
             
           
-            )
-            plain_message = strip_tags(convert_to_html_content)
-            send_mail(
-                  subject=  'Hello Ec Member',
-                    message=plain_message,
-                    from_email= request.user.email,
-                    recipient_list=[receiver_email],
-                    html_message=convert_to_html_content,
-                    fail_silently=False,
-                )
+            # )
+            # plain_message = strip_tags(convert_to_html_content)
+            # send_mail(
+            #       subject=  'Hello Ec Member',
+            #         message=plain_message,
+            #         from_email= request.user.email,
+            #         recipient_list=[receiver_email],
+            #         html_message=convert_to_html_content,
+            #         fail_silently=False,
+            #     )
             
   
             
@@ -389,8 +390,8 @@ def Admin_Signup(request):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Profile(request):
-    if not request.user.login_role.filter(name="Admin").exists():
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
     # Get user ids from the session data
@@ -417,9 +418,8 @@ def Admin_Profile(request):
 @login_required(login_url="index")
 def Admin_update(request, admin_id):
     # Check if the user has 'Admin' role
-    if not request.user.login_role.filter(name="Admin").exists():
-
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
 
     try:
         if request.method == "POST":
@@ -509,7 +509,10 @@ def Admin_update(request, admin_id):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def admin_password(request):
-    if request.user.login_role.filter(name="Admin").exists():
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
+    else:
+        
         try:
 
             if request.method == "POST":
@@ -571,8 +574,9 @@ def admin_logout(request):
 @login_required(login_url="index")
 def Admin_Dashboard(request):
 
-    if not request.user.login_role.filter(name="Admin").exists():
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
         return redirect("Error-Page")
+    
     # You don't need to reassign user_id since it's already passed in the URL
     total_event = Event_Data.objects.count()
     user_id = request.user.id
@@ -806,7 +810,7 @@ def base(request):
 @login_required(login_url="index")
 def admin_event_data(request):
 
-    if not request.user.login_role.filter(name="Admin"):
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
         return redirect("Error-Page")
 
     ec_member = LoginSide.objects.all().exclude(is_superuser=True)
@@ -840,6 +844,7 @@ def admin_event_data(request):
             collage = request.POST["collage"]
             associate_partner = request.POST.get("associate_partner", "")
             event_image = request.FILES.getlist("event_img")
+            event_description = request.POST.get('event_description')
 
             if event_expense == "":
                 event_expense = 0
@@ -892,6 +897,8 @@ def admin_event_data(request):
                 event_name=event_name,
                 associate_partner=associate_partner,
                 select_ec_member=select_ec_member,
+                event_description=event_description,
+                
                 user=request.user,
             )
             for image in event_image:
@@ -1037,7 +1044,7 @@ def download_excel(request):
 def manager_list(request):
     # Check if the user has the 'Admin' role
     try:
-        if not request.user.login_role.filter(name="Admin"):
+        if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
             return redirect("Error-Page")
     except Exception:
         return redirect(
@@ -1072,8 +1079,8 @@ def manager_list(request):
 # Delete Ec  Member
 @login_required(login_url="index")
 def delete_member(request, member_id):
-    if not request.user.login_role.filter(name="Admin").exists():
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
 
     try:
 
@@ -1100,8 +1107,8 @@ def delte_multiple(request):
 @login_required(login_url="index")
 def delete_event(request, event_id):
     # Ensure only admins can delete events
-    if not request.user.login_role.filter(name="Admin").exists():
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
     try:
 
         if request.method == "POST":
@@ -1131,8 +1138,8 @@ def delete_event(request, event_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_memeber(request, manager_id):
-    if not request.user.login_role.filter(name="Admin").exists():
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
     update_manager_data = get_object_or_404(LoginSide, id=manager_id)
     try:
         if request.method == "POST":
@@ -1149,7 +1156,7 @@ def update_memeber(request, manager_id):
             "Last Name": last_name,
             "Username": username,
             "Yi Role": yi_role,
-            "EC Role": login_role,
+            # "EC Role": login_role,
             "Phone Number": phone_number,
         }
 
@@ -1241,8 +1248,8 @@ def update_memeber(request, manager_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_event_data(request, event_id):
-    if not request.user.login_role.filter(name="Admin").exists():
-        return redirect("Error-Page")
+    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+            return redirect("Error-Page")
     else:
         try:
             update_event = get_object_or_404(Event_Data, id=event_id)
@@ -1256,6 +1263,7 @@ def update_event_data(request, event_id):
                 total_impact = request.POST.get("total_impact")
                 event_date = request.POST.get("event_date")
                 yirole = request.POST.get("role_yi")
+                
 
             required_fields = {
                 "Event Date": event_date,
@@ -1288,14 +1296,19 @@ def update_event_data(request, event_id):
                 update_event.which_SIG = request.POST["sig_"]
                 update_event.associate_partner = request.POST.get("associate_partners")
                 event_image = request.FILES.getlist("event_image")
+                update_event.event_description = request.POST["event_description"]
                 
                 for image in event_image:
+                    
+                    
                     if image:
                         try:
                             validator = FileExtensionValidator(
                                 allowed_extensions=["jpeg", "jpg", "png"]
                             )
                             validator(image)
+                            
+                            
                         except Exception as e:
                             messages.error(
                                 request,
@@ -1330,6 +1343,9 @@ def event_image_delete(request, image_id):
         messages.error(request, "Event Image not delete try again ")
     return redirect("Admin_Dashboard")
 
+
+def members_diary(request):
+    return render(request , 'Admin/members_diary.html')   
 
 class EventDataAPI(APIView):
     def get(self, request):

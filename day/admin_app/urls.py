@@ -49,6 +49,7 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path("reset_done/", password_update_done, name="password_reset_complete"),
+    path("member_diary",members_diary,name="member_diary"),
     # path('api/get-user-details/', get_logged_in_user_details, name='get-user-details'),
     # path('get-username/',get_username, name='get_username'),
     # path('delete_events/',delete_multiple_events, name='delete_multiple_events'),

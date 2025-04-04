@@ -1,0 +1,72 @@
+{% extends "base/base.html" %}
+
+{% block title %}New EC Member{% endblock title %}
+{% load static %}
+
+{% block link %}<link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">{% endblock link %}
+
+{% block bodyblock %}
+<main id="main" class="main">
+  <br>
+  <div class="pagetitle">
+    <h1>Members Diary</h1>
+  </div>
+
+
+
+  
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped" id="example">
+          <thead>
+            <tr class="text-nowrap text-center">
+              <th>Sr No</th>
+              <th>Name</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Yi Role</th>
+              <th>Vertical Role</th>
+              <th>Phone Number</th>
+              <th>Profile Image</th>
+           
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="text-nowrap text-center">
+              <td>1</td>
+              <td>2</td>
+              <td>4</td>
+              <td>4</td>
+              <td>4</td>
+              <td>4</td>
+              <td>4</td>
+              <td>4</td>
+              <td>4</td>
+              <td>
+                <img src="" 
+                border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
+
+              </td>
+            </tr>
+            </div>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+{% endblock %}
+
+{% block script %}
+
+  
+
+{% endblock script %}
+
+

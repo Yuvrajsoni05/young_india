@@ -89,18 +89,18 @@
                   <option value="Vertical Co-Chair">Vertical Co-Chair</option>
                   <option value="Chapter Chair">Chapter Chair</option>
                   <option value="Chapter Co-Chair">Chapter Co-Chair</option>
-                  <option value="Team Member">Team Member</option>
+                  <option value="Admin">Admin</option>
                 </select>
                 <div class="invalid-feedback">Please select a role.</div>
               </div>
             </div>
             
             <!-- Executive Council Role -->
-            <div class="mb-4">
-              <button type="button" id="verticalbtn" class="btn btn-outline-primary">Vertical Role</button>  
-              &nbsp; <button  type="button" id ="stakeholderbtn" class="btn btn-outline-primary"> Stakeholder Role </button><br> 
+            <div class="mb-4" id="vertical_view">
+              
+              {% comment %} &nbsp; <button  type="button" id ="stakeholderbtn" class="btn btn-outline-primary"> Stakeholder Role </button><br>  {% endcomment %}
               <div class="card border p-3 bg-light" >
-              <div id="verticalview">
+              <div>
                 <div class="d-flex flex-wrap gap-3"  >
                   {% for i in role %}
                   <div class="form-check">
@@ -110,13 +110,6 @@
                   {% endfor %}
                 </div>
               </div>
-
-                <div id="stakeholderview">
-                
-                        <div class="d-flex flex-wrap gap-3" >
-                        
-                        </div>
-                </div>
               </div>
             </div>
             
@@ -183,6 +176,40 @@ function password() {
   }
 }
 </script>
+
+<script>
+document.getElementById('yi_role').addEventListener('change', function () {
+  var schoolDiv = document.getElementById('vertical_view');
+  if (this.value === "Chapter Chair") {
+    schoolDiv.style.display = "none";  // Show SIG dropdown
+  } else {
+    schoolDiv.style.display = "block";   // Hide SIG dropdown
+  }
+});
+</script>
+
+<script>
+  document.getElementById('yi_role').addEventListener('change', function () {
+  var demo = document.getElementById('vertical_view');
+  if (this.value === "Chapter Co-Chair") {
+    demo.style.display = "none";  // Show SIG dropdown
+  } else {
+    demo.style.display = "block";   // Hide SIG dropdown
+  }
+});
+</script>
+
+<script>
+  document.getElementById('yi_role').addEventListener('change', function () {
+  var demo = document.getElementById('vertical_view');
+  if (this.value === "Admin") {
+    demo.style.display = "none";  // Show SIG dropdown
+  } else {
+    demo.style.display = "block";   // Hide SIG dropdown
+  }
+});
+</script>
+
 {% comment %} <script>
   function data() {
     var username = document.getElementById("username");
@@ -246,7 +273,7 @@ function password() {
 </script> {% endcomment %}
 
 
-<script>
+{% comment %} <script>
   document.addEventListener('DOMContentLoaded', function() {
       const verticalbtn = document.getElementById('verticalbtn');
       const stakeholderbtn = document.getElementById('stakeholderbtn');
@@ -272,7 +299,7 @@ function password() {
       verticalbtn.addEventListener('click', () => toggleView(true));
       stakeholderbtn.addEventListener('click', () => toggleView(false));
   });
-  </script>
+  </script> {% endcomment %}
   
 
 {% endblock script %}

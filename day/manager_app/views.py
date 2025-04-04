@@ -99,7 +99,7 @@ def about_yi(request):
 
 @login_required(login_url='index')
 def manager_update(request,manager_id):
-    if  request.user.login_role.filter(name='Admin').exclude():
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
         return redirect('Error-Page')
     
     try:
@@ -159,7 +159,7 @@ def manager_update(request,manager_id):
 
 @login_required(login_url='index')
 def manager_password(request):
-    if  request.user.login_role.filter(name='Admin').exclude():
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
         return redirect('Error-Page')
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
@@ -191,7 +191,7 @@ def manager_password(request):
 
 @login_required(login_url='index')
 def manager_dashboard(request):
-    if  request.user.login_role.filter(name='Admin').exclude():
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
         return redirect('Error-Page')
  
     user_roles = request.session.get('userrole', [])
@@ -213,7 +213,7 @@ def manager_dashboard(request):
 
 @login_required(login_url='index')
 def manager_profile(request):
-    if  request.user.login_role.filter(name='Admin').exclude():
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
         return redirect('Error-Page')
 
     return render(request,'member/member_profile.html')
@@ -259,7 +259,7 @@ def delete_event_data(request,events_id):
 
 def update_event_data(request,update_id):
 
-    if  request.user.login_role.filter(name='Admin').exclude():
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
         return redirect('Error-Page')
     
     try:
@@ -301,11 +301,27 @@ def update_event_data(request,update_id):
             update_event.social_link = request.POST['social_link']
             update_event.event_member = request.POST['event_member']
             update_event.select_ec_member = request.POST['select_ec_member']
+            update_event.event_description = request.POST["event_description"]
             update_event.total_impact = total_impact
             update_event.which_SIG  = request.POST['sig_']
             update_event.associate_partner = request.POST.get('associate_partners')
             event_image = request.FILES.getlist('event_image')
             for image in event_image:
+                if image:
+                        try:
+                            validator = FileExtensionValidator(
+                                allowed_extensions=["jpeg", "jpg", "png"]
+                            )
+                            validator(image)
+                            if len(event_image) > 6 and event_image:  # event_images is a list of image files
+                                messages.error(request, "You can Upload only 6 Images")
+                                return redirect('manager-dashboard')
+                        except Exception as e:
+                            messages.error(
+                                request,
+                                "Invalid file type. Only .jpeg, .jpg, .png allowed.",
+                            )
+                            return redirect('member-dashbaord')
                 Event_Image.objects.create(event=update_event,event_photo = image)
             update_event.save()
             
@@ -375,7 +391,7 @@ def delete_event_image(request,image_id):
 from django.http import JsonResponse
 @login_required(login_url='index')
 def event_data(request):
-    if  request.user.login_role.filter(name='Admin').exclude():
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
         return redirect('Error-Page')
     
     
@@ -482,8 +498,8 @@ def event_data(request):
 
 
 def dashboard(request):
-    if  request.user.login_role.filter(name='Admin').exclude():
-        return redirect('Error-Page')
+    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
+        return redirect("Error-Page")
     user = request.user
     all_event = Event_Data.objects.filter(user=user)
     total_event = Event_Data.objects.filter(user=user).count()

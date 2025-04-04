@@ -21,7 +21,7 @@ function addTagFromInput() {
       addTag(value);
       input.value = '';  // Reset input field after adding tag
     } else {
-      alert('You can only add up to 10 handler names.');
+      alert('You can only add up to 22 memeber names.');
     }
   }
 }

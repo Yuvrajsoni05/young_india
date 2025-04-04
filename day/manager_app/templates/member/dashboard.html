@@ -25,10 +25,11 @@
 
 {% block bodyblock %}
     <main id="main" class="main">
-
-      <div class="pagetitle">
-
-       </div>
+      <br>
+      <div class="pagetitle d-flex justify-content-between align-items-center">
+        <h1>Dashboard</h1>
+        
+      </div>
 {% comment %}        
          <nav>
            {% comment %} <ol class="breadcrumb">
@@ -191,7 +192,13 @@
                 
                     {% comment %} <td>{{event.associate_partner}} {% endcomment %}
                     <td>{{ event.total_impact|floatformat:"g" }}</td>
+                    {% if event.event_description == '' or event.event_description == None  %}
+                    <td> <span class="badge bg-light text-dark">No Description</span> </td>
+
+                    {% else %}
                     <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_description}}">{{ event.event_description }}</td>
+
+                    {% endif %}
                     <td>
                       {% if event.event_photo.all %}
                         {% with first_image=event.event_photo.first %}
@@ -408,8 +415,14 @@
 
                                     <div class="col-md-6" id="collage_div">
                                       <label class="form-label" for="event_image">Event Image</label>
-                                      <input type="file" id="event_image" class="form-control" name="event_image" multiple>
+                                      <input type="file" id="event_image" class="form-control" name="event_image" multiple accept=".jpg,.png,.jpeg">
                                   </div>
+
+                                  
+                                  <div class="col-md-6" id="collage_div">
+                                    <label for="event_description" class="form-label">Event Description</label>
+                                    <input type="textarea" class="form-control" name="event_description" id="event_description" value="{{event.event_description}}" rows="3"></input>
+                                </div>
                                     
                                     <div class="modal-footer">
                                
@@ -454,6 +467,20 @@
       </div>
     </div>
         </section>
+
+{% comment %} 
+        <div class="container">
+          <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+            </ul>
+            <p class="text-center text-muted">© 2021 Company, Inc</p>
+          </footer>
+          </div> {% endcomment %}
   </main><!-- End #main -->
 
 

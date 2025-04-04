@@ -106,7 +106,7 @@
             <!-- Project Verticals -->
             <div class="col-md-6">
               <div class="form-group mb-3">
-                <label for="project_verticals" class="form-label fw-bold fw-bold">Project Verticals<span class="text-danger"> *</span></label>
+                <label for="project_verticals" class="form-label fw-bold fw-bold">Yi Verticals<span class="text-danger"> *</span></label>
                 {% if role|length > 1 and 'Special Interest Group (S.I.G)' in role  %}
                   <select class="form-control-lg rounded form-control" id="project_verticals" name="project_verticals" required>
                     {% for i in role %}
@@ -157,9 +157,9 @@
             <!-- YI Pillar Impact -->
             <div class="col-md-6">
               <div class="form-group mb-3">
-                <label for="yi_pillar" class="form-label fw-bold fw-bold">YI Pillar Impact<span class="text-danger"> *</span></label>
+                <label for="yi_pillar" class="form-label fw-bold fw-bold">Yi Pillar Impact<span class="text-danger"> *</span></label>
                 <select class="form-control-lg rounded form-control form-select" id="yi_pillar" name="yi_pillar" required>
-                  <option value="" disabled selected>Choose YI Pillar Impact</option>
+                  <option value="" disabled selected>Choose Yi Pillar Impact</option>
                   <option value="Youth Leader">Youth Leader</option>
                   <option value="Thought Leader">Thought Leader</option>
                   <option value="Nation Building">Nation Building</option>
@@ -173,7 +173,7 @@
             <!-- Member names -->
             <div class="col-md-6">
               <div class="form-group mb-3">
-                <label for="tagInput" class="form-label fw-bold fw-bold">Member names</label>
+                <label for="tagInput" class="form-label fw-bold fw-bold">Member name</label>
                 <div class="tag-container" id="tagContainer">
                   <input type="text" id="tagInput" class="form-control-lg rounded form-control" placeholder="Type members name">
                   <input type="hidden" id="hiddenInput" name="handel_by">
@@ -219,7 +219,7 @@
 
             <div class="col-md-6">
               <div class="orm-group mb-3">
-                <label for="event_description" class="form-label">Event Description</label>
+                <label for="event_description" class="form-label fw-bold fw-bold">Event Description</label>
                 <textarea class="form-control" name="event_description" id="event_description" rows="3"></textarea>
               </div>
             </div>
