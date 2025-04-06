@@ -87,7 +87,7 @@ def index(request):
                 # if user.login_role.filter(name="Admin").exists():
                 #     # print(f"{username} , {password}")
                 #     # logger.info(f"Someone is trying to login Name : {username} {password}")
-                if user.yi_role == 'Chapter Co-Chair' or user.yi_role == 'Co-Chair' or user.yi_role == 'Admin':
+                if user.yi_role == 'Chapter Co-Chair' or user.yi_role == 'Chapter Chair' or user.yi_role == 'Admin':
                     return redirect("Admin_Dashboard")
                 else:
                     roles = user.login_role.all()
@@ -103,7 +103,6 @@ def index(request):
                     # Get all roles associated with the user
                     return redirect("member-dashbaord")
             else:
-
                 messages.error(request, "Invalid credentials, please try again.")
                 # logger.info(f"Error during authentication: {str(e)}")
                 return redirect("index")
@@ -116,11 +115,12 @@ def index(request):
 # Add new User Ec members
 
 
+
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Signup(request):
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
@@ -390,7 +390,7 @@ def Admin_Signup(request):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Profile(request):
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
@@ -418,7 +418,7 @@ def Admin_Profile(request):
 @login_required(login_url="index")
 def Admin_update(request, admin_id):
     # Check if the user has 'Admin' role
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
 
     try:
@@ -509,7 +509,7 @@ def Admin_update(request, admin_id):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def admin_password(request):
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
     else:
         
@@ -574,7 +574,7 @@ def admin_logout(request):
 @login_required(login_url="index")
 def Admin_Dashboard(request):
 
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
         return redirect("Error-Page")
     
     # You don't need to reassign user_id since it's already passed in the URL
@@ -810,8 +810,9 @@ def base(request):
 @login_required(login_url="index")
 def admin_event_data(request):
 
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
         return redirect("Error-Page")
+
 
     ec_member = LoginSide.objects.all().exclude(is_superuser=True)
     ec_member_names = [
@@ -1044,7 +1045,7 @@ def download_excel(request):
 def manager_list(request):
     # Check if the user has the 'Admin' role
     try:
-        if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+        if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
     except Exception:
         return redirect(
@@ -1079,7 +1080,7 @@ def manager_list(request):
 # Delete Ec  Member
 @login_required(login_url="index")
 def delete_member(request, member_id):
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
 
     try:
@@ -1107,10 +1108,9 @@ def delte_multiple(request):
 @login_required(login_url="index")
 def delete_event(request, event_id):
     # Ensure only admins can delete events
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
     try:
-
         if request.method == "POST":
             # Get the Event_Data instance to be deleted
             event_to_delete = get_object_or_404(Event_Data, id=event_id)
@@ -1125,7 +1125,6 @@ def delete_event(request, event_id):
                 except Exception as e:
                     messages.error(request, "Error deleteing image")
                     img.delete()
-
             # Delete the Event_Data instance, which will also delete related Event_Image instances due to cascade
             event_to_delete.delete()
         # Redirect back to the Admin Dashboard after deletion
@@ -1138,7 +1137,7 @@ def delete_event(request, event_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_memeber(request, manager_id):
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
     update_manager_data = get_object_or_404(LoginSide, id=manager_id)
     try:
@@ -1248,7 +1247,7 @@ def update_memeber(request, manager_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_event_data(request, event_id):
-    if not request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair' or request.user.yi_role =='Admin':
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
             return redirect("Error-Page")
     else:
         try:
@@ -1345,7 +1344,16 @@ def event_image_delete(request, image_id):
 
 
 def members_diary(request):
-    return render(request , 'Admin/members_diary.html')   
+    return render(request , 'Admin/members_diary.html')
+
+
+def delete_multiple_event(request):
+       
+       if request.method == "POST":
+        event_ids = request.POST.getlist('event_ids')  # Get selected checkboxes
+        if event_ids:
+            Event_Data.objects.filter(id__in=event_ids).delete()
+        return redirect('Admin_Dashboard')
 
 class EventDataAPI(APIView):
     def get(self, request):
@@ -1465,3 +1473,31 @@ def password_update_done(request):
 #             return redirect('Error-Page')
 #         return view_func(request, *args, **kwargs)
 #     return wrapper
+
+import csv
+import requests # type: ignore
+from io import StringIO
+from django.shortcuts import render
+
+def live_google_form_data(request):
+    csv_url = 'https://docs.google.com/spreadsheets/d/1WuoI9-47TGfBPdWqpnHQ2fZ3-sYw7Eh2JSADy-HAkXs/export?format=csv'
+    data = []
+
+    response = requests.get(csv_url)
+    if response.status_code == 200:
+        csv_file = StringIO(response.text)
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            data.append(row)
+
+    return render(request, 'Admin/google_live_data.html', {'data': data})
+
+
+
+
+
+
+
+
+
+

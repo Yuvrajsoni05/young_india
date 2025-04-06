@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Form Live Data</title>
+</head>
+<body>
+    <h2>Live Google Form Responses</h2>
+
+    {% if data %}
+    <table border="1" cellpadding="8">
+        <tr>
+            {% for key in data.0.keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in data %}
+        <tr>
+            {% for value in row.values %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+</body>
+</html>

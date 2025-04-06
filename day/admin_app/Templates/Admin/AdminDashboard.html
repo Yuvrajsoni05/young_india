@@ -251,11 +251,14 @@
               </div>
               
                         <div class="card-body">
+                          <form method="post" action="{% url 'delete_multiple_events' %}">
                           <div class="table-responsive">
+                        
                             <table class="table table-hover bordered align-middle"  id="eventTable">
                               <thead class="table-light"  style="overflow-y:auto;">
                                 <tr class="text-center text-nowrap">
                                   {% comment %} <th>Select </th> {% endcomment %}
+                                  <th>Select</th>
                                   <th>Sr No</th>
                                   <th>Date</th>
                                   <th>Member Name</th>
@@ -286,7 +289,7 @@
                                 {% if events %}
                                   {% for event in events %}
                                     <tr class="text-center text-nowrap">
-                                      {% comment %} <td><input type="checkbox" value={{event.id}} name="delete_multiple"></td> {% endcomment %}
+                                      <td><input type="checkbox" value={{event.id}} name="event_ids"></td>
                                       <td>{{ forloop.counter }}</td>
                                       <td>{{ event.date }}</td>
                                       <td>{{ event.your_name }}</td>
@@ -345,7 +348,7 @@
                                           <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
                                             <i class="bi bi-pencil-square"></i>
                                           </button>
-                                          <form method="post" action="{% url 'delete_event' event_id=event.id %}" class="d-inline">
+                                          <form method="post" action="{% url 'delete_event' event_id=event.id %}" class="d-inline" >
                                             {% csrf_token %}
                                             <button class="btn btn-sm btn-outline-danger ms-1" >
                                               <i class="bi bi-trash"></i>
@@ -355,43 +358,39 @@
                                       </td>
                                     </tr>
                                     <!-- Image Modal -->
-                                    <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
-                                      <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                          <div class="modal-header">
-                                            <h5 class="modal-title">Event Images</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                          </div>
-                                          <div class="modal-body p-0">
-                                            <div id="imageGallery{{ event.id }}"  class="carousel slide carousel-fade" data-bs-ride="carousel">
-                                              <div class="carousel-inner">
-                                                {% for image in event.event_photo.all %}
-                                                  <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                    <img src="{{ image.event_photo.url }}" class="d-block w-100" style="height: 500px; display: flex; object-fit: contain;" alt="Event Image">
-                                                    <div class="position-absolute bottom-0  translate--x mb-3">
-                                                      &nbsp;<form method="POST" action="{% url 'event_image_id'  image_id=image.id %}" class="d-inline" >
-                                                        {% csrf_token %}
-                                                        <button type="submit" class="btn btn-danger btn-md">
-                                                          <i class="bi bi-trash-fill me-1"></i> 
-                                                        </button>
-                                                      </form>
-                                                    </div>
-                                                  </div>
-                                                {% endfor %}
-                                              </div>
-                                              <button class="carousel-control-prev" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon visually-hidden  rounded p-2" aria-hidden="true"></span>
-                                                <span class="visually-hidden">Previous</span>
-                                              </button>
-                                              <button class="carousel-control-next" type="button" data-bs-target="#imageGallery{{ event.id }}" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon bg-dark visually-hidden rounded p-2" aria-hidden="false"></span>
-                                                <span class="visually-hidden">Next</span>
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
+                                   <!-- Modal -->
+<div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Event Images</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
+          {% for image in event.event_photo.all %}
+            <div class="col position-relative">
+              <div class="card h-100 shadow">
+                <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
+                <div class="card-body p-2 text-center">
+                  <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" onsubmit="event.stopPropagation();">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation();">
+                      <i class="bi bi-trash-fill"></i> Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
                                     
                                     <!-- Edit Event Modal -->
                                     <div class="modal fade"  id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
@@ -559,8 +558,11 @@
                                   </tbody>
                                  
                               </table>
+                              <button type="submit" class='btn btn-danger'>Delete Selected</button>
                                   <!-- Pagination -->
                               </div>
+                            </form>
+
                                 <nav aria-label="Event table navigation">
                               <ul class="pagination justify-content-center flex-wrap">
                                 <li class="page-item disabled">

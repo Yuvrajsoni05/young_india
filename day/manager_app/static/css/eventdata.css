@@ -33,8 +33,6 @@
 
 }
 
-
-
 /* Form Control Styles */
 .form-control {
   width:100%;
@@ -98,15 +96,18 @@ position: absolute;
 width: 100%;
 z-index: 100;
 }
+
 #checkBoxes label {
   display: block;
   padding: 0.3rem 0;
 }
 
+
 #checkBoxes label:hover {
   background-color: #f8f9fa;
   color: #212529;
 }
+
 
 
 

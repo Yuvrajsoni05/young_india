@@ -1,512 +1,536 @@
-
 {% extends "base/base.html" %}
 {% load static %}
-{% block title %} Add - Event - Data {% endblock title %}
-{% load static %}
+{% block title %}Add Event Data{% endblock title %}
 
-{% block link %}   <link href="{% static 'css/Admin_Event_data.css' %}" rel="stylesheet">
+{% block link %}
+<link href="{% static 'css/Admin_Event_data.css' %}" rel="stylesheet">
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
-<style>
- /* For mobile devices */
 
-</style>
- {% endblock link %}
-
-
-</head>
-
-
-
+{% endblock link %}
 
 {% block bodyblock %}
-  <main id="main" class="main">
-<br>
-    <div class="pagetitle">
-      <h1> Add Yong India Event</h1>
-    </div>
-      {% comment %} <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Admin</a></li>
-          <li class="breadcrumb-item active" > Add Yi Event</li></a>
-        </ol>
-      </nav> {% endcomment %}
- 
-
-      <div class="container-fluid">
-        <!-- Event Add Form -->
-        <div class="card custom-form form-datas w-100 p-4 shadow rounded">
-          <div class="position-relative">
-              <img src="{% static 'Image/YI.jpg' %}" 
-                   alt="Cover Photo" 
-                   class="w-100 rounded-top img-fluid d-block mx-auto h-auto" 
-                   style="max-height: 350px; object-fit: cover;">
-          </div>
-      
+<main id="main" class="main">
+  <br>
+  <div class="pagetitle">
+    <h1>Add Young India Event</h1>
+  </div>
+  <div class="container-fluid">
+    <!-- Event Add Form -->
+    <div class="card custom-form form-datas w-100 p-4 shadow rounded">
+      <div class="position-relative">
+        <img src="{% static 'Image/YI.jpg' %}" 
+             alt="Cover Photo" 
+             class="w-100 rounded-top img-fluid d-block mx-auto h-auto" 
+             style="max-height: 350px; object-fit: cover;">
+      </div>  
+      <div class="card-body form-col pt-5">
+        <form method="POST" id="myForm" action="{% url 'admin_event_data' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row">
+            <!-- Your Name field -->
+            <div class="col-12 col-sm-6 col-md-6 mb-md-0">
+              <div class="form-group">
+                <label for="your_name" class="form-label">Your Name</label><span style="color:red;"> *</span>
+                <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.full_name }}" required placeholder="Enter your full name" aria-label="Your Name" style="background-color:rgb(235, 236, 247);">
+              </div>
+            </div>
         
-        
-        <div class="card-body form-col pt-5">
-          <form method="POST" id="myForm" action="{% url 'admin_event_data' %}" enctype="multipart/form-data" >
-            {% csrf_token %}
-            <div class="row">
-              
-              <!-- Your Name field -->
-              <div class="col-12 col-sm-6 col-md-6 mb-md-0">
-                <div class="form-group">
-                  <label for="your_name" class="form-label fw-bold fw-bold">Your Name</label><span style="color:red;"> *</span>
-                  <input type="text" id="your_name" class="form-control form-control-lg rounded " name="your_name" value="{{ user.full_name}}" required placeholder="Enter your full name" aria-label="Your Name" style="background-color:rgb(235, 236, 247);">
-              
-                </div>
+            <!-- Event Date field -->
+            <div class="col-12 col-sm-6 col-md-6 mb-md-0">
+              <div class="form-group">
+                <label for="event_date" class="form-label">Event Date</label><span style="color:red;"> *</span>
+                <input type="date" id="event_date" class="form-control" name="event_date" aria-label="Event Date">
+                <span class="invalid-feedback" id="event_date_error">Please provide an event date.</span>
               </div>
-          
-              <!-- Event Date field -->
-              <div class="col-12 col-sm-6 col-md-6 mb-md-0">
-                <div class="form-group">
-                  <label for="event_date" class="form-label fw-bold">Event Date</label><span style="color:red;"> *</span>
-                  <input type="date" id="event_date" class="form-control date" name="event_date"  aria-label="Event Date">
-                  <span class="invalid-feedback" id="event_date_error">Please provide an event date.</span>
-                </div>
-              </div>
-              <!-- Event Name field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="event_name" class="form-label fw-bold">Event Name</label><span style="color:red;"> *</span>
-                  <input type="text" id="event_name" class="form-control form-control-lg rounded" name="event_name" placeholder="Event Name" required aria-label="Event Name">
-                  <span class="invalid-feedback" id="event_name_error">Please provide an event name.</>               
-                </div>
-              </div>
-          
-              <!-- Event Venue field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="event_venue" class="form-label fw-bold">Event Venue</label><span style="color:red;"> *</span>
-                  <input type="text" id="event_venue" class="form-control form-control-lg rounded" name="event_venue" placeholder="Event Venue">
-                  <span class="invalid-feedback" id="event_venue_error">Please provide an event venue.</span>               
-                </div>
-              </div>
-              
-          
-              <!-- YI Role field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="role_yi" class="form-label fw-bold">YI Role</label><span style="color:red;"> *</span>
-                  <input class="form-control form-control-lg rounded" id="role_yi" name="role_yi" value="{{user.yi_role}}" style="background-color:rgb(235, 236, 247);" required>
-                  <span class="invalid-feedback" id="event_yi_role_error">Please provide an event name.</span>
-                </div>
-              </div>
-          
-              <!-- Members name(s) field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="select_member" class="form-label fw-bold">Select EC Member</label>
-                  <div class="selectBox" onclick="toggleCheckboxes()">
-                    <select class="form-control form-control-lg rounded form-select" id="select_member_display">
-                      <option>Select EC Member</option>
-                    </select>
-                    <div class="overSelect"></div>
-                  </div>
-                  <div id="checkBoxes">
-                    {% for i in ec_member  %}
-                    <label>
-                      <input type="checkbox" name="select_member[]" value="{{i}}" /> {{i}}
-                    </label>
-                    {% endfor %}
-                  </div>
-                  <!-- Hidden field to store the concatenated values -->
-        
-                </div>
-              </div>
-          
-          
-              <!-- Project Verticals field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="project_verticals" class="form-label fw-bold">Project Verticals</label><span style="color:red;"> *</span>
-                  <select class="form-control form-control-lg rounded form-select" id="project_verticals" name="project_verticals" required>
-                    <option value="" disabled selected>Choose Project/Initiative</option>
-                    <option value="Masoom">Masoom</option>
-                    <option value="Road Safety">Road Safety</option>
-                    <option value="Health">Health</option>
-                    <option value="Sport">Sports</option>
-                    <option value="Accessibility">Accessibility</option>
-                    <option value="Learning(YI Talks)">Learning(YI Talks)</option>
-                    <option value="Climate action">Climate action</option>
-                    <option value="Innovation">Innovation</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Branding & PR">Branding & PR</option>
-                    <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
-                    <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
-                    <option value="Culture Connect">Culture Connect</option>
-                    <option value="Yi Angel">Yi Angel</option>
-                    <option value="Membership Engagement">Membership Engagement</option>
-                    <option value="none">None</option>
-                  </select>
-                  <span id="project_vertical_error" class="invalid-feedback">This field is required.</span>
-
-                </div>
-              </div>
-          
-              <!-- Project Stakeholder field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="project_stakeholder" class="form-label fw-bold">Project Stakeholder</label><span style="color:red;"> *</span>
-                  <select class="form-control form-control-lg rounded form-select"  id="project_stakeholder" name="project_stakeholder" required aria-label="Project Stakeholder">
-                    <option value="" disabled selected>Choose Project Stakeholder</option>
-                    <option value="Yuva">Yuva</option>
-                    <option value="Thalir">Thalir</option>
-                    <option value="Rural Initiatives">Rural Initiatives</option>
-                    <option value="General Public">General Public</option>
-                    <option value="Member">Member</option>
-                    <option value="none">None</option>
-                  </select>
-                  <span id="project_stakeholder_error" class="invalid-feedback" >This field is required.</span>
-
-                </div>
-              </div>
-          
-              <!-- YI Pillar Impact field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="yi_pillar" class="form-label fw-bold">YI Pillar Impacted</label><span style="color:red;"> *</span>
-                  <select class="form-control form-control-lg rounded form-select" id="yi_pillar" name="yi_pillar" required aria-label="YI Pillar Impact">
-                    <option value="" disabled selected>Choose YI Pillar Impact</option>
-                    <option value="Youth Leader">Youth Leader</option>
-                    <option value="Thought Leader">Thought Leader</option>
-                    <option value="Nation Building">Nation Building</option>
-                  </select>
-                  <span id="project_yipillar_error" class="invalid-feedback">This field is required.</span>
-
-                </div>
-              </div>
-          
-              <!-- Select Ec Member field -->
+            </div>
             
-
-
-              <div class="col-md-6">
-                <div class="form-group mb-3">
-                  <label for="tagInput" class="form-label fw-bold">Enter member's name</label>
-                  <div class="tag-container" id="tagContainer">
-                    <input type="text" id="tagInput" class="form-control form-control-lg rounded" placeholder="Type member's name">
-                    <input type="hidden" id="hiddenInput" name="event_member">
-                  </div>
-                </div>
+            <!-- Event Name field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="event_name" class="form-label">Event Name</label><span style="color:red;"> *</span>
+                <input type="text" id="event_name" class="form-control" name="event_name" placeholder="Event Name" required aria-label="Event Name">
+                <span class="invalid-feedback" id="event_name_error">Please provide an event name.</span>               
               </div>
-          
-              <!-- Social Link field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="social_link" class="form-label fw-bold">Social Link</label>
-                  <input type="url" id="social_link" class="form-control form-control-lg rounded" name="social_link" placeholder="Enter social media link" aria-label="Social Link">
-                </div>
-              </div>
-          
-              <!-- Total Impact field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="total_impact" class="form-label fw-bold">Total Impact</label><span style="color:red;"> *</span>
-                  <input type="number" id="total_impact" class="form-control form-control-lg rounded" name="total_impact" required placeholder="Total Impact" aria-label="Total Impact">
-                  <span class="invalid-feedback" id="event_impact_error">Please provide an event imapct.</span>
-
-                </div>
-              </div>
-          
-              <!-- Event Expense field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="event_expense" class="form-label fw-bold">Event Expense</label>
-                  <input type="number" id="event_expense" class="form-control form-control-lg rounded" name="event_expense" placeholder="Event Expense" aria-label="Event Expense">
-                </div>
-              </div>
-          
-              <!-- Event Image field -->
-              <div class="col-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                  <label for="event_img" class="form-label fw-bold">Event Image</label><br>
-                  <input type="file" id="event_img" class="form-control-file"  name="event_img" accept=".jpg, .jpeg, .png" aria-label="Event Image" multiple>
-                </div>
-              </div>
-
-
-              <div class="col-md-6">
-                <div class="orm-group mb-3">
-                  <label for="event_description" class="form-label fw-bold fw-bold">Event Description</label>
-                  <textarea class="form-control" name="event_description" id="event_description" rows="3"></textarea>
-                </div>
-              </div>
-
-              
-
-
-              <!-- Special Interest Group field -->
-              <div class="col-12 col-sm-6 col-md-6" id="sig_div" style="display: none;">
-                <div class="form-group">
-                  <label for="sig_" class="form-label fw-bold">Choose SIG</label>
-                  <select class="form-control form-control-lg rounded form-select" name="sig_">
-                    <option value="" disabled selected>Choose Special Interest Group</option>
-                    <option value="Active Living">Active Living</option>
-                    <option value="Photography">Photography</option>
-                    <option value="Trekking">Trekking</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Community">Community</option>
-                    <option value="">None</option>
-                  </select>
-                </div>
-              </div>
-          
-              <!-- Associate Partner field -->
-              <div class="col-12 col-sm-6 col-md-6" id="associate_div" style="display: none;">
-                <div class="form-group">
-                  <label for="associate_partners" class="form-label fw-bold">Associate Partner</label>
-                  <select class="form-control form-control-lg rounded form-select"  id="associate_partners" name="associate_partner">
-                    <option value="" disabled selected>Choose Associate</option>
-                    <option value="Big Bull">Big Bull</option>
-                    <option value="EB">EB</option>
-                    <option value="Yuvi">Yuvi</option>
-                    <option value="">None</option>
-                  </select>
-                </div>
-              </div>
-          
-              <!-- School field -->
-              <div class="col-12 col-sm-6 col-md-6" id="school_div" style="display: none;">
-                <div class="form-group">
-                  <label for="school" class="form-label fw-bold">School</label>
-                  <input type="text" id="school" class="form-control form-control-lg rounded" name="school" placeholder="School" aria-label="School">
-                </div>
-              </div>
-          
-              <!-- College field -->
-              <div class="col-12 col-sm-6 col-md-6" id="collage_div" style="display: none;">
-                <div class="form-group">
-                  <label for="collage" class="form-label fw-bold">College</label>
-                  <input type="text" id="collage" class="form-control form-control-lg rounded" name="collage" placeholder="College" aria-label="Collage">
-                </div>
-              </div>
-          
             </div>
-          
-            <div class="d-grid gap-2 d-md-flex justify-content-md-top mt-4">
-              <button type="submit" class="btn btn-primary px-4">Submit 
-              </button>
-              <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+        
+            <!-- Event Venue field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="event_venue" class="form-label">Event Venue</label><span style="color:red;"> *</span>
+                <input type="text" id="event_venue" class="form-control" name="event_venue" placeholder="Event Venue">
+                <span class="invalid-feedback" id="event_venue_error">Please provide an event venue.</span>               
+              </div>
             </div>
-          </form>
-        </div>
+            
+            <!-- YI Role field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="role_yi" class="form-label">YI Role</label><span style="color:red;"> *</span>
+                <input class="form-control" id="role_yi" name="role_yi" value="{{user.yi_role}}" style="background-color:rgb(235, 236, 247);" required>
+                <span class="invalid-feedback" id="event_yi_role_error">Please provide your YI role.</span>
+              </div>
+            </div>
+        
+            <!-- Members name(s) field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="select_member" class="form-label">Select EC Member</label>
+                <div class="selectBox" onclick="toggleCheckboxes()">
+                  <select class="form-control form-select" id="select_member_display">
+                    <option>Select EC Member</option>
+                  </select>
+                  <div class="overSelect"></div>
+                </div>
+                <div id="checkBoxes">
+                  {% for i in ec_member %}
+                  <label>
+                    <input type="checkbox" name="select_member[]" value="{{i}}" /> {{i}}
+                  </label>
+                  {% endfor %}
+                </div>
+                <input type="hidden" id="select_member_hidden" name="select_member_hidden">
+              </div>
+            </div>
+            
+            <!-- Project Verticals field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="project_verticals" class="form-label">Project Verticals</label><span style="color:red;"> *</span>
+                <select class="form-control form-select" id="project_verticals" name="project_verticals" required>
+                  <option value="" disabled selected>Choose Project/Initiative</option>
+                  <option value="Masoom">Masoom</option>
+                  <option value="Road Safety">Road Safety</option>
+                  <option value="Health">Health</option>
+                  <option value="Sport">Sports</option>
+                  <option value="Accessibility">Accessibility</option>
+                  <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                  <option value="Climate action">Climate Action</option>
+                  <option value="Innovation">Innovation</option>
+                  <option value="Entrepreneurship">Entrepreneurship</option>
+                  <option value="Branding & PR">Branding & PR</option>
+                  <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                  <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                  <option value="Culture Connect">Culture Connect</option>
+                  <option value="Yi Angel">Yi Angel</option>
+                  <option value="Membership Engagement">Membership Engagement</option>
+                  <option value="none">None</option>
+                </select>
+                <span id="project_vertical_error" class="invalid-feedback">This field is required.</span>
+              </div>
+            </div>
+            
+            <!-- Project Stakeholder field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="project_stakeholder" class="form-label">Project Stakeholder</label><span style="color:red;"> *</span>
+                <select class="form-control form-select" id="project_stakeholder" name="project_stakeholder" required aria-label="Project Stakeholder">
+                  <option value="" disabled selected>Choose Project Stakeholder</option>
+                  <option value="Yuva">Yuva</option>
+                  <option value="Thalir">Thalir</option>
+                  <option value="Rural Initiatives">Rural Initiatives</option>
+                  <option value="General Public">General Public</option>
+                  <option value="Member">Member</option>
+                  <option value="none">None</option>
+                </select>
+                <span id="project_stakeholder_error" class="invalid-feedback">This field is required.</span>
+              </div>
+            </div>
+        
+            <!-- YI Pillar Impact field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="yi_pillar" class="form-label">YI Pillar Impacted</label><span style="color:red;"> *</span>
+                <select class="form-control form-select" id="yi_pillar" name="yi_pillar" required aria-label="YI Pillar Impact">
+                  <option value="" disabled selected>Choose YI Pillar Impact</option>
+                  <option value="Youth Leader">Youth Leader</option>
+                  <option value="Thought Leader">Thought Leader</option>
+                  <option value="Nation Building">Nation Building</option>
+                </select>
+                <span id="project_yipillar_error" class="invalid-feedback">This field is required.</span>
+              </div>
+            </div>
+        
+            <!-- Enter member's name field -->
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="tagInput" class="form-label fw-bold">Enter member's name</label>
+                <div class="tag-container" id="tagContainer">
+                  <input type="text" id="tagInput" class="form-control form-control-lg rounded" placeholder="Type member's name">
+                  <input type="hidden" id="hiddenInput" name="event_member">
+                </div>
+              </div>
+            </div>
+        
+            <!-- Social Link field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="social_link" class="form-label">Social Link</label>
+                <input type="url" id="social_link" class="form-control" name="social_link" placeholder="Enter social media link" aria-label="Social Link">
+              </div>
+            </div>
+        
+            <!-- Total Impact field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="total_impact" class="form-label">Total Impact</label><span style="color:red;"> *</span>
+                <input type="number" id="total_impact" class="form-control" name="total_impact" required placeholder="Total Impact" aria-label="Total Impact">
+                <span class="invalid-feedback" id="event_impact_error">Please provide an event impact.</span>
+              </div>
+            </div>
+        
+            <!-- Event Expense field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="event_expense" class="form-label">Event Expense</label>
+                <input type="number" id="event_expense" class="form-control" name="event_expense" placeholder="Event Expense" aria-label="Event Expense">
+              </div>
+            </div>
+        
+            <!-- Event Image field -->
+            <div class="col-12 col-sm-6 col-md-6">
+              <div class="form-group">
+                <label for="event_img" class="form-label">Event Image</label><br>
+                <input type="file" id="event_img" class="form-control" name="event_img" accept=".jpg, .jpeg, .png" aria-label="Event Image" multiple>
+              </div>
+            </div>
+
+            <!-- Event Description field -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="event_description" class="form-label">Event Description</label>
+                <textarea class="form-control" name="event_description" id="event_description" rows="3"></textarea>
+              </div>
+            </div>
+
+            <!-- Special Interest Group field (conditionally displayed) -->
+            <div class="col-12 col-sm-6 col-md-6" id="sig_div" style="display: none;">
+              <div class="form-group">
+                <label for="sig_" class="form-label">Choose SIG</label>
+                <select class="form-control form-select" name="sig_">
+                  <option value="" disabled selected>Choose Special Interest Group</option>
+                  <option value="Active Living">Active Living</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Trekking">Trekking</option>
+                  <option value="Entrepreneurship">Entrepreneurship</option>
+                  <option value="Community">Community</option>
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+        
+            <!-- Associate Partner field (conditionally displayed) -->
+            <div class="col-12 col-sm-6 col-md-6" id="associate_div" style="display: none;">
+              <div class="form-group">
+                <label for="associate_partners" class="form-label">Associate Partner</label>
+                <select class="form-control form-select" id="associate_partners" name="associate_partner">
+                  <option value="" disabled selected>Choose Associate</option>
+                  <option value="Big Bull">Big Bull</option>
+                  <option value="EB">EB</option>
+                  <option value="Yuvi">Yuvi</option>
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+        
+            <!-- School field (conditionally displayed) -->
+            <div class="col-12 col-sm-6 col-md-6" id="school_div" style="display: none;">
+              <div class="form-group">
+                <label for="school" class="form-label">School</label>
+                <input type="text" id="school" class="form-control" name="school" placeholder="School" aria-label="School">
+              </div>
+            </div>
+        
+            <!-- College field (conditionally displayed) -->
+            <div class="col-12 col-sm-6 col-md-6" id="collage_div" style="display: none;">
+              <div class="form-group">
+                <label for="collage" class="form-label">College</label>
+                <input type="text" id="collage" class="form-control" name="collage" placeholder="College" aria-label="College">
+              </div>
+            </div>
+          </div>
+        
+          <div class="d-grid gap-2 d-md-flex justify-content-md-top mt-4">
+            <button type="submit" class="btn btn-primary px-4">Submit</button>
+            <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+          </div>
+        </form>
       </div>
     </div>
-   
-  </main>
+  </div>
+</main>
+{% endblock %} 
 
-  {% endblock %} 
+{% block script %}
 
-  {% block script %}
+<script>
+  // Toggle checkboxes in dropdown
+  let expanded = false;
 
-
-  <script>
-    let expanded = false;
-
-    function toggleCheckboxes() {
-        let checkboxes = document.getElementById("checkBoxes");
-        if (!expanded) {
-            checkboxes.style.display = "block";
-            expanded = true;
-        } else {
-            checkboxes.style.display = "none";
-            expanded = false;
-        }
+  function toggleCheckboxes() {
+    let checkboxes = document.getElementById("checkBoxes");
+    if (!expanded) {
+      checkboxes.style.display = "block";
+      expanded = true;
+    } else {
+      checkboxes.style.display = "none";
+      expanded = false;
     }
+  }
+  
+  // Close the dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    let selectBox = document.querySelector('.selectBox');
+    let checkboxes = document.getElementById("checkBoxes");
     
-    // Close the dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        let selectBox = document.querySelector('.selectBox');
-        let checkboxes = document.getElementById("checkBoxes");
-        
-        // If the click is outside both the selectBox and checkBoxes
-        if (!selectBox.contains(event.target) && !checkboxes.contains(event.target)) {
-            checkboxes.style.display = "none";
-            expanded = false;
-        }
-    }, true);
+    // If the click is outside both the selectBox and checkBoxes
+    if (!selectBox.contains(event.target) && !checkboxes.contains(event.target)) {
+      checkboxes.style.display = "none";
+      expanded = false;
+    }
+  }, true);
+  
+  // Update select display with checked options
+  function updateSelectDisplay() {
+    let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
+    let selectDisplay = document.getElementById('select_member_display');
     
+    if (checkboxes.length === 0) {
+      selectDisplay.options[0].text = "Select EC Member";
+    } else if (checkboxes.length === 1) {
+      selectDisplay.options[0].text = checkboxes[0].value;
+    } else {
+      selectDisplay.options[0].text = checkboxes.length + " Members Selected";
+    }
+  }
 
-    function updateSelectDisplay() {
-      let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
-      let selectDisplay = document.getElementById('select_member_display');
-      
-      if (checkboxes.length === 0) {
-          selectDisplay.options[0].text = "Select options";
-      } else if (checkboxes.length === 1) {
-          selectDisplay.options[0].text = checkboxes[0].value;
-      } else {
-          selectDisplay.options[0].text = checkboxes.length + " Member Selected";
-      }
-   }
-   document.querySelector('form').addEventListener('submit', function(event) {
+  // Handle form submission - collect checkbox values
+  document.querySelector('form').addEventListener('submit', function(event) {
     // Get all checked checkboxes
     let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
     let values = [];
     
     // Collect values from checked checkboxes
     checkboxes.forEach(function(checkbox) {
-        values.push(checkbox.value);
+      values.push(checkbox.value);
     });
     
     // Join the values with a comma and store in the hidden field
     document.getElementById('select_member_hidden').value = values.join(', ');
- });
+  });
  
- // Also update the checkboxes to show selected values in the dropdown
- let checkboxes = document.querySelectorAll('input[name="select_member[]"]');
- checkboxes.forEach(function(checkbox) {
+  // Add change event listeners to checkboxes
+  let checkboxes = document.querySelectorAll('input[name="select_member[]"]');
+  checkboxes.forEach(function(checkbox) {
     checkbox.addEventListener('change', function() {
-        updateSelectDisplay();
+      updateSelectDisplay();
     });
- });
+  });
+
+  // Form validation functions
+  // Event Date Validation
+  var event_date = document.getElementById('event_date');
+  var event_date_error = document.getElementById('event_date_error');
+
+  function checkEventDate() {
+    if (event_date.value.trim() === '') {
+      event_date_error.style.display = "block";
+      return false;
+    } else {
+      event_date_error.style.display = "none";
+      return true;
+    }
+  }
+  event_date.addEventListener('input', checkEventDate);
+  checkEventDate();
+
+  // Event Name Validation
+  var event_name = document.getElementById('event_name');
+  var event_name_error = document.getElementById('event_name_error');
+
+  function checkEventName() {
+    if (event_name.value.trim() === '') {
+      event_name_error.style.display = "block";
+      return false;
+    } else {
+      event_name_error.style.display = "none";
+      return true;
+    }
+  }
+  event_name.addEventListener('input', checkEventName);
+  checkEventName();
+
+  // Total Impact Validation
+  var event_impact = document.getElementById('total_impact');
+  var event_impact_error = document.getElementById('event_impact_error');
+
+  function checkEventImpact() {
+    if (event_impact.value.trim() === '') {
+      event_impact_error.style.display = "block";
+      return false;
+    } else {
+      event_impact_error.style.display = "none";
+      return true;
+    }
+  }
+  event_impact.addEventListener('input', checkEventImpact);
+  checkEventImpact();
+
+  // Project Stakeholder Validation
+  var project_stakeholder = document.getElementById('project_stakeholder');
+  var project_stakeholder_error = document.getElementById('project_stakeholder_error');
+
+  function checkProjectStakeholder() {
+    if (project_stakeholder.value === '') {
+      project_stakeholder_error.style.display = "block"; 
+      return false;
+    } else {
+      project_stakeholder_error.style.display = "none"; 
+      return true;
+    }
+  }
+  project_stakeholder.addEventListener('change', checkProjectStakeholder);
+  checkProjectStakeholder();
+
+  // YI Pillar Validation
+  var yi_pillar = document.getElementById('yi_pillar');
+  var project_yipillar_error = document.getElementById('project_yipillar_error');
+
+  function checkProjectYipillar() {
+    if (yi_pillar.value === '') {
+      project_yipillar_error.style.display = "block"; 
+      return false;
+    } else {
+      project_yipillar_error.style.display = "none"; 
+      return true;
+    }
+  }
+  yi_pillar.addEventListener('change', checkProjectYipillar);
+  checkProjectYipillar();
+
+  // Event Venue Validation
+  var project_venue = document.getElementById('event_venue');
+  var project_venue_error = document.getElementById('event_venue_error');
+
+  function checkProjectVenue() {
+    if (project_venue.value.trim() === '') {
+      project_venue_error.style.display = "block"; 
+      return false;
+    } else {
+      project_venue_error.style.display = "none"; 
+      return true;
+    }
+  }
+  project_venue.addEventListener('input', checkProjectVenue);
+  checkProjectVenue();
+
+  // Project Vertical Validation
+  var project_vertical = document.getElementById('project_verticals');
+  var project_vertical_errors = document.getElementById('project_vertical_error');
+
+  function checkProjectVertical() {
+    if (project_vertical.value === '') {
+      project_vertical_errors.style.display = "block"; 
+      return false;
+    } else {
+      project_vertical_errors.style.display = "none"; 
+      return true;
+    }
+  }
+  project_vertical.addEventListener('change', checkProjectVertical);
+  checkProjectVertical();
+
+  // Show/hide conditional fields based on project vertical selection
+  document.getElementById('project_verticals').addEventListener('change', function() {
+    const selectedValue = this.value;
+    
+    // Show SIG div only if "Special Interest Group (S.I.G)" is selected
+    if (selectedValue === "Special Interest Group (S.I.G)") {
+      document.getElementById('sig_div').style.display = 'block';
+    } else {
+      document.getElementById('sig_div').style.display = 'none';
+    }
+    
+    // Show associate_div for certain options
+    if (selectedValue === "Masoom" || selectedValue === "Road Safety" || selectedValue === "Health") {
+      document.getElementById('associate_div').style.display = 'block';
+    } else {
+      document.getElementById('associate_div').style.display = 'none';
+    }
+    
+    // Show school/college divs for certain options
+    if (selectedValue === "Masoom" || selectedValue === "Road Safety" || 
+        selectedValue === "Learning(YI Talks)" || selectedValue === "Climate action") {
+      document.getElementById('school_div').style.display = 'block';
+      document.getElementById('collage_div').style.display = 'block';
+    } else {
+      document.getElementById('school_div').style.display = 'none';
+      document.getElementById('collage_div').style.display = 'none';
+    }
+  });
+
+  // Form submission validation
+  document.getElementById('myForm').addEventListener('submit', function(event) {
+    var isEventNameValid = checkEventName();
+    var isEventDateValid = checkEventDate();
+    var isEventImpact = checkEventImpact();
+    var isStakeholder = checkProjectStakeholder();
+    var isYiPillar = checkProjectYipillar();  
+    var isVertical = checkProjectVertical();
+    var isVenue = checkProjectVenue();
+
+    if (!isEventNameValid || !isEventDateValid || !isEventImpact || 
+        !isStakeholder || !isYiPillar || !isVertical || !isVenue) {
+      event.preventDefault(); // Prevent form submission if validation fails
+    }
+  });
+
+  // Tag input system for member names
+  const tagInput = document.getElementById('tagInput');
+  const hiddenInput = document.getElementById('hiddenInput');
+  const tagContainer = document.getElementById('tagContainer');
+  let tags = [];
+
+  // Create tags from input
+  tagInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      
+      const value = tagInput.value.trim();
+      if (value && !tags.includes(value)) {
+        createTag(value);
+        tags.push(value);
+        updateHiddenInput();
+        tagInput.value = '';
+      }
+    }
+  });
+
+  // Create tag element
+  function createTag(text) {
+    const tag = document.createElement('span');
+    tag.classList.add('tag', 'badge', 'bg-primary', 'me-2', 'mb-2');
+    tag.textContent = text;
+    
+    const closeBtn = document.createElement('span');
+    closeBtn.classList.add('ms-2');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.addEventListener('click', () => {
+      tagContainer.removeChild(tag);
+      tags = tags.filter(t => t !== text);
+      updateHiddenInput();
+    });
+    
+    tag.appendChild(closeBtn);
+    tagContainer.insertBefore(tag, tagInput);
+  }
+
+  // Update hidden input with all tags
+  function updateHiddenInput() {
+    hiddenInput.value = tags.join(',');
+  }
+
 </script>
+<script src="{% static 'js/input.js' %}"></script>
+<script src="{% static 'assets/js/event.js' %}"></script>
 
-<script>
-
-// Event Date Validation
-var event_date = document.getElementById('event_date');
-var event_date_error = document.getElementById('event_date_error'); // changed variable name to avoid conflict
-
-function checkEventDate() {
-  if (event_date.value.trim() === '') {
-    event_date_error.style.display = "block";
-    return false;
-  } else {
-    event_date_error.style.display = "none";
-    return true;
-  }
-}
-
-event_date.addEventListener('input', checkEventDate); // Add the event listener for event date
-checkEventDate(); // Initial check
-
-// Event Name Validation
-
-var event_name = document.getElementById('event_name');
-var event_name_error = document.getElementById('event_name_error'); // changed variable name to avoid conflict
-
-function checkEventName() {
-  if (event_name.value.trim() === '') {
-    event_name_error.style.display = "block";
-    return false;
-  } else {
-    event_name_error.style.display = "none";
-    return true;
-  }
-}
-
-event_name.addEventListener('input', checkEventName); // Add the event listener for event name
-checkEventName();
-
-// Event Name Validation
-
-var event_impact = document.getElementById('total_impact');
-var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
-
-function checkEventImpact() {
-  if (event_impact.value.trim() === ''  ) {
-    event_impact_error.style.display = "block";
-    return false;
-  } else {
-    event_impact_error.style.display = "none";
-    return true;
-  }
-}
-event_impact.addEventListener('input', checkEventImpact); // Add the event listener for event name
-checkEventImpact();
-
-
-var project_stakeholder = document.getElementById('project_stakeholder');
-var project_stakeholder_error = document.getElementById('project_stakeholder_error');
-
-function checkProjectStakeholder() {
-  if (project_stakeholder.value === '') {
-    project_stakeholder_error.style.display = "block"; 
-    return false;
-  } else {
-    project_stakeholder_error.style.display = "none"; 
-    return true;
-  }
-}
-project_stakeholder.addEventListener('input', checkProjectStakeholder);
-checkProjectStakeholder();
-
-
-
-
-
-var yi_pillar = document.getElementById('yi_pillar');
-var project_yipillar_error = document.getElementById('project_yipillar_error');
-
-function checkProjectYipillar() {
-  if (yi_pillar.value.trim() === '') {
-    project_yipillar_error.style.display = "block"; 
-    return false;
-  } else {
-    project_yipillar_error.style.display = "none"; 
-    return true;
-  }
-}
-yi_pillar.addEventListener('input', checkProjectYipillar);
-checkProjectYipillar();
-
-
-
-var project_venue = document.getElementById('event_venue');
-var project_venue_error = document.getElementById('event_venue_error');
-
-function checkProjectVenue() {
-  if (project_venue.value.trim() === '') {
-    project_venue_error.style.display = "block"; 
-    return false;
-  } else {
-    project_venue_error.style.display = "none"; 
-    return true;
-  }
-}
-project_venue.addEventListener('input', checkProjectVenue);
-checkProjectVenue();
-
-
-
-
-var project_vertical = document.getElementById('project_verticals');
-var project_vertical_errors = document.getElementById('project_vertical_error');
-
-function checkProjectVertical() {
-  if (project_vertical.value.trim() === '') {
-    project_vertical_errors.style.display = "block"; 
-    return false;
-  } else {
-    project_vertical_errors.style.display = "none"; 
-    return true;
-  }
-}
-project_vertical.addEventListener('input', checkProjectVertical);
-checkProjectVertical();
-
-
-// Submit Form Validation
-document.getElementById('myForm').addEventListener('submit', function(event) {
-  var isEventNameValid = checkEventName(); // Check event name
-  var isEventDateValid = checkEventDate();
-  var isEventImpact = checkEventImpact();
-  var isStakeholder =checkProjectStakeholder();
-  var isYiPillar  = checkProjectYipillar();  
-  var isVertical  = checkProjectVertical();
-  var isVenue = checkProjectVenue();
-
-  if (!isEventNameValid || !isEventDateValid || !isEventImpact || !isStakeholder  || !isYiPillar || !isVertical || !isVenue ) {
-    event.preventDefault(); // Prevent form submission if either validation fails
-  }
-});
-</script>
-
-  <script src="{% static 'assets/js/event.js' %}"></script>
-  <script src="{% static 'js/input.js' %}" ></script>
-  {% endblock script %}
- 
+{% endblock script %}
