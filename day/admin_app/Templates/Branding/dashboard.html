@@ -1,0 +1,550 @@
+
+{% extends "base/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Dashboard {% endblock title %}
+
+{% block bodyblock %}
+
+{% block static %}
+<style>
+
+.form-label{
+  font-weight:bold;
+
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock static %}
+<!-- Main Content -->
+<main id="main" class="main">
+  <div class="pagetitle d-flex justify-content-between align-items-center">
+    <h1>Dashboard</h1>
+    {% comment %} <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add EC Member</button></a></div> {% endcomment %}
+  </div>
+
+  </div>
+
+
+  <!-- Dashboard Stats Section -->
+  <section class="section dashboard">
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+      <!-- Total Events Card -->
+      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <li class="dropdown-header text-start">
+                <h6>Vertical</h6>
+              </li>
+      
+              <!-- Show "All" option by default -->
+              <li><a class="dropdown-item" href="?vertical=all">All Verticals</a></li>
+      
+              <!-- Loop through verticals -->
+              {% for i in verticals %}
+              <li><a class="dropdown-item" href="?vertical={{ i }}">{{ i }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+      
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-list-check text-primary"></i>&nbsp; Vertical
+            </h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h6>{{ total_vertical }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+
+    <!-- Stats Cards -->
+  
+      <!-- Total Events Card -->
+      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-list-ol text-primary"></i>&nbsp; Total Events</h5>
+            <div class="d-flex align-items-center">
+              {% comment %} <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary-light">
+                <i class="bi bi-list-ol text-primary"></i>
+              </div> {% endcomment %}
+              <div class="ps-3">
+                <h6>  {{total_event}}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact Card -->
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="card-body">
+            
+            <h5 class="card-title"><i class="bi bi-people text-success"></i>&nbsp; Total Impact</h5>
+            <div class="d-flex align-items-center">
+              {% comment %} <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-success-light">
+                <i class="bi bi-people text-success"></i>
+              </div> {% endcomment %}
+              <div class="ps-3">
+                <h6>{{ total_impact}}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <!-- Expense Card -->
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-currency-rupee"></i> &nbsp;Total Expense</h5>
+            <div class="d-flex align-items-center">
+            
+              <div class="ps-3">
+                <h6>{{ total_expense|intcomma }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+                <div class="row mb-3">
+                  <div class="col-12 d-flex justify-content-center">
+                      <div class="btn-group" role="group">
+                          <button type="button" id="tableViewBtn" class="btn btn-outline-primary">
+                              <i class="bi bi-table me-2"></i>Yi Table
+                          </button>
+                          <button type="button" id="chartViewBtn" class="btn btn-outline-primary">
+                              <i class="bi bi-graph-up me-2"></i>Yi Analytics
+                          </button>
+                      </div>
+                  </div>
+              </div>
+            <div id="tableView">
+
+                <!-- View Toggle Buttons -->
+                <div class="card-header bg-white py-3">
+                  <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
+                      <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
+              
+                       <div class="d-flex gap-2">
+                        <div class="d-flex">
+                                  <a href="{% url 'branding_dashboard' %}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                  </a>&nbsp;&nbsp;
+                                  <a href="{% url 'download_excel' %}" class="btn btn-success">
+                                    <i class="bi bi-download"></i>
+                                </a> &nbsp;&nbsp;
+                                {% comment %} <a href="#" class="btn btn-outline-dark">
+                                  {{event_count}}
+                              </a>  {% endcomment %}
+                                </div>
+                        </div> 
+                  </div>
+              
+
+          
+              <div class="col-12">
+                  <div class="row g-2">
+                      <form method="get" action="{% url 'branding_dashboard' %}" id="managerFilterForm" class="d-flex flex-wrap">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                          <div class="d-flex">
+                              <select class="form-select me-2" id="event_date" name="event_date" onchange="this.form.submit()">
+                                  <option value="" disabled selected>Event Date</option>
+                                  <option value="all">All</option>
+                                  {% for i in event_date %}
+                                      <option value="{{ i }}"{% if i == request.GET.event_date %} selected {% endif %}>{{ i }}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                      </div>
+          
+                          <!-- Date Range Search -->
+                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  <select class="form-select me-2" id="stakeholder" name="stakeholder" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Stakeholder</option>
+                                      <option value="all">All</option>
+                                      {% for i in stakeholder_name %}
+                                          <option value="{{ i }}"{% if i == request.GET.stakeholder %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+          
+                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  <select class="form-select me-2" id="ec_name" name="ec_name" onchange="this.form.submit()">
+                                      <option value="" disabled selected>EC Member Name</option>
+                                      <option value="all">All</option>
+                                      {% for i in member_name %}
+                                          <option value="{{ i }}"{% if i == request.GET.ec_name %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+          
+                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  <select class="form-select me-2" id="yi_role" name="yi_role" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Yi Role</option>
+                                      <option value="all">All</option>
+                                      {% for i in yi_role_name %}
+                                          <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+          
+                          <!-- Event Name Search -->
+                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  <select class="form-select me-2" id="yi_pillar" name="yi_pillar" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Yi Pillar</option>
+                                      <option value="all">All</option>
+                                      {% for i in yi_pillar_name %}
+                                          <option value="{{ i }}"{% if i == request.GET.yi_pillar %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+          
+                          <!-- Vertical Search Dropdown -->
+                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  <select class="form-select me-2" id="verticals" name="verticals" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Yi Verticals</option>
+                                      <option value="all">All</option>
+                                      {% for i in verticals %}
+                                          <option value="{{ i }}"{% if i == request.GET.verticals %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                            
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+                        <div class="card-body">
+                          <form method="post" action="{% url 'delete_multiple_events' %}">
+                          <div class="table-responsive">
+                        
+                            <table class="table table-hover bordered align-middle"  id="eventTable">
+                              <thead class="table-light"  style="overflow-y:auto;">
+                                <tr class="text-center text-nowrap">
+                                  {% comment %} <th>Select </th> {% endcomment %}
+                                                            <th>Sr No</th>
+                                  <th>Date</th>
+                                  <th>Member Name</th>
+                                  <th>Event Name</th>
+                                  <th>Yi Verticals</th>
+                                  <th>Stakeholder</th>
+                                  <th>Venue</th>
+                                  <th>Expense</th>
+                                  <th>EC Members Name</th>
+                                  <th>Event Members Name</th>
+                                  <th>Yi Role</th>
+                                  <th>Yi Pillar</th>
+                                  <th>School</th>
+                                  <th>College</th>
+                                  <th>S.I.G</th>
+                                  <th>Impact</th>
+                                  <th>Event Description</th>
+                                  <th>Social Link</th>
+                                  <th>Image</th>
+                               
+                                </tr>
+
+                                
+                              </thead>
+                              <tbody id="display" >
+
+                                {% if events %}
+                                  {% for event in events %}
+                                    <tr class="text-center text-nowrap">
+                           
+                                      <td>{{ forloop.counter }}</td>
+                                      <td>{{ event.date }}</td>
+                                      <td>{{ event.your_name }}</td>
+                                      <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_name}}">{{ event.event_name }}</span></td>
+                                      <td>{{event.project_vertical}}
+                                      <td >{{event.project_stakeholder}}
+                                      <td>{{ event.event_venue }}</td>
+                                      <td>₹ {{ event.event_expense|intcomma }}</td>
+                                      {% if event.select_ec_member == '' or event.select_ec_member == None   %}
+                                     <td> <span class="badge bg-light text-dark">No Members</span></td>
+                                      {% else %}
+                                      <td class="event-handle" justify>{{ event.select_ec_member }}</td>
+                                      {% endif %}
+                                      
+                                      {% if event.event_member == '' or event.event_member == None %}
+                                      <td> <span class="badge bg-light text-dark">No Members</span></td>
+                                      {% else %}
+                                      <td class="event-handle" justify>{{ event.event_member }}</td>
+                                      {% endif %}
+                                    
+                                      <td>{{ event.role_yi }}</td>
+                                      <td>{{ event.yi_pillar }}</td>
+                                      <td> {{ event.school  }}</td>
+                                      <td>{{event.collage}}</td>
+                                      <td>{{event.which_SIG}}</td>
+                              
+                                      <td>{{ event.total_impact|floatformat:"g" }}</td>
+                                      {% if event.event_description == '' or event.event_description == None  %}
+                                      <td> <span class="badge bg-light text-dark">No Description</span> </td>
+                  
+                                      {% else %}
+                                      <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_description}}">{{ event.event_description }}</td>
+                  
+                                      {% endif %}
+                                      
+                                        {% if event.social_link == '' %}
+                                       
+                                        <td><span class="badge bg-light text-dark">No link</span></td>
+                                        {% else %}
+                                       <td><a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
+                                        {% endif %}
+                                      
+                                      <td>
+                                        {% if event.event_photo.all %}
+                                          {% with first_image=event.event_photo.first %}
+                                            <img src="{{ first_image.event_photo.url }}" alt="Event Image" class="rounded" height="40" width="60" 
+                                                data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
+                                                data-image-url="{{ first_image.event_photo.url }}" style="cursor: pointer;" >
+                                          {% endwith %}
+                                        {% else %}
+                                          <span class="badge bg-light text-dark">No image</span>
+                                        {% endif %}
+                                      </td>
+                                    
+                                    </tr>
+                                    <!-- Image Modal -->
+                                   <!-- Modal -->
+                                            <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Event Images</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
+                                                    {% for image in event.event_photo.all %}
+                                                        <div class="col position-relative">
+                                                        <div class="card h-100 shadow">
+                                                            <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
+                                                        </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                      {% endfor %}
+                                      {% else %}
+                                      <tr>
+                                        <td colspan="20" class="text-center"> No Event available </td>
+                                      </tr>
+                                      {% endif %}
+                                  </tbody>
+                              </table>
+                              </div>
+                            </form>
+
+                                <nav aria-label="Event table navigation">
+                              <ul class="pagination justify-content-center flex-wrap">
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="page-item active">
+                                  <a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item">
+                                  <a class="page-link" href="#">Next</a>
+                                </li>
+                              </ul>
+                            </nav>
+                          </div>
+                        </div>
+                       </div>   
+                  </div>
+
+                  <div id="chartView" class="card-body" style="display: none;">
+                    <h5 class="card-title">Event Analytics</h5>
+                    
+                    <div class="row">
+                        <!-- Card 1: Line and Bar Chart Combination -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Line & Bar Chart</h6>
+                                    <canvas id="lineBarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Card 2: Simple Bar Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Bar Chart</h6>
+                                    <canvas id="barChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Card 3: Pie Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pie Chart</h6>
+                                    <canvas id="pieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Card 4: Another Pie Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pie Chart 2</h6>
+                                    <canvas id="pieChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <!-- Card 5: Column Chart -->
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Column Chart</h6>
+                                    <canvas id="columnChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+         
+</section>
+
+  </main>
+<!-- End #main -->
+  {% endblock bodyblock %} 
+  
+
+  {% block script %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tableViewBtn = document.getElementById('tableViewBtn');
+    const chartViewBtn = document.getElementById('chartViewBtn');
+    const tableView = document.getElementById('tableView');
+    const chartView = document.getElementById('chartView');
+
+    // Toggle view function
+    function toggleView(showTable) {
+        if (showTable) {
+            tableView.style.display = 'block';
+            chartView.style.display = 'none';
+            tableViewBtn.classList.remove('btn-outline-primary');
+            tableViewBtn.classList.add('btn-primary');
+            chartViewBtn.classList.remove('btn-primary');
+            chartViewBtn.classList.add('btn-outline-primary');
+        } else {
+            tableView.style.display = 'none';
+            chartView.style.display = 'block';
+            chartViewBtn.classList.remove('btn-outline-primary');
+            chartViewBtn.classList.add('btn-primary');
+            tableViewBtn.classList.remove('btn-primary');
+            tableViewBtn.classList.add('btn-outline-primary');
+        }
+    }
+
+    // Event listeners for view toggle buttons
+    tableViewBtn.addEventListener('click', () => toggleView(true));
+    chartViewBtn.addEventListener('click', () => toggleView(false));
+});
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get all the event-handle elements in the table
+    const eventHandles = document.querySelectorAll('.event-handle');
+    
+    // Loop through each event-handle element
+    eventHandles.forEach(function (eventHandleElement) {
+        // Get the event_handle content
+        const eventHandle = eventHandleElement.innerText;
+        
+        // Split the data by commas
+        const names = eventHandle.split(',');
+        
+        // Create a select element
+        const select = document.createElement('select');
+        select.className = 'event-handle form-select fomr-control border'; // Add a class for styling if needed
+        
+        // Create a default option
+        const defaultOption = document.createElement('link');
+        defaultOption.text = 'See Member';
+        defaultOption.value = '';
+        select.appendChild(defaultOption);
+        
+        // Loop through each name and create an option for it
+        names.forEach(function (name) {
+            // Trim any extra spaces from the name
+            const trimmedName = name.trim();
+            
+            // Create the option element
+            const option = document.createElement('option');
+            option.value = trimmedName;
+            option.text = trimmedName;
+            
+            // Append the option to the select
+            select.appendChild(option);
+        });
+        
+        // Clear the original content in the <td>
+        eventHandleElement.innerHTML = '';
+        
+        // Append the new formatted select menu
+        eventHandleElement.appendChild(select);
+    });
+});
+</script>
+
+  <script src="{% static 'js/dashboard.js' %}"></script>
+  <script src="{% static 'js/chart/lineBarChart.js' %}"></script>
+  <script src="{% static 'js/chart/barChart.js' %}"></script>
+  <script src="{% static 'js/chart/pieChart.js' %}"></script>
+  <script src="{% static 'js/chart/pieChart2.js' %}"></script>
+  <script src="{% static 'js/chart/columnChart.js' %}"></script>
+  
+  {% endblock script %}
+
+
+
+
+  

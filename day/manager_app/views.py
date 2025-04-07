@@ -441,9 +441,9 @@ def event_data(request):
 
             event_image = request.FILES.getlist('event_img')
 
-            if len(event_image) > 6 and event_image:  # event_images is a list of image files
-                messages.error(request, "You can Upload only 6 Images")
-                return redirect('manager-dashboard')
+            # if len(event_image) > 6 and event_image:  # event_images is a list of image files
+            #     messages.error(request, "You can Upload only 6 Images")
+            #     return redirect('manager-dashboard')
         
 
        
@@ -605,7 +605,7 @@ def dashboard(request):
 
 #             # Show a success message
 #             messages.success(request, 'Event Updated Successfully')
-#             return redirect('Admin_Dashboard', event_id=update_event.id)
+#             return redirect('Admin_Dashboard', event_id=update_event.i.)
 
 #         else:
 #             # If the method is not POST, show an error message

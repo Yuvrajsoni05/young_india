@@ -1,35 +1,50 @@
 <aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-          <a class="nav-link" href="{% url 'Admin_Dashboard' %}">
+          <a class="nav-link" {% if user.yi_role == 'Branding' %} href="{% url 'branding_dashboard' %}" {% else %} href="{% url 'Admin_Dashboard' %}" {% endif %} >
               <i class="bi bi-grid"></i>
               <span>Dashboard</span>
           </a>
       </li>
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'View-manager' %}">
-              <i class="bi bi-people-fill"></i>
-              <span>Executive Council Members</span>
-          </a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link collapsed " href="{% url 'admin_event_data' %}">
-              <i class="bi bi-calendar2-plus"></i>
-              <span>Add Yi Event</span>
-          </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed " href="{% url 'member_diary' %}">
-            <i class="bi bi-journal-text"></i>
-            <span>Members Diary</span>
+
+    {% if user.yi_role == 'Branding' %}
+    <li class="nav-item">
+        <a class="nav-link collapsed " href="{% url 'Admin_Logout' %}">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Logout</span>
         </a>
     </li>
-      <li class="nav-item">
-          <a class="nav-link collapsed " href="{% url 'Admin_Logout' %}">
-              <i class="bi bi-box-arrow-left"></i>
-              <span>Logout</span>
-          </a>
-      </li>
-  </ul>
+
+    {% else %}
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'View-manager' %}">
+            <i class="bi bi-people-fill"></i>
+            <span>Executive Council Members</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed " href="{% url 'admin_event_data' %}">
+            <i class="bi bi-calendar2-plus"></i>
+            <span>Add Yi Event</span>
+        </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed " href="{% url 'member_diary' %}">
+          <i class="bi bi-journal-text"></i>
+          <span>Members Diary</span>
+      </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link collapsed " href="{% url 'Admin_Logout' %}">
+        <i class="bi bi-box-arrow-left"></i>
+        <span>Logout</span>
+    </a>
+</li>
+
+
+    
+    {% endif %}
+</ul>
 </aside>
 

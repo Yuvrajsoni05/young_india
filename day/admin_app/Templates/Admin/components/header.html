@@ -3,56 +3,62 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center">
+ 
+
     <button id="sidebarToggle" class="btn border-0 p-2 bg-transparent">
       <i id="sidebarIcon" class="bi bi-list fs-4 text-primary"></i> <!-- Keep original colors -->
     </button>
-    <a href="{% url 'Admin_Dashboard' %}" class="logo d-flex align-items-center ms-2">
+    {% if user.yi_role  == 'Branding' %}
+    <a href="{% url 'branding_dashboard' %}" class="logo d-flex align-items-center ms-2">
       <img src="{% static 'Image/YIIMG.png' %}" alt="Logo"  height="60" width="60">
       <span class=" "></span> <!-- Keep spacing -->
     </a>
-  </div><!-- End Logo -->
+ {% else %}
+ <a href="{% url 'Admin_Dashboard' %}" class="logo d-flex align-items-center ms-2">
+  <img src="{% static 'Image/YIIMG.png' %}" alt="Logo"  height="60" width="60">
+  <span class=" "></span> <!-- Keep spacing -->
+</a>
 
-
+    
+    
+    {% endif %}
+     </div><!-- End Logo -->
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
         <!-- End Search Icon-->
+{% if user.yi_role == "Branding" %}
 
-        <li class="nav-item dropdown">
+{% else %}
+<li class="nav-item dropdown">
+  <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+    <i class="bi bi-app-indicator"></i>
+    <span class="badge bg-primary badge-number"> {{ count }} </span>
+  </a><!-- End Notification Icon -->
 
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-app-indicator"></i>
-            <span class="badge bg-primary badge-number"> {{ count }} </span>
-          </a><!-- End Notification Icon -->
+  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+    <span class="badge rounded-pill bg-primary p-2 ms-2">Active User Name </span></a>
+    {% for i in name %}
+      <li class="notification-item">
+        <i class="bi bi-activity"></i>
+        <div>
+          <h4>{{ i }} </h4>
+    
+        </div>
+      </li>
+    {% endfor %}
 
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <span class="badge rounded-pill bg-primary p-2 ms-2">Active User Name </span></a>
-            {% for i in name %}
-              <li class="notification-item">
-                <i class="bi bi-activity"></i>
-                <div>
-                  <h4>{{ i }} </h4>
-            
-                </div>
-              </li>
-            {% endfor %}
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            
+    <li>
+      <hr class="dropdown-divider">
+    </li>
 
 
-   
+  </ul><!-- End Notification Dropdown Items -->
 
-            
+</li><!-- End Notification Nav -->
 
-          
-
-          </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
+{% endif %}
+        
 
         {% comment %} <li class="nav-item dropdown">
 
@@ -146,9 +152,6 @@
               <hr class="dropdown-divider">
             </li>
 
-        
-
-           
               <hr class="dropdown-divider">
             </li>
 
@@ -166,28 +169,5 @@
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
-{% comment %} from django.shortcuts import get_object_or_404, redirect
-  from .models import Event_Data, Event_Image
-  
-  def delete_event(request, event_id):
-      # Check if the user has Admin role
-      if not request.user.login_role.filter(name='Admin').exists():
-          return redirect('Error-Page')
-      
-      if request.method == 'POST':
-          # Get the Event_Data instance
-          delete_event = get_object_or_404(Event_Data, id=event_id)
-          
-          # Delete related event images if they exist
-          # Get related Event_Image objects
-          event_images = delete_event.event_photo.all()
-          for event_image in event_images:
-              if event_image.event_photo:
-                  event_image.event_photo.delete()  # This deletes the file from the media directory
-              event_image.delete()  # Delete the Event_Image instance from the database
-          
-          # Delete the Event_Data instance
-          delete_event.delete()
-      
-      return redirect('Admin_Dashboard') {% endcomment %} 
+
   

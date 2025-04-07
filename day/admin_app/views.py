@@ -69,7 +69,15 @@ from django.utils.html import strip_tags
 # Create your views here.
 
 
-# login Page
+def  check_role(view_func):
+    def wrapper(request,*args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('index')
+        if not request.user.yi_role == 'Chapter Co-Chair' or request.euser.yi_role == 'Chapter Chair' or request.user.yi_role == 'Admin' :
+            return redirect('Error-Page')
+        return view_func(request,*args,**kwargs)
+    return wrapper
+
 
 
 @never_cache
@@ -87,8 +95,10 @@ def index(request):
                 # if user.login_role.filter(name="Admin").exists():
                 #     # print(f"{username} , {password}")
                 #     # logger.info(f"Someone is trying to login Name : {username} {password}")
-                if user.yi_role == 'Chapter Co-Chair' or user.yi_role == 'Chapter Chair' or user.yi_role == 'Admin':
+                if user.yi_role == 'Chapter Co-Chair' or user.yi_role == 'Chapter Chair' or user.yi_role == 'Admin' :
                     return redirect("Admin_Dashboard")
+                elif user.yi_role == 'Branding':
+                    return redirect("branding_dashboard")
                 else:
                     roles = user.login_role.all()
                     request.session["userrole"] = [role.name for role in roles]
@@ -113,8 +123,6 @@ def index(request):
 
 
 # Add new User Ec members
-
-
 
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
@@ -218,8 +226,8 @@ def Admin_Signup(request):
                         },
                     )
 
-                if profile_img.size > 4 * 1024 * 1024:  # 4MB limit
-                    messages.error(request, "Image size must be less than 4MB.")
+                if profile_img.size > 10 * 1024 * 1024:  # 10 MB limit
+                    messages.error(request, "Image size must be less than 10 MB.")
                     return render(
                         request,
                         "Admin/AdminSignup.html",
@@ -390,7 +398,7 @@ def Admin_Signup(request):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Profile(request):
-    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin','Branding']:
             return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
@@ -412,13 +420,12 @@ def Admin_Profile(request):
 
 # Admin profile Update View Code
 
-
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_update(request, admin_id):
     # Check if the user has 'Admin' role
-    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin','Branding']:
             return redirect("Error-Page")
 
     try:
@@ -457,8 +464,8 @@ def Admin_update(request, admin_id):
 
             if "admin_profile_img" in request.FILES:
 
-                if admin_profile.photo.size > 4 * 1024 * 1024:
-                    messages.error(request, "Image Size must be 4mb")
+                if admin_profile.photo.size > 10 * 1024 * 1024:
+                    messages.error(request, "Image size must be less than 10 MB ")
                     return redirect("Admin_Profile")
 
                 if (
@@ -509,7 +516,7 @@ def Admin_update(request, admin_id):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def admin_password(request):
-    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin' ,'Branding']:
             return redirect("Error-Page")
     else:
         
@@ -567,8 +574,6 @@ def admin_logout(request):
 
 
 # Admin Dashboard
-
-
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
@@ -628,6 +633,8 @@ def Admin_Dashboard(request):
     
 
     # Manager names from Event_Data
+    imapct = (Event_Data.objects.all().values_list('total_impact',flat=True))
+    
     member_name = (
         Event_Data.objects.all().values_list("your_name", flat=True).distinct()
     )
@@ -649,10 +656,29 @@ def Admin_Dashboard(request):
     total_vertical = vertical_name.count()
     # event_list = Event_Data.objects.all()
 
+    member_name_chart = (
+        Event_Data.objects.all().values_list("your_name", flat=True).distinct()
+    )
+    vertical_name_chart = (
+        Event_Data.objects.all().values_list("project_vertical", flat=True)
+    )
+    imapct_chart = (Event_Data.objects.all().values_list('total_impact',flat=True))
+
+
     event_list = Event_Data.objects.all()
-    # event_count = Event_Data.objects.all().count()
+
+    vertical_chart = [event for event in vertical_name_chart ]
+    impact_chart = [event for event in  imapct_chart]
+    member_chart = [event for event in  member_name_chart]
     
-    
+    # def event_chart(request):
+    # events = Event.objects.all()
+    # labels = [event.event_name for event in events]
+    # data = [event.event_impact for event in events]
+    # context = {
+    #     'labels': labels,
+    #     'data': data,
+    # }
 
     selected_vertical = request.GET.get("vertical", "all")
     if selected_vertical != "all":
@@ -778,13 +804,15 @@ def Admin_Dashboard(request):
         "count": active_users_count,
         "name": active_user_names,
         "event_date":event_date,
+        'vertical_chart':vertical_chart,
+        'impact_chart':impact_chart,
+        'member_chart':member_chart,
         
     }
     return render(request, "Admin/AdminDashboard.html", context)
 
 
 # Base file
-
 
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
@@ -803,7 +831,6 @@ def base(request):
 
 
 # Admin Side Event Data
-
 
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
@@ -865,9 +892,9 @@ def admin_event_data(request):
                     messages.error(request, f" The  {field} field is Required")
                     return redirect("admin_event_data")
 
-            if len(event_image) > 6 and event_image:
-                messages.error(request, "You can Upload only 6 Image")
-                return redirect("admin_event_data")
+            # if len(event_image) > 6 and event_image:
+            #     messages.error(request, "You can Upload only 6 Image")
+            #     return redirect("admin_event_data")
 
             valid_extension = [".jpeg", ".jpg", ".png"]
 
@@ -1137,7 +1164,7 @@ def delete_event(request, event_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_memeber(request, manager_id):
-    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin']:
+    if request.user.yi_role not in ['Chapter Co-Chair', 'Chapter Chair', 'Admin' ]:
             return redirect("Error-Page")
     update_manager_data = get_object_or_404(LoginSide, id=manager_id)
     try:
@@ -1219,8 +1246,8 @@ def update_memeber(request, manager_id):
                         )
                         return redirect("View-manager")
 
-                if update_manager_data.photo.size > 4 * 1024 * 1024:
-                    messages.error(request, "Image Size must be 4mb ")
+                if update_manager_data.photo.size > 10 * 1024 * 1024:
+                    messages.error(request, "Image size must be less than 10 MB")
                     return redirect("View-manager")
 
             try:
@@ -1297,9 +1324,7 @@ def update_event_data(request, event_id):
                 event_image = request.FILES.getlist("event_image")
                 update_event.event_description = request.POST["event_description"]
                 
-                for image in event_image:
-                    
-                    
+                for image in event_image: 
                     if image:
                         try:
                             validator = FileExtensionValidator(
@@ -1345,6 +1370,178 @@ def event_image_delete(request, image_id):
 
 def members_diary(request):
     return render(request , 'Admin/members_diary.html')
+
+
+
+
+def branding_dashboard(request):
+    if request.user.yi_role not in ['Branding']:
+        return redirect('Error-Page')
+    
+    
+    
+    
+    total_event = Event_Data.objects.count()
+    event_list = Event_Data.objects.all()
+   
+    total_impact_result = Event_Data.objects.aggregate(Sum("total_impact"))
+    total_impact = (
+        total_impact_result["total_impact__sum"]
+        if total_impact_result["total_impact__sum"] is not None
+        else 0
+    )
+    
+    
+    total_expense_result = Event_Data.objects.aggregate(Sum("event_expense"))
+    total_expense = (
+        total_expense_result["event_expense__sum"]
+        if total_expense_result["event_expense__sum"] is not None
+        else 0
+    )
+    
+    member_name = (
+        Event_Data.objects.all().values_list("your_name", flat=True).distinct()
+    )
+    
+    vertical_name = (
+        Event_Data.objects.all().values_list("project_vertical", flat=True).distinct()
+    )
+    total_vertical = vertical_name.count()
+    
+    stakeholder_name = (
+        Event_Data.objects.all().values_list('project_stakeholder',flat=True).distinct()
+    )
+    
+    
+    yi_role_name = (
+        Event_Data.objects.all().values_list('role_yi',flat=True).distinct()
+    )
+    
+    yi_pillar_name = (
+        Event_Data.objects.all().values_list("yi_pillar", flat=True).distinct()
+    )
+    
+    
+    event_date = (
+        Event_Data.objects.all().values_list("date",flat=True).distinct()
+    )
+
+    def formatImpact(total_impact):
+        s, *d = str(total_impact).partition(".")
+        r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+        return "".join([r] + d)
+    
+    def formatINR(total_expense):
+        s, *d = str(total_expense).partition(".")
+        r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+        return "".join([r] + d)
+    
+    
+    selected_vertical = request.GET.get("vertical", "all")
+    if selected_vertical != "all":
+        total_vertical = Event_Data.objects.filter(
+            project_vertical=selected_vertical
+        ).count()
+        event_list = event_list.filter(project_vertical__icontains=selected_vertical)
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+
+    
+    ec_name = request.GET.get("ec_name", "all")
+    if ec_name and ec_name != "all":
+        event_list = event_list.filter(your_name__icontains=ec_name)
+        total_event = event_list.filter(your_name__icontains=ec_name).count
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+        
+        
+    yi_pillar = request.GET.get("yi_pillar")
+    if yi_pillar and yi_pillar != "all":
+        event_list = event_list.filter(yi_pillar__icontains=yi_pillar)
+        total_event = event_list.filter(yi_pillar__icontains=yi_pillar).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+    
+    yi_role = request.GET.get("yi_role")
+    if yi_role and yi_role != "all":
+        event_list = event_list.filter(role_yi__icontains=yi_role)
+        total_event = event_list.filter(role_yi__icontains=yi_role).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+        total_expense_result["event_expense__sum"]
+        if total_expense_result["event_expense__sum"] is not None
+        else 0
+    )
+        
+    stakeholder = request.GET.get("stakeholder")
+    if stakeholder and stakeholder != "all":
+        event_list = event_list.filter(project_stakeholder__icontains=stakeholder)
+        total_event = event_list.filter(project_stakeholder__icontains=stakeholder).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+        
+        
+    date = request.GET.get("event_date")
+    if date and date != "all": 
+        event_list = event_list.filter(date__icontains=date)
+        total_event = event_list.filter(date__icontains=date).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+    total_expense  = formatINR(total_expense)
+    total_impact = formatImpact(total_impact)
+    context = {
+        'events':event_list,
+        'total_event':total_event,
+        'total_expense':total_expense,
+        'total_impact':total_impact,
+        'verticals':vertical_name ,
+        'total_vertical':total_vertical,
+        'stakeholder_name':stakeholder_name,
+        'yi_role_name':yi_role_name,
+        'yi_pillar_name':yi_pillar_name,
+        'event_date': event_date,
+        'member_name':member_name ,
+    }
+    
+    return render(request,'Branding/dashboard.html',context)
 
 
 def delete_multiple_event(request):
@@ -1424,6 +1621,9 @@ def admin_chart(request):
     return render(request, "Admin/chart/admin_chart.html", context)
 
 
+
+
+
 # ForgotPasssword Side
 class CustomPasswordResetView(PasswordResetView):
     template_name = "password/password_reset_form.html"
@@ -1474,23 +1674,23 @@ def password_update_done(request):
 #         return view_func(request, *args, **kwargs)
 #     return wrapper
 
-import csv
-import requests # type: ignore
-from io import StringIO
-from django.shortcuts import render
+# import csv
+# import requests # type: ignore
+# from io import StringIO
+# from django.shortcuts import render
 
-def live_google_form_data(request):
-    csv_url = 'https://docs.google.com/spreadsheets/d/1WuoI9-47TGfBPdWqpnHQ2fZ3-sYw7Eh2JSADy-HAkXs/export?format=csv'
-    data = []
+# def live_google_form_data(request):
+#     csv_url = 'https://docs.google.com/spreadsheets/d/1WuoI9-47TGfBPdWqpnHQ2fZ3-sYw7Eh2JSADy-HAkXs/export?format=csv'
+#     data = []
 
-    response = requests.get(csv_url)
-    if response.status_code == 200:
-        csv_file = StringIO(response.text)
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            data.append(row)
+#     response = requests.get(csv_url)
+#     if response.status_code == 200:
+#         csv_file = StringIO(response.text)
+#         reader = csv.DictReader(csv_file)
+#         for row in reader:
+#             data.append(row)
 
-    return render(request, 'Admin/google_live_data.html', {'data': data})
+#     return render(request, 'Admin/google_live_data.html', {'data': data})
 
 
 

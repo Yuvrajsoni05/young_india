@@ -15,6 +15,7 @@
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 {% endblock static %}
 <!-- Main Content -->
 <main id="main" class="main">
@@ -73,10 +74,7 @@
           </div>
         </div>
       </div>
-      
 
-
-    <!-- Stats Cards -->
   
       <!-- Total Events Card -->
       <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
@@ -113,8 +111,6 @@
         </div>
       </div>
 
-      
-
       <!-- Expense Card -->
       <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
@@ -130,7 +126,6 @@
         </div>
       </div>
       
-
                 <div class="row mb-3">
                   <div class="col-12 d-flex justify-content-center">
                       <div class="btn-group" role="group">
@@ -143,8 +138,9 @@
                       </div>
                   </div>
               </div>
-            <div id="tableView">
 
+              
+            <div id="tableView">
                 <!-- View Toggle Buttons -->
                 <div class="card-header bg-white py-3">
                   <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
@@ -359,39 +355,38 @@
                                     </tr>
                                     <!-- Image Modal -->
                                    <!-- Modal -->
-<div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event Images</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+                                              <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h5 class="modal-title">Event Images</h5>
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
 
-      <div class="modal-body">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
-          {% for image in event.event_photo.all %}
-            <div class="col position-relative">
-              <div class="card h-100 shadow">
-                <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
-                <div class="card-body p-2 text-center">
-                  <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" onsubmit="event.stopPropagation();">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation();">
-                      <i class="bi bi-trash-fill"></i> Delete
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
+                                                    <div class="modal-body">
+                                                      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
+                                                        {% for image in event.event_photo.all %}
+                                                          <div class="col position-relative">
+                                                            <div class="card h-100 shadow">
+                                                              <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
+                                                              <div class="card-body p-2 text-center">
+                                                                <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" onsubmit="event.stopPropagation();">
+                                                                  {% csrf_token %}
+                                                                  <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation();">
+                                                                    <i class="bi bi-trash-fill"></i> Delete
+                                                                  </button>
+                                                                </form>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        {% endfor %}
+                                                      </div>
+                                                    </div>
 
-    </div>
-  </div>
-</div>
-
-                                    
+                                                  </div>
+                                                </div>
+                                              </div>
+                                                                            
                                     <!-- Edit Event Modal -->
                                     <div class="modal fade"  id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
                                       <div class="modal-dialog modal-lg">
@@ -552,7 +547,7 @@
                                       {% endfor %}
                                       {% else %}
                                       <tr>
-                                        <td colspan="17" class="text-center"> No Event available </td>
+                                        <td colspan="21" class="text-center"> No Event available </td>
                                       </tr>
                                       {% endif %}
                                   </tbody>
@@ -609,13 +604,14 @@
                     <div class="row">
                         <!-- Card 3: Pie Chart -->
                         <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Pie Chart</h6>
-                                    <canvas id="pieChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6 class="card-title">Pie Chart</h6>
+                                  <canvas id="pieChart"></canvas>
+                              </div>
+                          </div>
+                      </div>
+                      
                 
                         <!-- Card 4: Another Pie Chart -->
                         <div class="col-md-6">
@@ -633,7 +629,7 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h6 class="card-title">Column Chart</h6>
+                                    <h6 class="card-title">{{labels}}</h6>
                                     <canvas id="columnChart"></canvas>
                                 </div>
                             </div>
@@ -747,140 +743,110 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
-
-  // Event Date Validation
-  var event_date = document.getElementById('event_date');
-  var event_date_error = document.getElementById('event_date_error'); // changed variable name to avoid conflict
-  
-  function checkEventDate() {
-    if (event_date.value.trim() === '') {
-      event_date_error.style.display = "block";
-      return false;
-    } else {
-      event_date_error.style.display = "none";
-      return true;
-    }
-  }
-  event_date.addEventListener('input', checkEventDate); // Add the event listener for event date
-  checkEventDate(); // Initial check
-  
-  // Event Name Validation
-  
-  var event_name = document.getElementById('event_name');
-  var event_name_error = document.getElementById('event_name_error'); // changed variable name to avoid conflict
-  
-  function checkEventName() {
-    if (event_name.value.trim() === '') {
-      event_name_error.style.display = "block";
-      return false;
-    } else {
-      event_name_error.style.display = "none";
-      return true;
-    }
-  }
-  
-  event_name.addEventListener('input', checkEventName); // Add the event listener for event name
-  checkEventName();
-  
-  // Event Name Validation
-  
-  var event_impact = document.getElementById('total_impact');
-  var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
-  
-  function checkEventImpact() {
-    if (event_impact.value.trim() === '') {
-      event_impact_error.style.display = "block";
-      return false;
-    } else {
-      event_impact_error.style.display = "none";
-      return true;
-    }
-  }
-  event_impact.addEventListener('input', checkEventImpact); // Add the event listener for event name
-  checkEventImpact();
-  
-  
-  var project_stakeholder = document.getElementById('project_stakeholder');
-  var project_stakeholder_error = document.getElementById('project_stakeholder_error');
-  
-  function checkProjectStakeholder() {
-    if (project_stakeholder.value === '') {
-      project_stakeholder_error.style.display = "block"; 
-    } else {
-      project_stakeholder_error.style.display = "none"; 
-    }
-  }
-  project_stakeholder.addEventListener('input', checkProjectStakeholder);
-  checkProjectStakeholder();
-  
-  
-  
-  
-  
-  var yi_pillar = document.getElementById('yi_pillar');
-  var project_yipillar_error = document.getElementById('project_yipillar_error');
-  
-  function checkProjectYipillar() {
-    if (yi_pillar.value.trim() === '') {
-      project_yipillar_error.style.display = "block"; 
-    } else {
-      project_yipillar_error.style.display = "none"; 
-    }
-  }
-  yi_pillar.addEventListener('change', checkProjectYipillar);
-  checkProjectYipillar();
-  
-  
-  
-  var project_venue = document.getElementById('event_venue');
-  var project_venue_error = document.getElementById('event_venue_error');
-  
-  function checkProjectVenue() {
-    if (project_venue.value.trim() === '') {
-      project_venue_error.style.display = "block"; 
-    } else {
-      project_venue_error.style.display = "none"; 
-    }
-  }
-  project_venue.addEventListener('change', checkProjectVenue);
-  checkProjectVenue();
-  
-  
-  
-  
-  var project_vertical = document.getElementById('project_verticals');
-  var project_vertical_errors = document.getElementById('project_vertical_error');
-  
-  function checkProjectVertical() {
-    if (project_vertical.value.trim() === '') {
-      project_vertical_errors.style.display = "block"; 
-    } else {
-      project_vertical_errors.style.display = "none"; 
-    }
-  }
-  project_vertical.addEventListener('change', checkProjectVertical);
-  checkProjectVertical();
-  
-  
-  // Submit Form Validation
-  document.getElementById('edit_event').addEventListener('submit', function(event) {
-    var isEventNameValid = checkEventName(); // Check event name
-    var isEventDateValid = checkEventDate();
-    var isEventImpact = checkEventImpact();
-    var isStakeholder = checkProjectStakeholder();
-    var isYiPillar  = checkProjectYipillar();  
-    var isVertical  = checkProjectVertical();
-    var isVenue = checkProjectVenue();
-  
-    if (!isEventNameValid || !isEventDateValid || !isEventImpact || !isStakeholder  || !isYiPillar || !isVertical || !isVenue ) {
-      event.preventDefault(); 
-    }
+  var ctx = document.getElementById('barChart').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ member_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [{
+              label: 'Event Impact',
+              data: {{ impact_chart }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgba(0, 0, 0, 0.2)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
   });
-  </script>
+</script>
+
+
+<script>
+  var ctx = document.getElementById('pieChart').getContext('2d');  // Change the canvas ID if needed
+  var eventChart = new Chart(ctx, {
+      type: 'pie',  // Change chart type to 'pie'
+      data: {
+          labels: {{ vertical_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [{
+              label: 'Event Impact',
+              data: {{ impact_chart }},  // Impact values (total_impact) from Django context
+              backgroundColor: [
+                  'rgba(75, 192, 192, 0.2)',  // Color for the first segment
+                  'rgba(153, 102, 255, 0.2)',  // Color for the second segment
+                  'rgba(255, 159, 64, 0.2)',   // Color for the third segment
+                  // Add more colors if needed
+              ],
+              borderColor: [
+                  'rgba(75, 192, 192, 1)',  // Border color for the first segment
+                  'rgba(153, 102, 255, 1)',  // Border color for the second segment
+                  'rgba(255, 159, 64, 1)',   // Border color for the third segment
+                  // Add more border colors if needed
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+              legend: {
+                  position: 'top',  // Position the legend at the top of the chart
+              },
+              tooltip: {
+                  callbacks: {
+                      label: function(tooltipItem) {
+                          return tooltipItem.label + ': ' + tooltipItem.raw;  // Custom tooltip label format
+                      }
+                  }
+              }
+          }
+      }
+  });
+</script>
+
+
+<script>
+  const ctx1 = document.getElementById('lineBarChart').getContext('2d');
+new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: {{ member_chart|safe }},
+        datasets: [
+            {
+                type: 'line',
+                label: 'Line Data',
+                borderColor: 'blue',
+                borderWidth: 2,
+                fill: false,
+                data: {{ impact_chart }}
+            },
+            {
+                type: 'bar',
+                label: 'Bar Data',
+                backgroundColor: 'red',
+                data: [15, 25, 35, 45, 55]
+            }
+        ]
+    }
+});
+</script>
+
+
+
+
+
+
+  
   <script src="{% static 'js/dashboard.js' %}"></script>
-  <script src="{% static 'js/chart/lineBarChart.js' %}"></script>
-  <script src="{% static 'js/chart/barChart.js' %}"></script>
-  <script src="{% static 'js/chart/pieChart.js' %}"></script>
+  {% comment %} <script src="{% static 'js/chart/lineBarChart.js' %}"></script> {% endcomment %}
+  {% comment %} <script src="{% static 'js/chart/barChart.js' %}"></script> {% endcomment %}
+  {% comment %} <script src="{% static 'js/chart/pieChart.js' %}"></script> {% endcomment %}
   <script src="{% static 'js/chart/pieChart2.js' %}"></script>
   <script src="{% static 'js/chart/columnChart.js' %}"></script>
   

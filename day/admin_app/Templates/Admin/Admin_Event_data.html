@@ -14,16 +14,25 @@
   <div class="pagetitle">
     <h1>Add Young India Event</h1>
   </div>
-  <div class="container-fluid">
+ 
     <!-- Event Add Form -->
     <div class="card custom-form form-datas w-100 p-4 shadow rounded">
       <div class="position-relative">
-        <img src="{% static 'Image/YI.jpg' %}" 
+        <!-- Image -->
+        <img src="{% static 'Image/Yi Bharat Rising  (Twitter Post).png' %}" 
              alt="Cover Photo" 
              class="w-100 rounded-top img-fluid d-block mx-auto h-auto" 
-             style="max-height: 350px; object-fit: cover;">
-      </div>  
-      <div class="card-body form-col pt-5">
+             style="max-height: 300px; object-fit: cover;">
+    
+        <!-- Text on top of the image -->
+        {% comment %} <div class="position-absolute top-50 start-50 translate-middle " style="z-index: 10; rgb(0, 0, 0)">
+          <h3>DEVLOPMENT OF YOUTH NATION</h3>
+          <p>Yi Ahmedabad </p>
+        </div> {% endcomment %}
+      </div>   
+    
+    
+      <div class="card-body form-col pt-2">
         <form method="POST" id="myForm" action="{% url 'admin_event_data' %}" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="row">
@@ -74,21 +83,22 @@
             <!-- Members name(s) field -->
             <div class="col-12 col-sm-6 col-md-6">
               <div class="form-group">
-                <label for="select_member" class="form-label">Select EC Member</label>
+                <label for="select_member" class="form-label fw-bold fw-bold">Select EC Member</label>
                 <div class="selectBox" onclick="toggleCheckboxes()">
-                  <select class="form-control form-select" id="select_member_display">
-                    <option>Select EC Member</option>
+                  <select class="form-select form-control-lg rounded form-control" id="select_member_display">
+                    <option class = "form-control-lg rounded form-control">Select EC Member</option>
                   </select>
                   <div class="overSelect"></div>
                 </div>
                 <div id="checkBoxes">
                   {% for i in ec_member %}
                   <label>
-                    <input type="checkbox" name="select_member[]" value="{{i}}" /> {{i}}
+                    <input type="checkbox" name="select_member[]" value="{{ i }}" /> {{ i }}
                   </label>
                   {% endfor %}
                 </div>
-                <input type="hidden" id="select_member_hidden" name="select_member_hidden">
+                <input type="hidden" id="select_member_hidden" name="select_member" value="">
+
               </div>
             </div>
             
@@ -153,14 +163,13 @@
             <!-- Enter member's name field -->
             <div class="col-md-6">
               <div class="form-group mb-3">
-                <label for="tagInput" class="form-label fw-bold">Enter member's name</label>
+                <label for="tagInput" class="form-label fw-bold fw-bold">Member name</label>
                 <div class="tag-container" id="tagContainer">
-                  <input type="text" id="tagInput" class="form-control form-control-lg rounded" placeholder="Type member's name">
+                  <input type="text" id="tagInput" class="form-control-lg rounded form-control" placeholder="Type members name">
                   <input type="hidden" id="hiddenInput" name="event_member">
                 </div>
               </div>
             </div>
-        
             <!-- Social Link field -->
             <div class="col-12 col-sm-6 col-md-6">
               <div class="form-group">
@@ -261,9 +270,12 @@
 {% endblock %} 
 
 {% block script %}
+<script src="{% static 'js/input.js' %}"></script>
+<script src="{% static 'assets/js/event.js' %}"></script>
+
+
 
 <script>
-  // Toggle checkboxes in dropdown
   let expanded = false;
 
   function toggleCheckboxes() {
@@ -276,60 +288,51 @@
       expanded = false;
     }
   }
-  
-  // Close the dropdown when clicking outside
+
   document.addEventListener('click', function(event) {
     let selectBox = document.querySelector('.selectBox');
     let checkboxes = document.getElementById("checkBoxes");
-    
-    // If the click is outside both the selectBox and checkBoxes
+
     if (!selectBox.contains(event.target) && !checkboxes.contains(event.target)) {
       checkboxes.style.display = "none";
       expanded = false;
     }
   }, true);
-  
-  // Update select display with checked options
+
   function updateSelectDisplay() {
     let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
     let selectDisplay = document.getElementById('select_member_display');
-    
+
     if (checkboxes.length === 0) {
-      selectDisplay.options[0].text = "Select EC Member";
+        selectDisplay.options[0].text = "Select options";
     } else if (checkboxes.length === 1) {
-      selectDisplay.options[0].text = checkboxes[0].value;
+        selectDisplay.options[0].text = checkboxes[0].value;
     } else {
-      selectDisplay.options[0].text = checkboxes.length + " Members Selected";
+        selectDisplay.options[0].text = checkboxes.length + " Member Selected";
     }
   }
 
-  // Handle form submission - collect checkbox values
   document.querySelector('form').addEventListener('submit', function(event) {
-    // Get all checked checkboxes
     let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
     let values = [];
-    
-    // Collect values from checked checkboxes
     checkboxes.forEach(function(checkbox) {
       values.push(checkbox.value);
     });
-    
-    // Join the values with a comma and store in the hidden field
     document.getElementById('select_member_hidden').value = values.join(', ');
   });
- 
-  // Add change event listeners to checkboxes
+
   let checkboxes = document.querySelectorAll('input[name="select_member[]"]');
   checkboxes.forEach(function(checkbox) {
     checkbox.addEventListener('change', function() {
       updateSelectDisplay();
     });
   });
+</script>
 
-  // Form validation functions
+<script>
   // Event Date Validation
   var event_date = document.getElementById('event_date');
-  var event_date_error = document.getElementById('event_date_error');
+  var event_date_error = document.getElementById('event_date_error'); // changed variable name to avoid conflict
 
   function checkEventDate() {
     if (event_date.value.trim() === '') {
@@ -340,12 +343,13 @@
       return true;
     }
   }
-  event_date.addEventListener('input', checkEventDate);
-  checkEventDate();
+  event_date.addEventListener('input', checkEventDate); // Add the event listener for event date
+  checkEventDate(); // Initial check
 
   // Event Name Validation
+ 
   var event_name = document.getElementById('event_name');
-  var event_name_error = document.getElementById('event_name_error');
+  var event_name_error = document.getElementById('event_name_error'); // changed variable name to avoid conflict
 
   function checkEventName() {
     if (event_name.value.trim() === '') {
@@ -356,12 +360,13 @@
       return true;
     }
   }
-  event_name.addEventListener('input', checkEventName);
+
+  event_name.addEventListener('input', checkEventName); // Add the event listener for event name
   checkEventName();
 
-  // Total Impact Validation
+  // Event Name Validation
   var event_impact = document.getElementById('total_impact');
-  var event_impact_error = document.getElementById('event_impact_error');
+  var event_impact_error = document.getElementById('event_impact_error'); // changed variable name to avoid conflict
 
   function checkEventImpact() {
     if (event_impact.value.trim() === '') {
@@ -372,10 +377,26 @@
       return true;
     }
   }
-  event_impact.addEventListener('input', checkEventImpact);
+  event_impact.addEventListener('input', checkEventImpact); // Add the event listener for event name
   checkEventImpact();
 
-  // Project Stakeholder Validation
+  var event_venue = document.getElementById('event_venue');
+  var event_venue_error = document.getElementById('event_venue_error'); // changed variable name to avoid conflict
+
+  function checkEventVenue() {
+    if (event_venue.value.trim() === '') {
+      event_venue_error.style.display = "block";
+      return false;
+     
+    } else {
+      event_venue_error.style.display = "none";
+      return true;
+      
+    }
+  }
+  event_venue.addEventListener('input', checkEventVenue); // Add the event listener for event name
+  checkEventVenue();
+
   var project_stakeholder = document.getElementById('project_stakeholder');
   var project_stakeholder_error = document.getElementById('project_stakeholder_error');
 
@@ -388,149 +409,40 @@
       return true;
     }
   }
-  project_stakeholder.addEventListener('change', checkProjectStakeholder);
+  project_stakeholder.addEventListener('input', checkProjectStakeholder);
   checkProjectStakeholder();
 
-  // YI Pillar Validation
   var yi_pillar = document.getElementById('yi_pillar');
-  var project_yipillar_error = document.getElementById('project_yipillar_error');
+  var project_yipillar_errors = document.getElementById('project_yipillar_error');
 
   function checkProjectYipillar() {
-    if (yi_pillar.value === '') {
-      project_yipillar_error.style.display = "block"; 
+    if (yi_pillar.value.trim() === '') {
+      project_yipillar_errors.style.display = "block"; 
       return false;
+
     } else {
-      project_yipillar_error.style.display = "none"; 
+      project_yipillar_errors.style.display = "none"; 
       return true;
     }
   }
   yi_pillar.addEventListener('change', checkProjectYipillar);
   checkProjectYipillar();
 
-  // Event Venue Validation
-  var project_venue = document.getElementById('event_venue');
-  var project_venue_error = document.getElementById('event_venue_error');
-
-  function checkProjectVenue() {
-    if (project_venue.value.trim() === '') {
-      project_venue_error.style.display = "block"; 
-      return false;
-    } else {
-      project_venue_error.style.display = "none"; 
-      return true;
-    }
-  }
-  project_venue.addEventListener('input', checkProjectVenue);
-  checkProjectVenue();
-
-  // Project Vertical Validation
-  var project_vertical = document.getElementById('project_verticals');
-  var project_vertical_errors = document.getElementById('project_vertical_error');
-
-  function checkProjectVertical() {
-    if (project_vertical.value === '') {
-      project_vertical_errors.style.display = "block"; 
-      return false;
-    } else {
-      project_vertical_errors.style.display = "none"; 
-      return true;
-    }
-  }
-  project_vertical.addEventListener('change', checkProjectVertical);
-  checkProjectVertical();
-
-  // Show/hide conditional fields based on project vertical selection
-  document.getElementById('project_verticals').addEventListener('change', function() {
-    const selectedValue = this.value;
-    
-    // Show SIG div only if "Special Interest Group (S.I.G)" is selected
-    if (selectedValue === "Special Interest Group (S.I.G)") {
-      document.getElementById('sig_div').style.display = 'block';
-    } else {
-      document.getElementById('sig_div').style.display = 'none';
-    }
-    
-    // Show associate_div for certain options
-    if (selectedValue === "Masoom" || selectedValue === "Road Safety" || selectedValue === "Health") {
-      document.getElementById('associate_div').style.display = 'block';
-    } else {
-      document.getElementById('associate_div').style.display = 'none';
-    }
-    
-    // Show school/college divs for certain options
-    if (selectedValue === "Masoom" || selectedValue === "Road Safety" || 
-        selectedValue === "Learning(YI Talks)" || selectedValue === "Climate action") {
-      document.getElementById('school_div').style.display = 'block';
-      document.getElementById('collage_div').style.display = 'block';
-    } else {
-      document.getElementById('school_div').style.display = 'none';
-      document.getElementById('collage_div').style.display = 'none';
-    }
-  });
-
-  // Form submission validation
   document.getElementById('myForm').addEventListener('submit', function(event) {
-    var isEventNameValid = checkEventName();
+    var isEventNameValid = checkEventName(); // Check event name
     var isEventDateValid = checkEventDate();
     var isEventImpact = checkEventImpact();
-    var isStakeholder = checkProjectStakeholder();
-    var isYiPillar = checkProjectYipillar();  
-    var isVertical = checkProjectVertical();
-    var isVenue = checkProjectVenue();
+    var isStakeholder =checkProjectStakeholder();
+    var isYiPillar  = checkProjectYipillar();  
 
-    if (!isEventNameValid || !isEventDateValid || !isEventImpact || 
-        !isStakeholder || !isYiPillar || !isVertical || !isVenue) {
-      event.preventDefault(); // Prevent form submission if validation fails
+    var isVenue = checkEventVenue();
+
+    if (!isEventNameValid || !isEventDateValid || !isEventImpact || !isStakeholder  || !isYiPillar  || !isVenue ) {
+      event.preventDefault(); // Prevent form submission if either validation fails
     }
   });
-
-  // Tag input system for member names
-  const tagInput = document.getElementById('tagInput');
-  const hiddenInput = document.getElementById('hiddenInput');
-  const tagContainer = document.getElementById('tagContainer');
-  let tags = [];
-
-  // Create tags from input
-  tagInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      
-      const value = tagInput.value.trim();
-      if (value && !tags.includes(value)) {
-        createTag(value);
-        tags.push(value);
-        updateHiddenInput();
-        tagInput.value = '';
-      }
-    }
-  });
-
-  // Create tag element
-  function createTag(text) {
-    const tag = document.createElement('span');
-    tag.classList.add('tag', 'badge', 'bg-primary', 'me-2', 'mb-2');
-    tag.textContent = text;
-    
-    const closeBtn = document.createElement('span');
-    closeBtn.classList.add('ms-2');
-    closeBtn.innerHTML = '&times;';
-    closeBtn.addEventListener('click', () => {
-      tagContainer.removeChild(tag);
-      tags = tags.filter(t => t !== text);
-      updateHiddenInput();
-    });
-    
-    tag.appendChild(closeBtn);
-    tagContainer.insertBefore(tag, tagInput);
-  }
-
-  // Update hidden input with all tags
-  function updateHiddenInput() {
-    hiddenInput.value = tags.join(',');
-  }
-
 </script>
-<script src="{% static 'js/input.js' %}"></script>
-<script src="{% static 'assets/js/event.js' %}"></script>
+
+
 
 {% endblock script %}
