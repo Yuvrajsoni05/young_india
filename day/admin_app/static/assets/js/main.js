@@ -286,3 +286,66 @@
 
 // [22/Mar/2025 23:17:06,397] - Broken pipe from ('127.0.0.1', 51766)
 
+
+
+// (function() {
+//   "use strict";
+
+//   document.addEventListener("DOMContentLoaded", function() {
+//     // Get elements
+//     const toggleBtn = document.querySelector(".toggle-sidebar-btn");
+//     const sidebarIcon = document.querySelector("#sidebarIcon");
+//     const body = document.body;
+//     const movieIcon = document.querySelector('.movie-view-icon');
+    
+//     // Function to apply sidebar state
+//     function applySidebarState(isOpen) {
+//       const isMobile = window.innerWidth <= 1199;
+      
+//       if (isOpen) {
+//         // Open sidebar logic
+//         if (isMobile) {
+//           body.classList.add('toggle-sidebar');
+//         } else {
+//           body.classList.remove('toggle-sidebar');
+//         }
+        
+//         if (sidebarIcon) sidebarIcon.className = "bi bi-x-lg fs-4 text-primary";
+//         if (movieIcon) movieIcon.style.display = 'block';
+//       } else {
+//         // Closed sidebar logic
+//         if (isMobile) {
+//           body.classList.remove('toggle-sidebar');
+//         } else {
+//           body.classList.add('toggle-sidebar');
+//         }
+        
+//         if (sidebarIcon) sidebarIcon.className = "bi bi-list fs-4 text-primary";
+//         if (movieIcon) movieIcon.style.display = 'none';
+//       }
+//     }
+    
+//     // Check saved state on page load
+//     const sidebarOpen = localStorage.getItem('sidebarOpen') === 'true';
+//     applySidebarState(sidebarOpen);
+    
+//     // Toggle sidebar on button click
+//     if (toggleBtn) {
+//       toggleBtn.addEventListener("click", function() {
+//         const currentState = localStorage.getItem('sidebarOpen') === 'true';
+//         const newState = !currentState;
+        
+//         // Save new state
+//         localStorage.setItem('sidebarOpen', newState);
+        
+//         // Apply the new state
+//         applySidebarState(newState);
+//       });
+//     }
+    
+//     // Handle window resize
+//     window.addEventListener('resize', function() {
+//       const currentState = localStorage.getItem('sidebarOpen') === 'true';
+//       applySidebarState(currentState);
+//     });
+//   });

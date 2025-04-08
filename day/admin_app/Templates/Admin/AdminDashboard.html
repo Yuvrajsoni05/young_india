@@ -13,69 +13,12 @@
   font-weight:bold;
 
 
-
-  #container {
-    height: 400px;
-}
-
-.highcharts-figure,
-.highcharts-data-table table {
-    min-width: 310px;
-    max-width: 800px;
-    margin: 1em auto;
-}
-
-.highcharts-data-table table {
-    font-family: Verdana, sans-serif;
-    border-collapse: collapse;
-    border: 1px solid #ebebeb;
-    margin: 10px auto;
-    text-align: center;
-    width: 100%;
-    max-width: 500px;
-}
-
-.highcharts-data-table caption {
-    padding: 1em 0;
-    font-size: 1.2em;
-    color: #555;
-}
-
-.highcharts-data-table th {
-    font-weight: 600;
-    padding: 0.5em;
-}
-
-.highcharts-data-table td,
-.highcharts-data-table th,
-.highcharts-data-table caption {
-    padding: 0.5em;
-}
-
-.highcharts-data-table thead tr,
-.highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
-}
-
-.highcharts-data-table tr:hover {
-    background: #f1f7ff;
-}
-
-.highcharts-description {
-    margin: 0.3rem 10px;
-}
-
-
 }
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-3d.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 
 {% endblock static %}
 <!-- Main Content -->
@@ -935,14 +878,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 </script>
 
-
-
-
-
-
-
-
-
 <script>
   var ctx = document.getElementById('vertical_chart').getContext('2d');
   var eventChart = new Chart(ctx, {
@@ -1049,66 +984,39 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-{% comment %} <script>
-  var ctx = document.getElementById('pieChart').getContext('2d');  // Change the canvas ID if needed
-  var eventChart = new Chart(ctx, {
-      type: 'pie',  // Change chart type to 'pie'
-      data: {
-          labels: {{ vertical_chart|safe }},  // Event names (project_vertical) from Django context
-          datasets: [{
-              label: 'Event Impact',
-              data: {{ impact_chart }},  // Impact values (total_impact) from Django context
-              backgroundColor: [
-                  'rgba(0, 0, 0, 0.2)',  // Color for the first segment
-                  'rgba(85, 0, 255, 0.2)',  // Color for the second segment
-                  'rgba(255, 159, 64, 0.2)',   // Color for the third segment
-                  // Add more colors if needed
-              ],
-              borderColor: [
-                  'rgba(75, 192, 192, 1)',  // Border color for the first segment
-                  'rgba(153, 102, 255, 1)',  // Border color for the second segment
-                  'rgba(255, 159, 64, 1)',   // Border color for the third segment
-                  // Add more border colors if needed
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-          responsive: true,
-          plugins: {
-              legend: {
-                  position: 'top',  // Position the legend at the top of the chart
-              },
-              tooltip: {
-                  callbacks: {
-                      label: function(tooltipItem) {
-                          return tooltipItem.label + ': ' + tooltipItem.raw;  // Custom tooltip label format
-                      }
-                  }
-              }
-          }
-      }
-  });
-</script> {% endcomment %}
 
 
 <script>
+  let delayed;
+
   const ctx1 = document.getElementById('lineBarChart').getContext('2d');
-new Chart(ctx1, {
+  new Chart(ctx1, {
     type: 'bar',
     data: {
-        labels: {{ project_chart|safe }},
-        datasets: [
-     
-            {
-                type: 'bar',
-                label: 'Total Impact',
-                backgroundColor: 'rgb(79, 54, 187)',
-                data: {{project_impact_sum}}
-            }
-        ]
-    },options: {
-        
+      labels: {{ project_chart|safe }},
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Total Impact',
+          backgroundColor: 'rgb(79, 54, 187)',
+          data: {{ project_impact_sum }},
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+          anchor: 'end',
+          align: 'end',
+          offset: -10,
+          font: {
+            weight: 'bold',
+            size: 20
+          },
+          formatter: (value) => value // You can customize this as needed
+        }
+      },
       animation: {
         onComplete: () => {
           delayed = true;
@@ -1128,19 +1036,17 @@ new Chart(ctx1, {
           }
         },
         y: {
-         
           grid: {
             display: false
           }
-          
         }
       }
-    }
-    
-});
+    },
+    plugins: [ChartDataLabels]
+  });
 </script>
 
-<script>
+{% comment %} <script>
 
 // Data retrieved from https://yearbook.enerdata.net/electricity/world-electricity-production-statistics.html
 Highcharts.chart('container', {
@@ -1213,26 +1119,12 @@ Highcharts.chart('container', {
       data: [582, 571, 533, 555, 473],
       stack: 'Europe'
   }]
-});
+}); {% endcomment %}
 
 
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   <script src="{% static 'js/dashboard.js' %}"></script>
   {% comment %} <script src="{% static 'js/chart/lineBarChart.js' %}"></script> {% endcomment %}
   {% comment %} <script src="{% static 'js/chart/barChart.js' %}"></script> {% endcomment %}
