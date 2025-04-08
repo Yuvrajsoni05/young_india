@@ -18,7 +18,7 @@ ROLE_CHOICES = [
     ("Accessibility", "Accessibility"),
     ("Learning(YI Talks)", "Learning(YI Talks)"),
     ("Climate action", "Climate action"),
-    ("Climate action", "Climate action"),
+    ("Climate Change", "climate Change"),
     ("Innovation", "Innovation"),
     ("Entrepreneurship", "Entrepreneurship"),
     ("Branding & PR", "Branding & PR"),

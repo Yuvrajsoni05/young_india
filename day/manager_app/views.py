@@ -67,9 +67,6 @@ from django.core.validators import FileExtensionValidator
 #             return render(request,'manager/manager_signup.html')
 
 
-
-
-
 #         manager_user = LoginSide.objects.create_user(username=manager_username,
 #                                                      first_name=first_name,
 #                                                      last_name=last_name,
@@ -84,14 +81,11 @@ from django.core.validators import FileExtensionValidator
 #     return render(request,'manager/manager_signup.html')
 
 
-
 @login_required(login_url='index')
 def manager_logout(request):
     logout(request)
     request.session.clear()
     return redirect('index')
-
-
 
 
 def about_yi(request):

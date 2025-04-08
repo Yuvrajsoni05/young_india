@@ -3,7 +3,7 @@ import os
 import re
 from collections import Counter
 
-
+from django.db.models import Count
 # Django imports
 from django.conf import settings
 from django.contrib import messages
@@ -464,9 +464,7 @@ def Admin_update(request, admin_id):
 
             if "admin_profile_img" in request.FILES:
 
-                if admin_profile.photo.size > 10 * 1024 * 1024:
-                    messages.error(request, "Image size must be less than 10 MB ")
-                    return redirect("Admin_Profile")
+        
 
                 if (
                     admin_profile.photo
@@ -477,6 +475,9 @@ def Admin_update(request, admin_id):
                     os.remove(admin_profile.photo.path)
 
                 admin_profile.photo = request.FILES["admin_profile_img"]
+                
+                
+                
 
                 if admin_profile.photo:
                     try:
@@ -484,6 +485,10 @@ def Admin_update(request, admin_id):
                             allowed_extensions=["jpeg", "jpg", "png"]
                         )
                         validator(admin_profile.photo)
+                        
+                        if admin_profile.photo.size > 10 * 1024 * 1024:
+                            messages.error(request, "Image size must be less than 10 MB ")
+                            return redirect("Admin_Profile")
                     except ValidationError:
                         messages.error(
                             request,
@@ -659,17 +664,48 @@ def Admin_Dashboard(request):
     member_name_chart = (
         Event_Data.objects.all().values_list("your_name", flat=True).distinct()
     )
-    vertical_name_chart = (
-        Event_Data.objects.all().values_list("project_vertical", flat=True)
-    )
-    imapct_chart = (Event_Data.objects.all().values_list('total_impact',flat=True))
+    # vertical_name_chart = (
+    #     Event_Data.objects.all().values_list("project_vertical", flat=True)
+    # )
+    # imapct_chart = (Event_Data.objects.all().values_list('total_impact',flat=True))
 
-
+    data = Event_Data.objects.values('project_vertical').annotate(impact=Sum('total_impact')).annotate(vertical=Count('project_vertical'))
+    yi_pillar_data = Event_Data.objects.values('yi_pillar').annotate(pillar_impact=Sum('total_impact'))
+    yi_stakeholder_data = Event_Data.objects.values('project_stakeholder').annotate(stakeholder_impact=Count('project_stakeholder'))
+    # member_name_data = Event_Data.objects.values('your_name').annotate(total_events=Count('your_name')).annotate(total_impacts=Sum('total_impact'))
+   
     event_list = Event_Data.objects.all()
 
-    vertical_chart = [event for event in vertical_name_chart ]
-    impact_chart = [event for event in  imapct_chart]
-    member_chart = [event for event in  member_name_chart]
+    vertical_chart = [event['project_vertical'] for event in data ]
+    impact_chart = [event['impact'] for event in  data]
+    vertical_wise_impact = [event['vertical'] for event in data]
+    
+    yi_project = Event_Data.objects.filter(project_vertical__in=['Masoom','Road Safety','Health','Accessibility','Climate Change']).values()
+    yi_initiatives = Event_Data.objects.filter(project_vertical__in=['Entrepreneurship','Innovation','Special Interest Group (S.I.G)','Sports','Learning(YI Talks)','Women Engagement (YIWE)','Yi Angel','Yi Angel']).values()
+    
+    yi_initiatives_data = yi_initiatives.values('project_vertical').annotate(total_event=Count('project_vertical')).annotate(total_impact=Sum('total_impact'))
+    
+    initiatives_chart = [initiatives['project_vertical'] for initiatives in yi_initiatives_data]
+    initiatives_count_chart = [initiatives['total_event'] for initiatives in yi_initiatives_data]
+    initiatives_impact_chart = [initiatives['total_impact'] for initiatives in yi_initiatives_data]
+    
+    project_chart_data = yi_project.values('project_vertical').annotate(total_event=Count('project_vertical')).annotate(total_impact=Sum('total_impact'))
+    project_chart = [name['project_vertical'] for name in  project_chart_data]
+    project_count_chart = [name['total_event'] for name in  project_chart_data]
+    project_impact_sum = [name['total_impact'] for name in project_chart_data]
+    
+    yi_pillar_chart = [pillar['yi_pillar'] for pillar in yi_pillar_data]
+    yi_pillar_impact = [pillar['pillar_impact'] for pillar in yi_pillar_data]
+    
+    
+    yi_stakeholder_chart =[stakeholder['project_stakeholder'] for stakeholder in yi_stakeholder_data] 
+    yi_stakeholder_impact =[stakeholder['stakeholder_impact'] for stakeholder in yi_stakeholder_data] 
+    
+    # demo = Event_Data.objects.filter(project_vertical__in=['Masoom', 'AnotherProject', 'SomeOtherProject']).values('project_vertical')
+    #Member.objects.filter(firstname='Emil').values()
+   
+   
+
     
     # def event_chart(request):
     # events = Event.objects.all()
@@ -806,7 +842,17 @@ def Admin_Dashboard(request):
         "event_date":event_date,
         'vertical_chart':vertical_chart,
         'impact_chart':impact_chart,
-        'member_chart':member_chart,
+        'project_chart':project_chart,
+        'yi_pillar_chart':yi_pillar_chart,
+        'yi_pillar_impact':yi_pillar_impact,
+        'yi_stakeholder_chart':yi_stakeholder_chart,
+        'yi_stakeholder_impact':yi_stakeholder_impact,
+        'project_count_chart':project_count_chart,
+        'project_impact_sum':project_impact_sum,
+        'vertical_wise_impact':vertical_wise_impact,
+        'initiatives_chart':initiatives_chart,
+        'initiatives_count_chart':initiatives_count_chart,
+        'initiatives_impact_chart':initiatives_impact_chart
         
     }
     return render(request, "Admin/AdminDashboard.html", context)

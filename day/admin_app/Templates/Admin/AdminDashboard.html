@@ -12,9 +12,70 @@
 .form-label{
   font-weight:bold;
 
+
+
+  #container {
+    height: 400px;
 }
+
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+.highcharts-description {
+    margin: 0.3rem 10px;
+}
+
+
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 {% endblock static %}
 <!-- Main Content -->
@@ -32,6 +93,11 @@
       </ol>
     </nav> {% endcomment %}
 
+<!-- Button trigger modal -->
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
 
     
 
@@ -317,8 +383,11 @@
                                       <td> <span class="badge bg-light text-dark">No Description</span> </td>
                   
                                       {% else %}
-                                      <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_description}}">{{ event.event_description }}</td>
-                  
+                                      <td class="ellipsis"><span data-bs-toggle="modal" data-bs-target="#staticBackdrop{{event.id}}" title="{{event.event_description}}">{{ event.event_description }}</td>
+                                        
+                                      
+
+
                                       {% endif %}
                                       
                                         {% if event.social_link == '' %}
@@ -353,8 +422,29 @@
                                         </div>
                                       </td>
                                     </tr>
+                                    <!-- Modal -->
+                                    
+                                    <div class="modal fade" id="staticBackdrop{{event.id}}"  tabindex="-1"  aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Event Description</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                          {{event.event_description}}
+                                          </div>
+                                          {% comment %} <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Understood</button>
+                                          </div> {% endcomment %}
+                                        </div>
+                                      </div>
+                                    </div>
+
+
                                     <!-- Image Modal -->
-                                   <!-- Modal -->
+                                   
                                               <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl">
                                                   <div class="modal-content">
@@ -584,7 +674,7 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h6 class="card-title">Line & Bar Chart</h6>
+                                    <h6 class="card-title">Yi Project</h6>
                                     <canvas id="lineBarChart"></canvas>
                                 </div>
                             </div>
@@ -594,8 +684,8 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h6 class="card-title">Bar Chart</h6>
-                                    <canvas id="barChart"></canvas>
+                                    <h6 class="card-title">Yi Initiatives  </h6>
+                                    <canvas id="initiatives"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -605,9 +695,9 @@
                         <!-- Card 3: Pie Chart -->
                         <div class="col-md-6">
                           <div class="card">
-                              <div class="card-body">
-                                  <h6 class="card-title">Pie Chart</h6>
-                                  <canvas id="pieChart"></canvas>
+                              <div class="card-body " >
+                                  <h6 class="card-title" >Yi Pillar</h6>
+                                  <canvas id="barChart"></canvas>
                               </div>
                           </div>
                       </div>
@@ -616,24 +706,25 @@
                         <!-- Card 4: Another Pie Chart -->
                         <div class="col-md-6">
                             <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Pie Chart 2</h6>
-                                    <canvas id="pieChart2"></canvas>
+                                <div class="card-body ">
+                                    <h6 class="card-title">Yi Stakeholder </h6>
+                                    <canvas id="stakeholder_event"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 
                     <div class="row">
                         <!-- Card 5: Column Chart -->
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">{{labels}}</h6>
-                                    <canvas id="columnChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
+                       
+<figure class="highcharts-figure">
+  <div id="container"></div>
+  <p class="highcharts-description">
+      Chart showing grouped and stacked 3D columns. These features are
+      available both for 2D and 3D column charts.
+  </p>
+</figure>
                     </div>
                   </div>
 
@@ -747,20 +838,45 @@ document.addEventListener('DOMContentLoaded', function() {
   var eventChart = new Chart(ctx, {
       type: 'bar',  // Specify the chart type
       data: {
-          labels: {{ member_chart|safe }},  // Event names (project_vertical) from Django context
+          labels: {{ yi_pillar_chart|safe }},  // Event names (project_vertical) from Django context
           datasets: [{
-              label: 'Event Impact',
-              data: {{ impact_chart }},  // Impact values (total_impact) from Django context
-              backgroundColor: 'rgba(0, 0, 0, 0.2)',  // Bar color
+              label: 'Yi Pillar Wise Impact',
+              data: {{ yi_pillar_impact }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgba(207, 197, 248)',  // Bar color
               borderColor: 'rgb(0, 0, 0)',
-              borderWidth: 1
+              borderWidth: 1,
+          datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
           }]
       },
       options: {
+        plugins: {
+          datalabels: {
+            color: '#000',
+            display: function(context) {
+              return context.dataset.data[context.dataIndex];
+            }
+          }
+        } ,
+
           responsive: true,
           scales: {
+        
+
+              x: {
+                grid: {
+                  display: false
+                }
+              },
               y: {
-                  beginAtZero: true
+               
+                grid: {
+                  display: false
+                }
+                
               }
           }
       }
@@ -768,7 +884,172 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
+
 <script>
+  var ctx = document.getElementById('initiatives').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ initiatives_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [{
+              label: 'Yi Initiatives ',
+              data: {{ initiatives_impact_chart }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgba(207, 197, 248)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1,
+          datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
+          }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: '#000',
+            display: function(context) {
+              return context.dataset.data[context.dataIndex];
+            }
+          }
+        } ,
+
+          responsive: true,
+          scales: {
+        
+
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+               
+                grid: {
+                  display: false
+                }
+                
+              }
+          }
+      }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+  var ctx = document.getElementById('vertical_chart').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ vertical_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [
+            
+            {
+                type: 'bar',
+                label: 'Total Event',
+                backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+                borderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+                data: {{  vertical_wise_impact }}
+              
+            },
+            {
+                type: 'bar',
+                label: 'Total Impact',
+                backgroundColor: 'rgba(98, 62, 255, 0.43)',
+                data: {{impact_chart}}
+            }
+        ]
+      },
+      options: {
+
+          responsive: true,
+          scales: {
+        
+
+              x: {
+                
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                
+                grid: {
+                  display: false
+                }
+                
+              }
+          }
+      }
+  });
+</script>
+
+
+
+
+<script>
+  var ctx = document.getElementById('stakeholder_event').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ yi_stakeholder_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [{
+              label: 'Yi Stakeholder ',
+              data: {{ yi_stakeholder_impact }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgb(79, 54, 187)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1,
+              datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
+          }]
+      },
+      options: {
+        
+        animation: {
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+           
+            grid: {
+              display: false
+            }
+            
+          }
+        }
+      }
+    });
+
+</script>
+
+
+{% comment %} <script>
   var ctx = document.getElementById('pieChart').getContext('2d');  // Change the canvas ID if needed
   var eventChart = new Chart(ctx, {
       type: 'pie',  // Change chart type to 'pie'
@@ -778,8 +1059,8 @@ document.addEventListener('DOMContentLoaded', function() {
               label: 'Event Impact',
               data: {{ impact_chart }},  // Impact values (total_impact) from Django context
               backgroundColor: [
-                  'rgba(75, 192, 192, 0.2)',  // Color for the first segment
-                  'rgba(153, 102, 255, 0.2)',  // Color for the second segment
+                  'rgba(0, 0, 0, 0.2)',  // Color for the first segment
+                  'rgba(85, 0, 255, 0.2)',  // Color for the second segment
                   'rgba(255, 159, 64, 0.2)',   // Color for the third segment
                   // Add more colors if needed
               ],
@@ -808,7 +1089,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       }
   });
-</script>
+</script> {% endcomment %}
 
 
 <script>
@@ -816,26 +1097,135 @@ document.addEventListener('DOMContentLoaded', function() {
 new Chart(ctx1, {
     type: 'bar',
     data: {
-        labels: {{ member_chart|safe }},
+        labels: {{ project_chart|safe }},
         datasets: [
-            {
-                type: 'line',
-                label: 'Line Data',
-                borderColor: 'blue',
-                borderWidth: 2,
-                fill: false,
-                data: {{ impact_chart }}
-            },
+     
             {
                 type: 'bar',
-                label: 'Bar Data',
-                backgroundColor: 'red',
-                data: [15, 25, 35, 45, 55]
+                label: 'Total Impact',
+                backgroundColor: 'rgb(79, 54, 187)',
+                data: {{project_impact_sum}}
             }
         ]
+    },options: {
+        
+      animation: {
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          if (context.type === 'data' && context.mode === 'default' && !delayed) {
+            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+         
+          grid: {
+            display: false
+          }
+          
+        }
+      }
     }
+    
 });
 </script>
+
+<script>
+
+// Data retrieved from https://yearbook.enerdata.net/electricity/world-electricity-production-statistics.html
+Highcharts.chart('container', {
+  chart: {
+      type: 'column',
+      options3d: {
+          enabled: true,
+          alpha: 15,
+          beta: 15,
+          viewDistance: 25,
+          depth: 40
+      }
+  },
+
+  title: {
+      text: ' Electricity production in countries, grouped by continent'
+  },
+
+  xAxis: {
+      labels: {
+          skew3d: true,
+          style: {
+              fontSize: '16px'
+          }
+      }
+  },
+
+  yAxis: {
+      allowDecimals: false,
+      min: 0,
+      title: {
+          text: 'TWh',
+          skew3d: true,
+          style: {
+              fontSize: '16px'
+          }
+      }
+  },
+
+  tooltip: {
+      headerFormat: '<b>{point.key}</b><br>',
+      pointFormat: '<span style="color:{series.color}">\u25CF</span> ' +
+          '{series.name}: {point.y} / {point.stackTotal}'
+  },
+
+  plotOptions: {
+      series: {
+          pointStart: 2018
+      },
+      column: {
+          stacking: 'normal',
+          depth: 40
+      }
+  },
+
+  series: [{
+      name: 'South Korea',
+      data: [590, 582, 571, 606, 625],
+      stack: 'Asia'
+  }, {
+      name: 'Germany',
+      data: [643, 612, 572, 588, 578],
+      stack: 'Europe'
+  }, {
+      name: 'Saudi Arabia',
+      data: [378, 367, 363, 408, 433],
+      stack: 'Asia'
+  }, {
+      name: 'France',
+      data: [582, 571, 533, 555, 473],
+      stack: 'Europe'
+  }]
+});
+
+
+</script>
+
+
+
+
+
+
+
+
+
 
 
 
