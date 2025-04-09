@@ -46,7 +46,7 @@
 
   <!-- Dashboard Stats Section -->
   <section class="section dashboard">
-
+   
     <!-- Stats Cards -->
     <div class="row mb-4">
       <!-- Total Events Card -->
@@ -618,7 +618,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h6 class="card-title">Yi Project</h6>
-                                    <canvas id="lineBarChart"></canvas>
+                                    <canvas width='550px' height="350px" id="chartId"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -639,8 +639,8 @@
                         <div class="col-md-6">
                           <div class="card">
                               <div class="card-body " >
-                                  <h6 class="card-title" >Yi Pillar</h6>
-                                  <canvas id="barChart"></canvas>
+                                  <h6 class="card-title" >Yi Stakeholder</h6>
+                                  <canvas id="stakeholder_event"></canvas>
                               </div>
                           </div>
                       </div>
@@ -650,25 +650,25 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body ">
-                                    <h6 class="card-title">Yi Stakeholder </h6>
-                                    <canvas id="stakeholder_event"></canvas>
+                                    <h6 class="card-title">Yi Pillar</h6>
+                                    <canvas width='550px' height="350px" id="pillar_pie"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+                   
+                 
                 
-                    <div class="row">
+                    {% comment %} <div class="row">
                         <!-- Card 5: Column Chart -->
-                       
-<figure class="highcharts-figure">
-  <div id="container"></div>
-  <p class="highcharts-description">
-      Chart showing grouped and stacked 3D columns. These features are
-      available both for 2D and 3D column charts.
-  </p>
-</figure>
-                    </div>
+                        <div class="card">
+                          <div class="card-body">
+                              <h6 class="card-title">Month Wise Data</h6>
+                              <canvas id="month"></canvas>
+                          </div>
+                      </div>
+
+                    </div> {% endcomment %}
                   </div>
 
 
@@ -728,6 +728,96 @@ document.addEventListener('DOMContentLoaded', function() {
     chartViewBtn.addEventListener('click', () => toggleView(false));
 });
 </script>
+
+
+<script>
+  var chrt = document.getElementById("chartId").getContext("2d");
+  var chartId = new Chart(chrt, {
+    type: 'pie',
+    data: {
+      labels: {{ project_chart|safe }},
+      datasets: [{
+        label: "Total Impact",
+        data: {{project_impact_sum}},
+        backgroundColor: ['blue', 'aqua', 'lightblue', 'lightgreen', 'gold', ],
+        hoverOffset: 15
+      }],
+    },
+    options: {
+      
+      responsive: false,
+      plugins: {
+        datalabels: {
+          color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+          anchor: 'center',
+          align: 'end',
+          
+          offset: -10,
+          font: {
+           family:'self',
+            size: 18
+          },
+          formatter: (value) => value // You can customize this as needed
+        },
+        legend: {
+          position: 'right', // Move the legend to the right side
+        },
+        tooltip: {
+          enabled: true // Optionally, disable the tooltips if you prefer the labels to be visible without hovering
+        }
+      },
+    },
+    plugins: [ChartDataLabels]
+  });
+</script>
+
+
+
+
+<script>
+  var chrt = document.getElementById("pillar_pie").getContext("2d");
+  var chartId = new Chart(chrt, {
+    type: 'pie',
+    data: {
+      labels: {{ yi_pillar_chart|safe }},
+      datasets: [{
+        label: "Total Impact",
+        data: {{yi_pillar_impact}},
+        backgroundColor: ['blue', 'aqua', 'lightblue', 'lightgreen', 'gold', ],
+        hoverOffset: 15
+      }],
+    },
+    options: {
+      
+      responsive: false,
+      plugins: {
+        datalabels: {
+          color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+          anchor: 'center',
+          align: 'end',
+          
+          offset: -10,
+          font: {
+           family:'self',
+            size: 18
+          },
+          formatter: (value) => value // You can customize this as needed
+        },
+        legend: {
+          position: 'right', // Move the legend to the right side
+        },
+        tooltip: {
+          enabled: true // Optionally, disable the tooltips if you prefer the labels to be visible without hovering
+        }
+      },
+    },
+    plugins: [ChartDataLabels]
+  });
+</script>
+
+
+
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // Get all the event-handle elements in the table
@@ -783,9 +873,91 @@ document.addEventListener('DOMContentLoaded', function() {
       data: {
           labels: {{ yi_pillar_chart|safe }},  // Event names (project_vertical) from Django context
           datasets: [{
+            type: 'bar',
+            label: 'Yi Pillar Wise Count',
+            backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+            borderColor: 'rgb(0, 0, 0)',
+            borderWidth: 1,
+            hoverOffset: 15
+            data: {{  yi_pillar_count}}
+          
+        },{
               label: 'Yi Pillar Wise Impact',
               data: {{ yi_pillar_impact }},  // Impact values (total_impact) from Django context
-              backgroundColor: 'rgba(207, 197, 248)',  // Bar color
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1,
+              hoverOffset: 15
+          datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
+          }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+            anchor: 'end',
+            align: 'end',
+            
+            offset: -10,
+            font: {
+             family:'self',
+              size: 18
+            },
+            formatter: (value) => value // You can customize this as needed
+          }
+        },
+        animation: {
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+
+          responsive: true,
+          scales: {
+      
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+               
+                grid: {
+                  display: true
+                }
+                
+              }
+          }
+      },
+      plugins: [ChartDataLabels]
+  });
+</script>
+
+
+
+
+
+<script>
+  var ctx = document.getElementById('month').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{month_wise_impact|safe}},  // Event names (project_vertical) from Django context
+          datasets: [{
+              label: 'Yi Pillar Wise Impact',
+              data: {{ date_chart_impact|safe }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
               borderColor: 'rgb(0, 0, 0)',
               borderWidth: 1,
           datalabels: {
@@ -817,7 +989,7 @@ document.addEventListener('DOMContentLoaded', function() {
               y: {
                
                 grid: {
-                  display: false
+                  display: true
                 }
                 
               }
@@ -834,28 +1006,55 @@ document.addEventListener('DOMContentLoaded', function() {
       type: 'bar',  // Specify the chart type
       data: {
           labels: {{ initiatives_chart|safe }},  // Event names (project_vertical) from Django context
-          datasets: [{
-              label: 'Yi Initiatives ',
+          datasets: [
+            
+          {
+            type: 'bar',
+            label: 'Initiatives Event',
+            backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+            borderColor: 'rgb(0, 0, 0)',
+            borderWidth: 1,
+            hoverOffset: 15,
+            data: {{  initiatives_count_chart }}
+          
+        },
+        {
+              label: 'Initiatives Impact',
               data: {{ initiatives_impact_chart }},  // Impact values (total_impact) from Django context
-              backgroundColor: 'rgba(207, 197, 248)',  // Bar color
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
               borderColor: 'rgb(0, 0, 0)',
+              hoverOffset: 15,
               borderWidth: 1,
-          datalabels: {
-                align: 'start',
-                anchor: 'end',
-                offset:-20
-              }
+          
           }]
       },
       options: {
         plugins: {
           datalabels: {
-            color: '#000',
-            display: function(context) {
-              return context.dataset.data[context.dataIndex];
-            }
+            color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+            anchor: 'end',
+            align: 'end',
+            
+            offset: -10,
+            font: {
+             family:'self',
+              size: 18
+            },
+            formatter: (value) => value // You can customize this as needed
           }
-        } ,
+        },  animation: {
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+
 
           responsive: true,
           scales: {
@@ -869,12 +1068,13 @@ document.addEventListener('DOMContentLoaded', function() {
               y: {
                
                 grid: {
-                  display: false
+                  display: true
                 }
                 
               }
           }
-      }
+      },
+      plugins: [ChartDataLabels]
   });
 </script>
 
@@ -899,7 +1099,7 @@ document.addEventListener('DOMContentLoaded', function() {
             {
                 type: 'bar',
                 label: 'Total Impact',
-                backgroundColor: 'rgba(98, 62, 255, 0.43)',
+                backgroundColor: 'rgb(45, 0, 248)',
                 data: {{impact_chart}}
             }
         ]
@@ -919,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', function() {
               y: {
                 
                 grid: {
-                  display: false
+                  display: true
                 }
                 
               }
@@ -937,10 +1137,20 @@ document.addEventListener('DOMContentLoaded', function() {
       type: 'bar',  // Specify the chart type
       data: {
           labels: {{ yi_stakeholder_chart|safe }},  // Event names (project_vertical) from Django context
-          datasets: [{
-              label: 'Yi Stakeholder ',
+          datasets: [
+         
+              {
+                type: 'bar',
+                label: 'Yi Stakeholder Event',
+                backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+                borderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+                data: {{ yi_stakeholder_count|safe }}
+              
+            },{
+              label: 'Yi Stakeholder Impact',
               data: {{ yi_stakeholder_impact }},  // Impact values (total_impact) from Django context
-              backgroundColor: 'rgb(79, 54, 187)',  // Bar color
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
               borderColor: 'rgb(0, 0, 0)',
               borderWidth: 1,
               datalabels: {
@@ -951,7 +1161,20 @@ document.addEventListener('DOMContentLoaded', function() {
           }]
       },
       options: {
-        
+        plugins: {
+          datalabels: {
+            color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+            anchor: 'end',
+            align: 'start',
+            
+            offset: -10,
+            font: {
+             family:'self',
+              size: 18
+            },
+            formatter: (value) => value // You can customize this as needed
+          }
+        },
         animation: {
           onComplete: () => {
             delayed = true;
@@ -973,12 +1196,13 @@ document.addEventListener('DOMContentLoaded', function() {
           y: {
            
             grid: {
-              display: false
+              display: true
             }
             
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
 
 </script>
@@ -997,8 +1221,17 @@ document.addEventListener('DOMContentLoaded', function() {
       datasets: [
         {
           type: 'bar',
+          label: 'Total Event',
+          backgroundColor: 'rgb(0, 183, 255)',  // Bar color
+          borderColor: 'rgb(0, 0, 0)',
+          borderWidth: 1,
+          data: {{  project_count_chart }}
+        
+      },
+        {
+          type: 'bar',
           label: 'Total Impact',
-          backgroundColor: 'rgb(79, 54, 187)',
+          backgroundColor: 'rgb(45, 0, 248)',
           data: {{ project_impact_sum }},
         }
       ]
@@ -1009,10 +1242,11 @@ document.addEventListener('DOMContentLoaded', function() {
           color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
           anchor: 'end',
           align: 'end',
+          
           offset: -10,
           font: {
-            weight: 'bold',
-            size: 20
+           family:'self',
+            size: 18
           },
           formatter: (value) => value // You can customize this as needed
         }
@@ -1037,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         y: {
           grid: {
-            display: false
+            display: true
           }
         }
       }
@@ -1149,3 +1383,4 @@ Highcharts.chart('container', {
   demo = request.GET.get('demo')
   if demo and demo != 'all':
       event_list = event_list.filter(project_vertical__icontains=demo) {% endcomment %}
+

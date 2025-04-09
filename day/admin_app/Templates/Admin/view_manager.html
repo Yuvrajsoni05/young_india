@@ -191,7 +191,7 @@
                         </div>
                       </div>
                       
-                      <div class="mb-4">
+                      <div class="mb-4" id="vertical_view">
                         <label for="manager_role" class="form-label">EC Role:</label><span class="text-danger"> *</span>
                         <div class="d-flex flex-wrap gap-3">
                           {% for i in role %}
@@ -229,6 +229,26 @@
 <!-- End #main -->
 {% endblock %}
 {% block script %}
+
+
+<script>
+document.addEventListener("DOMContentLoaded",function (){
+
+  const roleSelect = document.getElementById("yi_role");
+  const verticalView = document.getElementById("vertical_view");
+
+
+  roleSelect.addEventListener("change",function()){
+    const hiddenRoles = ["Chapter Chair" ,"Chapter Co-Chair" ,"Admin","Branding"];
+    verticalView.style.display = hiddenRoles.includes(this.value) ? "none":"block";
+
+  }
+
+});
+
+
+
+</script>
 
 
 

@@ -28,6 +28,7 @@ from django.utils.timezone import now
 from django.views.decorators.cache import never_cache
 
 from babel.numbers import format_currency
+from datetime import date, datetime
 
 # Third-party imports
 # from io import BytesIO
@@ -668,10 +669,10 @@ def Admin_Dashboard(request):
     #     Event_Data.objects.all().values_list("project_vertical", flat=True)
     # )
     # imapct_chart = (Event_Data.objects.all().values_list('total_impact',flat=True))
-
+    Event_date  = Event_Data.objects.values('date').annotate(date_impact=Sum('total_impact')).distinct()
     data = Event_Data.objects.values('project_vertical').annotate(impact=Sum('total_impact')).annotate(vertical=Count('project_vertical'))
-    yi_pillar_data = Event_Data.objects.values('yi_pillar').annotate(pillar_impact=Sum('total_impact'))
-    yi_stakeholder_data = Event_Data.objects.values('project_stakeholder').annotate(stakeholder_impact=Count('project_stakeholder'))
+    yi_pillar_data = Event_Data.objects.values('yi_pillar').annotate(pillar_impact=Sum('total_impact')).annotate(event_count=Count('project_stakeholder'))
+    yi_stakeholder_data = Event_Data.objects.values('project_stakeholder').annotate(stakeholder_impact=Sum('total_impact')).annotate(event_count=Count('project_stakeholder'))
     # member_name_data = Event_Data.objects.values('your_name').annotate(total_events=Count('your_name')).annotate(total_impacts=Sum('total_impact'))
    
     event_list = Event_Data.objects.all()
@@ -689,6 +690,15 @@ def Admin_Dashboard(request):
     initiatives_count_chart = [initiatives['total_event'] for initiatives in yi_initiatives_data]
     initiatives_impact_chart = [initiatives['total_impact'] for initiatives in yi_initiatives_data]
     
+    date_chart = [date['date'] for date in Event_date]
+
+    # months = [date.strftime('%B') for date in date_chart]
+    # month_str = ', '.join(months)
+    # print(month_str)
+    # data_charts = month_str
+    date_chart_impact = [data['date_impact'] for data in Event_date]
+    
+    
     project_chart_data = yi_project.values('project_vertical').annotate(total_event=Count('project_vertical')).annotate(total_impact=Sum('total_impact'))
     project_chart = [name['project_vertical'] for name in  project_chart_data]
     project_count_chart = [name['total_event'] for name in  project_chart_data]
@@ -696,17 +706,20 @@ def Admin_Dashboard(request):
     
     yi_pillar_chart = [pillar['yi_pillar'] for pillar in yi_pillar_data]
     yi_pillar_impact = [pillar['pillar_impact'] for pillar in yi_pillar_data]
-    
+    yi_pillar_count = [pillar['event_count'] for pillar in yi_pillar_data]
     
     yi_stakeholder_chart =[stakeholder['project_stakeholder'] for stakeholder in yi_stakeholder_data] 
     yi_stakeholder_impact =[stakeholder['stakeholder_impact'] for stakeholder in yi_stakeholder_data] 
+    yi_stakeholder_count = [stakeholder['event_count'] for stakeholder in yi_stakeholder_data]
     
+    
+  
     # demo = Event_Data.objects.filter(project_vertical__in=['Masoom', 'AnotherProject', 'SomeOtherProject']).values('project_vertical')
     #Member.objects.filter(firstname='Emil').values()
    
    
 
-    
+    # print(month_wise_impact)
     # def event_chart(request):
     # events = Event.objects.all()
     # labels = [event.event_name for event in events]
@@ -747,8 +760,7 @@ def Admin_Dashboard(request):
             else 0
         )
         
-        
-        
+      
 
     verticals = request.GET.get("verticals")
     if verticals and verticals != "all":
@@ -845,14 +857,18 @@ def Admin_Dashboard(request):
         'project_chart':project_chart,
         'yi_pillar_chart':yi_pillar_chart,
         'yi_pillar_impact':yi_pillar_impact,
+        'yi_pillar_count':yi_pillar_count,
         'yi_stakeholder_chart':yi_stakeholder_chart,
         'yi_stakeholder_impact':yi_stakeholder_impact,
+        'yi_stakeholder_count':yi_stakeholder_count,
         'project_count_chart':project_count_chart,
         'project_impact_sum':project_impact_sum,
         'vertical_wise_impact':vertical_wise_impact,
         'initiatives_chart':initiatives_chart,
         'initiatives_count_chart':initiatives_count_chart,
-        'initiatives_impact_chart':initiatives_impact_chart
+        'initiatives_impact_chart':initiatives_impact_chart,
+        'month_wise_impact':date_chart,
+        'date_chart_impact':date_chart_impact
         
     }
     return render(request, "Admin/AdminDashboard.html", context)
