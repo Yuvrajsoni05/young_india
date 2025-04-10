@@ -16,13 +16,33 @@
     </li>
 
     {% else %}
-
-    <li class="nav-item">
+   <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'View-manager' %}">
             <i class="bi bi-people-fill"></i>
             <span>Executive Council Members</span>
         </a>
-    </li>
+    </li> 
+  
+    {% comment %} <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="{% url 'View-manager' %}">
+            <i class="bi bi-people-fill"></i><span>EC Members</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'View-manager' %}">
+              <i class="bi bi-circle"></i><span>Manage EC Members</span>
+            </a>
+          </li>
+    
+    
+          <li>
+            <a href="{% url 'Admin_Signup' %}">
+              <i class="bi bi-circle"></i><span>Add EC Member</span>
+            </a>
+          </li>
+    
+        </ul>
+      </li> {% endcomment %}
     <li class="nav-item">
         <a class="nav-link collapsed " href="{% url 'admin_event_data' %}">
             <i class="bi bi-calendar2-plus"></i>
@@ -43,8 +63,12 @@
 </li>
 
 
+
+
+
     
     {% endif %}
+    
 </ul>
 </aside>
 

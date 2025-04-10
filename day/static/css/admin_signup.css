@@ -1,0 +1,10 @@
+.form-label{
+  font-weight: bold;
+}
+.font-text{
+  color: red;
+}
+.card-body{
+  font-family:  sans-serif;
+  font-size: medium;
+}

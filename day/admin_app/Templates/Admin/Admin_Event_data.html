@@ -22,7 +22,7 @@
         <img src="{% static 'Image/Yi Bharat Rising  (Twitter Post).png' %}" 
              alt="Cover Photo" 
              class="w-100 rounded-top img-fluid d-block mx-auto h-auto" 
-             style="max-height: 300px; object-fit: cover;">
+             style="max-height: 400px; object-fit: cover;">
     
         <!-- Text on top of the image -->
         {% comment %} <div class="position-absolute top-50 start-50 translate-middle " style="z-index: 10; rgb(0, 0, 0)">
@@ -32,7 +32,7 @@
       </div>   
     
     
-      <div class="card-body form-col pt-2">
+      <div class="card-body form-col pt-4">
         <form method="POST" id="myForm" action="{% url 'admin_event_data' %}" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="row">

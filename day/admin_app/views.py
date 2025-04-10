@@ -96,12 +96,17 @@ def index(request):
                 # if user.login_role.filter(name="Admin").exists():
                 #     # print(f"{username} , {password}")
                 #     # logger.info(f"Someone is trying to login Name : {username} {password}")
+                
+                
+                
                 if user.yi_role == 'Chapter Co-Chair' or user.yi_role == 'Chapter Chair' or user.yi_role == 'Admin' :
                     return redirect("Admin_Dashboard")
                 elif user.yi_role == 'Branding':
                     return redirect("branding_dashboard")
                 else:
                     roles = user.login_role.all()
+                    if roles == '' or roles == None:
+                        return redirect('index')
                     request.session["userrole"] = [role.name for role in roles]
                     if roles.exists():
                         first_role_with_image = roles.filter(

@@ -1,0 +1,1386 @@
+
+{% extends "base/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Dashboard {% endblock title %}
+
+{% block bodyblock %}
+
+{% block static %}
+<style>
+
+.form-label{
+  font-weight:bold;
+
+
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+
+{% endblock static %}
+<!-- Main Content -->
+<main id="main" class="main">
+  <div class="pagetitle d-flex justify-content-between align-items-center">
+    <h1>Dashboard</h1>
+    {% comment %} <a href="{% url 'Admin_Signup' %}"> <button type="submit"  class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp; Add EC Member</button></a></div> {% endcomment %}
+  </div>
+
+
+
+
+
+
+    
+
+  <!-- Dashboard Stats Section -->
+  <section class="section dashboard">
+   
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+      <!-- Vertical Card -->
+      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <li class="dropdown-header text-start">
+                <h6>Vertical</h6>
+              </li>
+      
+              <!-- Show "All" option by default -->
+              <li><a class="dropdown-item" href="?vertical=all">All Verticals</a></li>
+      
+              <!-- Loop through verticals -->
+              {% for i in verticals %}
+              <li><a class="dropdown-item" href="?vertical={{ i }}">{{ i }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+      
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-list-check text-primary"></i>&nbsp; Vertical
+            </h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h6>{{ total_vertical }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Events Card -->
+      <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-list-ol text-primary"></i>&nbsp; Total Events</h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h6>{{total_event}}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact Card -->
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-people text-success"></i>&nbsp; Total Impact</h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h6>{{ total_impact}}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense Card -->
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card info-card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-currency-rupee"></i> &nbsp;Total Expense</h5>
+            <div class="d-flex align-items-center">
+              <div class="ps-3">
+                <h6>{{ total_expense|intcomma }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- End Stats Cards row -->
+      
+    <!-- View Toggle Buttons -->
+    <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-center">
+        <div class="btn-group" role="group">
+          <button type="button" id="tableViewBtn" class="btn btn-outline-primary">
+            <i class="bi bi-table me-2"></i>Yi Table
+          </button>
+          <button type="button" id="chartViewBtn" class="btn btn-outline-primary">
+            <i class="bi bi-graph-up me-2"></i>Yi Analytics
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table View Section -->
+    <div id="tableView">
+      <div class="card">
+        <!-- Table View Header -->
+        <div class="card-header bg-white py-3">
+          <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+            <h1 style="color:darkblue">Yi Ahmedabad Events</h1>
+            
+            <div class="d-flex gap-2">
+              <a href="{% url 'Admin_Dashboard' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-clockwise"></i>
+              </a>&nbsp;&nbsp;
+              <a href="{% url 'download_excel' %}" class="btn btn-success">
+                <i class="bi bi-download"></i>
+              </a>
+            </div> 
+          </div>
+          
+          <!-- Filters Section -->
+          <div class="col-12">
+            <div class="row g-2">
+              
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                  <div class="d-flex">
+                    
+                  </div>
+                </div>
+                
+                <!-- Stakeholder Filter -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                  <div class="d-flex">
+                   
+                  </div>
+                </div>
+                
+                <!-- EC Member Name Filter -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                  <div class="d-flex">
+                    
+                  </div>
+                </div>
+                
+                <!-- Yi Role Filter -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                  <div class="d-flex">
+                    
+                  </div>
+                </div>
+                
+                <!-- Yi Pillar Filter -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                  <div class="d-flex">
+                    
+                </div>
+                
+                <!-- Yi Verticals Filter -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                  <div class="d-flex">
+                    
+                  </div>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <!-- Table Content -->
+        <div class="card-body">
+          {% comment %} <form method="post" action="{% url 'delete_multiple_events' %}"> {% endcomment %}
+            {% csrf_token %}
+            <div class="table-responsive">
+              <table class="table table-hover bordered align-middle" id="eventTable">
+                <thead class="table-light" style="overflow-y:auto;">
+                  <tr class="text-center text-nowrap">
+                    <th>Select</th>
+                    <th>Sr No</th>
+                    <th>Event Date</th>
+                    <th>Member Name</th>
+                    <th>Event Name</th>
+                    <th>Yi Verticals</th>
+                    <th>Stakeholder</th>
+                    <th>Venue</th>
+                    <th>Expense</th>
+                    <th>EC Members Name</th>
+                    <th>Event Members Name</th>
+                    <th>Yi Role</th>
+                    <th>Yi Pillar</th>
+                    <th>School</th>
+                    <th>College</th>
+                    <th>S.I.G</th>
+                    <th>Impact</th>
+                    <th>Event Description</th>
+                    <th>Social Link</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                  </tr>
+
+                </thead>
+             
+                <form method="get" action="{% url 'Admin_Dashboard' %}" id="" class="d-flex flex-wrap">
+
+                  <thead>
+                    <th></th>
+                    <th></th>
+                    <th>
+                      <select class="form-select  form-select-sm rounded-pill" id="event_date" name="event_date" onchange="this.form.submit()">
+                        <option value="" disabled selected>Date</option>
+                        <option value="all">All</option>
+                        {% for i in event_date %}
+                          <option value="{{ i }}"{% if i == request.GET.event_date %} selected {% endif %}>{{ i }}</option>
+                        {% endfor %}
+                      </select>
+                    </th>
+                    <th><select class="form-select  form-select-sm rounded-pill" id="ec_name" name="ec_name" onchange="this.form.submit()">
+                      <option value="" disabled selected>Member</option>
+                      <option value="all">All</option>
+                      {% for i in member_name %}
+                        <option value="{{ i }}"{% if i == request.GET.ec_name %} selected {% endif %}>{{ i }}</option>
+                      {% endfor %}
+                    </select></th>
+                    <th></th>
+                    <th ><select class="form-select  form-select-sm rounded-pill" id="verticals" name="verticals" onchange="this.form.submit()">
+                      <option value="" disabled selected>Yi Verticals</option>
+                      <option value="all">All</option>
+                      {% for i in verticals %}
+                        <option value="{{ i }}"{% if i == request.GET.verticals %} selected {% endif %}>{{ i }}</option>
+                      {% endfor %}
+                    </select></th>
+                    <th colspan=2> <select class="form-select  form-select-sm rounded-pill" id="stakeholder" name="stakeholder" onchange="this.form.submit()">
+                      <option value="" disabled selected>Stakeholder</option>
+                      <option value="all">All</option>
+                      {% for i in stakeholder %}
+                        <option value="{{ i }}"{% if i == request.GET.stakeholder %} selected {% endif %}>{{ i }}</option>
+                      {% endfor %}
+                    </select></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th><select class="form-select  form-select-sm rounded-pill" id="yi_role" name="yi_role" onchange="this.form.submit()">
+                      <option value="" disabled selected>Yi Role</option>
+                      <option value="all">All</option>
+                      {% for i in yi_role %}
+                        <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
+                      {% endfor %}
+                    </select></th>
+                    <th>        <select class="form-select  form-select-sm rounded-pill" id="yi_pillar" name="yi_pillar" onchange="this.form.submit()">
+                      <option value="" disabled selected>Yi Pillar</option>
+                      <option value="all">All</option>
+                      {% for i in yi_pillar %}
+                        <option value="{{ i }}"{% if i == request.GET.yi_pillar %} selected {% endif %}>{{ i }}</option>
+                      {% endfor %}
+                    </select></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </thead>
+                </form>
+                
+                <tbody id="display">
+                  {% if events %}
+                    {% for event in events %}
+                      <tr class="text-center text-nowrap">
+                        <td><input type="checkbox" value="{{event.id}}" name="event_ids"></td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ event.date }}</td>
+                        <td>{{ event.your_name }}</td>
+                        <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_name}}">{{ event.event_name }}</span></td>
+                        <td>{{event.project_vertical}}</td>
+                        <td>{{event.project_stakeholder}}</td>
+                        <td>{{ event.event_venue }}</td>
+                        <td>₹ {{ event.event_expense|intcomma }}</td>
+                        
+                        {% if event.select_ec_member == '' or event.select_ec_member == None %}
+                          <td><span class="badge bg-light text-dark">No Members</span></td>
+                        {% else %}
+                          <td class="event-handle">{{ event.select_ec_member }}</td>
+                        {% endif %}
+                        
+                        {% if event.event_member == '' or event.event_member == None %}
+                          <td><span class="badge bg-light text-dark">No Members</span></td>
+                        {% else %}
+                          <td class="event-handle">{{ event.event_member }}</td>
+                        {% endif %}
+                        
+                        <td>{{ event.role_yi }}</td>
+                        <td>{{ event.yi_pillar }}</td>
+                        <td>{{ event.school }}</td>
+                        <td>{{event.collage}}</td>
+                        <td>{{event.which_SIG}}</td>
+                        <td>{{ event.total_impact|floatformat:"g" }}</td>
+                        
+                        {% if event.event_description == '' or event.event_description == None %}
+                          <td><span class="badge bg-light text-dark">No Description</span></td>
+                        {% else %}
+                          <td class="ellipsis"><span data-bs-toggle="modal" data-bs-target="#staticBackdrop{{event.id}}" title="{{event.event_description}}">{{ event.event_description }}</span></td>
+                        {% endif %}
+                        
+                        {% if event.social_link == '' %}
+                          <td><span class="badge bg-light text-dark">No link</span></td>
+                        {% else %}
+                          <td><a href="{{ event.social_link}}" ><i class="bi bi-link"></i></a></td>
+                        {% endif %}
+                        
+                        <td>
+                          {% if event.event_photo.all %}
+                            {% with first_image=event.event_photo.first %}
+                              <img src="{{ first_image.event_photo.url }}" alt="Event Image" class="rounded" height="40" width="60" 
+                                  data-bs-toggle="modal" data-bs-target="#imageModal{{ event.id }}"
+                                  data-image-url="{{ first_image.event_photo.url }}" style="cursor: pointer;">
+                            {% endwith %}
+                          {% else %}
+                            <span class="badge bg-light text-dark">No image</span>
+                          {% endif %}
+                        </td>
+                        
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}">
+                              <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <form method="post" action="{% url 'delete_event' event_id=event.id %}" class="d-inline">
+                              {% csrf_token %}
+                              <button class="btn btn-sm btn-outline-danger ms-1">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <!-- Description Modal -->
+                      <div class="modal fade" id="staticBackdrop{{event.id}}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5 form-label" id="staticBackdropLabel">Event Description</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              {{event.event_description}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Image Modal -->
+                      <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Event Images</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            
+                            <div class="modal-body">
+                              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
+                                {% for image in event.event_photo.all %}
+                                  <div class="col position-relative">
+                                    <div class="card h-100 shadow">
+                                      <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
+                                      <div class="card-body p-2 text-center">
+                                        <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" onsubmit="event.stopPropagation();">
+                                          {% csrf_token %}
+                                          <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation();">
+                                            <i class="bi bi-trash-fill"></i> Delete
+                                          </button>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Edit Event Modal -->
+                      <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header bg-light">
+                              <h5 class="modal-title">Edit Event</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form method="post" id="edit_event" action="{% url 'Update_event_data' event_id=event.id %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                  <!-- Event Date -->
+                                  <div class="col-md-6">
+                                    <label for="event_date" class="form-label">Event Date </label><span style="color:red;"> *</span>
+                                    <input type="date" class="form-control" id="event_date" name="event_date" value="{{ event.date }}">
+                                    <div class="invalid-feedback" id="event_date_error">Please provide an event date.</div>
+                                  </div>
+                                  
+                                  <!-- Event Name -->
+                                  <div class="col-md-6">
+                                    <label for="event_name" class="form-label">Event Name </label><span style="color:red;"> *</span>
+                                    <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event.event_name }}">
+                                    <div class="invalid-feedback" id="event_name_error">Please provide an event name.</div>
+                                  </div>
+                                  
+                                  <!-- Members Name -->
+                                  <div class="col-md-6">
+                                    <label for="event_handle" class="form-label">Members Name</label>
+                                    <input type="text" class="form-control" id="event_handle" name="event_handle" value="{{ event.event_member }}">
+                                  </div>
+                                  
+                                  <!-- EC Members Name -->
+                                  <div class="col-md-6">
+                                    <label for="select_ec_member" class="form-label">EC Members Name</label>
+                                    <input type="text" class="form-control" id="select_ec_member" name="select_ec_member" value="{{ event.select_ec_member }}">
+                                  </div>
+                                  
+                                  <!-- YI Role -->
+                                  <div class="col-md-6">
+                                    <label for="role_yi" class="form-label">YI Role </label><span style="color:red;"> *</span>
+                                    <select class="form-select" id="role_yi" name="role_yi">
+                                      <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
+                                      <option value="Vertical Chair">Vertical Chair</option>
+                                      <option value="Vertical Co-Chair">Vertical Co-Chair</option>
+                                      <option value="Chapter Chair">Chapter Chair</option>
+                                      <option value="Chapter Co-Chair">Chapter Co-Chair</option>
+                                      <option value="Admin">Admin</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="event_yi_role_error">Please provide an event Yi Role.</div>
+                                  </div>
+                                  
+                                  <!-- Project Verticals -->
+                                  <div class="col-md-6">
+                                    <label for="project_verticals" class="form-label">Project Verticals </label><span style="color:red;"> *</span>
+                                    <select class="form-select" id="project_verticals" name="project_verticals">
+                                      <option value="{{ event.project_vertical }}">{{ event.project_vertical }}</option>
+                                      <option value="Masoom">Masoom</option>
+                                      <option value="Road Safety">Road Safety</option>
+                                      <option value="Health">Health</option>
+                                      <option value="Sport">Sports</option>
+                                      <option value="Accessibility">Accessibility</option>
+                                      <option value="Learning(YI Talks)">Learning(YI Talks)</option>
+                                      <option value="Climate action">Climate action</option>
+                                      <option value="Innovation">Innovation</option>
+                                      <option value="Entrepreneurship">Entrepreneurship</option>
+                                      <option value="Branding & PR">Branding & PR</option>
+                                      <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
+                                      <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
+                                      <option value="Culture Connect">Culture Connect</option>
+                                      <option value="Yi Angel">Yi Angel</option>
+                                      <option value="Membership Engagement">Membership Engagement</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="event_yi_vertical_error">Please provide an event Yi Vertical.</div>
+                                  </div>
+                                  
+                                  <!-- Project Stakeholder -->
+                                  <div class="col-md-6">
+                                    <label for="project_stakeholder" class="form-label">Project Stakeholder </label><span style="color:red;"> *</span>
+                                    <select class="form-select" id="project_stakeholder" name="project_stakeholder">
+                                      <option value="{{ event.project_stakeholder }}">{{ event.project_stakeholder }}</option>
+                                      <option value="Yuva">Yuva</option>
+                                      <option value="Thalir">Thalir</option>
+                                      <option value="Rural Initiatives">Rural Initiatives</option>
+                                      <option value="General Public">General Public</option>
+                                      <option value="Associate Partner">Associate Partner</option>
+                                      <option value="">None</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="event_yi_stakeholder_error">Please provide an event Yi Stakeholder.</div>
+                                  </div>
+                                  
+                                  <!-- Yi Pillar -->
+                                  <div class="col-md-6">
+                                    <label for="yi_pillar" class="form-label">Yi Pillar </label><span style="color:red;"> *</span>
+                                    <select class="form-control" id="yi_pillar" name="yi_pillar">
+                                      <option value="{{ event.yi_pillar }}">{{ event.yi_pillar }}</option>
+                                      <option value="Youth Leader">Youth Leader</option>
+                                      <option value="Thought Leader">Thought Leader</option>
+                                      <option value="Nation Building">Nation Building</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="event_yi_pillar_error">Please provide an event Yi Pillar.</div>
+                                  </div>
+                                  
+                                  <!-- Social Link -->
+                                  <div class="col-md-6">
+                                    <label for="social_link" class="form-label">Social Link</label>
+                                    <input type="url" class="form-control" id="social_link" name="social_link" value="{{ event.social_link }}">
+                                  </div>
+                                  
+                                  <!-- Impact -->
+                                  <div class="col-md-6">
+                                    <label for="total_impact" class="form-label">Impact</label><span style="color:red;"> *</span>
+                                    <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
+                                    <div class="invalid-feedback" id="event_total_impact_error">Please provide an event Total Impact.</div>
+                                  </div>
+                                  
+                                  <!-- Event Expense -->
+                                  <div class="col-md-6">
+                                    <label for="event_expense" class="form-label">Event Expense</label>
+                                    <input type="number" class="form-control" id="event_expense" name="event_expense" value="{{ event.event_expense }}">
+                                  </div>
+                                  
+                                  <!-- SIG -->
+                                  <div class="col-md-6" id="sig_div">
+                                    <label for="sig_" class="form-label">Choose SIG</label>
+                                    <select class="form-control form-select" id="sig_" name="sig_">
+                                      {% if event.which_SIG == '' or event.which_SIG == None %} 
+                                        <option value="">Choose SIG</option>
+                                        <option value="Active Living">Active Living</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Trekking">Trekking</option>
+                                        <option value="Entrepreneurship">Entrepreneurship</option>
+                                        <option value="Community">Community</option>
+                                        <option value="">None</option>
+                                      {% else %}
+                                        <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
+                                        <option value="Active Living">Active Living</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Trekking">Trekking</option>
+                                        <option value="Entrepreneurship">Entrepreneurship</option>
+                                        <option value="Community">Community</option>
+                                        <option value="">None</option>
+                                      {% endif %}
+                                    </select>
+                                  </div>
+                                  
+                                  <!-- School -->
+                                  <div class="col-md-6" id="school_div">
+                                    <label for="school" class="form-label">School</label>
+                                    <input type="text" id="school" class="form-control" name="school" placeholder="School" value="{{ event.school }}">
+                                  </div>
+                                  
+                                  <!-- College -->
+                                  <div class="col-md-6" id="collage_div">
+                                    <label for="collage" class="form-label">College</label>
+                                    <input type="text" id="collage" class="form-control" name="collage" placeholder="College" value="{{ event.collage }}">
+                                  </div>
+                                  
+                                  <!-- Event Image -->
+                                  <div class="col-md-6">
+                                    <label for="event_image" class="form-label">Event Image</label>
+                                    <input type="file" id="event_image" class="form-control" name="event_image" multiple accept=".jpeg, .png, .jpg">
+                                  </div>
+                                  
+                                  <!-- Event Description -->
+                                  <div class="col-md-6">
+                                    <label for="event_description" class="form-label">Event Description</label>
+                                    <textarea class="form-control" name="event_description" id="event_description" rows="3">{{event.event_description}}</textarea>
+                                  </div>
+                                </div>
+                                
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <tr>
+                      <td colspan="21" class="text-center">No Events available</td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+              
+              {% comment %} <button type="submit" class="btn btn-danger">Delete Selected</button> {% endcomment %}
+            </div>
+          {% comment %} </form> {% endcomment %}
+          
+          <!-- Pagination -->
+          <nav aria-label="Event table navigation">
+            <ul class="pagination justify-content-center flex-wrap">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+                <div id="chartView" class="card-body" style="display: none;">
+                    <h5 class="card-title">Event Analytics</h5>
+                    
+                    <div class="row">
+                        <!-- Card 1: Line and Bar Chart Combination -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Yi Project</h6>
+                                    <canvas width='550px' height="350px" id="chartId"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Card 2: Simple Bar Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Yi Initiatives  </h6>
+                                    <canvas id="initiatives"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Card 3: Pie Chart -->
+                        <div class="col-md-6">
+                          <div class="card">
+                              <div class="card-body " >
+                                  <h6 class="card-title" >Yi Stakeholder</h6>
+                                  <canvas id="stakeholder_event"></canvas>
+                              </div>
+                          </div>
+                      </div>
+                      
+                
+                        <!-- Card 4: Another Pie Chart -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body ">
+                                    <h6 class="card-title">Yi Pillar</h6>
+                                    <canvas width='550px' height="350px" id="pillar_pie"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                 
+                
+                    {% comment %} <div class="row">
+                        <!-- Card 5: Column Chart -->
+                        <div class="card">
+                          <div class="card-body">
+                              <h6 class="card-title">Month Wise Data</h6>
+                              <canvas id="month"></canvas>
+                          </div>
+                      </div>
+
+                    </div> {% endcomment %}
+                </div>
+
+
+                  
+</section>
+
+
+
+  </main>
+<!-- End #main -->
+  {% endblock bodyblock %} 
+  
+
+
+  {% block script %}
+  
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tableViewBtn = document.getElementById('tableViewBtn');
+    const chartViewBtn = document.getElementById('chartViewBtn');
+    const tableView = document.getElementById('tableView');
+    const chartView = document.getElementById('chartView');
+
+    // Toggle view function
+    function toggleView(showTable) {
+        if (showTable) {
+            tableView.style.display = 'block';
+            chartView.style.display = 'none';
+            tableViewBtn.classList.remove('btn-outline-primary');
+            tableViewBtn.classList.add('btn-primary');
+            chartViewBtn.classList.remove('btn-primary');
+            chartViewBtn.classList.add('btn-outline-primary');
+        } else {
+            tableView.style.display = 'none';
+            chartView.style.display = 'block';
+            chartViewBtn.classList.remove('btn-outline-primary');
+            chartViewBtn.classList.add('btn-primary');
+            tableViewBtn.classList.remove('btn-primary');
+            tableViewBtn.classList.add('btn-outline-primary');
+        }
+    }
+
+    // Event listeners for view toggle buttons
+    tableViewBtn.addEventListener('click', () => toggleView(true));
+    chartViewBtn.addEventListener('click', () => toggleView(false));
+});
+</script>
+
+
+<script>
+  var chrt = document.getElementById("chartId").getContext("2d");
+  var chartId = new Chart(chrt, {
+    type: 'pie',
+    data: {
+      labels: {{ project_chart|safe }},
+      datasets: [{
+        label: "Total Impact",
+        data: {{project_impact_sum}},
+        backgroundColor: ['skyblue', 'aqua', 'lightblue', 'lightgreen', 'gold', ],
+        hoverOffset: 15
+      }],
+    },
+    options: {
+      
+      responsive: false,
+      plugins: {
+        datalabels: {
+          color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+          anchor: 'center',
+          align: 'end',
+          
+          offset: -10,
+          font: {
+           family:'self',
+            size: 18
+          },
+          formatter: (value) => value // You can customize this as needed
+        },
+        legend: {
+          position: 'right', // Move the legend to the right side
+        },
+        tooltip: {
+          enabled: true // Optionally, disable the tooltips if you prefer the labels to be visible without hovering
+        }
+      },
+    },
+    plugins: [ChartDataLabels]
+  });
+</script>
+
+
+
+
+<script>
+  var chrt = document.getElementById("pillar_pie").getContext("2d");
+  var chartId = new Chart(chrt, {
+    type: 'doughnut',
+    data: {
+      labels: {{ yi_pillar_chart|safe }},
+      datasets: [{
+        label: "Total Impact",
+        data: {{yi_pillar_impact}},
+        backgroundColor: ['blue', 'aqua', 'lightblue', 'lightgreen', 'gold', ],
+        hoverOffset: 15
+      }],
+    },
+    options: {
+      
+      responsive: false,
+      plugins: {
+        datalabels: {
+          color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+          anchor: 'center',
+          align: 'end',
+          
+          offset: -10,
+          font: {
+           family:'self',
+            size: 18
+          },
+          formatter: (value) => value // You can customize this as needed
+        },
+        legend: {
+          position: 'right', // Move the legend to the right side
+        },
+        tooltip: {
+          enabled: true // Optionally, disable the tooltips if you prefer the labels to be visible without hovering
+        }
+      },
+    },
+    plugins: [ChartDataLabels]
+  });
+</script>
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get all the event-handle elements in the table
+    const eventHandles = document.querySelectorAll('.event-handle');
+    
+    // Loop through each event-handle element
+    eventHandles.forEach(function (eventHandleElement) {
+        // Get the event_handle content
+        const eventHandle = eventHandleElement.innerText;
+        
+        // Split the data by commas
+        const names = eventHandle.split(',');
+        
+        // Create a select element
+        const select = document.createElement('select');
+        select.className = 'event-handle form-select fomr-control border'; // Add a class for styling if needed
+        
+        // Create a default option
+        const defaultOption = document.createElement('link');
+        defaultOption.text = 'See Member';
+        defaultOption.value = '';
+        select.appendChild(defaultOption);
+        
+        // Loop through each name and create an option for it
+        names.forEach(function (name) {
+            // Trim any extra spaces from the name
+            const trimmedName = name.trim();
+            
+            // Create the option element
+            const option = document.createElement('option');
+            option.value = trimmedName;
+            option.text = trimmedName;
+            
+            // Append the option to the select
+            select.appendChild(option);
+        });
+        
+        // Clear the original content in the <td>
+        eventHandleElement.innerHTML = '';
+        
+        // Append the new formatted select menu
+        eventHandleElement.appendChild(select);
+    });
+});
+</script>
+
+
+
+<script>
+  var ctx = document.getElementById('barChart').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ yi_pillar_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [{
+            type: 'bar',
+            label: 'Yi Pillar Wise Count',
+            backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+            borderColor: 'rgb(0, 0, 0)',
+            borderWidth: 1,
+            hoverOffset: 15
+            data: {{  yi_pillar_count}}
+          
+        },{
+              label: 'Yi Pillar Wise Impact',
+              data: {{ yi_pillar_impact }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1,
+              hoverOffset: 15
+          datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
+          }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+            anchor: 'end',
+            align: 'end',
+            
+            offset: -10,
+            font: {
+             family:'self',
+              size: 18
+            },
+            formatter: (value) => value // You can customize this as needed
+          }
+        },
+        animation: {
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+
+          responsive: true,
+          scales: {
+      
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+               
+                grid: {
+                  display: true
+                }
+                
+              }
+          }
+      },
+      plugins: [ChartDataLabels]
+  });
+</script>
+
+
+
+
+
+<script>
+  var ctx = document.getElementById('month').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{month_wise_impact|safe}},  // Event names (project_vertical) from Django context
+          datasets: [{
+              label: 'Yi Pillar Wise Impact',
+              data: {{ date_chart_impact|safe }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1,
+          datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
+          }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: '#000',
+            display: function(context) {
+              return context.dataset.data[context.dataIndex];
+            }
+          }
+        } ,
+
+          responsive: true,
+          scales: {
+        
+
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+               
+                grid: {
+                  display: true
+                }
+                
+              }
+          }
+      }
+  });
+</script>
+
+
+
+<script>
+  var ctx = document.getElementById('initiatives').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ initiatives_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [
+            
+          {
+            type: 'bar',
+            label: 'Initiatives Event',
+            backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+            borderColor: 'rgb(0, 0, 0)',
+            borderWidth: 1,
+            hoverOffset: 15,
+            data: {{  initiatives_count_chart }}
+          
+        },
+        {
+              label: 'Initiatives Impact',
+              data: {{ initiatives_impact_chart }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              hoverOffset: 15,
+              borderWidth: 1,
+          
+          }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+            anchor: 'end',
+            align: 'end',
+            
+            offset: -10,
+            font: {
+             family:'self',
+              size: 18
+            },
+            formatter: (value) => value // You can customize this as needed
+          }
+        },  animation: {
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+
+
+          responsive: true,
+          scales: {
+        
+
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+               
+                grid: {
+                  display: true
+                }
+                
+              }
+          }
+      },
+      plugins: [ChartDataLabels]
+  });
+</script>
+
+<script>
+  var ctx = document.getElementById('vertical_chart').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ vertical_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [
+            
+            {
+                type: 'bar',
+                label: 'Total Event',
+                backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+                borderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+                data: {{  vertical_wise_impact }}
+              
+            },
+            {
+                type: 'bar',
+                label: 'Total Impact',
+                backgroundColor: 'rgb(45, 0, 248)',
+                data: {{impact_chart}}
+            }
+        ]
+      },
+      options: {
+
+          responsive: true,
+          scales: {
+        
+
+              x: {
+                
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                
+                grid: {
+                  display: true
+                }
+                
+              }
+          }
+      }
+  });
+</script>
+
+
+
+<script>
+  var ctx = document.getElementById('stakeholder_event').getContext('2d');
+  var eventChart = new Chart(ctx, {
+      type: 'bar',  // Specify the chart type
+      data: {
+          labels: {{ yi_stakeholder_chart|safe }},  // Event names (project_vertical) from Django context
+          datasets: [
+         
+              {
+                type: 'bar',
+                label: 'Yi Stakeholder Event',
+                backgroundColor: 'rgb(25, 255, 236)',  // Bar color
+                borderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+                data: {{ yi_stakeholder_count|safe }}
+              
+            },{
+              label: 'Yi Stakeholder Impact',
+              data: {{ yi_stakeholder_impact }},  // Impact values (total_impact) from Django context
+              backgroundColor: 'rgb(45, 0, 248)',  // Bar color
+              borderColor: 'rgb(0, 0, 0)',
+              borderWidth: 1,
+              datalabels: {
+                align: 'start',
+                anchor: 'end',
+                offset:-20
+              }
+          }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+            anchor: 'end',
+            align: 'start',
+            
+            offset: -10,
+            font: {
+             family:'self',
+              size: 18
+            },
+            formatter: (value) => value // You can customize this as needed
+          }
+        },
+        animation: {
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+           
+            grid: {
+              display: true
+            }
+            
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+</script>
+
+
+
+
+<script>
+  let delayed;
+
+  const ctx1 = document.getElementById('lineBarChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: {{ project_chart|safe }},
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Total Event',
+          backgroundColor: 'rgb(0, 183, 255)',  // Bar color
+          borderColor: 'rgb(0, 0, 0)',
+          borderWidth: 1,
+          data: {{  project_count_chart }}
+        
+      },
+        {
+          type: 'bar',
+          label: 'Total Impact',
+          backgroundColor: 'rgb(45, 0, 248)',
+          data: {{ project_impact_sum }},
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          color: 'rgb(0, 0, 0)', // or '#000' depending on contrast
+          anchor: 'end',
+          align: 'end',
+          
+          offset: -10,
+          font: {
+           family:'self',
+            size: 18
+          },
+          formatter: (value) => value // You can customize this as needed
+        }
+      },
+      animation: {
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          if (context.type === 'data' && context.mode === 'default' && !delayed) {
+            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: true
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+</script>
+
+{% comment %} <script>
+
+// Data retrieved from https://yearbook.enerdata.net/electricity/world-electricity-production-statistics.html
+Highcharts.chart('container', {
+  chart: {
+      type: 'column',
+      options3d: {
+          enabled: true,
+          alpha: 15,
+          beta: 15,
+          viewDistance: 25,
+          depth: 40
+      }
+  },
+
+  title: {
+      text: ' Electricity production in countries, grouped by continent'
+  },
+
+  xAxis: {
+      labels: {
+          skew3d: true,
+          style: {
+              fontSize: '16px'
+          }
+      }
+  },
+
+  yAxis: {
+      allowDecimals: false,
+      min: 0,
+      title: {
+          text: 'TWh',
+          skew3d: true,
+          style: {
+              fontSize: '16px'
+          }
+      }
+  },
+
+  tooltip: {
+      headerFormat: '<b>{point.key}</b><br>',
+      pointFormat: '<span style="color:{series.color}">\u25CF</span> ' +
+          '{series.name}: {point.y} / {point.stackTotal}'
+  },
+
+  plotOptions: {
+      series: {
+          pointStart: 2018
+      },
+      column: {
+          stacking: 'normal',
+          depth: 40
+      }
+  },
+
+  series: [{
+      name: 'South Korea',
+      data: [590, 582, 571, 606, 625],
+      stack: 'Asia'
+  }, {
+      name: 'Germany',
+      data: [643, 612, 572, 588, 578],
+      stack: 'Europe'
+  }, {
+      name: 'Saudi Arabia',
+      data: [378, 367, 363, 408, 433],
+      stack: 'Asia'
+  }, {
+      name: 'France',
+      data: [582, 571, 533, 555, 473],
+      stack: 'Europe'
+  }]
+}); {% endcomment %}
+
+
+{% comment %} </script> {% endcomment %}
+
+
+  <script src="{% static 'js/dashboard.js' %}"></script>
+
+  {% endblock script %}
+
+
+
+
+  
+
+  {% comment %} event_list = Event_Data.objects.all()
+  # Handle search filtering
+  search = request.GET.get('search')
+  if search and search != 'all':
+      event_list = event_list.filter(your_name__icontains=search)  # Filter based on 'search'
+
+  # Apply demo filter if provided
+  demo = request.GET.get('demo')
+  if demo and demo != 'all':
+      event_list = event_list.filter(project_vertical__icontains=demo) {% endcomment %}
+

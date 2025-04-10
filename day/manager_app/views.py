@@ -87,7 +87,7 @@ def manager_logout(request):
     request.session.clear()
     return redirect('index')
 
-
+@login_required(login_url='index')
 def about_yi(request):
     return render(request,'components/AboutYi.html')
 
@@ -189,6 +189,7 @@ def manager_dashboard(request):
         return redirect('Error-Page')
  
     user_roles = request.session.get('userrole', [])
+    
     # ec_member = LoginSide.objects.all().values_list('first_name', flat=True).distinct().exclude(is_superuser=True)
     ec_member = LoginSide.objects.all().distinct().exclude(is_superuser=True)
     ec_member_names = [f"{member.first_name} {member.last_name}"for member in ec_member]
