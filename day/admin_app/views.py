@@ -686,8 +686,8 @@ def Admin_Dashboard(request):
     impact_chart = [event['impact'] for event in  data]
     vertical_wise_impact = [event['vertical'] for event in data]
     
-    yi_project = Event_Data.objects.filter(project_vertical__in=['Masoom','Road Safety','Health','Accessibility','Climate Change']).values()
-    yi_initiatives = Event_Data.objects.filter(project_vertical__in=['Entrepreneurship','Innovation','Special Interest Group (S.I.G)','Sports','Learning(YI Talks)','Women Engagement (YIWE)','Yi Angel','Yi Angel']).values()
+    yi_project = Event_Data.objects.filter(project_vertical__in=['Masoom','Road Safety','Yi Health','Accessibility','Climate Change']).values()
+    yi_initiatives = Event_Data.objects.filter(project_vertical__in=['Entrepreneurship','Innovation','Special Interest Group (S.I.G)','Sports','Learning(YI Talks)','Women Engagement (YIWE)','Yi Angel',]).values()
     
     yi_initiatives_data = yi_initiatives.values('project_vertical').annotate(total_event=Count('project_vertical')).annotate(total_impact=Sum('total_impact'))
     
@@ -1147,7 +1147,8 @@ def manager_list(request):
         )  # Redirect if the user doesn't have the Admin role
 
     # Make sure you're filtering by the 'user' field, not 'username'
-    manager = LoginSide.objects.exclude(is_superuser=True)
+    manager = LoginSide.objects.exclude(is_superuser=True).exclude(id=request.user.id)
+
     # Fetch all login roles (you can filter this as needed)
     login_role = Login_Role.objects.all()
     # Get the user's roles
@@ -1183,11 +1184,11 @@ def delete_member(request, member_id):
             member = get_object_or_404(LoginSide, id=member_id)
 
             member.delete()
-            messages.success(request, "Ec Member Deleted Succssfully")
+          
         return redirect("View-manager")
     except Exception as e:
 
-        messages.error(request, "Something Went Wrong Please  Try Again")
+ 
         return redirect("View-manager")
 #Delete Multiple Event 
 
@@ -1288,6 +1289,11 @@ def update_memeber(request, manager_id):
             email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
             if not re.match(email_regex, update_manager_data.email):
                 messages.error(request, "Enter Valid Email")
+                return redirect("View-manager")
+            
+            phone_regex = r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$"
+            if not re.match(phone_regex, update_manager_data.phone_number):
+                messages.error(request, "Phone number must be 10 digits and valid.")
                 return redirect("View-manager")
 
             if "manager_profile_img" in request.FILES:
@@ -1435,6 +1441,19 @@ def event_image_delete(request, image_id):
     return redirect("Admin_Dashboard")
 
 
+def profile_image_delete(request, image_id):
+    try:
+
+        if request.method == "POST":
+            profile_image_delete = get_object_or_404(LoginSide, id=image_id)
+            if profile_image_delete.photo:
+                profile_image_delete.event_photo.delete()
+                messages.success(request, "Image Delete")
+            profile_image_delete.delete()  # Delete the image record
+    except Exception as e:
+        messages.error(request, "Event Image not delete try again ")
+    return redirect("Admin_Dashboard")
+
 def members_diary(request):
     return render(request , 'Admin/members_diary.html')
 
@@ -1447,63 +1466,146 @@ def branding_dashboard(request):
     
     
     
-    
     total_event = Event_Data.objects.count()
-    event_list = Event_Data.objects.all()
-   
-    total_impact_result = Event_Data.objects.aggregate(Sum("total_impact"))
-    total_impact = (
-        total_impact_result["total_impact__sum"]
-        if total_impact_result["total_impact__sum"] is not None
-        else 0
-    )
-    
-    
+    user_id = request.user.id
+    total_user_data = LoginSide.objects.exclude(login_role="Admin")
+    total_user = total_user_data.count()
+    sessions = Session.objects.filter(expire_date__gte=now())
+    # Get user ids from the session data
+    user_ids = [session.get_decoded().get("_auth_user_id") for session in sessions]
+    # Query LoginSide objects for users
+    active_users = LoginSide.objects.filter(id__in=user_ids)  # Get user objects
+
+    active_user_names = [f"{user.first_name} {user.last_name}" for user in active_users]
+    active_users_count = LoginSide.objects.filter(is_active=True).count()
+    active_users_count = active_users.count()
     total_expense_result = Event_Data.objects.aggregate(Sum("event_expense"))
     total_expense = (
         total_expense_result["event_expense__sum"]
         if total_expense_result["event_expense__sum"] is not None
         else 0
     )
-    
-    member_name = (
-        Event_Data.objects.all().values_list("your_name", flat=True).distinct()
+    total_impact_result = Event_Data.objects.aggregate(Sum("total_impact"))
+    total_impact = (
+        total_impact_result["total_impact__sum"]
+        if total_impact_result["total_impact__sum"] is not None
+        else 0
     )
-    
-    vertical_name = (
-        Event_Data.objects.all().values_list("project_vertical", flat=True).distinct()
+    impact_avg = Event_Data.objects.aggregate(Avg("total_impact"))
+    avg_impact = (
+        impact_avg["total_impact__avg"]
+        if impact_avg["total_impact__avg"] is not None
+        else 0
     )
-    total_vertical = vertical_name.count()
+    # Retrieve all distinct users and roles
+    all_user = LoginSide.objects.all().distinct()
+    login_role = Login_Role.objects.all().distinct()
+
+    def formatINR(total_expense):
+        s, *d = str(total_expense).partition(".")
+        r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+        return "".join([r] + d)
+
     
-    stakeholder_name = (
-        Event_Data.objects.all().values_list('project_stakeholder',flat=True).distinct()
-    )
-    
-    
-    yi_role_name = (
-        Event_Data.objects.all().values_list('role_yi',flat=True).distinct()
-    )
-    
-    yi_pillar_name = (
-        Event_Data.objects.all().values_list("yi_pillar", flat=True).distinct()
-    )
-    
-    
-    event_date = (
-        Event_Data.objects.all().values_list("date",flat=True).distinct()
-    )
 
     def formatImpact(total_impact):
         s, *d = str(total_impact).partition(".")
         r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
         return "".join([r] + d)
+
     
-    def formatINR(total_expense):
-        s, *d = str(total_expense).partition(".")
-        r = ",".join([s[x - 2 : x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
-        return "".join([r] + d)
+
+    # Manager names from Event_Data
+    imapct = (Event_Data.objects.all().values_list('total_impact',flat=True))
+    
+    member_name = (
+        Event_Data.objects.all().values_list("your_name", flat=True).distinct()
+    )
+    vertical_name = (
+        Event_Data.objects.all().values_list("project_vertical", flat=True).distinct()
+    )
+    stakeholder_name = (
+        Event_Data.objects.all()
+        .values_list("project_stakeholder", flat=True)
+        .distinct()
+    )
+    yi_pillar_name = (
+        Event_Data.objects.all().values_list("yi_pillar", flat=True).distinct()
+    )
+    event_date = (
+        Event_Data.objects.all().values_list("date",flat=True).distinct()
+    )
+    yi_role_name = Event_Data.objects.all().values_list("role_yi", flat=True).distinct()
+    total_vertical = vertical_name.count()
+    # event_list = Event_Data.objects.all()
+
+    member_name_chart = (
+        Event_Data.objects.all().values_list("your_name", flat=True).distinct()
+    )
+    # vertical_name_chart = (
+    #     Event_Data.objects.all().values_list("project_vertical", flat=True)
+    # )
+    # imapct_chart = (Event_Data.objects.all().values_list('total_impact',flat=True))
+    Event_date  = Event_Data.objects.values('date').annotate(date_impact=Sum('total_impact')).distinct()
+    data = Event_Data.objects.values('project_vertical').annotate(impact=Sum('total_impact')).annotate(vertical=Count('project_vertical'))
+    yi_pillar_data = Event_Data.objects.values('yi_pillar').annotate(pillar_impact=Sum('total_impact')).annotate(event_count=Count('project_stakeholder'))
+    yi_stakeholder_data = Event_Data.objects.values('project_stakeholder').annotate(stakeholder_impact=Sum('total_impact')).annotate(event_count=Count('project_stakeholder'))
+    # member_name_data = Event_Data.objects.values('your_name').annotate(total_events=Count('your_name')).annotate(total_impacts=Sum('total_impact'))
+   
+    event_list = Event_Data.objects.all()
+
+    vertical_chart = [event['project_vertical'] for event in data ]
+    impact_chart = [event['impact'] for event in  data]
+    vertical_wise_impact = [event['vertical'] for event in data]
+    
+    yi_project = Event_Data.objects.filter(project_vertical__in=['Masoom','Road Safety','Yi Health','Accessibility','Climate Change']).values()
+    yi_initiatives = Event_Data.objects.filter(project_vertical__in=['Entrepreneurship','Innovation','Special Interest Group (S.I.G)','Sports','Learning(YI Talks)','Women Engagement (YIWE)','Yi Angel',]).values()
+    
+    yi_initiatives_data = yi_initiatives.values('project_vertical').annotate(total_event=Count('project_vertical')).annotate(total_impact=Sum('total_impact'))
+    
+    initiatives_chart = [initiatives['project_vertical'] for initiatives in yi_initiatives_data]
+    initiatives_count_chart = [initiatives['total_event'] for initiatives in yi_initiatives_data]
+    initiatives_impact_chart = [initiatives['total_impact'] for initiatives in yi_initiatives_data]
+    
+    date_chart = [date['date'] for date in Event_date]
+
+    # months = [date.strftime('%B') for date in date_chart]
+    # month_str = ', '.join(months)
+    # print(month_str)
+    # data_charts = month_str
+    date_chart_impact = [data['date_impact'] for data in Event_date]
     
     
+    project_chart_data = yi_project.values('project_vertical').annotate(total_event=Count('project_vertical')).annotate(total_impact=Sum('total_impact'))
+    project_chart = [name['project_vertical'] for name in  project_chart_data]
+    project_count_chart = [name['total_event'] for name in  project_chart_data]
+    project_impact_sum = [name['total_impact'] for name in project_chart_data]
+    
+    yi_pillar_chart = [pillar['yi_pillar'] for pillar in yi_pillar_data]
+    yi_pillar_impact = [pillar['pillar_impact'] for pillar in yi_pillar_data]
+    yi_pillar_count = [pillar['event_count'] for pillar in yi_pillar_data]
+    
+    yi_stakeholder_chart =[stakeholder['project_stakeholder'] for stakeholder in yi_stakeholder_data] 
+    yi_stakeholder_impact =[stakeholder['stakeholder_impact'] for stakeholder in yi_stakeholder_data] 
+    yi_stakeholder_count = [stakeholder['event_count'] for stakeholder in yi_stakeholder_data]
+    
+    
+  
+    # demo = Event_Data.objects.filter(project_vertical__in=['Masoom', 'AnotherProject', 'SomeOtherProject']).values('project_vertical')
+    #Member.objects.filter(firstname='Emil').values()
+   
+   
+
+    # print(month_wise_impact)
+    # def event_chart(request):
+    # events = Event.objects.all()
+    # labels = [event.event_name for event in events]
+    # data = [event.event_impact for event in events]
+    # context = {
+    #     'labels': labels,
+    #     'data': data,
+    # }
+
     selected_vertical = request.GET.get("vertical", "all")
     if selected_vertical != "all":
         total_vertical = Event_Data.objects.filter(
@@ -1519,8 +1621,8 @@ def branding_dashboard(request):
             if total_expense_result["event_expense__sum"] is not None
             else 0
         )
+        
 
-    
     ec_name = request.GET.get("ec_name", "all")
     if ec_name and ec_name != "all":
         event_list = event_list.filter(your_name__icontains=ec_name)
@@ -1535,7 +1637,22 @@ def branding_dashboard(request):
             else 0
         )
         
-        
+      
+
+    verticals = request.GET.get("verticals")
+    if verticals and verticals != "all":
+        event_list = event_list.filter(project_vertical__icontains=verticals)
+        total_event = event_list.filter(project_vertical__icontains=verticals).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+            total_expense_result["event_expense__sum"]
+            if total_expense_result["event_expense__sum"] is not None
+            else 0
+        )
+
     yi_pillar = request.GET.get("yi_pillar")
     if yi_pillar and yi_pillar != "all":
         event_list = event_list.filter(yi_pillar__icontains=yi_pillar)
@@ -1549,21 +1666,7 @@ def branding_dashboard(request):
             if total_expense_result["event_expense__sum"] is not None
             else 0
         )
-    
-    yi_role = request.GET.get("yi_role")
-    if yi_role and yi_role != "all":
-        event_list = event_list.filter(role_yi__icontains=yi_role)
-        total_event = event_list.filter(role_yi__icontains=yi_role).count()
-        total_impact_result= event_list.aggregate(Sum("total_impact"))       
-        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
-        else 0 )
-        total_expense_result = event_list.aggregate(Sum("event_expense"))
-        total_expense = (
-        total_expense_result["event_expense__sum"]
-        if total_expense_result["event_expense__sum"] is not None
-        else 0
-    )
-        
+
     stakeholder = request.GET.get("stakeholder")
     if stakeholder and stakeholder != "all":
         event_list = event_list.filter(project_stakeholder__icontains=stakeholder)
@@ -1577,8 +1680,21 @@ def branding_dashboard(request):
             if total_expense_result["event_expense__sum"] is not None
             else 0
         )
-        
-        
+
+    yi_role = request.GET.get("yi_role")
+    if yi_role and yi_role != "all":
+        event_list = event_list.filter(role_yi__icontains=yi_role)
+        total_event = event_list.filter(role_yi__icontains=yi_role).count()
+        total_impact_result= event_list.aggregate(Sum("total_impact"))       
+        total_impact = (total_impact_result["total_impact__sum"]if total_impact_result["total_impact__sum"] is not None
+        else 0 )
+        total_expense_result = event_list.aggregate(Sum("event_expense"))
+        total_expense = (
+        total_expense_result["event_expense__sum"]
+        if total_expense_result["event_expense__sum"] is not None
+        else 0
+    )
+
     date = request.GET.get("event_date")
     if date and date != "all": 
         event_list = event_list.filter(date__icontains=date)
@@ -1592,22 +1708,46 @@ def branding_dashboard(request):
             if total_expense_result["event_expense__sum"] is not None
             else 0
         )
-    total_expense  = formatINR(total_expense)
     total_impact = formatImpact(total_impact)
+    total_expense = formatINR(total_expense)
     context = {
-        'events':event_list,
-        'total_event':total_event,
-        'total_expense':total_expense,
-        'total_impact':total_impact,
-        'verticals':vertical_name ,
-        'total_vertical':total_vertical,
-        'stakeholder_name':stakeholder_name,
-        'yi_role_name':yi_role_name,
-        'yi_pillar_name':yi_pillar_name,
-        'event_date': event_date,
-        'member_name':member_name ,
+        "user_id": user_id,
+        "users_data": all_user,
+        "role": login_role,
+        "total_manager": total_user,
+        "total_event": total_event,
+        "total_impact": total_impact,
+        "impact_avg": avg_impact,
+        "total_expense": total_expense,
+        "events": event_list,
+        "member_name": member_name,
+        "verticals": vertical_name,
+        "stakeholder": stakeholder_name,
+        "yi_pillar": yi_pillar_name,
+        "yi_role": yi_role_name,
+        "total_vertical": total_vertical,
+        "count": active_users_count,
+        "name": active_user_names,
+        "event_date":event_date,
+        'vertical_chart':vertical_chart,
+        'impact_chart':impact_chart,
+        'project_chart':project_chart,
+        'yi_pillar_chart':yi_pillar_chart,
+        'yi_pillar_impact':yi_pillar_impact,
+        'yi_pillar_count':yi_pillar_count,
+        'yi_stakeholder_chart':yi_stakeholder_chart,
+        'yi_stakeholder_impact':yi_stakeholder_impact,
+        'yi_stakeholder_count':yi_stakeholder_count,
+        'project_count_chart':project_count_chart,
+        'project_impact_sum':project_impact_sum,
+        'vertical_wise_impact':vertical_wise_impact,
+        'initiatives_chart':initiatives_chart,
+        'initiatives_count_chart':initiatives_count_chart,
+        'initiatives_impact_chart':initiatives_impact_chart,
+        'month_wise_impact':date_chart,
+        'date_chart_impact':date_chart_impact
+        
     }
-    
     return render(request,'Branding/dashboard.html',context)
 
 

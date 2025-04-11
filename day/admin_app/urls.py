@@ -28,6 +28,9 @@ urlpatterns = [
         "update-event-image/<int:image_id>/", event_image_delete, name="event_image_id"
     ),
     path(
+        "profile-image-delete/<str:image_id>/",profile_image_delete,name="profile_image-delete"
+    ),
+    path(
         "update-event-data/<int:event_id>/", update_event_data, name="Update_event_data"
     ),
     path("update-manager/<uuid:manager_id>/", update_memeber, name="Update_Manager"),

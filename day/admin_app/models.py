@@ -13,7 +13,7 @@ ROLE_CHOICES = [
     ("Manager", "Manager"),
     ("Masoom", "Masoom"),
     ("Road Safety", "Road Safety"),
-    ("Health", "Health"),
+    ("Yi Health", "Yi Health"),
     ("Sports", "Sports"),
     ("Accessibility", "Accessibility"),
     ("Learning(YI Talks)", "Learning(YI Talks)"),
@@ -25,6 +25,7 @@ ROLE_CHOICES = [
     ("Women Engagement (YIWE)", "Women Engagement (YIWE)"),
     ("Culture Connect", "Culture Connect"),
     ("Yi Angel", "Yi Angel"),
+    
     ("Special Interest Group (S.I.G)", "Special Interest Group (S.I.G)"),
 ]
 

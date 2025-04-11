@@ -12,9 +12,14 @@
 .form-label{
   font-weight:bold;
 
+
 }
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+
 {% endblock static %}
 <!-- Main Content -->
 <main id="main" class="main">
@@ -24,11 +29,24 @@
   </div>
 
   </div>
+    {% comment %} <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'Admin_Dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item active">Admin</li>
+      </ol>
+    </nav> {% endcomment %}
 
+<!-- Button trigger modal -->
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+
+    
 
   <!-- Dashboard Stats Section -->
   <section class="section dashboard">
-
+   
     <!-- Stats Cards -->
     <div class="row mb-4">
       <!-- Total Events Card -->
@@ -65,10 +83,7 @@
           </div>
         </div>
       </div>
-      
 
-
-    <!-- Stats Cards -->
   
       <!-- Total Events Card -->
       <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
@@ -105,8 +120,6 @@
         </div>
       </div>
 
-      
-
       <!-- Expense Card -->
       <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card info-card shadow-sm border-0">
@@ -122,7 +135,6 @@
         </div>
       </div>
       
-
                 <div class="row mb-3">
                   <div class="col-12 d-flex justify-content-center">
                       <div class="btn-group" role="group">
@@ -135,8 +147,9 @@
                       </div>
                   </div>
               </div>
-            <div id="tableView">
 
+              
+            <div id="tableView">
                 <!-- View Toggle Buttons -->
                 <div class="card-header bg-white py-3">
                   <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center py-3">
@@ -154,104 +167,103 @@
                                   {{event_count}}
                               </a>  {% endcomment %}
                                 </div>
-                        </div> 
+                      </div> 
                   </div>
               
-
-          
-              <div class="col-12">
-                  <div class="row g-2">
-                      <form method="get" action="{% url 'branding_dashboard' %}" id="managerFilterForm" class="d-flex flex-wrap">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                          <div class="d-flex">
-                              <select class="form-select me-2" id="event_date" name="event_date" onchange="this.form.submit()">
-                                  <option value="" disabled selected>Event Date</option>
-                                  <option value="all">All</option>
-                                  {% for i in event_date %}
-                                      <option value="{{ i }}"{% if i == request.GET.event_date %} selected {% endif %}>{{ i }}</option>
-                                  {% endfor %}
-                              </select>
+                  <div class="col-12">
+                      <div class="row g-2">
+                          <form method="get" action="{% url 'Admin_Dashboard' %}" id="managerFilterForm" class="d-flex flex-wrap">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                              <div class="d-flex">
+                                  {% comment %} <select class="form-select me-2" id="event_date" name="event_date" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Event Date</option>
+                                      <option value="all">All</option>
+                                      {% for i in event_date %}
+                                          <option value="{{ i }}"{% if i == request.GET.event_date %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                  </select> {% endcomment %}
+                              </div>
                           </div>
+              
+                              <!-- Date Range Search -->
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      {% comment %} <select class="form-select me-2" id="stakeholder" name="stakeholder" onchange="this.form.submit()">
+                                          <option value="" disabled selected>Stakeholder</option>
+                                          <option value="all">All</option>
+                                          {% for i in stakeholder %}
+                                              <option value="{{ i }}"{% if i == request.GET.stakeholder %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select> {% endcomment %}
+                                  </div>
+                              </div>
+              
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      {% comment %} <select class="form-select me-2" id="ec_name" name="ec_name" onchange="this.form.submit()">
+                                          <option value="" disabled selected>EC Member Name</option>
+                                          <option value="all">All</option>
+                                          {% for i in member_name %}
+                                              <option value="{{ i }}"{% if i == request.GET.ec_name %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select> {% endcomment %}
+                                  </div>
+                              </div>
+              
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      {% comment %} <select class="form-select me-2" id="yi_role" name="yi_role" onchange="this.form.submit()">
+                                          <option value="" disabled selected>Yi Role</option>
+                                          <option value="all">All</option>
+                                          {% for i in yi_role %}
+                                              <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select> {% endcomment %}
+                                  </div>
+                              </div>
+              
+                              <!-- Event Name Search -->
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      {% comment %} <select class="form-select me-2" id="yi_pillar" name="yi_pillar" onchange="this.form.submit()">
+                                          <option value="" disabled selected>Yi Pillar</option>
+                                          <option value="all">All</option>
+                                          {% for i in yi_pillar %}
+                                              <option value="{{ i }}"{% if i == request.GET.yi_pillar %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select> {% endcomment %}
+                                  </div>
+                              </div>
+              
+                              <!-- Vertical Search Dropdown -->
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                  <div class="d-flex">
+                                      {% comment %} <select class="form-select me-2" id="verticals" name="verticals" onchange="this.form.submit()">
+                                          <option value="" disabled selected>Yi Verticals</option>
+                                          <option value="all">All</option>
+                                          {% for i in verticals %}
+                                              <option value="{{ i }}"{% if i == request.GET.verticals %} selected {% endif %}>{{ i }}</option>
+                                          {% endfor %}
+                                      </select> {% endcomment %}
+                                  </div>
+                              </div>
+                              <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                
+                              </div>
+                          </form>
                       </div>
-          
-                          <!-- Date Range Search -->
-                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                              <div class="d-flex">
-                                  <select class="form-select me-2" id="stakeholder" name="stakeholder" onchange="this.form.submit()">
-                                      <option value="" disabled selected>Stakeholder</option>
-                                      <option value="all">All</option>
-                                      {% for i in stakeholder_name %}
-                                          <option value="{{ i }}"{% if i == request.GET.stakeholder %} selected {% endif %}>{{ i }}</option>
-                                      {% endfor %}
-                                  </select>
-                              </div>
-                          </div>
-          
-                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                              <div class="d-flex">
-                                  <select class="form-select me-2" id="ec_name" name="ec_name" onchange="this.form.submit()">
-                                      <option value="" disabled selected>EC Member Name</option>
-                                      <option value="all">All</option>
-                                      {% for i in member_name %}
-                                          <option value="{{ i }}"{% if i == request.GET.ec_name %} selected {% endif %}>{{ i }}</option>
-                                      {% endfor %}
-                                  </select>
-                              </div>
-                          </div>
-          
-                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                              <div class="d-flex">
-                                  <select class="form-select me-2" id="yi_role" name="yi_role" onchange="this.form.submit()">
-                                      <option value="" disabled selected>Yi Role</option>
-                                      <option value="all">All</option>
-                                      {% for i in yi_role_name %}
-                                          <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
-                                      {% endfor %}
-                                  </select>
-                              </div>
-                          </div>
-          
-                          <!-- Event Name Search -->
-                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                              <div class="d-flex">
-                                  <select class="form-select me-2" id="yi_pillar" name="yi_pillar" onchange="this.form.submit()">
-                                      <option value="" disabled selected>Yi Pillar</option>
-                                      <option value="all">All</option>
-                                      {% for i in yi_pillar_name %}
-                                          <option value="{{ i }}"{% if i == request.GET.yi_pillar %} selected {% endif %}>{{ i }}</option>
-                                      {% endfor %}
-                                  </select>
-                              </div>
-                          </div>
-          
-                          <!-- Vertical Search Dropdown -->
-                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                              <div class="d-flex">
-                                  <select class="form-select me-2" id="verticals" name="verticals" onchange="this.form.submit()">
-                                      <option value="" disabled selected>Yi Verticals</option>
-                                      <option value="all">All</option>
-                                      {% for i in verticals %}
-                                          <option value="{{ i }}"{% if i == request.GET.verticals %} selected {% endif %}>{{ i }}</option>
-                                      {% endfor %}
-                                  </select>
-                              </div>
-                          </div>
-                          <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                            
-                          </div>
-                      </form>
                   </div>
               </div>
-          </div>
+              
                         <div class="card-body">
-                          <form method="post" action="{% url 'delete_multiple_events' %}">
+                          {% comment %} <form method="post" action="{% url 'delete_multiple_events' %}"> {% endcomment %}
                           <div class="table-responsive">
                         
                             <table class="table table-hover bordered align-middle"  id="eventTable">
                               <thead class="table-light"  style="overflow-y:auto;">
                                 <tr class="text-center text-nowrap">
-                                  {% comment %} <th>Select </th> {% endcomment %}
-                                                            <th>Sr No</th>
+                                 }
+                                  <th>Sr No</th>
                                   <th>Date</th>
                                   <th>Member Name</th>
                                   <th>Event Name</th>
@@ -270,17 +282,84 @@
                                   <th>Event Description</th>
                                   <th>Social Link</th>
                                   <th>Image</th>
-                               
+                              
                                 </tr>
 
                                 
                               </thead>
+                              <form method="get" action="{% url 'branding_dashboard' %}" id="" class="d-flex flex-wrap">
+
+                                <thead>
+                                  
+                                  <th></th>
+                                  <th>
+                                    <select class="form-select  form-select-sm rounded-pill" id="event_date" name="event_date" onchange="this.form.submit()">
+                                      <option value="" disabled selected>Date</option>
+                                      <option value="all">All</option>
+                                      {% for i in event_date %}
+                                        <option value="{{ i }}"{% if i == request.GET.event_date %} selected {% endif %}>{{ i }}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </th>
+                                  <th><select class="form-select  form-select-sm rounded-pill" id="ec_name" name="ec_name" onchange="this.form.submit()">
+                                    <option value="" disabled selected>Member</option>
+                                    <option value="all">All</option>
+                                    {% for i in member_name %}
+                                      <option value="{{ i }}"{% if i == request.GET.ec_name %} selected {% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select></th>
+                                  <th></th>
+                                  <th ><select class="form-select  form-select-sm rounded-pill" id="verticals" name="verticals" onchange="this.form.submit()">
+                                    <option value="" disabled selected>Yi Verticals</option>
+                                    <option value="all">All</option>
+                                    {% for i in verticals %}
+                                      <option value="{{ i }}"{% if i == request.GET.verticals %} selected {% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select></th>
+                                  <th><select class="form-select  form-select-sm rounded-pill" id="stakeholder" name="stakeholder" onchange="this.form.submit()">
+                                    <option value="" disabled selected>Stakeholder</option>
+                                    <option value="all">All</option>
+                                    {% for i in stakeholder %}
+                                      <option value="{{ i }}"{% if i == request.GET.stakeholder %} selected {% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                
+                                  <th></th>
+                                  <th><select class="form-select  form-select-sm rounded-pill" id="yi_role" name="yi_role" onchange="this.form.submit()">
+                                    <option value="" disabled selected>Yi Role</option>
+                                    <option value="all">All</option>
+                                    {% for i in yi_role %}
+                                      <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select></th>
+                                  <th>        <select class="form-select  form-select-sm rounded-pill" id="yi_pillar" name="yi_pillar" onchange="this.form.submit()">
+                                    <option value="" disabled selected>Yi Pillar</option>
+                                    <option value="all">All</option>
+                                    {% for i in yi_pillar %}
+                                      <option value="{{ i }}"{% if i == request.GET.yi_pillar %} selected {% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                               
+                                </thead>
+                              </form>
+                              
                               <tbody id="display" >
 
                                 {% if events %}
                                   {% for event in events %}
                                     <tr class="text-center text-nowrap">
-                           
+                                      {% comment %} <td><input type="checkbox" value={{event.id}} name="event_ids"></td> {% endcomment %}
                                       <td>{{ forloop.counter }}</td>
                                       <td>{{ event.date }}</td>
                                       <td>{{ event.your_name }}</td>
@@ -312,8 +391,11 @@
                                       <td> <span class="badge bg-light text-dark">No Description</span> </td>
                   
                                       {% else %}
-                                      <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_description}}">{{ event.event_description }}</td>
-                  
+                                      <td class="ellipsis"><span data-bs-toggle="modal" data-bs-target="#staticBackdrop{{event.id}}" title="{{event.event_description}}">{{ event.event_description }}</td>
+                                        
+                                      
+
+
                                       {% endif %}
                                       
                                         {% if event.social_link == '' %}
@@ -334,42 +416,77 @@
                                           <span class="badge bg-light text-dark">No image</span>
                                         {% endif %}
                                       </td>
-                                    
+                                      
                                     </tr>
-                                    <!-- Image Modal -->
-                                   <!-- Modal -->
-                                            <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog modal-xl">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Event Images</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
+                                    <!-- Modal -->
+                                    
+                                    <div class="modal fade" id="staticBackdrop{{event.id}}"  tabindex="-1"  aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Event Description</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                          {{event.event_description}}
+                                          </div>
+                                          {% comment %} <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Understood</button>
+                                          </div> {% endcomment %}
+                                        </div>
+                                      </div>
+                                    </div>
 
-                                                <div class="modal-body">
-                                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
-                                                    {% for image in event.event_photo.all %}
-                                                        <div class="col position-relative">
-                                                        <div class="card h-100 shadow">
-                                                            <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
-                                                        </div>
-                                                        </div>
-                                                    {% endfor %}
+
+                                    <!-- Image Modal -->
+                                   
+                                              <div class="modal fade" id="imageModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h5 class="modal-title">Event Images</h5>
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
+
+                                                    <div class="modal-body">
+                                                      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" style="max-height: 500px; overflow-y: auto;">
+                                                        {% for image in event.event_photo.all %}
+                                                          <div class="col position-relative">
+                                                            <div class="card h-100 shadow">
+                                                              <img src="{{ image.event_photo.url }}" class="card-img-top" alt="Event Image" style="object-fit: contain; max-height: 300px;">
+                                                              {% comment %} <div class="card-body p-2 text-center">
+                                                                <form method="POST" action="{% url 'event_image_id' image_id=image.id %}" onsubmit="event.stopPropagation();">
+                                                                  {% csrf_token %}
+                                                                  <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation();">
+                                                                    <i class="bi bi-trash-fill"></i> Delete
+                                                                  </button>
+                                                                </form>
+                                                              </div> {% endcomment %}
+                                                            </div>
+                                                          </div>
+                                                        {% endfor %}
+                                                      </div>
+                                                    </div>
+                                                  </div>
                                                 </div>
-                                                </div>
-                                            </div>
-                                            </div>
+                                              </div>
+                                                                            
+                                    <!-- Edit Event Modal -->
+                                   
                                       {% endfor %}
                                       {% else %}
                                       <tr>
-                                        <td colspan="20" class="text-center"> No Event available </td>
+                                        <td colspan="21" class="text-center"> No Event available </td>
                                       </tr>
                                       {% endif %}
                                   </tbody>
+                                 
                               </table>
+                              {% comment %} <button type="submit" class='btn btn-danger'>Delete Selected</button> {% endcomment %}
+                                  <!-- Pagination -->
                               </div>
-                            </form>
+                            {% comment %} </form> {% endcomment %}
 
                                 <nav aria-label="Event table navigation">
                               <ul class="pagination justify-content-center flex-wrap">
@@ -388,75 +505,163 @@
                         </div>
                        </div>   
                   </div>
-
+                 
                   <div id="chartView" class="card-body" style="display: none;">
-                    <h5 class="card-title">Event Analytics</h5>
-                    
                     <div class="row">
-                        <!-- Card 1: Line and Bar Chart Combination -->
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Line & Bar Chart</h6>
-                                    <canvas id="lineBarChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                
-                        <!-- Card 2: Simple Bar Chart -->
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Bar Chart</h6>
-                                    <canvas id="barChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <!-- Card 3: Pie Chart -->
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Pie Chart</h6>
-                                    <canvas id="pieChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                
-                        <!-- Card 4: Another Pie Chart -->
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Pie Chart 2</h6>
-                                    <canvas id="pieChart2"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="row">
-                        <!-- Card 5: Column Chart -->
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Column Chart</h6>
-                                    <canvas id="columnChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-         
-</section>
+                              <div class="col-lg-6">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Yi Project</h5>
+                      
+                                    <!-- Line Chart -->
+                                    <div id="project_chart"></div>
 
+                               
+                                    <script>
+                                      document.addEventListener("DOMContentLoaded", () => {
+                                        new ApexCharts(document.querySelector("#project_chart"), {
+                                          series: {{ project_impact_sum }},
+                                          chart: {
+                                            height: 350,
+                                            type: 'pie',
+                                            toolbar: {
+                                              show: true
+                                            }
+                                          },
+                                          labels: {{ project_chart|safe }}
+                                        }).render();
+                                      });
+                                    </script>
+                      
+                              
+                                    <!-- End Line Chart -->
+                      
+                                  </div>
+                                </div>
+                              </div>
+                      
+                              <div class="col-lg-6">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Yi Initiatives</h5>
+                      
+                                    <!-- Area Chart -->
+                                    <div id="initiatives"></div>
+                                    <script>
+                                      document.addEventListener("DOMContentLoaded", () => {
+                                        new ApexCharts(document.querySelector("#initiatives"), {
+                                          series: [{
+                                            data: {{ initiatives_impact_chart }}
+                                          }],
+                                          chart: {
+                                            type: 'bar',
+                                            height: 350
+                                          },
+                                          plotOptions: {
+                                            bar: {
+                                              borderRadius: 4,
+                                              horizontal: false,
+                                            }
+                                          },
+                                          dataLabels: {
+                                            enabled: true
+                                          },
+                                          xaxis: {
+                                            categories: {{ initiatives_chart|safe }}
+                                          }
+                                        }).render();
+                                      });
+                                    </script>
+                      
+                                    <!-- End Area Chart -->
+                      
+                                  </div>
+                                </div>
+                              </div>
+                      
+                              <div class="col-lg-6">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Yi Pillar</h5>
+                      
+                                    <!-- Column Chart -->
+                                    <div id="yi_pillars"></div>
+
+
+                                    <script>
+                                      document.addEventListener("DOMContentLoaded", () => {
+                                        new ApexCharts(document.querySelector("#yi_pillars"), {
+                                          series: [{
+                                            data: {{ yi_pillar_impact }}
+                                          }],
+                                          chart: {
+                                            type: 'bar',
+                                            height: 350
+                                          },
+                                          plotOptions: {
+                                            bar: {
+                                              borderRadius: 4,
+                                              horizontal: false,
+                                            }
+                                          },
+                                          dataLabels: {
+                                            enabled: true
+                                          },
+                                          xaxis: {
+                                            categories: {{ yi_pillar_chart|safe }}
+                                          }
+                                        }).render();
+                                      });
+                                    </script>
+                      
+                                  
+                                    <!-- End Column Chart -->
+                      
+                                  </div>
+                                </div>
+                              </div>
+                      
+                              <div class="col-lg-6">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Yi Stakeholder</h5>
+                      
+                                    <!-- Bar Chart -->
+                                    <div id="pieChart"></div>
+
+                                    <script>
+                                      document.addEventListener("DOMContentLoaded", () => {
+                                        new ApexCharts(document.querySelector("#pieChart"), {
+                                          series: {{ yi_stakeholder_impact }},
+                                          chart: {
+                                            height: 350,
+                                            type: 'pie',
+                                            toolbar: {
+                                              show: true
+                                            }
+                                          },
+                                          labels: {{ yi_stakeholder_chart|safe }}
+                                        }).render();
+                                      });
+                                    </script>
+                                
+                         
+                                  </div>
+                                </div>
+                              </div>
+
+                  </div>
+            
+                  </div>
+
+      </section>
   </main>
 <!-- End #main -->
   {% endblock bodyblock %} 
   
 
   {% block script %}
+  
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -489,6 +694,11 @@ document.addEventListener('DOMContentLoaded', function() {
     chartViewBtn.addEventListener('click', () => toggleView(false));
 });
 </script>
+
+
+
+
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // Get all the event-handle elements in the table
@@ -535,12 +745,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+  <script src="{% static 'assets/vendor/echarts/echarts.min.js' %}"></script>
   <script src="{% static 'js/dashboard.js' %}"></script>
-  <script src="{% static 'js/chart/lineBarChart.js' %}"></script>
-  <script src="{% static 'js/chart/barChart.js' %}"></script>
-  <script src="{% static 'js/chart/pieChart.js' %}"></script>
-  <script src="{% static 'js/chart/pieChart2.js' %}"></script>
-  <script src="{% static 'js/chart/columnChart.js' %}"></script>
+
   
   {% endblock script %}
 
@@ -548,3 +766,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   
+
+  {% comment %} event_list = Event_Data.objects.all()
+  # Handle search filtering
+  search = request.GET.get('search')
+  if search and search != 'all':
+      event_list = event_list.filter(your_name__icontains=search)  # Filter based on 'search'
+
+  # Apply demo filter if provided
+  demo = request.GET.get('demo')
+  if demo and demo != 'all':
+      event_list = event_list.filter(project_vertical__icontains=demo) {% endcomment %}
+
