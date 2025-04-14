@@ -25,8 +25,13 @@ ROLE_CHOICES = [
     ("Women Engagement (YIWE)", "Women Engagement (YIWE)"),
     ("Culture Connect", "Culture Connect"),
     ("Yi Angel", "Yi Angel"),
-    
+    ("Thalir" , "Thalir"),
+    ("Yuva" , "Yuva"),
+    ("Rural Initiatives","Rural Initiatives"),
+    ("General Public","General Public"),
+    ("Chapter","Chapter"),
     ("Special Interest Group (S.I.G)", "Special Interest Group (S.I.G)"),
+
 ]
 
 
@@ -58,7 +63,7 @@ class LoginSide(AbstractUser):
             RegexValidator(
                 regex=r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$",  # This is the regex for validating the phone number
                 message="Enter a valid phone number.",
-                code="invalid_phone",
+                code="invalid phone",
             ),
         ],
     )
@@ -74,10 +79,10 @@ class LoginSide(AbstractUser):
         self.photo.delete()
         super().delete(*args, **kwargs)
 
-    def full_name(self):
-        return (
-            f"{self.first_name} {self.last_name}" if self.first_name else self.last_name
-        )
+    # def full_name(self):
+    #     return (
+    #         f"{self.first_name} {self.last_name}" if self.first_name else self.last_name
+    #     )
 
 
 # user = User.objects.get(username="your_username")
