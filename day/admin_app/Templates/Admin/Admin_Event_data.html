@@ -40,7 +40,7 @@
             <div class="col-12 col-sm-6 col-md-6 mb-md-0">
               <div class="form-group">
                 <label for="your_name" class="form-label">Your Name</label><span style="color:red;"> *</span>
-                <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.full_name }}" required placeholder="Enter your full name" aria-label="Your Name" style="background-color:rgb(235, 236, 247);">
+                <input type="text" id="your_name" class="form-control" name="your_name" value="{{ user.first_name }} {{user.last_name}}" required placeholder="Enter your full name" aria-label="Your Name" style="background-color:rgb(235, 236, 247);">
               </div>
             </div>
         
@@ -139,7 +139,7 @@
                   <option value="Thalir">Thalir</option>
                   <option value="Rural Initiatives">Rural Initiatives</option>
                   <option value="General Public">General Public</option>
-                  <option value="Member">Member</option>
+                  <option value="Membership">Membership</option>
                   <option value="none">None</option>
                 </select>
                 <span id="project_stakeholder_error" class="invalid-feedback">This field is required.</span>

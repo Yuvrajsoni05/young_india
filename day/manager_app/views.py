@@ -93,8 +93,9 @@ def about_yi(request):
 
 @login_required(login_url='index')
 def manager_update(request,manager_id):
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
-        return redirect('Error-Page')
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
+        
+        return redirect("Error-Page")
     
     try:
         if request.method == 'POST':
@@ -153,8 +154,9 @@ def manager_update(request,manager_id):
 
 @login_required(login_url='index')
 def manager_password(request):
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
         return redirect('Error-Page')
+    
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
@@ -185,14 +187,15 @@ def manager_password(request):
 
 @login_required(login_url='index')
 def manager_dashboard(request):
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
-        return redirect('Error-Page')
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
+        return redirect("Error-Page")
  
     user_roles = request.session.get('userrole', [])
     
     # ec_member = LoginSide.objects.all().values_list('first_name', flat=True).distinct().exclude(is_superuser=True)
     ec_member = LoginSide.objects.all().distinct().exclude(is_superuser=True)
-    ec_member_names = [f"{member.first_name} {member.last_name}"for member in ec_member]
+    ec_member_names = [
+        f"{member.first_name} {member.last_name} {member.designation}" for member in ec_member.distinct()]
     if user_roles:
         context = {
             'role': user_roles,
@@ -208,7 +211,7 @@ def manager_dashboard(request):
 
 @login_required(login_url='index')
 def manager_profile(request):
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
         return redirect('Error-Page')
 
     return render(request,'member/member_profile.html')
@@ -253,8 +256,8 @@ def delete_event_data(request,events_id):
 
 
 def update_event_data(request,update_id):
-
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
+    
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
         return redirect('Error-Page')
     
     try:
@@ -386,9 +389,10 @@ def delete_event_image(request,image_id):
 from django.http import JsonResponse
 @login_required(login_url='index')
 def event_data(request):
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
+        
         return redirect('Error-Page')
-    
+        
     
     try:
         
@@ -422,7 +426,7 @@ def event_data(request):
             required_fields = {
                         'Event Date': event_date,
                         'Project Vertical': project_verticals,
-                        'Project Stakeholder': project_stakeholder,
+                
                         'Yi Piller':  yi_pillar,
                         'Yi Role':  role_yi,
                         'Total Impact': total_impact,
@@ -493,7 +497,9 @@ def event_data(request):
 
 
 def dashboard(request):
-    if  request.user.yi_role == 'Chapter Co-Chair' or  request.user.yi_role == 'Chapter Chair':
+    
+    
+    if  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
         return redirect("Error-Page")
     user = request.user
     all_event = Event_Data.objects.filter(user=user)

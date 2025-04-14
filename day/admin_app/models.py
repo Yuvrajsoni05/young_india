@@ -17,7 +17,7 @@ ROLE_CHOICES = [
     ("Sports", "Sports"),
     ("Accessibility", "Accessibility"),
     ("Learning(YI Talks)", "Learning(YI Talks)"),
-    ("Climate action", "Climate action"),
+    ("Membership" ,"Membership"),
     ("Climate Change", "climate Change"),
     ("Innovation", "Innovation"),
     ("Entrepreneurship", "Entrepreneurship"),
@@ -68,9 +68,23 @@ class LoginSide(AbstractUser):
         ],
     )
 
+    # @property
+    # def full_name(self):
+    #     return f"{self.first_name} {self.last_name}"
+    
+    @property
+    def designation(self):
+        
+        roles = ', '.join((role.name) for role in self.login_role.all())
+        return f"{roles} {self.yi_role}"
+        
+    
+    
     @property
     def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        demo = ()
+        return f"{self.first_name} {self.last_name} {self.designation} "
+    
 
     def __str__(self):
         return f"{self.first_name} | {self.last_name} | {self.login_role}"

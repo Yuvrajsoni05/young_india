@@ -274,7 +274,7 @@
                                   <th>Expense</th>
                                   <th>EC Members Name</th>
                                   <th>Event Members Name</th>
-                                  <th>Yi Role</th>
+                                  <th>Designation</th>
                                   <th>Yi Pillar</th>
                                   <th>School</th>
                                   <th>College</th>
@@ -519,14 +519,14 @@
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                  <label for="role_yi" class="form-label">YI Role </label><span style="color:red;"> *</span>
+                                                  <label for="role_yi" class="form-label">Designation</label><span style="color:red;"> *</span>
                                                   <select class="form-select" id="role_yi" name="role_yi">
                                                     <option value="{{ event.role_yi }}">{{ event.role_yi }}</option>
-                                                    <option value="Vertical Chair">Vertical Chair</option>
-                                                    <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                                                    <option value="Chapter Chair">Chapter Chair</option>
-                                                    <option value="Chapter Co-Chair">Chapter Co-Chair</option>
+                                                    <option value="Chair">Chair</option>
+                                                    <option value="Co-Chair">Co-Chair</option>
+                                                    <option value="Branding">Branding</option>
                                                     <option value="Admin">Admin</option>
+                                             
                                                   </select>
                                                   <div class="invalid-feedback" id="event_yi_role_error">Please provide an event Yi Role.</div>
                                                 </div>
@@ -561,7 +561,8 @@
                                                     <option value="Thalir">Thalir</option>
                                                     <option value="Rural Initiatives">Rural Initiatives</option>
                                                     <option value="General Public">General Public</option>
-                                                    <option value="Associate Partner">Associate Partner</option>
+                                                    <option  value="Membership">Membership</option>
+                                                    {% comment %} <option value="Associate Partner">Associate Partner</option> {% endcomment %}
                                                     <option value="">None</option>
                                                     <!-- Add all stakeholder options -->
                                                   </select>

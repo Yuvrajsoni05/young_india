@@ -76,7 +76,7 @@
             <!-- YI Role -->
             <div class="col-md-6">
               <div class="form-group mb-3">
-                <label for="role_yi" class="form-label fw-bold fw-bold">YI Role<span class="text-danger"> *</span></label>
+                <label for="role_yi" class="form-label fw-bold fw-bold">Designation<span class="text-danger"> *</span></label>
                 <input class="form-control-lg rounded form-control" id="role_yi" name="role_yi" value="{{ user.yi_role }}" readonly style="background-color:rgb(235, 236, 247);">
                 <div class="invalid-feedback" id="event_yi_role_error">Please provide an event name.</div>
               </div>
@@ -133,27 +133,30 @@
                       <option value="{{ i }}">{{ i }}</option>
                     {% endfor %}
                   </select>
+
+
+                  
                 {% endif %}
                 <div class="invalid-feedback" id="event_verticals_error">Please Provide Verticals.</div>
               </div>  
             </div>
 
             <!-- Project Stakeholder -->
-            <div class="col-md-6">
-              <div class="form-group mb-3">
-                <label for="project_stakeholder" class="form-label fw-bold fw-bold">Project Stakeholder<span class="text-danger"> *</span></label>
-                <select class="form-select form-control-lg rounded form-control" id="project_stakeholder" name="project_stakeholder" required>
-                  <option class = "form-control-lg rounded form-control" value="" disabled selected>Choose Project Stakeholder</option>
-                  <option class = "form-control-lg rounded form-control" value="Yuva">Yuva</option>
-                  <option  class = "form-control-lg rounded form-control" value="Thalir">Thalir</option>
-                  <option  class = "form-control-lg rounded form-control" value="Rural Initiatives">Rural Initiatives</option>
-                  <option  class = "form-control-lg rounded form-control" value="General Public">General Public</option>
-                  <option  class = "form-control-lg rounded form-control" value="Member">Member</option>
-                  <option  class = "form-control-lg rounded form-control" value="NA">None</option>
-                </select>
-                <div id="project_stakeholder_error" class="invalid-feedback">This field is required.</div>
-              </div>
-            </div>
+                 <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="project_stakeholder" class="form-label fw-bold fw-bold">Project Stakeholder<span class="text-danger"> *</span></label>
+                      <select class="form-select form-control-lg rounded form-control" id="project_stakeholder" name="project_stakeholder" required>
+                        <option class = "form-control-lg rounded form-control" value="" disabled selected>Choose Project Stakeholder</option>
+                        <option class = "form-control-lg rounded form-control" value="Yuva">Yuva</option>
+                        <option  class = "form-control-lg rounded form-control" value="Thalir">Thalir</option>
+                        <option  class = "form-control-lg rounded form-control" value="Rural Initiatives">Rural Initiatives</option>
+                        <option  class = "form-control-lg rounded form-control" value="General Public">General Public</option>
+                        <option  class = "form-control-lg rounded form-control" value="Membership">Membership</option>
+                        <option  class = "form-control-lg rounded form-control" value="NA">None</option>
+                      </select>
+                      <div id="project_stakeholder_error" class="invalid-feedback">This field is required.</div>
+                    </div>
+                  </div>
 
             <!-- YI Pillar Impact -->
             <div class="col-md-6">
