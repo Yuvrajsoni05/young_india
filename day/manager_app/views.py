@@ -413,7 +413,7 @@ def event_data(request):
             event_venue = request.POST.get('event_venue', '')
             event_name = request.POST.get('event_name', '')
             event_description = request.POST.get('event_description', '')
-            school = request.POST.get('school', '')
+            school = request.POST['school']
             collage = request.POST.get('collage', '')
             associate_partner = request.POST.get('associate_partner', '')
             

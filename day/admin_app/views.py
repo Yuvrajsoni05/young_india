@@ -125,7 +125,7 @@ def index(request):
                 return redirect("index")
     except Exception as e:
 
-        messages.error(request, f"Error")
+        messages.error(request, f"hiii {str(e)}")
     return render(request, "index.html")
 
 

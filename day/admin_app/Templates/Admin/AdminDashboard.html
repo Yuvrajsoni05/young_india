@@ -329,8 +329,8 @@
                                   <th></th>
                                 
                                   <th></th>
-                                  <th><select class="form-select  form-select-sm rounded-pill" id="yi_role" name="yi_role" onchange="this.form.submit()">
-                                    <option value="" disabled selected>Yi Role</option>
+                                  <th><select class="form-select  form-select-sm rounded-pill " id="yi_role" name="yi_role" onchange="this.form.submit()">
+                                    <option class="text-nowrap" value="" disabled selected>Designation</option>
                                     <option value="all">All</option>
                                     {% for i in yi_role %}
                                       <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>

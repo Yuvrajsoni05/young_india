@@ -29,8 +29,9 @@ ROLE_CHOICES = [
     ("Yuva" , "Yuva"),
     ("Rural Initiatives","Rural Initiatives"),
     ("General Public","General Public"),
-    ("Chapter","Chapter"),
+    
     ("Special Interest Group (S.I.G)", "Special Interest Group (S.I.G)"),
+    ("Chapter","Chapter")
 
 ]
 

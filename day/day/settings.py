@@ -30,7 +30,7 @@ SESSION_SAVE_EVERY_REQUEST = False
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wv0rofd922sk9alt(6t3q*ou!drwkmkeam6ajru_zo-z2nc)4s'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -172,12 +172,12 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER =  'soniyuvraj9499@gmail.com'
-EMAIL_HOST_PASSWORD = 'orge dlse yzrp ralx'
+EMAIL_HOST_USER =  os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 # CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
 # SESSION_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
