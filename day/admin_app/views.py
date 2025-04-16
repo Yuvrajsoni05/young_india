@@ -99,6 +99,11 @@ def index(request):
                 # rol = user.login_role.all()
                 
                 # if user.yi_role == 'Co-Chair' or user.yi_role == 'Chair':
+                
+                
+              
+                    
+                
                 if "Chapter Co-Chair" in user.designation or "Chapter Chair" in user.designation or user.yi_role == 'Admin':
                     
                     return redirect("Admin_Dashboard")
@@ -106,8 +111,9 @@ def index(request):
                     return redirect("branding_dashboard")
                 else:
                     roles = user.login_role.all()
-                    if roles == '' or roles == None:
+                    if roles == ' ' or roles == None:
                         return redirect('index')
+                    
                     request.session["userrole"] = [role.name for role in roles]
                     if roles.exists():
                         first_role_with_image = roles.filter(
@@ -123,9 +129,9 @@ def index(request):
                 messages.error(request, "Invalid credentials, please try again.")
                 # logger.info(f"Error during authentication: {str(e)}")
                 return redirect("index")
-    except Exception as e:
+    except Exception:
 
-        messages.error(request, f"hiii {str(e)}")
+        messages.error(request, f"Somthing Went Wrong Please  Try Again")
     return render(request, "index.html")
 
 
@@ -162,7 +168,10 @@ def Admin_Signup(request):
                 "login_role"
             )  # Use getlist to fetch multiple roles
 
-            required_fields = {
+         
+            if yi_role == 'Admin' or yi_role == 'Branding' or login_role == 'Chapter':
+                
+                required_fields = {
                 "Username": username,
                 "First Name": first_name,
                 "Last Name": last_name,
@@ -173,6 +182,20 @@ def Admin_Signup(request):
                 "Password": password,
                 "Confirm Password": confirm_password,
             }
+            else:
+                required_fields = {
+                "Username": username,
+                "First Name": first_name,
+                "Last Name": last_name,
+                "Email": Admin_email,
+                "Phone": phone,
+                "Yi Role": yi_role,
+                "EC Role": login_role,
+                "Password": password,
+                "Confirm Password": confirm_password,
+                }
+                
+                
 
             form_data = {
                 "username": username,
@@ -385,8 +408,8 @@ def Admin_Signup(request):
             },
         )
 
-    except Exception as e:
-        messages.error(request, f"An error occurred: {str(e)}")
+    except Exception:
+        messages.error(request, f"Somthing Went Wrong Please  Try Again")
         return render(
             request,
             "Admin/AdminSignup.html",
@@ -515,9 +538,9 @@ def Admin_update(request, admin_id):
                     return redirect("Admin_Profile")
         # If the method is not POST, show an error
 
-    except Exception as e:
+    except Exception:
         # Handle any other errors during the process
-        messages.error(request, f"Error updating profile: {str(e)}")
+        messages.error(request, f"Somthing Went Wrong Please  Try Again")
         return redirect("Admin_Profile")
 
 
@@ -569,8 +592,8 @@ def admin_password(request):
                 return redirect("Admin_Profile")
             else:
                 return redirect("Error-Page")
-        except Exception as e:
-            messages.error(request, "Somthing Wrong ", str(e))
+        except Exception:
+            messages.error(request, "Somthing Went Wrong Please  Try Again ",)
 
 
 # Admin Logout
@@ -597,7 +620,10 @@ def Admin_Dashboard(request):
   
     # if request.user.designation == 'Chapter Co-Chair' or request.user.designation is 'Chapter Chair':
     #     return redirect("Error-Page")
-    
+    ec_member = LoginSide.objects.all().exclude(is_superuser=True)
+    ec_member_names = [
+        f"{member.first_name} {member.last_name} {member.designation}" for member in ec_member.distinct()
+    ]
     # You don't need to reassign user_id since it's already passed in the URL
     total_event = Event_Data.objects.count()
     user_id = request.user.id
@@ -878,7 +904,7 @@ def Admin_Dashboard(request):
         'initiatives_count_chart':initiatives_count_chart,
         'initiatives_impact_chart':initiatives_impact_chart,
         'month_wise_impact':date_chart,
-        'date_chart_impact':date_chart_impact
+        'date_chart_impact':date_chart_impact,
         
     }
     return render(request, "Admin/AdminDashboard.html", context)
@@ -1014,7 +1040,7 @@ def admin_event_data(request):
 
         return render(request, "Admin/Admin_Event_data.html", context)
     except Exception:
-        messages.error(request, "Somthing Went  Please  Try Again")
+        messages.error(request, "Somthing Went Wrong Please  Try Again")
         return redirect("Admin_Dashboard")
 
 
@@ -1184,16 +1210,12 @@ def delete_member(request, member_id):
             return redirect("Error-Page")
 
     try:
-
         if request.method == "POST":
             member = get_object_or_404(LoginSide, id=member_id)
-
-            member.delete()
-          
+            member.delete()    
         return redirect("View-manager")
-    except Exception as e:
+    except Exception:
 
- 
         return redirect("View-manager")
 #Delete Multiple Event 
 
@@ -1222,14 +1244,14 @@ def delete_event(request, event_id):
                     print(path)
                     if os.path.isfile(path):
                         os.remove(path)
-                except Exception as e:
+                except Exception:
                     messages.error(request, "Error deleteing image")
                     img.delete()
             # Delete the Event_Data instance, which will also delete related Event_Image instances due to cascade
             event_to_delete.delete()
         # Redirect back to the Admin Dashboard after deletion
         return redirect("Admin_Dashboard")
-    except Exception as e:
+    except Exception:
         messages.error(request, "Something Went Wrong Please  Try Again")
 
 
@@ -1249,15 +1271,29 @@ def update_memeber(request, manager_id):
             email = request.POST["manager_email"]
             login_role = request.POST.getlist("login_role")
             phone_number = request.POST["manager_phone_number"]
+                    
+                    
+        if yi_role == 'Admin' or yi_role == 'Branding' or login_role == 'Chapter':
 
-        required_fields = {
-            "First Name": first_name,
-            "Last Name": last_name,
-            "Username": username,
-            "Yi Role": yi_role,
-            # "EC Role": login_role,
-            "Phone Number": phone_number,
-        }
+            required_fields = {
+                "First Name": first_name,
+                "Last Name": last_name,
+                "Username": username,
+                "Yi Role": yi_role,
+                # "EC Role": login_role,
+                "Phone Number": phone_number,
+            }
+        else:
+            
+            required_fields = {
+                "First Name": first_name,
+                "Last Name": last_name,
+                "Username": username,
+                "Yi Role": yi_role,
+                "EC Role": login_role,
+                "Phone Number": phone_number,
+            }
+            
 
         for field, field_value in required_fields.items():
             if not field_value:
@@ -1344,7 +1380,7 @@ def update_memeber(request, manager_id):
                     return redirect("View-manager")
 
     except Exception:
-        messages.error(request, "EC Member profile not Updated Please  Try Again")
+        messages.error(request, "Somthing Went Wrong Please  Try Again  ")
         return redirect("View-manager")
 
 
@@ -1411,7 +1447,7 @@ def update_event_data(request, event_id):
                             validator(image)
                             
                             
-                        except Exception as e:
+                        except Exception:
                             messages.error(
                                 request,
                                 "Invalid file type. Only .jpeg, .jpg, .png allowed.",
@@ -1441,7 +1477,7 @@ def event_image_delete(request, image_id):
                 image_to_delete.event_photo.delete()
                 messages.success(request, "Image Delete")
             image_to_delete.delete()  # Delete the image record
-    except Exception as e:
+    except Exception:
         messages.error(request, "Event Image not delete try again ")
     return redirect("Admin_Dashboard")
 
@@ -1455,7 +1491,7 @@ def profile_image_delete(request, image_id):
                 profile_image_delete.event_photo.delete()
                 messages.success(request, "Image Delete")
             profile_image_delete.delete()  # Delete the image record
-    except Exception as e:
+    except Exception:
         messages.error(request, "Event Image not delete try again ")
     return redirect("Admin_Dashboard")
 
@@ -1887,7 +1923,7 @@ def password_update_done(request):
 #     return wrapper
 
 # import csv
-# import requests # type: ignore
+
 # from io import StringIO
 # from django.shortcuts import render
 
@@ -1895,7 +1931,7 @@ def password_update_done(request):
 #     csv_url = 'https://docs.google.com/spreadsheets/d/1WuoI9-47TGfBPdWqpnHQ2fZ3-sYw7Eh2JSADy-HAkXs/export?format=csv'
 #     data = []
 
-#     response = requests.get(csv_url)
+#     response = request.get(csv_url) # type: ignore
 #     if response.status_code == 200:
 #         csv_file = StringIO(response.text)
 #         reader = csv.DictReader(csv_file)
@@ -1904,6 +1940,70 @@ def password_update_done(request):
 
 #     return render(request, 'Admin/google_live_data.html', {'data': data})
 
+
+import requests
+import csv
+from io import StringIO
+from django.shortcuts import render
+
+def live_google_form_data(request):
+    csv_url = 'https://docs.google.com/spreadsheets/d/1WuoI9-47TGfBPdWqpnHQ2fZ3-sYw7Eh2JSADy-HAkXs/export?format=csv'
+    data = []
+
+    # Fetch the CSV file using requests
+    response = requests.get(csv_url)
+    
+    # Check if the request was successful
+    if response.status_code == 200:
+        csv_file = StringIO(response.text)
+        reader = csv.DictReader(csv_file)
+        
+        # Loop through rows and append data
+        for row in reader:
+            data.append(row)
+    print(data)
+    for i in data:
+        print(i)
+        print("Timestamp: ",i['Timestamp'])
+        print(f"Name: {i['Name']}")
+        print(f"Roll No.: {i['Roll No.']}")
+        print(f"Class: {i['Class']}")
+        print(f"Upload Image: {i['Upload Image']}")
+        print('-' * 40)
+        image_urls = {i['Upload Image']}
+        print(image_urls)
+        # for i, url in enumerate(image_urls, start=1):
+        #     response = requests.get(url)
+        #     if response.status_code == 200:
+        #         with open(f"image_{i}.jpg", "wb") as file:
+        #             file.write(response.content)
+        #         print(f"Downloaded image_{i}.jpg")
+        #     else:
+        #         print(f"Failed to download image {i}")
+        
+
+            # Render the data in the template
+    return render(request, 'Admin/google_live_data.html', {'data': data})
+
+
+# import requests
+# from django.core.files.base import ContentFile
+# from urllib.parse import urlparse
+# import os
+
+# def download_image_to_model(instance, image_url):
+#     response = requests.get(image_url)
+
+#     if response.status_code == 200:
+#         # Extract the file name from the URL
+#         parsed_url = urlparse(image_url)
+#         filename = os.path.basename(parsed_url.path)
+
+#         # Save image content to the model's ImageField
+#         instance.image.save(filename, ContentFile(response.content), save=True)
+#         print("Image saved to model.")
+#     else:
+#         print("Failed to download image.")
 
 
 

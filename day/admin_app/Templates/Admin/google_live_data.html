@@ -9,14 +9,28 @@
     {% if data %}
     <table border="1" cellpadding="8">
         <tr>
+            <!-- Loop through the keys in the first row to create table headers -->
             {% for key in data.0.keys %}
                 <th>{{ key }}</th>
             {% endfor %}
         </tr>
+        
+        <!-- Loop through each row of data -->
         {% for row in data %}
         <tr>
-            {% for value in row.values %}
-                <td>{{ value }}</td>
+            {% for key, value in row.items %}
+                <td>
+                    {% if key == 'Upload Image' and value %}
+                    <!-- Show the URL as a clickable link that opens the image -->
+                    <a href="{{ value }}" target="_blank">View Image</a>
+                {% elif key == 'Upload Image' and not value %}
+                    No Image Available
+                {% else %}
+                    {{ value }}
+                {% endif %}
+                
+                
+                </td>
             {% endfor %}
         </tr>
         {% endfor %}

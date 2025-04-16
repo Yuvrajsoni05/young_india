@@ -173,8 +173,10 @@
                       <div class="row">
                         <div class="col-md-6">
                           <div class="mb-3">
-                            <label for="yi_role" class="form-label">Yi Role</label><span class="text-danger"> *</span>
-                            <select class="form-select" id="yi_role" name="yi_role" >
+                            <label for="yi_role" class="form-label">Designation</label><span class="text-danger"> *</span>
+                            <select class="form-select" id="yi_role_{{ manager.id }}" name="yi_role">
+
+
                               <option value="{{manager.yi_role}}">{{ manager.yi_role }}</option>
                               <option value="Chair">Chair</option>
                               <option value="Co-Chair">Co-Chair</option>
@@ -194,13 +196,15 @@
                         </div>
                       </div>
                       
-                      <div class="mb-4" id="vertical_view">
+                      <div class="mb-4" id="vertical_view_{{ manager.id }}">
+
+
                         <label for="manager_role" class="form-label">EC Role:</label><span class="text-danger"> *</span>
                         <div class="d-flex flex-wrap gap-3">
                           {% for i in role %}
                           <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="login_role_{{ i.id }}_{{ manager.id }}" {% if i in manager.login_role.all %} checked {% endif %}>
-                            <label class="form-check-label" for="login_role_{{ i.id }}_{{ manager.id }}">{{ i.name }}</label>
+                            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="" {% if i in manager.login_role.all %} checked {% endif %}>
+                            <label class="form-check-label" for="">{{ i.name }}</label>
                           </div>
                           {% endfor %}
                         </div>
@@ -236,22 +240,46 @@
 
 {% block script %}
 
-{% comment %} 
+
+
 <script>
-document.addEventListener("DOMContentLoaded",function (){
+  // Wait until the page's content has fully loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    
+    // 🔍 Step 1: Find all modals for editing members
+    // This looks for any element whose ID starts with "editModal"
+    const allManagers = document.querySelectorAll('[id^="editModal"]');
 
-  const roleSelect = document.getElementById("yi_role");
-  const verticalView = document.getElementById("vertical_view");
+    // 🔁 Step 2: Loop through each modal (one per EC member)
+    allManagers.forEach(function (modal) {
+      
+      // ✂️ Extract the manager ID from the modal's ID
+      // For example, "editModal5" becomes just "5"
+      const managerId = modal.id.replace("editModal", "");
 
-  roleSelect.addEventListener("change",function()){
-    const hiddenRoles = ["Chapter Chair" ,"Chapter Co-Chair" ,"Admin","Branding"];
-    verticalView.style.display = hiddenRoles.includes(this.value) ? "none":"block";
-  }
-};
-</script> {% endcomment %}
+      // 🔗 Step 3: Get the dropdown and vertical view elements inside this modal
+      const roleSelect = modal.querySelector(`#yi_role_${managerId}`);
+      const verticalView = modal.querySelector(`#vertical_view_${managerId}`);
 
+      // ✅ Step 4: If both elements exist (to avoid any errors)
+      if (roleSelect && verticalView) {
 
+        // 📋 These are roles where EC Role (vertical_view) should be hidden
+        const hiddenRoles = ["Admin", "Branding"];
 
+        // 🚦 Step 5: When the modal first loads, check the current role
+        // If it's in the hidden list, hide the EC Role section
+        verticalView.style.display = hiddenRoles.includes(roleSelect.value) ? "none" : "block";
+
+        // 🎯 Step 6: Add event listener when user changes the role
+        roleSelect.addEventListener("change", function () {
+          // Show or hide vertical_view based on the selected role
+          verticalView.style.display = hiddenRoles.includes(this.value) ? "none" : "block";
+        });
+      }
+    });
+  });
+</script>
 
 
 

@@ -301,7 +301,7 @@ def update_event_data(request,update_id):
             update_event.select_ec_member = request.POST['select_ec_member']
             update_event.event_description = request.POST["event_description"]
             update_event.total_impact = total_impact
-            update_event.which_SIG  = request.POST['sig_']
+            update_event.which_SIG  = request.POST.get('sig_','')
             update_event.associate_partner = request.POST.get('associate_partners')
             event_image = request.FILES.getlist('event_image')
             for image in event_image:
@@ -331,8 +331,8 @@ def update_event_data(request,update_id):
             return redirect('member-dashbaord')
             
     except Exception as e:
-        
-        messages.error(request,'Data not update')
+        print(e)
+        messages.error(request,f'Data not update{e} ')
         return redirect('member-dashbaord')
     return render (request,'member/dashboard.html')
 
@@ -508,8 +508,10 @@ def dashboard(request):
     total_impact = total_impact_data['total_impact__sum'] if total_impact_data['total_impact__sum']is not None else 0
     user_roles = request.session.get('userrole', [])
     image = request.session.get('image', None)
-    ec_member = LoginSide.objects.all().distinct().exclude(is_superuser=True)
-    ec_member_names = [f"{member.first_name} {member.last_name}"for member in ec_member]
+    ec_member = LoginSide.objects.all().exclude(is_superuser=True)
+    ec_member_names = [
+        f"{member.first_name} {member.last_name} {member.designation}" for member in ec_member.distinct()
+    ]
     # event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))
     
@@ -546,7 +548,7 @@ def dashboard(request):
                     'events': all_event,
                     'role':user_roles,
                     'image':image,
-                    'ec_member ':ec_member_names                   
+                    'ec_member':ec_member_names                   
                     
                 }
 

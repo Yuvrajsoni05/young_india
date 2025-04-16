@@ -152,9 +152,13 @@
                 <th> Yi Pillar   </th>
                 <th>School</th>
                 <th>College</th>
-                
-   
-                  <th>S.I.G</th>
+                {% for i in role %}
+                      {% if i == 'Special Interest Group (S.I.G)' %}
+                      <th>S.I.G</th>
+                      {% endif %}
+
+                    {% endfor %}
+              
                  
                 <th> Social Link </th>
                 <th>Impact</th>
@@ -193,8 +197,15 @@
                     <td>{{ event.yi_pillar }}</td>
                     <td> {{ event.school  }}  </td>
                     <td>{{event.collage}}</td>
-                    
-                    <td>{{event.which_SIG}}</td>
+                           {% for i in role %}
+                      {% if i == 'Special Interest Group (S.I.G)' %}
+                      
+                     
+                        <td>{{event.which_SIG}}</td>
+                   
+
+                        {% endif %}
+                    {% endfor %}
                     <td>
                       {% if event.social_link == ''  %}
                       <span class="badge bg-light text-dark">No Link</span>
@@ -208,7 +219,23 @@
                     <td> <span class="badge bg-light text-dark">No Description</span> </td>
 
                     {% else %}
-                    <td class="ellipsis"><span data-toggle="tooltip" data-placement="top" title="{{event.event_description}}">{{ event.event_description }}</td>
+                    <td class="ellipsis"><span data-bs-toggle="modal" data-bs-target="#staticBackdrop{{event.id}}" title="{{event.event_description}}">{{ event.event_description }}</td>
+                                        
+<!-- Modal -->
+                                    
+                          <div class="modal fade" id="staticBackdrop{{event.id}}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Event Description</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-break">
+                                  {{event.event_description}}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
                     {% endif %}
                     <td>
@@ -304,31 +331,14 @@
                                 <label for="role_yi" class="form-label">Designation</label>
                                 {% comment %} <select class="form-select" id="role_yi" name="role_yi" readonly> {% endcomment %}
                                   <input class="form-control"  value="{{ event.role_yi }}" id="role_yi" name="role_yi" readonly style="background-color:rgb(235, 236, 247);"> 
-                                  {% comment %} <option value="Vertical Chair">Vertical Chair</option>
-                                  <option value="Vertical Co-Chair">Vertical Co-Chair</option>
-                                  <option value="Team Member">Team Member</option> {% endcomment %}
+                                
                                 </select>
                               </div>
                               <div class="col-md-6">
                                 <label for="project_verticals" class="form-label">Yi Verticals</label>
                                 {% comment %} <select class="form-select" id="project_verticals" name="project_verticals"> {% endcomment %}
                                   <input class="form-control"  name="project_verticals" value="{{ event.project_vertical }}" readonly style="background-color:rgb(235, 236, 247);">
-                                  {% comment %} <option value="Masoom">Masoom</option>
-                                  <option value="Road Safety">Road Safety</option>
-                                  <option value="Health">Health</option>
-                                  <option value="Sport">Sports</option>
-                                  <option value="Accessibility">Accessibility</option>
-                                  <option value="Learning(YI Talks)">Learning(YI Talks)</option>
-                                  <option value="Climate action">Climate action</option>
-                                  <option value="Innovation">Innovation</option>
-                                  <option value="Entrepreneurship">Entrepreneurship</option>
-                                  <option value="Branding & PR">Branding & PR</option>
-                                  <option value="Special Interest Group (S.I.G)">Special Interest Group (S.I.G)</option>
-                                  <option value="Women Engagement (YIWE)">Women Engagement (YIWE)</option>
-                                  <option value="Culture Connect">Culture Connect</option>
-                                  <option value="Yi Angel">Yi Angel</option>
-                                  <option value="Membership Engagement">Membership Engagement</option> {% endcomment %}
-                                  <!-- Add all vertical options -->
+                        
                                 </select>
                               </div>
                               <div class="col-md-6">
@@ -345,8 +355,6 @@
                                 </select>
                               </div>
                               
-
-
                                     <div class="col-md-6">
                                         <label for="yi_pillar" class="form-label">Yi Pillar</label>
                                         <select class="form-select" id="yi_pillar" name="yi_pillar">
@@ -358,13 +366,10 @@
                                         </select>
                                     </div>
 
-
                                     <div class="col-md-6">
                                       <label for="select_ec_member" class="form-label">Select EC members</label>
                                       <input type="text" class="form-control" id="select_ec_member" name="select_ec_member" value="{{ event.select_ec_member }}">
                                   </div>
-
-
 
                                   <div class="col-md-6">
                                     <label for="social_link" class="form-label">Members</label>
@@ -380,39 +385,27 @@
                                         <label for="total_impact" class="form-label">Impact</label>
                                         <input type="text" class="form-control" id="total_impact" name="total_impact" value="{{ event.total_impact }}">
                                     </div>
-{% comment %} 
-                                    <div class="col-md-6">
-                                        <label for="event_expense" class="form-label">Event Expense</label>
-                                        <input type="number" class="form-control" id="event_expense" name="event_expense" value="{{ event.event_expense }}">
-                                    </div> {% endcomment %}
 
-                                    <div class="col-md-6" id="sig_div">
-                                        <label for="sig_" class="form-label">Choose SIG</label>
-                                        <select class="form-select" id="sig_" name="sig_">
-                                          {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
+                                    {% for i in role %}
+                                        {% if i == 'Special Interest Group (S.I.G)' %}
+                                              <div class="col-md-6" id="sig_div">
+                                                  <label for="sig_" class="form-label">Choose SIG</label>
+                                                  <select class="form-select" id="sig_" name="sig_">
+                                                    {% if event.which_SIG  == None %} <option value="Choose SIG">Choose SIG</option>{% else %}
 
-                                            <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
-                                            <option value="Active Living">Active Living</option>
-                                            <option value="Photography">Photography</option>
-                                            <option value="Trekking">Trekking</option>
-                                            <option value="Entrepreneurship">Entrepreneurship</option>
-                                            <option value="Community">Community</option>
-                                             <option value="">None</option>{% endif %}
-                                            <!-- Add SIG options -->
-                                        </select>
-                                    </div>
-
-                                    {% comment %} <div class="col-md-6" id="associate_div">
-                                        <label for="associate_partners">Associate Partner</label>
-                                        <select class="form-control" id="associate_partners" name="associate_partners">
-                                            <option value="{{ event.associate_partner }}">{{ event.associate_partner }}</option>
-                                            <option value="Big Bull">Big Bull</option>
-                                            <option value="EB">EB</option>
-                                            <option value="Yuvi">Yuvi</option>
-                                             <option value="">None</option>
-                                            <!-- Add associate partners -->
-                                        </select>
-                                    </div> {% endcomment %}
+                                                      <option value="{{ event.which_SIG }}">{{ event.which_SIG }}</option>
+                                                      <option value="Active Living">Active Living</option>
+                                                      <option value="Photography">Photography</option>
+                                                      <option value="Trekking">Trekking</option>
+                                                      <option value="Entrepreneurship">Entrepreneurship</option>
+                                                      <option value="Community">Community</option>
+                                                      <option value="">None</option>{% endif %}
+                                                      <!-- Add SIG options -->
+                                                  </select>
+                                              </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                        
 
                                     <div class="col-md-6" id="school_div">
                                         <label class="form-label" for="school">School</label>
@@ -433,7 +426,8 @@
                                   
                                   <div class="col-md-6" id="collage_div">
                                     <label for="event_description" class="form-label">Event Description</label>
-                                    <input type="textarea" class="form-control" name="event_description" id="event_description" value="{{event.event_description}}" rows="3"></input>
+                                    <textarea class="form-control" name="event_description" id="event_description" rows="3">{{event.event_description}}</textarea>
+
                                 </div>
                                     
                                     <div class="modal-footer">
@@ -465,11 +459,7 @@
                 <li class="page-item active">
                   <a class="page-link" href="#">1</a>
                 </li>
-                <!-- Optional pagination links if needed -->
-                <!-- <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li> -->
+              
                 <li class="page-item">
                   <a class="page-link" href="#">Next</a>
                 </li>
@@ -480,19 +470,7 @@
     </div>
         </section>
 
-{% comment %} 
-        <div class="container">
-          <footer class="py-3 my-4">
-            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-              <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
-            </ul>
-            <p class="text-center text-muted">© 2021 Company, Inc</p>
-          </footer>
-          </div> {% endcomment %}
+
   </main><!-- End #main -->
 
 
@@ -556,6 +534,59 @@
 </script>
 
 
+<script>
+  let expanded = false;
+
+  function toggleCheckboxes() {
+    let checkboxes = document.getElementById("checkBoxes");
+    if (!expanded) {
+      checkboxes.style.display = "block";
+      expanded = true;
+    } else {
+      checkboxes.style.display = "none";
+      expanded = false;
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    let selectBox = document.querySelector('.selectBox');
+    let checkboxes = document.getElementById("checkBoxes");
+
+    if (!selectBox.contains(event.target) && !checkboxes.contains(event.target)) {
+      checkboxes.style.display = "none";
+      expanded = false;
+    }
+  }, true);
+
+  function updateSelectDisplay() {
+    let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
+    let selectDisplay = document.getElementById('select_member_display');
+
+    if (checkboxes.length === 0) {
+        selectDisplay.options[0].text = "Select options";
+    } else if (checkboxes.length === 1) {
+        selectDisplay.options[0].text = checkboxes[0].value;
+    } else {
+        selectDisplay.options[0].text = checkboxes.length + " Member Selected";
+    }
+  }
+
+  document.querySelector('form').addEventListener('submit', function(event) {
+    let checkboxes = document.querySelectorAll('input[name="select_member[]"]:checked');
+    let values = [];
+    checkboxes.forEach(function(checkbox) {
+      values.push(checkbox.value);
+    });
+    document.getElementById('select_member_hidden').value = values.join(', ');
+  });
+
+  let checkboxes = document.querySelectorAll('input[name="select_member[]"]');
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      updateSelectDisplay();
+    });
+  });
+</script>
 
 {% endblock script %}
 
@@ -563,19 +594,3 @@
 
 
 
-
-<div class="col-md-6">
-  <div class="form-group mb-3">
-    <label for="project_stakeholder" class="form-label fw-bold fw-bold">Project Stakeholder<span class="text-danger"> *</span></label>
-    <select class="form-select form-control-lg rounded form-control" id="project_stakeholder" name="project_stakeholder" required>
-      <option class = "form-control-lg rounded form-control" value="" disabled selected>Choose Project Stakeholder</option>
-      <option class = "form-control-lg rounded form-control" value="Yuva">Yuva</option>
-      <option  class = "form-control-lg rounded form-control" value="Thalir">Thalir</option>
-      <option  class = "form-control-lg rounded form-control" value="Rural Initiatives">Rural Initiatives</option>
-      <option  class = "form-control-lg rounded form-control" value="General Public">General Public</option>
-      <option  class = "form-control-lg rounded form-control" value="Membership">Membership</option>
-      <option  class = "form-control-lg rounded form-control" value="NA">None</option>
-    </select>
-    <div id="project_stakeholder_error" class="invalid-feedback">This field is required.</div>
-  </div>
-</div>

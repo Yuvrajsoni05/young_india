@@ -58,7 +58,7 @@ urlpatterns = [
     # path('delete_events/',delete_multiple_events, name='delete_multiple_events'),
     # path('vertical_base', vertical_base,name='vertical_base')
     
-    # path('google-data/',live_google_form_data, name='google_data'),
+    path('google-data/',live_google_form_data, name='google_data'),
     path('delete_multiple-event',delete_multiple_event,name="delete_multiple_events"),
     
     
