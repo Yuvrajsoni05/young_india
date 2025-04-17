@@ -1,80 +1,116 @@
- /* Focus state for inputs */
- .form-control:focus {
+/* Form control focus state */
+.form-control:focus, .form-select:focus {
   border-color: #4e73df;
   box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
   transition: all 0.3s ease;
-  
-  
 }
 
-/* Form Group Label Styling */
-.form-group label {
-
-  color: #333;
-
-  transition: all 0.3s ease;
-  font-size: medium;
-  font-family:sans-serif;
-  font-weight: bold; 
-  
-}
-
-.form-group label:hover {
-  color: #4e73df; /* Color change on hover */
-}
-
-/* Header Styling */
-.card-header {
+/* Form header styling */
+.form-header {
   background-color: #1944c7;
-  color: #fff;
-  font-family:sans-serif;
-  font-size: larger;
-  font-weight: 700;
-
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
-/* Form Control Styles */
-.form-control {
-  width:100%;
-  height: 3.5rem; /* Adjust input height for a cleaner look */
-  font-size: large; /* Slightly bigger font size for better readability */
-  border-radius: 0.375rem;
-  padding: 0.75rem 1.25rem; /* Increase padding for better space inside input */
-  border: 1px solid #ddd; /* Lighter border */
-  transition: all 0.3s ease;
-  font-family:sans-serif;
-
+.form-header h2 {
+  color: white;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-.form-control:focus {
-  border-color: #4e73df;
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  margin-right: 1rem;
 }
+
+/* Form labels */
+.form-label {
+  color: #333;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Form controls */
+.form-control, .form-select {
+  height: 45px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+}
+
 .form-control::placeholder {
-  color: #6c757d;
+  color: #adb5bd;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
-#sig_div select {
-  font-size: 1rem;
+/* Custom form card */
+.custom-form {
+  background-color: #fff;
+  border: none;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
 }
 
-@media (max-width: 767px) {
-  .form-control {
-    font-size: 1rem;
-  }
+/* Buttons */
+.btn-primary, .btn-outline-secondary {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 6px;
+}
 
+.btn-primary {
+  background-color: #1944c7;
+  border: none;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+/* Checkbox menu */
+#checkBoxes {
+  display: none;
+  border: 1px solid #ced4da;
+  background-color: white;
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-top: 2px;
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+#checkBoxes label {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  margin: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#checkBoxes label:hover {
+  background-color: #f8f9fa;
 }
 
 .selectBox {
   position: relative;
-}
-
-.selectBox select {
-  width: 100%;
-  font-weight: normal;
 }
 
 .overSelect {
@@ -85,29 +121,25 @@
   bottom: 0;
 }
 
-#checkBoxes {
-display: none;
-border: 1px solid #ced4da;
-background-color: white;
-border-radius: 0.25rem;
-padding: 0.5rem;
-margin-top: -1px;
-position: absolute;
-width: 43%;
-z-index: 100;
+/* Textarea styling */
+textarea.form-control {
+  height: auto;
+  min-height: 100px;
 }
 
-#checkBoxes label {
-  display: block;
-  padding: 0.3rem 0;
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .form-control, .form-select {
+    height: 40px;
+    font-size: 0.9rem;
+  }
+  
+  .form-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+  }
 }
-
-
-#checkBoxes label:hover {
-  background-color: #f8f9fa;
-  color: #212529;
-}
-
-
-
-
