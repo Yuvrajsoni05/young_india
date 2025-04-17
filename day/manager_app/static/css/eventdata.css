@@ -7,7 +7,7 @@
 
 /* Form header styling */
 .form-header {
-  background-color: #1944c7;
+  background-color: #b1c2f3;
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1.5rem;
@@ -16,19 +16,18 @@
 }
 
 .form-header h2 {
-  color: white;
+  color: rgb(12, 0, 117);
   font-weight: 600;
   margin: 0;
   font-size: 1.5rem;
 }
 
 .profile-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: 100px;
+  height: 60px;
+ 
   object-fit: cover;
-  border: 2px solid white;
-  margin-right: 1rem;
+
 }
 
 /* Form labels */
@@ -90,7 +89,7 @@
   padding: 0.5rem;
   margin-top: 2px;
   position: absolute;
-  width: 100%;
+  width: 47%;
   max-height: 200px;
   overflow-y: auto;
   z-index: 100;

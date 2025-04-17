@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'admin_app','manager_app',
     'rest_framework',
+    'import_export'
     # 'axes',
     # 'django_extensions',
     # 'django_browser_reload'

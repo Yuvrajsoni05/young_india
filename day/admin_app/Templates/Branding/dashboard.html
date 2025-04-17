@@ -273,7 +273,7 @@
                                   <th>Expense</th>
                                   <th>EC Members Name</th>
                                   <th>Event Members Name</th>
-                                  <th>Yi Role</th>
+                                  <th>Designation</th>
                                   <th>Yi Pillar</th>
                                   <th>School</th>
                                   <th>College</th>
@@ -329,7 +329,7 @@
                                 
                                   <th></th>
                                   <th><select class="form-select  form-select-sm rounded-pill" id="yi_role" name="yi_role" onchange="this.form.submit()">
-                                    <option value="" disabled selected>Yi Role</option>
+                                    <option value="" disabled selected>Designation</option>
                                     <option value="all">All</option>
                                     {% for i in yi_role %}
                                       <option value="{{ i }}"{% if i == request.GET.yi_role %} selected {% endif %}>{{ i }}</option>

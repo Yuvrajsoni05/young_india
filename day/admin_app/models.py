@@ -92,6 +92,18 @@ class LoginSide(AbstractUser):
     def delete(self, *args, **kwargs):
         self.photo.delete()
         super().delete(*args, **kwargs)
+        
+        
+        
+class Member_details(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=200)
+    phone = models.CharField(max_length=200)
+    
+
+    
+    
+    
 
     # def full_name(self):
     #     return (

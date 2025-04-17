@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout,update_session_auth_hash
 from admin_app.models import LoginSide,Login_Role
-from matplotlib import pyplot as plt
-import matplotlib
+# from matplotlib import pyplot as plt
+# import matplotlib
 import numpy as np
 from .models import Event_Data,Event_Image
 from  django.contrib.auth.decorators import login_required

@@ -5,7 +5,7 @@
 {% block link %}
 <link href="{% static 'css/eventdata.css' %}" rel="stylesheet">
 <link href="{% static 'css/inputfiled.css' %}" rel="stylesheet">
-<link href="{% static 'css/event-form-custom.css' %}" rel="stylesheet">
+
 {% endblock link %}
 
 {% block bodyblock %}
@@ -21,7 +21,7 @@
       <div class="form-header">
         <div class="d-flex align-items-center">
           <img src="{{ request.session.image }}" class="profile-image me-4" alt="Role Image">
-          <h2>Add Young India Event</h2>
+          <h2 >Add Young India Event</h2>
         </div>
       </div>
         
@@ -358,7 +358,7 @@
     let selectDisplay = document.getElementById('select_member_display');
 
     if (checkboxes.length === 0) {
-        selectDisplay.options[0].text = "Select options";
+        selectDisplay.options[0].text = "Select Member";
     } else if (checkboxes.length === 1) {
         selectDisplay.options[0].text = checkboxes[0].value;
     } else {

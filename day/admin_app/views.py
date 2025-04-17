@@ -35,7 +35,7 @@ from datetime import date, datetime
 import numpy as np
 from PIL.Image import Image
 from asgiref.typing import HTTPResponseBodyEvent
-from matplotlib import pyplot as plt
+
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
 from openpyxl.drawing.image import Image
@@ -194,6 +194,9 @@ def Admin_Signup(request):
                 "Password": password,
                 "Confirm Password": confirm_password,
                 }
+            if yi_role == 'Admin' or yi_role == 'Branding':
+                login_role = ' '
+                
                 
                 
 
@@ -941,7 +944,7 @@ def admin_event_data(request):
 
     ec_member = LoginSide.objects.all().exclude(is_superuser=True)
     ec_member_names = [
-        f"{member.first_name} {member.last_name} {member.designation}" for member in ec_member.distinct()
+        f"{member.first_name} {member.last_name} | {member.designation}" for member in ec_member.distinct()
     ]
     sessions = Session.objects.filter(expire_date__gte=now())
     user_ids = [session.get_decoded().get("_auth_user_id") for session in sessions]
@@ -1293,6 +1296,10 @@ def update_memeber(request, manager_id):
                 "EC Role": login_role,
                 "Phone Number": phone_number,
             }
+            
+        if yi_role == 'Admin' or yi_role == 'Branding':
+            login_role = ' '
+        
             
 
         for field, field_value in required_fields.items():
@@ -1799,6 +1806,9 @@ def delete_multiple_event(request):
         if event_ids:
             Event_Data.objects.filter(id__in=event_ids).delete()
         return redirect('Admin_Dashboard')
+    
+    
+
 
 class EventDataAPI(APIView):
     def get(self, request):
@@ -2004,6 +2014,46 @@ def live_google_form_data(request):
 #         print("Image saved to model.")
 #     else:
 #         print("Failed to download image.")
+
+from .models import Member_details
+from .resource import Member_Detail_Resource
+from django.contrib import messages
+from tablib import Dataset
+from django.http import HttpResponse
+
+
+def simple_upload(request):
+    if request.method == 'POST':
+        members_diary = Member_Detail_Resource()
+        dataset = Dataset()
+        new_person = request.FILES['myfile']
+
+        if not new_person.name.endswith('xlsx'):
+            messages.info(request,'Wrong Format')
+            return render (request,'Admin/members_diary.html')
+        import_data = dataset.load(new_person.read(),format='xlsx')
+        for data in import_data:
+            value = Member_details (
+                data[0],
+                data[1],
+                data[2],
+                data[3],
+
+            )
+            if value == data:
+                value.remove()
+                
+            value.save()
+    return render (request,'Admin/members_diary.html')
+               
+        
+        
+            
+
+
+
+
+
 
 
 
