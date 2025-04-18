@@ -195,7 +195,7 @@ def manager_dashboard(request):
     # ec_member = LoginSide.objects.all().values_list('first_name', flat=True).distinct().exclude(is_superuser=True)
     ec_member = LoginSide.objects.all().distinct().exclude(is_superuser=True)
     ec_member_names = [
-        f"{member.first_name} {member.last_name} {member.designation}" for member in ec_member.distinct()]
+        f"{member.first_name} {member.last_name} | {member.designation}" for member in ec_member.distinct()]
     if user_roles:
         context = {
             'role': user_roles,
@@ -510,7 +510,7 @@ def dashboard(request):
     image = request.session.get('image', None)
     ec_member = LoginSide.objects.all().exclude(is_superuser=True)
     ec_member_names = [
-        f"{member.first_name} {member.last_name} {member.designation}" for member in ec_member.distinct()
+        f"{member.first_name} {member.last_name} | {member.designation}" for member in ec_member.distinct()
     ]
     # event_name = Event_Data.objects.filter(user=user).values_list('project_vertical',flat=True).distinct()
     # event_impact = Event_Data.objects.filter(user=user).values('project_vertical').annotate(total_impact=Sum('total_impact'))

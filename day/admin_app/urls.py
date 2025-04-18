@@ -57,9 +57,13 @@ urlpatterns = [
     # path('get-username/',get_username, name='get_username'),
     # path('delete_events/',delete_multiple_events, name='delete_multiple_events'),
     path('simple_upload', simple_upload,name='simple_upload'),
+    path('member-diary',member_diary,name='member-diary'),
+    
+    
     
     path('google-data/',live_google_form_data, name='google_data'),
     path('delete_multiple-event',delete_multiple_event,name="delete_multiple_events"),
+    
     
     
     #Branding

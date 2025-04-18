@@ -141,8 +141,10 @@ def index(request):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Signup(request):
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
+    # if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
+    #         return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
     # Get user ids from the session data
@@ -431,8 +433,8 @@ def Admin_Signup(request):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def Admin_Profile(request):
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
 
     sessions = Session.objects.filter(expire_date__gte=now())
     # Get user ids from the session data
@@ -458,8 +460,8 @@ def Admin_Profile(request):
 @login_required(login_url="index")
 def Admin_update(request, admin_id):
     # Check if the user has 'Admin' role
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
 
     try:
         if request.method == "POST":
@@ -554,8 +556,8 @@ def Admin_update(request, admin_id):
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 @login_required(login_url="index")
 def admin_password(request):
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
     else:
         
         try:
@@ -618,7 +620,7 @@ def admin_logout(request):
 def Admin_Dashboard(request):
     demo = request.user.designation 
     print(demo)
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
         return redirect("Error-Page")
   
     # if request.user.designation == 'Chapter Co-Chair' or request.user.designation is 'Chapter Chair':
@@ -938,8 +940,8 @@ def base(request):
 @login_required(login_url="index")
 def admin_event_data(request):
 
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-        return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+            return redirect("Error-Page")
 
 
     ec_member = LoginSide.objects.all().exclude(is_superuser=True)
@@ -1173,7 +1175,8 @@ def download_excel(request):
 def manager_list(request):
     # Check if the user has the 'Admin' role
     try:
-        if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
+        
+        if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
             return redirect("Error-Page")
     except Exception:
         return redirect(
@@ -1209,8 +1212,8 @@ def manager_list(request):
 # Delete Ec  Member
 @login_required(login_url="index")
 def delete_member(request, member_id):
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
 
     try:
         if request.method == "POST":
@@ -1233,8 +1236,8 @@ def delte_multiple(request):
 @login_required(login_url="index")
 def delete_event(request, event_id):
     # Ensure only admins can delete events
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
     try:
         if request.method == "POST":
             # Get the Event_Data instance to be deleted
@@ -1262,8 +1265,8 @@ def delete_event(request, event_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_memeber(request, manager_id):
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
     update_manager_data = get_object_or_404(LoginSide, id=manager_id)
     try:
         if request.method == "POST":
@@ -1395,8 +1398,8 @@ def update_memeber(request, manager_id):
 @never_cache
 @cache_control(no_store=True, no_cache=True, must_revalidate=True, max_age=0)
 def update_event_data(request, event_id):
-    if  not  request.user.designation == "Chapter Chair"  or  request.user.designation == 'Chapter Co-Chair' or request.user.yi_role == 'Admin':
-            return redirect("Error-Page")
+    if request.user.designation not in ["Chapter Chair", "Chapter Co-Chair"] and request.user.yi_role != "Admin":
+        return redirect("Error-Page")
     else:
         try:
             update_event = get_object_or_404(Event_Data, id=event_id)
@@ -2022,6 +2025,15 @@ from tablib import Dataset
 from django.http import HttpResponse
 
 
+
+def member_diary(request):
+    
+    demo = LoginSide.objects.all()
+    contexts = {
+        'demo': demo,
+    }
+    return render(request,'Admin/members_diary.html',{'demo':demo})
+
 def simple_upload(request):
     if request.method == 'POST':
         members_diary = Member_Detail_Resource()
@@ -2040,9 +2052,8 @@ def simple_upload(request):
                 data[3],
 
             )
-            if value == data:
-                value.remove()
-                
+        
+        
             value.save()
     return render (request,'Admin/members_diary.html')
                

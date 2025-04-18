@@ -106,7 +106,7 @@
                 border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
 
               </td>
-              <td class="action-btn-group">
+              <td>
                 <form action="{% url 'Member-Delete' member_id=manager.id %}" method="post" class="d-inline">
                   {% csrf_token %}
                   <button class="btn btn-sm btn-outline-danger" type="submit">

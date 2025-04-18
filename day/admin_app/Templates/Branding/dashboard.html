@@ -420,20 +420,16 @@
                                     </tr>
                                     <!-- Modal -->
                                     
-                                    <div class="modal fade" id="staticBackdrop{{event.id}}"  tabindex="-1"  aria-hidden="true">
-                                      <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal fade" id="staticBackdrop{{event.id}}" tabindex="-1" aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                         <div class="modal-content">
                                           <div class="modal-header">
                                             <h1 class="modal-title fs-5" id="staticBackdropLabel">Event Description</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                           </div>
-                                          <div class="modal-body">
-                                          {{event.event_description}}
+                                          <div class="modal-body text-break">
+                                            {{event.event_description}}
                                           </div>
-                                          {% comment %} <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Understood</button>
-                                          </div> {% endcomment %}
                                         </div>
                                       </div>
                                     </div>
