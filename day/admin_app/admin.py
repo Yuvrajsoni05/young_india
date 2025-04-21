@@ -29,5 +29,5 @@ admin.site.register(LoginSide,LoginSideAdmin)
 
 @admin.register(Member_details)
 class Member_Admin(ImportExportModelAdmin):
-    list_display = ('name','email','phone')
+    list_display = ('First_Name','Last_Name','Email_Address','Phone_No')
     

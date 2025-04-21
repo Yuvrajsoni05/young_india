@@ -3,7 +3,129 @@
 {% block title %}New EC Member{% endblock title %}
 {% load static %}
 
-{% block link %}<link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">{% endblock link %}
+{% block link %}
+<style>
+
+  :root {
+    --primary-color: #4361ee;
+    --hover-color: #3a56d4;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --text-muted: #6c757d;
+}
+
+  .upload-container {
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 2rem;
+}
+
+.upload-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #212529;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.drop-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--light-bg);
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+    position: relative;
+}
+
+.drop-area:hover,
+.drop-area:focus-within {
+    border-color: var(--primary-color);
+    background-color: rgba(67, 97, 238, 0.05);
+}
+
+.icon-container {
+    margin-bottom: 1rem;
+}
+
+.file-icon {
+    width: 60px;
+    height: 60px;
+    fill: var(--primary-color);
+}
+
+.drop-text {
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.drop-hint {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.file-types {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-btn:hover {
+    background-color: var(--hover-color);
+}
+
+.upload-btn:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+.selected-file {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background-color: var(--light-bg);
+    font-size: 0.875rem;
+    display: none;
+}
+
+/* This will show the selected file name without JavaScript */
+.file-input:valid ~ .selected-file {
+    display: block;
+}
+</style>
+
+
+
+<link href="{% static 'css/admin_signup.css' %}" rel="stylesheet">{% endblock link %}
 
 {% block bodyblock %}
 <main id="main" class="main">
@@ -12,25 +134,91 @@
     <h1>Members Diary</h1>
  
   </div>
-    {% if messages %}
-      {% for message in messages  %}
-        {{message}}
-      {% endfor %}
-    
-    {% endif %}
-
-
-      <form method="post" action="{% url 'simple_upload' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-
-     <input type='file' name='myfile'  >
-     <button type="submit">Upload</button>
-          
-
-      </form>
-
  
-      {{"Hello"}}
+
+  <form method="post" action="{% url 'simple_upload' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <label for="fileUpload" class="drop-area">
+        <div class="icon-container">
+            <svg class="file-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <path d="M8 13h8M8 17h8M8 9h1"/>
+            </svg>
+        </div>
+        <div class="drop-text">Drag & drop your Excel file here</div>
+        <div class="drop-hint">or click to browse files</div>
+        <div class="file-types">Accepted file types: .xlsx, .xls</div>
+        
+        <input 
+            type="file" 
+            name="myfile" 
+            id="fileUpload" 
+            class="file-input" 
+            accept=".xlsx,.xls"
+            required
+        >
+        
+        <div class="selected-file">
+            File selected: <span id="fileName">your file</span>
+        </div>
+    </label>
+    
+    <button type="submit" class="upload-btn">Upload File</button>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-striped" id="example">
+              <thead>
+                <tr class="text-nowrap text-center">
+                  <th>Sr No</th>
+                  <th>Name</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Company Name</th>
+                  <th>Company Designation</th>
+                  <th>Address</th>
+                  <th>EC Member</th>
+                  <th>EC Designation</th>
+                  <th>Vertical</th>
+                  <th>Phone Number</th>
+                  <th>Profile Image</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for member in demo %}
+                <tr class="text-nowrap text-center">
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ member.First_Name}}  {{member.Last_Name}}</td>
+                  <td>{{ member.First_Name}}</td>
+                  <td>{{ member.Last_Name}}</td>
+                  <td>{{ member.Email_Address }}</td>
+                  <td>{{ member.Company_Name }}</td>
+                  <td>{{ member.Company_Designation }}</td>
+                  <td>{{member.Address}}</td>
+                  <td>{{ member.EC_Member }}</td>
+                  <td>{{ member.EC_Designation }}</td>
+                  {% if member.Vertical == '' or member.Vertical == 'nan' or member.Vertical == None %}
+                  <td> <span class="badge bg-light text-dark">No Vertical</span></td>
+                  {% else %}
+                  <td>{{ member.Vertical }}</td>
+                  {% endif %}
+                  <td>{{ member.Phone_No }}</td>
+                  <td>
+                    <img src="{% if manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
+                    border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
+                  </td>
+                </tr>
+                <!-- Edit Modal for each member -->
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
 
 </main>

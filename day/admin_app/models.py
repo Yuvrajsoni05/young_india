@@ -96,9 +96,27 @@ class LoginSide(AbstractUser):
         
         
 class Member_details(models.Model):
-    name = models.CharField(max_length=200)
-    email = models.CharField(max_length=200)
-    phone = models.CharField(max_length=200)
+    First_Name = models.CharField(max_length=200 ,null=True, blank=True)
+    Last_Name = models.CharField(max_length=200 ,null=True, blank=True)
+    
+    Email_Address = models.CharField(max_length=200 ,null=True, blank=True)
+    Phone_No = models.CharField(max_length=200 ,null=True, blank=True)
+    Company_Name= models.CharField(max_length=200 ,null=True, blank=True)
+    Company_Designation = models.CharField(max_length=200 ,null=True, blank=True)
+    Address = models.CharField(max_length=200 ,null=True, blank=True)
+    EC_Member = models.CharField( max_length=200,null=True, blank=True)
+    EC_Designation = models.CharField(max_length=200 ,null=True, blank=True)
+    Profile_Photo = models.URLField(max_length=200 ,null=True, blank=True)
+    Vertical = models.CharField(max_length=200 ,null=True, blank=True)
+    DOB = models.CharField(max_length=200 ,null=True, blank=True)
+    Membership_Type = models.CharField(max_length=200 ,null=True, blank=True)
+
+    
+
+
+   
+
+
     
 
     

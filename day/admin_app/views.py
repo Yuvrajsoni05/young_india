@@ -2,7 +2,7 @@
 import os
 import re
 from collections import Counter
-
+import pandas as pd
 from django.db.models import Count
 # Django imports
 from django.conf import settings
@@ -2027,36 +2027,111 @@ from django.http import HttpResponse
 
 
 def member_diary(request):
+   
+    demo = Member_details.objects.all()
     
-    demo = LoginSide.objects.all()
-    contexts = {
-        'demo': demo,
-    }
-    return render(request,'Admin/members_diary.html',{'demo':demo})
+    
+    return render (request,'Admin/members_diary.html',{'demo':demo})
+
+# def simple_upload(request):
+#     if request.method == 'POST':
+#         members_diary = Member_Detail_Resource()
+#         dataset = Dataset()
+#         new_person = request.FILES['myfile']
+
+#         if not new_person.name.endswith('xlsx'):
+#             messages.error(request,'Wrong Format')
+#             return redirect('member-diary')
+#         import_data = dataset.load(new_person.read(),format='xlsx')
+#         for data in import_data:
+#             value = Member_details (
+#                 data[0],
+#                 data[1],
+#                 data[2],
+#                 data[3],
+
+#             )
+#         value.save()
+#         df = pd.read_excel(new_person, usecols=['name', 'email','Phone'])
+#         df_no_duplicates = df.drop_duplicates()
+#         print("DataFrame with dupicates removed " ,df_no_duplicates)
+        
+#         df_subset_duplicates = df.drop_duplicates(subset=['name','email','Phone'])
+#         print("\nDataFrame with duplicates removed (subset):\n", df_subset_duplicates)
+        
+#         df_unique_col1 = df.drop_duplicates(subset=['email'], keep='first')
+#         print(df_unique_col1)
+        
+#         df_keep_last = df.drop_duplicates(subset=['name','email','Phone'],keep='last')
+#         print("dataframe with dupliacate removed (subset) : ",df_keep_last)
+        
+#         df_keep_done = df.drop_duplicates(subset=['name','email','Phone'],keep=False)
+#         print("dataFrame with duplicate removed",df_keep_done)       
+        
+        
+#         df_inplace = df.drop_duplicates(inplace=True)
+#         print(df_inplace)
+            
+#         return redirect('member-diary')
+
 
 def simple_upload(request):
     if request.method == 'POST':
-        members_diary = Member_Detail_Resource()
+        member_diary =  Member_Detail_Resource()
         dataset = Dataset()
-        new_person = request.FILES['myfile']
-
-        if not new_person.name.endswith('xlsx'):
-            messages.info(request,'Wrong Format')
-            return render (request,'Admin/members_diary.html')
-        import_data = dataset.load(new_person.read(),format='xlsx')
-        for data in import_data:
-            value = Member_details (
-                data[0],
-                data[1],
-                data[2],
-                data[3],
-
-            )
         
+        new_memebr =  request.FILES.get('myfile')
         
-            value.save()
-    return render (request,'Admin/members_diary.html')
+        if not new_memebr.name.endswith('xlsx'):
+            messages.error(request,'Wrong Format')
+            return redirect('member-diary')
+        import_data = new_memebr
+        
+        df = pd.read_excel(import_data,usecols=['First Name','Last Name','Email Address','Company Name' ,'Company Designation','Membership Type','EC Member?','Vertical','EC Designation','Date of Birth' ,'Phone No.','Address'])
+        df_unique_col = df.drop_duplicates(subset=['Email Address'], keep='last')
+        print(df['Email Address'])
+        
+        # for data in df_unique_col:
+        #     value = Member_details(
+            
+        #        name =data['name'],
+        #        email = data['email'],
+        #        phone = data['Phone'],
+             
+        #     )
+        for _, i in df_unique_col.iterrows():
+            if Member_details.objects.filter(
+                
                
+                Email_Address = i['Email Address'],
+                
+            ).exists():
+                demo = df_unique_col
+                print(df_unique_col)
+                messages.error(request,f"This {demo} Must Be Dublicate " )
+               
+            else:
+                value = Member_details(
+                First_Name = i['First Name'],
+                Last_Name = i['Last Name'],
+                Email_Address = i['Email Address'],
+                Company_Name = i['Company Name'],
+                Company_Designation = i['Company Designation'],
+                Membership_Type = i['Membership Type'],
+                EC_Member = i['EC Member?'],
+                Vertical = i['Vertical'],
+                EC_Designation = i['EC Designation'],
+                DOB = i['Date of Birth'],
+                Phone_No = i['Phone No.'],
+                Address = i['Address']
+                
+
+                )
+                value.save()
+    return redirect('member-diary')
+    
+            
+
         
         
             
