@@ -17,15 +17,12 @@ class LoginSideAdmin(admin.ModelAdmin):
 
 
     def get_login_role(self, obj):
-        
-        return ", ".join([i.name for i in obj.login_role.all()
-                            
-                          
-                          ])
+        return ", ".join([i.name for i in obj.login_role.all()])
     
     get_login_role.short_description = 'login_Role'
 
 admin.site.register(LoginSide,LoginSideAdmin)
+
 
 @admin.register(Member_details)
 class Member_Admin(ImportExportModelAdmin):

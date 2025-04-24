@@ -116,8 +116,18 @@ class Member_details(models.Model):
 
    
 
-
+#   vertical_roles = [v.strip() for v in i.Vertical.split(',')] #splits the string and removes extra spaces
     
+#             roles = Login_Role.objects.filter(name__in=vertical_roles) # Corrected variable name to roles
+            
+#             Admin_user.login_role.set(roles)
+#             Admin_user.save()
+
+# import string
+
+# length = 8
+# random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+# print(random_string)
 
     
     
