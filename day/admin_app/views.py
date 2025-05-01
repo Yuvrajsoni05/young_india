@@ -2078,7 +2078,7 @@ def member_diary(request):
 
 def simple_upload(request):
  
-        
+    
     if request.method == 'POST':
         member_diary =  Member_Detail_Resource()
         dataset = Dataset()
@@ -2092,34 +2092,19 @@ def simple_upload(request):
         
         df = pd.read_excel(import_data,usecols=['First Name','Last Name','Email Address','Company Name' ,'Company Designation','Membership Type','EC Member?','Vertical','EC Designation','Date of Birth' ,'Phone No.','Address'])
         df_unique_col = df.drop_duplicates(subset=['Email Address'], keep='last')
-        # for i in df['EC Member?'].values:
-        #     if i == 'Yes':
-        #         print("",i)
+        # print(df_unique_col)
                 
-                
-        
-        # if df['EC Member?'].any('Yes'):
-        #     print("Yes")
-        
-        # for data in df_unique_col:
-        #     value = Member_details(
-        #        name =data['name'],
-        #        email = data['email'],
-        #        phone = data['Phone'],
-        # 
         for _, i in df_unique_col.iterrows():
             if Member_details.objects.filter(
-            
                 Email_Address = i['Email Address'],
-                
-                
+                      
             ).exists():
                 demo = df_unique_col
                 # print(df_unique_col)
-                messages.error(request,f"This {demo} Must Be Dublicate " )
-            
+                messages.error(request,f"This {demo } Must Be Dublicate " )
+                # print("This is Dublicate")
             else:
-                value = Member_details(
+                value = Member_details.objects.create(
                 First_Name = i['First Name'],
                 Last_Name = i['Last Name'],
                 Email_Address = i['Email Address'],
@@ -2131,40 +2116,37 @@ def simple_upload(request):
                 EC_Designation = i['EC Designation'],
                 DOB = i['Date of Birth'],
                 Phone_No = i['Phone No.'],
-                Address = i['Address']
-    
+                Address = i['Address']  
                 )
-                value.save()
-                
-                 
-        all_data =  Member_details.objects.all().exclude(EC_Member='No')
-        # print(all_data.EC_Member)
-        length = 8
-        random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
-        print(random_string)
-        for i in all_data:
-            
-            print(f"{i.First_Name} | {i.Last_Name} | {i.Email_Address} | {i.Phone_No} | {i.Company_Designation} | {i.Address} | {i.EC_Member} | {i.Vertical}")
+                if Member_details.objects.filter(Email_Address=value.Email_Address).exists():
+                        messages.error(request, "This email is already taken")
+                else:
                     
+                    value.save()
+                
+               
+                all_data =  value
+   
+                if all_data.EC_Member == 'Yes':
                     
-            Admin_user = LoginSide.objects.create_user(
-                username = f'YI {i.First_Name} {random_string}',
-                first_name=i.First_Name,
-                last_name=i.Last_Name,
-                
-                password='Admin9499@@',
-                email=i.Email_Address,
-                yi_role=i.Company_Designation,
-                phone_number=i.Phone_No,
-                
-            ) 
-            vertical_roles = i.Vertical.split()
-            role = Login_Role.objects.filter(
-                name__in = vertical_roles
-            )
-            Admin_user.login_role.set(role)
-            Admin_user.save()
-            
+                    random_number = random.randint(1000, 9999)  
+                    username = f'{all_data.First_Name}{random_number}'.lower()
+                    Admin_user = LoginSide.objects.create_user(
+                            username=username,     
+                            first_name=all_data.First_Name,
+                            last_name=all_data.Last_Name,
+                            password='Yi9499@@',
+                            email=all_data.Email_Address,
+                            yi_role=all_data.EC_Designation,
+                            phone_number=all_data.Phone_No,
+                        
+                    )
+                    vertical_roles = [role.strip() for role in all_data.Vertical.split(',')]
+                    chosen_role = vertical_roles[0]
+                    
+                    roles = Login_Role.objects.filter(name=chosen_role)   
+                    Admin_user.login_role.set(roles )
+                    Admin_user.save()
               
     return redirect('member-diary')
     
