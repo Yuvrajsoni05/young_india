@@ -55,6 +55,7 @@ class LoginSide(AbstractUser):
     email = models.EmailField(max_length=200, unique=True, validators=[validate_email])
     photo = models.ImageField(upload_to="user_photo/", null=True, blank=True, validators = [FileExtensionValidator(allowed_extensions=["jpeg", "jpg", "png"])])
     yi_role = models.CharField(max_length=200, null=True)
+    
 
     phone_number = models.CharField(
         max_length=10,  # This will accommodate international numbers
@@ -66,7 +67,16 @@ class LoginSide(AbstractUser):
                 code="invalid phone",
             ),
         ],
+    
     )
+    
+    Company_Name = models.CharField(max_length=200,blank=True, null=True)
+    Company_Designation = models.CharField(max_length=200,blank=True, null=True)
+    IG_Link = models.URLField(max_length=200,blank=True, null=True)
+    Linkedin_Link = models.URLField(max_length=200,blank=True, null=True)
+    DOB = models.DateField(max_length=200,blank=True, null=True)
+    
+    
 
     # @property
     # def full_name(self):
@@ -74,7 +84,7 @@ class LoginSide(AbstractUser):
     
     @property
     def designation(self):
-        
+
         roles = ', '.join((role.name) for role in self.login_role.all())
         return f"{roles} {self.yi_role}"
         
@@ -98,20 +108,27 @@ class LoginSide(AbstractUser):
 class Member_details(models.Model):
     First_Name = models.CharField(max_length=200 ,null=True, blank=True)
     Last_Name = models.CharField(max_length=200 ,null=True, blank=True)
-    
+
     Email_Address = models.CharField(max_length=200 ,null=True, blank=True)
     Phone_No = models.CharField(max_length=200 ,null=True, blank=True)
     Company_Name= models.CharField(max_length=200 ,null=True, blank=True)
     Company_Designation = models.CharField(max_length=200 ,null=True, blank=True)
-    Address = models.CharField(max_length=200 ,null=True, blank=True)
+    Address = models.TextField(max_length=200 ,null=True, blank=True)
     EC_Member = models.CharField( max_length=200,null=True, blank=True)
     EC_Designation = models.CharField(max_length=200 ,null=True, blank=True)
     Profile_Photo = models.URLField(max_length=200 ,null=True, blank=True)
     Vertical = models.CharField(max_length=200 ,null=True, blank=True)
-    DOB = models.CharField(max_length=200 ,null=True, blank=True)
+    DOB = models.DateField(max_length=200 ,null=True, blank=True)
     Membership_Type = models.CharField(max_length=200 ,null=True, blank=True)
-
+    IG_Link = models.URLField(max_length=200, blank=True, null=True)
+    Linkedin_Link = models.URLField(max_length=200,blank=True, null=True)
     
+    
+    
+    
+    @property
+    def member_name(self):
+        return f"{self.First_Name} {self.Last_Name}"    
 
 
    

@@ -1385,7 +1385,7 @@ Highcharts.chart('container', {
       event_list = event_list.filter(project_vertical__icontains=demo) {% endcomment %}
 
  
-    
+{% comment %}     
       if request.method == 'POST':
       member_diary =  Member_Detail_Resource()
       dataset = Dataset()
@@ -1455,4 +1455,12 @@ Highcharts.chart('container', {
               # Assign the chosen role to the user
               roles = Login_Role.objects.filter(name=chosen_role)
               Admin_user.login_role.set(roles)
-              Admin_user.save()
+              Admin_user.save() {% endcomment %}
+
+
+              query = request.GET.get('search') 
+              if query:
+                  all_data = Crud_Data.objects.filter(name__icontains=query)  
+              else:
+                  all_data = Crud_Data.objects.all()
+              return render(request, 'index.html', {'key': all_data})

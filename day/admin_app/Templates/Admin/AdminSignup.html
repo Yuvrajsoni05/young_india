@@ -24,24 +24,30 @@
             {% csrf_token %}
 
             <!-- Personal Information -->
-            <div class="row mb-3">
-              <div class="col-md-6">
+            <div class="row mb-4">
+              <div class="col-md-4">
                 <label for="username" class="form-label">Username<span style="color:red;"> *</span></label>
                 <input type="text" class="form-control" id="username" name="add_username" maxlength="15" placeholder="Enter Username" required value="{{form_data.username}}">
                 <div class="invalid-feedback">Please provide a username.</div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="firstname" class="form-label">First Name<span style="color:red;"> *</span></label>
                 <input type="text" class="form-control" id="firstname" name="first_name" maxlength="15" placeholder="First Name" value="{{form_data.first_name}}" required>
                 <div class="invalid-feedback">Please provide a first name.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="lastname" class="form-label">Last Name<span style="color:red;"> *</span></label>
+                <input type="text" class="form-control" id="lastname" name="last_name" maxlength="15" placeholder="Last Name" value="{{form_data.last_name}}" required>
+                <div class="invalid-feedback">Please provide a last name.</div>
               </div>
             </div>
 
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="lastname" class="form-label">Last Name<span style="color:red;"> *</span></label>
-                <input type="text" class="form-control" id="lastname" name="last_name" maxlength="15" placeholder="Last Name" value="{{form_data.last_name}}" required>
+                <label for="dob" class="form-label">D.O.B<span style="color:red;"> *</span></label>
+                <input type="date" class="form-control" id="dob" name="dob" maxlength="15" value="{{form_data.dob}}" required>
                 <div class="invalid-feedback">Please provide a last name.</div>
               </div>
 
@@ -51,6 +57,23 @@
                 <div class="invalid-feedback">Please provide a valid email address.</div>
               </div>
             </div>
+
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="company_name" class="form-label">Company Name<span style="color:red;">*</span></label>
+                <input type="text" class="form-control" id="company_name" name="company_name"  placeholder="Company Name" value="{{form_data.company_name}}" required>
+                <div class="invalid-feedback">Please provide a Company Name.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="add_email" class="form-label">Company Designation<span style="color:red;"> *</span></label>
+                <input type="text" class="form-control" id="company_designation" name="company_designation" maxlength="50" placeholder="Company Designation" value="{{form_data.company_designation}}" required>
+                <div class="invalid-feedback">Please provide a valid Company Designation.</div>
+              </div>
+            </div>
+
+            
 
             <!-- Contact & Role -->
             <div class="row mb-3">
@@ -93,9 +116,25 @@
 
             <!-- Profile Image -->
             <div class="mb-4">
-              <label for="profile_img" class="form-label">Profile Image<span style="color:red;"> *</span></label>
+              <label for="profile_img" class="form-label">Profile Image</label>
               <input type="file" class="form-control" id="profile_img" name="profile_img" accept=".jpeg,.png,.jpg" >
               <div class="form-text text-muted">Accepted formats: .jpg, .jpeg, .png</div>
+            </div>
+
+
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="ig_link" class="form-label">Instagram Account</label>
+                <input type="url" class="form-control" id="ig_link" name="ig_link"  placeholder="Instagram Account Link"  required>
+  
+              </div>
+
+              <div class="col-md-6">
+                <label for="lk_link" class="form-label">Linkedin Account</label>
+                <input type="url" class="form-control" id="lk_link" name="lk_link"  placeholder="Linkedin Account Link"  required>
+              
+              </div>
             </div>
 
             <!-- Password -->

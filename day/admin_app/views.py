@@ -3,7 +3,7 @@ import os
 import re
 import random
 import string
-
+from django.db.models import Q
 from collections import Counter
 import pandas as pd
 from django.db.models import Count
@@ -169,6 +169,10 @@ def Admin_Signup(request):
             Admin_email = request.POST.get("add_email")
             phone = request.POST.get("add_phone")
             yi_role = request.POST.get("yi_role")
+            company_name = request.POST.get("company_name")
+            company_designation = request.POST.get("company_designation")
+            ig_link = request.POST.get("ig_link")
+            lk_link = request.POST.get("lk_link")
             login_role = request.POST.getlist(
                 "login_role"
             )  # Use getlist to fetch multiple roles
@@ -363,6 +367,13 @@ def Admin_Signup(request):
                 email=Admin_email,
                 yi_role=yi_role,
                 phone_number=phone,
+                Company_Name=company_name,
+                Company_Designation=company_designation,
+                IG_Link = ig_link,
+                Linkedin_Link = lk_link,
+                
+
+                
             )
             
             # user_info = {
@@ -2030,9 +2041,24 @@ from django.http import HttpResponse
 
 
 def member_diary(request):
+    
    
-    demo = Member_details.objects.all()
-    return render (request,'Admin/members_diary.html',{'demo':demo})
+    search_query = request.GET.get('search_member', '').strip()
+    if search_query:
+        demo = Member_details.objects.filter(Q(First_Name__icontains=search_query)|
+                                             Q(Last_Name__icontains=search_query)| 
+                                              Q(Email_Address__icontains=search_query)
+                                             ).all()
+        
+    else:
+        demo = Member_details.objects.all()
+
+    context = {
+        'demo': demo,
+    }
+     # full_name = Member_details.objects.all().values('First_Name','Last_Name').distinct().exclude(EC_Member='Yes')
+       # print(full_name)
+    return render (request,'Admin/members_diary.html',context)
 
 # def simple_upload(request):
 #     if request.method == 'POST':
@@ -2080,8 +2106,8 @@ def simple_upload(request):
  
     
     if request.method == 'POST':
-        member_diary =  Member_Detail_Resource()
-        dataset = Dataset()
+        # member_diary =  Member_Detail_Resource()
+        # dataset = Dataset()
         
         new_memebr =  request.FILES.get('myfile')
         
@@ -2089,20 +2115,17 @@ def simple_upload(request):
             messages.error(request,'Wrong Format')
             return redirect('member-diary')
         import_data = new_memebr
-        
-        df = pd.read_excel(import_data,usecols=['First Name','Last Name','Email Address','Company Name' ,'Company Designation','Membership Type','EC Member?','Vertical','EC Designation','Date of Birth' ,'Phone No.','Address'])
+        df = pd.read_excel(import_data,usecols=['First Name','Last Name','Email Address','Company Name' ,'Company Designation','Membership Type','EC Member?','Vertical','EC Designation','Date of Birth' ,'Phone No.','IG Account Link','Linked Account Link','Address'])
         df_unique_col = df.drop_duplicates(subset=['Email Address'], keep='last')
         # print(df_unique_col)
                 
         for _, i in df_unique_col.iterrows():
             if Member_details.objects.filter(
-                Email_Address = i['Email Address'],
-                      
-            ).exists():
+                Email_Address = i['Email Address']).exists():
+                
                 demo = df_unique_col
-                # print(df_unique_col)
-                messages.error(request,f"This {demo } Must Be Dublicate " )
-                # print("This is Dublicate")
+                print(demo)
+                
             else:
                 value = Member_details.objects.create(
                 First_Name = i['First Name'],
@@ -2116,15 +2139,13 @@ def simple_upload(request):
                 EC_Designation = i['EC Designation'],
                 DOB = i['Date of Birth'],
                 Phone_No = i['Phone No.'],
-                Address = i['Address']  
+                Address = i['Address'],
+                IG_Link = i['IG Account Link'],
+                Linkedin_Link = i['Linked Account Link']
+
                 )
-                if Member_details.objects.filter(Email_Address=value.Email_Address).exists():
-                        messages.error(request, "This email is already taken")
-                else:
-                    
-                    value.save()
-                
-               
+                messages.success(request,'File Data Upload Sussfully')
+                value.save()            
                 all_data =  value
    
                 if all_data.EC_Member == 'Yes':
@@ -2139,6 +2160,11 @@ def simple_upload(request):
                             email=all_data.Email_Address,
                             yi_role=all_data.EC_Designation,
                             phone_number=all_data.Phone_No,
+                            Company_Name = all_data.Company_Name,
+                            DOB = all_data.DOB,
+                            Company_Designation = all_data.Company_Designation,
+                            
+                            
                         
                     )
                     vertical_roles = [role.strip() for role in all_data.Vertical.split(',')]
@@ -2146,7 +2172,10 @@ def simple_upload(request):
                     
                     roles = Login_Role.objects.filter(name=chosen_role)   
                     Admin_user.login_role.set(roles )
+                    messages.success(request,'New EC Member are Created Also ')
                     Admin_user.save()
+                    
+                
               
     return redirect('member-diary')
     

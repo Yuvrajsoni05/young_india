@@ -83,14 +83,18 @@
           <thead>
             <tr class="text-nowrap text-center">
               <th>Sr No</th>
+              <th>D.O.B</th>
               <th>Name</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Username</th>
               <th>Email</th>
+              <th>Company Name</th>
+              <th>Company Designation</th>
               <th>EC Role</th>
               <th>Designation</th>
               <th>Vertical Role</th>
+              
               <th>Phone Number</th>
               <th>Profile Image</th>
               <th colspan="3">Action</th>
@@ -100,11 +104,15 @@
             {% for manager in managers %}
             <tr class="text-nowrap text-center">
               <td>{{ forloop.counter }}</td>
+              <td> {{manager.DOB}} </td>
+             
               <td>{{ manager.first_name}}  {{manager.last_name}}</td>
               <td>{{ manager.first_name }}</td>
               <td>{{ manager.last_name }}</td>
               <td>{{ manager.username }}</td>
               <td>{{ manager.email }}</td>
+              <td> {{ manager.Company_Name }}</td>
+              <td> {{ manager.Company_Designation }}</td>
               <td>{{manager.designation}}</td>
               <td>{{ manager.yi_role }}</td>
               {% if manager.login_role.all == '' or manager.login_role.all == None %}
