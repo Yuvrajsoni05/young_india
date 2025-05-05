@@ -138,7 +138,7 @@
                 <img src="{% if manager.photo %}{{ manager.photo.url }}{% else %}{% static 'Image/img.png' %}{% endif %}" 
                 border="1px" height="45px" width="45px" alt="Profile" class="rounded-circle">
               </td>
-              <td> <form method="post" action="#" class="d-inline" >
+              <td> <form method="post" action="{% url 'member_diary_delete' members_id=member.id %}" class="d-inline" >
                 {% csrf_token %}
                 <button class="btn btn-sm btn-outline-danger ms-1" >
                   <i class="bi bi-trash"></i>

@@ -74,7 +74,8 @@ class LoginSide(AbstractUser):
     Company_Designation = models.CharField(max_length=200,blank=True, null=True)
     IG_Link = models.URLField(max_length=200,blank=True, null=True)
     Linkedin_Link = models.URLField(max_length=200,blank=True, null=True)
-    DOB = models.DateField(max_length=200,blank=True, null=True)
+    DOB = models.CharField(max_length=200,blank=True, null=True)
+    Company_Address = models.CharField(max_length=200,blank=True, null=True)
     
     
 
@@ -109,8 +110,18 @@ class Member_details(models.Model):
     First_Name = models.CharField(max_length=200 ,null=True, blank=True)
     Last_Name = models.CharField(max_length=200 ,null=True, blank=True)
 
-    Email_Address = models.CharField(max_length=200 ,null=True, blank=True)
-    Phone_No = models.CharField(max_length=200 ,null=True, blank=True)
+    Email_Address = models.EmailField(max_length=200 ,null=True, blank=True)
+    Phone_No = models.CharField( max_length=10,  # This will accommodate international numbers
+        default="0",
+        validators=[
+            RegexValidator(
+                regex=r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$",  # This is the regex for validating the phone number
+                message="Enter a valid phone number.",
+                code="invalid phone",
+            ),
+        ],
+    
+    )
     Company_Name= models.CharField(max_length=200 ,null=True, blank=True)
     Company_Designation = models.CharField(max_length=200 ,null=True, blank=True)
     Address = models.TextField(max_length=200 ,null=True, blank=True)

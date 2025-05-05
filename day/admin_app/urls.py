@@ -58,6 +58,7 @@ urlpatterns = [
     # path('delete_events/',delete_multiple_events, name='delete_multiple_events'),
     path('simple_upload', simple_upload,name='simple_upload'),
     path('member-diary',member_diary,name='member-diary'),
+    path('member_diary_delete/<int:members_id>/',delete_members_diary,name='member_diary_delete'),
     
     
     

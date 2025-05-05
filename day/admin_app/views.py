@@ -29,7 +29,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.decorators.cache import never_cache
-
+from datetime import datetime
 from babel.numbers import format_currency
 from datetime import date, datetime
 
@@ -168,11 +168,14 @@ def Admin_Signup(request):
             confirm_password = request.POST.get("password2")
             Admin_email = request.POST.get("add_email")
             phone = request.POST.get("add_phone")
+            
             yi_role = request.POST.get("yi_role")
             company_name = request.POST.get("company_name")
             company_designation = request.POST.get("company_designation")
             ig_link = request.POST.get("ig_link")
             lk_link = request.POST.get("lk_link")
+            dob = request.POST.get('dob')
+            company_address = request.POST.get('company_address')
             login_role = request.POST.getlist(
                 "login_role"
             )  # Use getlist to fetch multiple roles
@@ -371,40 +374,36 @@ def Admin_Signup(request):
                 Company_Designation=company_designation,
                 IG_Link = ig_link,
                 Linkedin_Link = lk_link,
-                
-
+                Company_Address=company_address,
+                DOB = dob,
                 
             )
             
-            # user_info = {
-            #         "username": username,
-            #         "password": password,
-            #         "yi_role": yi_role,
-            #         "login_role": login_role,
+            user_info = {
+                    "username": username,
+                    "password": password,
+                    "yi_role": yi_role,
+                    "login_role": login_role,
                     
-            # }
+            }
             
-            # receiver_email =  Admin_email
-            # template_name = "base/email.html"
-
-            # convert_to_html_content =  render_to_string(
-            # template_name=template_name,
-            # context=user_info
+            receiver_email =  Admin_email
+            template_name = "base/email.html"
+            convert_to_html_content =  render_to_string(
+            template_name=template_name,
+            context=user_info
             
-          
-            # )
-            # plain_message = strip_tags(convert_to_html_content)
-            # send_mail(
-            #       subject=  'Hello Ec Member',
-            #         message=plain_message,
-            #         from_email= request.user.email,
-            #         recipient_list=[receiver_email],
-            #         html_message=convert_to_html_content,
-            #         fail_silently=False,
-            #     )
-            
-  
-            
+            )
+            plain_message = strip_tags(convert_to_html_content)
+            send_mail(
+                  subject=  'Hello Ec Member',
+                    message=plain_message,
+                    from_email= request.user.email,
+                    recipient_list=[receiver_email],
+                    html_message=convert_to_html_content,
+                    fail_silently=False,
+                )
+    
 
             # Assign selected roles to the user
             roles = Login_Role.objects.filter(
@@ -438,7 +437,6 @@ def Admin_Signup(request):
                 "count": active_users_count,
             },
         )
-
 
 # Admin Profie  HTML Page
 
@@ -2116,15 +2114,27 @@ def simple_upload(request):
             return redirect('member-diary')
         import_data = new_memebr
         df = pd.read_excel(import_data,usecols=['First Name','Last Name','Email Address','Company Name' ,'Company Designation','Membership Type','EC Member?','Vertical','EC Designation','Date of Birth' ,'Phone No.','IG Account Link','Linked Account Link','Address'])
+        
         df_unique_col = df.drop_duplicates(subset=['Email Address'], keep='last')
-        # print(df_unique_col)
-                
+        
+        # phone_validation = [['Phone No.']]
+        # print(phone_validation)
+        # phone_regex = r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$" 
+        # if not re.match(phone_regex,phone_validation):
+        #     messages.error(request,'Phone number must be 10 digit ')
+        
+    
         for _, i in df_unique_col.iterrows():
+            phone  = str(i['Phone No.'])
+            regex = r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$"            
             if Member_details.objects.filter(
                 Email_Address = i['Email Address']).exists():
                 
-                demo = df_unique_col
-                print(demo)
+                messages.error(request,f"This Email Alredy Taken")
+                
+            elif not re.match(regex,phone):
+                messages.error(request,'Phone Number Must Be 10 Digit')
+           
                 
             else:
                 value = Member_details.objects.create(
@@ -2142,16 +2152,24 @@ def simple_upload(request):
                 Address = i['Address'],
                 IG_Link = i['IG Account Link'],
                 Linkedin_Link = i['Linked Account Link']
+                
 
                 )
+                
                 messages.success(request,'File Data Upload Sussfully')
                 value.save()            
                 all_data =  value
-   
+                
+                date_str = str(all_data.DOB)
+                datetime_obj = datetime.strptime(date_str,"%Y-%m-%d %H:%M:%S")
+                formatted_date = datetime_obj.strftime("%Y-%m-%d")
+                
+                
                 if all_data.EC_Member == 'Yes':
                     
                     random_number = random.randint(1000, 9999)  
                     username = f'{all_data.First_Name}{random_number}'.lower()
+                    passwords = f'{all_data.First_Name}@{random_number}'.capitalize() ,
                     Admin_user = LoginSide.objects.create_user(
                             username=username,     
                             first_name=all_data.First_Name,
@@ -2161,12 +2179,48 @@ def simple_upload(request):
                             yi_role=all_data.EC_Designation,
                             phone_number=all_data.Phone_No,
                             Company_Name = all_data.Company_Name,
-                            DOB = all_data.DOB,
+                            DOB = formatted_date,
                             Company_Designation = all_data.Company_Designation,
+                            Company_Address = all_data.Address,
                             
                             
                         
                     )
+                    
+                    print(username)
+                    print(passwords)
+                    print(all_data.Vertical)
+                    print(all_data.EC_Designation)
+                    
+                    
+                    # user_info = {
+                    #     "username":username,
+                    #     "password":passwords,
+                    #     "yi_role":all_data.Vertical,
+                    #     "login_role":all_data.EC_Designation,
+                        
+                    # }
+                    
+                    # receiver_email =  all_data.Email_Address
+                    # template_name = "base/email.html"
+                    
+                    
+                    # convert_to_html_content =  render_to_string(
+                    #     template_name=template_name,
+                    #     context=user_info
+                    # )
+                    # plain_message = strip_tags(convert_to_html_content)
+                    # send_mail(
+                    #     subject= "Hello",
+                    #     message=plain_message,
+                    #     from_email=request.user.email,
+                    #     recipient_list=[receiver_email],
+                    #     html_message=convert_to_html_content,
+                    #     fail_silently=False,
+                        
+                    # )
+                    
+                    
                     vertical_roles = [role.strip() for role in all_data.Vertical.split(',')]
                     chosen_role = vertical_roles[0]
                     
@@ -2174,17 +2228,22 @@ def simple_upload(request):
                     Admin_user.login_role.set(roles )
                     messages.success(request,'New EC Member are Created Also ')
                     Admin_user.save()
-                    
-                
-              
     return redirect('member-diary')
     
     
-
+def delete_members_diary(request,members_id):
+    if request.method == 'POST':
+        delete_member =  get_object_or_404(Member_details,id=members_id)
+        delete_member.delete()
+        return redirect('member-diary')
+    return render (request,'Admin/members_diary.html')
         
-        
-
-
+def delete_members_all(request):
+    if request.method == 'POST':
+        demo = request.POST.getlist("demo")
+        delete_member = get_object_or_404(Member_details,id=demo)
+        delete_member.delete()
+        return redirect('member-diary')
 
 
 

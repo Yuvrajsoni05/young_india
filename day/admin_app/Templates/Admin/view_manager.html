@@ -91,6 +91,7 @@
               <th>Email</th>
               <th>Company Name</th>
               <th>Company Designation</th>
+              <th>Company Address</th>
               <th>EC Role</th>
               <th>Designation</th>
               <th>Vertical Role</th>
@@ -104,7 +105,7 @@
             {% for manager in managers %}
             <tr class="text-nowrap text-center">
               <td>{{ forloop.counter }}</td>
-              <td> {{manager.DOB}} </td>
+              <td> {{ manager.DOB }} </td>
              
               <td>{{ manager.first_name}}  {{manager.last_name}}</td>
               <td>{{ manager.first_name }}</td>
@@ -113,6 +114,7 @@
               <td>{{ manager.email }}</td>
               <td> {{ manager.Company_Name }}</td>
               <td> {{ manager.Company_Designation }}</td>
+              <td> {{ manager.Company_Address }}</td>
               <td>{{manager.designation}}</td>
               <td>{{ manager.yi_role }}</td>
               {% if manager.login_role.all == '' or manager.login_role.all == None %}
@@ -181,8 +183,8 @@
 
 
             <!-- Edit Modal for each member -->
-            <div class="modal fade" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
-              <div class="modal-dialog modal-lg yi-event-model">
+            <div class="modal fade modal-xl" id="editModal{{ manager.id }}" tabindex="-1" aria-labelledby="editModal{{ manager.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Edit Member</h5>
@@ -191,19 +193,19 @@
                   <div class="modal-body">
                     <form method="post" action="{% url 'Update_Manager' manager_id=manager.id %}" enctype="multipart/form-data">
                       {% csrf_token %}
-                      <input type="hidden" name="manager_id" id="manager_id" value="">
+                      <input type="hidden" name="manager_id" id="manager_id" value="{{ manager.id }}">
                       
                       <div class="row">
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_first_name" class="form-label">First Name</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}" >
+                            <input type="text" class="form-control" maxlength="20" id="manager_first_name" name="manager_first_name" value="{{ manager.first_name }}">
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_last_name" class="form-label">Last Name</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control" maxlength="20" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}" >
+                            <input type="text" class="form-control" maxlength="20" id="manager_last_name" name="manager_last_name" value="{{manager.last_name}}">
                           </div>
                         </div>
                       </div>
@@ -212,14 +214,51 @@
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_username" class="form-label">Username</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control" maxlength="15" id="manager_username" name="manager_username" value="{{manager.username}}" >
-                            <div class="invalid-feedback" id="username_error">Please Prvide Username.</div>
+                            <input type="text" class="form-control" maxlength="15" id="manager_username" name="manager_username" value="{{manager.username}}">
+                            <div class="invalid-feedback" id="username_error">Please Provide Username.</div>
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="manager_email" class="form-label">Email</label><span class="text-danger"> *</span>
-                            <input type="email" class="form-control" maxlength="50" id="manager_email" name="manager_email" value="{{ manager.email }}" >
+                            <input type="email" class="form-control" maxlength="50" id="manager_email" name="manager_email" value="{{ manager.email }}">
+                          </div>
+                        </div>
+                      </div>
+            
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_dob" class="form-label">D.O.B</label><span class="text-danger"> *</span>
+                            <input type="date" class="form-control" maxlength="15" id="member_dob" name="member_dob" value="{{manager.DOB}}">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="manager_phone_number" class="form-label">Phone Number</label><span class="text-danger"> *</span>
+                            <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}">
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Company Information -->
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="mb-3">
+                            <label for="company_name" class="form-label">Company Name</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control" id="company_name" name="company_name" value="{{ manager.Company_Name }}">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="mb-3">
+                            <label for="company_designation" class="form-label">Company Designation</label>
+                            <input type="text" class="form-control" id="company_designation" name="company_designation" value="{{ manager.Company_Designation }}">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="mb-3">
+                            <label for="company_address" class="form-label">Company Address</label>
+                            <input type="text" class="form-control" id="company_address" name="company_address" value="{{ manager.Company_Address }}">
                           </div>
                         </div>
                       </div>
@@ -229,8 +268,6 @@
                           <div class="mb-3">
                             <label for="yi_role" class="form-label">Designation</label><span class="text-danger"> *</span>
                             <select class="form-select" id="yi_role_{{ manager.id }}" name="yi_role">
-
-
                               <option value="{{manager.yi_role}}">{{ manager.yi_role }}</option>
                               <option value="Chair">Chair</option>
                               <option value="Co-Chair">Co-Chair</option>
@@ -239,36 +276,26 @@
                             </select>
                           </div>
                         </div>
-                        
                         <div class="col-md-6">
-                         
                           <div class="mb-3">
-                            
-                            <label for="manager_phone_number" class="form-label">Phone Number</label><span class="text-danger"> *</span>
-                            <input type="number" maxlength="10" minlength="10" class="form-control" id="manager_phone_number" name="manager_phone_number" value="{{manager.phone_number }}" >
+                            <label for="manager_profile_img" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" id="manager_profile_img" name="manager_profile_img" accept=".jpeg,.png,.jpg">
                           </div>
                         </div>
                       </div>
                       
                       <div class="mb-4" id="vertical_view_{{ manager.id }}">
-
-
                         <label for="manager_role" class="form-label">EC Role:</label><span class="text-danger"> *</span>
                         <div class="d-flex flex-wrap gap-3">
                           {% for i in role %}
                           <div class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="" {% if i in manager.login_role.all %} checked {% endif %}>
-                            <label class="form-check-label" for="">{{ i.name }}</label>
+                            <input type="checkbox" class="form-check-input" name="login_role" value="{{ i.name }}" id="role_{{ i.id }}" {% if i in manager.login_role.all %} checked {% endif %}>
+                            <label class="form-check-label" for="role_{{ i.id }}">{{ i.name }}</label>
                           </div>
                           {% endfor %}
                         </div>
                       </div>
-
-                      <div class="mb-3">
-                        <label for="manager_profile_img" class="form-label">Profile Image</label>
-                        <input type="file" class="form-control" id="manager_profile_img" name="manager_profile_img" accept=".jpeg,.png,.jpg">
-                      </div>
-
+            
                       <div class="modal-footer px-0 pb-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>
